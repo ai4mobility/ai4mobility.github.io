@@ -1,3 +1,5 @@
+![AI for Mobility — Intelligent systems, safer journeys, smarter futures.](_static/banner.jpg)
+
 # AI for Mobility
 
 Welcome to **AI for Mobility** — an open graduate-level course on how artificial intelligence is transforming transportation systems.

@@ -61,6 +61,16 @@ header.navbar {
     font-weight: 600;
 }
 
+/* Home-page banner image — first <img> in the main content area */
+.bd-main .bd-article > section > p:first-child > img:only-child {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 62, 42, 0.15);
+}
+
 /* "tip" admonitions in USF green */
 .admonition.tip,
 .admonition.hint {
