@@ -2,7 +2,7 @@
 
 ## Course information
 
-**AI Mobility Technologies**  
+**AI for Mobility**  
 A graduate-level course on artificial intelligence applications in transportation.
 
 - **Format**: Self-paced, open materials (recordings + notes + labs)

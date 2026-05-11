@@ -1,4 +1,4 @@
-# AI Mobility Technologies
+# AI for Mobility
 
 An open graduate-level course on artificial intelligence applications in transportation.
 
@@ -8,7 +8,7 @@ An open graduate-level course on artificial intelligence applications in transpo
 
 ## What this is
 
-This repository hosts the source for the *AI Mobility Technologies* course site, built with [Jupyter Book](https://jupyterbook.org/). The site rebuilds and publishes automatically whenever changes are pushed to `main`.
+This repository hosts the source for the *AI for Mobility* course site, built with [Jupyter Book](https://jupyterbook.org/). The site rebuilds and publishes automatically whenever changes are pushed to `main`.
 
 ## Course outline
 

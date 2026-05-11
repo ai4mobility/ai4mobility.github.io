@@ -1,7 +1,7 @@
-# Jupyter Book configuration for AI Mobility Technologies
+# Jupyter Book configuration for AI for Mobility
 # Full reference: https://jupyterbook.org/customize/config.html
 
-title: AI Mobility Technologies
+title: AI for Mobility
 author: Hao Zhou, University of South Florida
 copyright: "2026"
 # logo: _static/logo.png   # uncomment when you add a logo image

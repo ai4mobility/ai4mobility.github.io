@@ -1,6 +1,6 @@
-# AI Mobility Technologies
+# AI for Mobility
 
-Welcome to **AI Mobility Technologies** — an open graduate-level course on how artificial intelligence is transforming transportation systems.
+Welcome to **AI for Mobility** — an open graduate-level course on how artificial intelligence is transforming transportation systems.
 
 ## Who this is for
 

@@ -11,7 +11,7 @@ You are free to:
 
 Under the following terms:
 
-- **Attribution** — You must give appropriate credit (e.g., *"Adapted from AI Mobility Technologies by Hao Zhou, https://ai4mobility.github.io, CC BY 4.0"*), provide a link to the license, and indicate if changes were made.
+- **Attribution** — You must give appropriate credit (e.g., *"Adapted from AI for Mobility by Hao Zhou, https://ai4mobility.github.io, CC BY 4.0"*), provide a link to the license, and indicate if changes were made.
 
 Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
 
