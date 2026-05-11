@@ -1,0 +1,25 @@
+# Table of contents for AI Mobility Technologies
+# Reference: https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+
+parts:
+  - caption: Getting Started
+    chapters:
+      - file: prerequisites
+      - file: syllabus
+
+  - caption: Course Modules
+    chapters:
+      - file: module1/index
+        sections:
+          - file: module1/lecture1
+          - file: module1/lab1
+      - file: module2/index
+      - file: module3/index
+      - file: module4/index
+
+  - caption: Resources
+    chapters:
+      - file: resources

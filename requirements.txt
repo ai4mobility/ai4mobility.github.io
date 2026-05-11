@@ -1,0 +1,6 @@
+jupyter-book>=0.15,<2.0
+ghp-import
+numpy
+pandas
+matplotlib
+scikit-learn

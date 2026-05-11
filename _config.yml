@@ -1,0 +1,56 @@
+# Jupyter Book configuration for AI Mobility Technologies
+# Full reference: https://jupyterbook.org/customize/config.html
+
+title: AI Mobility Technologies
+author: Hao Zhou, University of South Florida
+copyright: "2026"
+# logo: _static/logo.png   # uncomment when you add a logo image
+
+# Don't execute notebooks on build (faster + more reliable for CI)
+execute:
+  execute_notebooks: 'off'
+
+# Only build files listed in _toc.yml — keeps README/LICENSE out of the rendered site
+only_build_toc_files: true
+
+exclude_patterns:
+  - README.md
+  - LICENSE.md
+  - .github/*
+
+# Information about where the book exists on the web
+repository:
+  url: https://github.com/ai4mobility/ai4mobility.github.io
+  branch: main
+
+# HTML output options
+html:
+  use_issues_button: true
+  use_repository_button: true
+  use_edit_page_button: true
+  home_page_in_navbar: true
+  extra_css:
+    - _static/custom.css
+  baseurl: "https://ai4mobility.github.io"
+
+# Launch buttons for runnable notebooks
+launch_buttons:
+  notebook_interface: "jupyterlab"
+  colab_url: "https://colab.research.google.com"
+
+# Parse and render settings (MyST extensions)
+parse:
+  myst_enable_extensions:
+    - colon_fence
+    - deflist
+    - html_image
+    - linkify
+    - substitution
+    - tasklist
+    - dollarmath
+    - amsmath
+
+# Latex output (for PDF builds, optional)
+latex:
+  latex_documents:
+    targetname: book.tex

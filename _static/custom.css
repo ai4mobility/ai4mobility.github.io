@@ -1,0 +1,73 @@
+/* USF brand colors applied as accents on top of the default JupyterBook theme.
+   Brand reference: USF Green #006747, USF Gold (deep) #B79F4D. */
+
+:root {
+    --usf-green: #006747;
+    --usf-green-dark: #003E2A;
+    --usf-gold: #B79F4D;
+    --usf-gold-light: #CFC493;
+
+    /* Map onto JupyterBook / pydata-sphinx-theme variables where it works */
+    --pst-color-primary: #006747;
+    --pst-color-secondary: #B79F4D;
+    --pst-color-link: #006747;
+    --pst-color-link-hover: #B79F4D;
+}
+
+/* Top navbar background */
+.bd-header,
+header.navbar {
+    background-color: var(--usf-green) !important;
+}
+
+.bd-header a,
+.bd-header .navbar-brand {
+    color: #ffffff !important;
+}
+
+/* Hyperlinks in body content */
+.bd-main a {
+    color: var(--usf-green);
+}
+.bd-main a:hover {
+    color: var(--usf-gold);
+}
+
+/* H1, H2 accents */
+.bd-main h1 {
+    color: var(--usf-green-dark);
+    border-bottom: 3px solid var(--usf-gold);
+    padding-bottom: 0.3em;
+}
+.bd-main h2 {
+    color: var(--usf-green);
+}
+.bd-main h3 {
+    color: var(--usf-green-dark);
+}
+
+/* Tables — green header, white text */
+.bd-main table thead {
+    background-color: var(--usf-green);
+}
+.bd-main table thead th {
+    color: #ffffff !important;
+}
+
+/* Active sidebar item */
+.bd-sidebar-primary .nav-link.active,
+.bd-sidebar-primary .current > a {
+    color: var(--usf-green-dark) !important;
+    font-weight: 600;
+}
+
+/* "tip" admonitions in USF green */
+.admonition.tip,
+.admonition.hint {
+    border-left: 4px solid var(--usf-green) !important;
+}
+.admonition.tip > .admonition-title,
+.admonition.hint > .admonition-title {
+    background-color: rgba(0, 103, 71, 0.10) !important;
+    color: var(--usf-green-dark) !important;
+}
