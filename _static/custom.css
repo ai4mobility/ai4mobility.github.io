@@ -81,3 +81,151 @@ header.navbar {
     background-color: rgba(0, 103, 71, 0.10) !important;
     color: var(--usf-green-dark) !important;
 }
+
+/* -----------------------------------------------------------
+   Guest Speaker cards
+   ----------------------------------------------------------- */
+
+.speaker-card {
+    border: 1px solid rgba(0, 103, 71, 0.15) !important;
+    border-radius: 10px !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.speaker-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 62, 42, 0.12);
+}
+.speaker-card .sd-card-img-top {
+    width: 110px !important;
+    height: 110px !important;
+    max-width: 110px !important;
+    margin: 1.25rem auto 0.5rem !important;
+    border-radius: 50% !important;
+    border: 3px solid var(--usf-gold-light) !important;
+    background: var(--usf-gold-light) !important;
+    padding: 0 !important;
+    object-fit: cover;
+    display: block;
+}
+.speaker-card .sd-card-body {
+    text-align: center;
+    padding: 1rem 1.25rem 1.25rem !important;
+}
+
+/* Role tag badges */
+.speaker-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    margin-bottom: 0.7rem;
+}
+.tag-academic {
+    background-color: rgba(0, 103, 71, 0.12);
+    color: var(--usf-green-dark);
+}
+.tag-industry {
+    background-color: rgba(183, 159, 77, 0.22);
+    color: var(--usf-green-dark);
+}
+.tag-public {
+    background-color: rgba(0, 62, 42, 0.12);
+    color: var(--usf-green-dark);
+}
+
+/* -----------------------------------------------------------
+   Workflow timeline (Agency Advisory Board)
+   ----------------------------------------------------------- */
+
+.workflow-timeline {
+    position: relative;
+    padding: 0.5rem 0;
+}
+.workflow-step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+    position: relative;
+}
+.workflow-step:last-child {
+    margin-bottom: 0;
+}
+.workflow-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 22px;
+    top: 48px;
+    bottom: -1.25rem;
+    width: 2px;
+    background-color: var(--usf-gold-light);
+    z-index: 0;
+}
+.workflow-marker {
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: var(--usf-gold);
+    color: var(--usf-green-dark);
+    font-weight: 700;
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 62, 42, 0.15);
+    z-index: 1;
+    position: relative;
+}
+.workflow-content {
+    padding-top: 0.35rem;
+}
+.workflow-content h4 {
+    margin: 0 0 0.25rem 0 !important;
+    font-size: 1.05rem;
+    color: var(--usf-green-dark);
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+}
+.workflow-content p {
+    margin: 0;
+    color: #4a5568;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+/* -----------------------------------------------------------
+   CTA buttons (Nominate / Become a partner)
+   ----------------------------------------------------------- */
+
+.cta-row {
+    text-align: center;
+    margin: 1.25rem 0 2.5rem;
+}
+.cta-button {
+    display: inline-block;
+    background-color: var(--usf-green);
+    color: #ffffff !important;
+    padding: 0.7rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+    box-shadow: 0 2px 4px rgba(0, 62, 42, 0.15);
+}
+.cta-button:hover {
+    background-color: var(--usf-green-dark);
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+.cta-button.cta-secondary {
+    background-color: var(--usf-gold);
+    color: var(--usf-green-dark) !important;
+}
+.cta-button.cta-secondary:hover {
+    background-color: #a08a3f;
+    color: var(--usf-green-dark) !important;
+}

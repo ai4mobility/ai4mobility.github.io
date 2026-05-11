@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Speaker headshot placeholder">
+  <rect width="200" height="200" fill="#E8E2C7"/>
+  <circle cx="100" cy="78" r="32" fill="#006747"/>
+  <path d="M 40 200 Q 40 128 100 128 Q 160 128 160 200 Z" fill="#006747"/>
+</svg>
