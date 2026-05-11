@@ -16,6 +16,44 @@ You'll get the most out of the course if you have basic Python familiarity and h
 
 **By the end of the course** you will be able to explain the major AI methods being applied to mobility problems and where each one fits best; build computer-vision pipelines for traffic monitoring (vehicle detection, tracking, hazard recognition); reason about the role of AI in driving automation (ADAS, autonomous vehicles, V2X connectivity); use AI-augmented traffic simulation tools to test and evaluate transportation interventions; and critically read AI-mobility research papers, identifying where claims are vs. aren't supported.
 
+## From Mobility Operations to AI Solutions
+
+This course is organized around a problem-to-solution learning model. Students do not only learn AI algorithms; they learn how to identify real transportation needs, translate them into AI-ready problems, develop feasible solution concepts, and communicate results back to practitioners.
+
+<ol class="workflow-pipeline" aria-label="From mobility operations to AI solutions — five-step workflow">
+
+<li class="workflow-pipeline-step">
+<div class="workflow-pipeline-badge" aria-hidden="true">1</div>
+<h4>Real Mobility Needs</h4>
+<p>Agencies, industry partners, and practitioners share operational pain points.</p>
+</li>
+
+<li class="workflow-pipeline-step">
+<div class="workflow-pipeline-badge" aria-hidden="true">2</div>
+<h4>Problem Translation</h4>
+<p>Students and researchers convert needs into AI-actionable problem statements.</p>
+</li>
+
+<li class="workflow-pipeline-step">
+<div class="workflow-pipeline-badge" aria-hidden="true">3</div>
+<h4>AI Methods &amp; Prototypes</h4>
+<p>Teams explore computer vision, prediction, optimization, LLMs/VLMs, simulation, and edge AI.</p>
+</li>
+
+<li class="workflow-pipeline-step">
+<div class="workflow-pipeline-badge" aria-hidden="true">4</div>
+<h4>Practitioner Feedback</h4>
+<p>Agency and industry advisors review feasibility, constraints, data needs, and deployment value.</p>
+</li>
+
+<li class="workflow-pipeline-step">
+<div class="workflow-pipeline-badge" aria-hidden="true">5</div>
+<h4>Open Knowledge &amp; Impact</h4>
+<p>Results become reusable project briefs, tutorials, open-source tools, and future research directions.</p>
+</li>
+
+</ol>
+
 ## Learning Modules
 
 The course is organized into four modules. Each module contains lecture notes, a video walkthrough on YouTube, hands-on lab notebooks (runnable in Google Colab), and recommended readings.
@@ -192,6 +230,100 @@ Local transportation agencies and public-sector partners are invited to help sha
 <div class="cta-row">
 <a class="cta-button cta-secondary" href="mailto:haozhou1@usf.edu?subject=Project%20Partner%20Inquiry%20%E2%80%94%20AI%20for%20Mobility">Become a Project Partner</a>
 </div>
+
+## Open Mobility Challenges
+
+Transportation agencies and industry partners often face practical operational challenges that may benefit from AI, but these problems are not always easy to formulate as research or student project topics. The *Open Mobility Challenges* section provides a structured space to document real-world needs, discuss feasibility, and connect practitioners with students and researchers.
+
+<div class="challenge-grid">
+
+<article class="challenge-card">
+<header class="challenge-card-header">
+<h4>AI-Assisted Traffic Camera Monitoring</h4>
+<span class="status-tag status-example">Example Challenge</span>
+</header>
+<dl class="challenge-meta">
+<dt>Operational context</dt>
+<dd>TMC operators monitor many video feeds manually.</dd>
+<dt>Possible AI direction</dt>
+<dd>Computer vision and vision-language models for incident detection, queue monitoring, and event summarization.</dd>
+<dt>Considerations</dt>
+<dd>Camera access, false alarms, privacy, operator trust.</dd>
+</dl>
+<a class="challenge-link" href="https://github.com/ai4mobility/ai4mobility.github.io/issues" target="_blank" rel="noopener" aria-label="Discuss AI-Assisted Traffic Camera Monitoring on GitHub">Discuss on GitHub →</a>
+</article>
+
+<article class="challenge-card">
+<header class="challenge-card-header">
+<h4>Post-Storm Roadway Damage Assessment</h4>
+<span class="status-tag status-example">Example Challenge</span>
+</header>
+<dl class="challenge-meta">
+<dt>Operational context</dt>
+<dd>Agencies need rapid situational awareness after hurricanes or severe storms.</dd>
+<dt>Possible AI direction</dt>
+<dd>AI dashcam or drone-based detection of debris, flooding, damaged signs, blocked lanes, and signal outages.</dd>
+<dt>Considerations</dt>
+<dd>GPS tagging, offline operation, integration with existing reporting workflows.</dd>
+</dl>
+<a class="challenge-link" href="https://github.com/ai4mobility/ai4mobility.github.io/issues" target="_blank" rel="noopener" aria-label="Discuss Post-Storm Roadway Damage Assessment on GitHub">Discuss on GitHub →</a>
+</article>
+
+<article class="challenge-card">
+<header class="challenge-card-header">
+<h4>Near-Miss and Conflict Analysis</h4>
+<span class="status-tag status-example">Example Challenge</span>
+</header>
+<dl class="challenge-meta">
+<dt>Operational context</dt>
+<dd>Safety risks often appear before crashes but are difficult to measure systematically.</dd>
+<dt>Possible AI direction</dt>
+<dd>Video analytics, trajectory extraction, behavior recognition, and surrogate safety metrics.</dd>
+<dt>Considerations</dt>
+<dd>Camera placement, calibration, data quality, validation.</dd>
+</dl>
+<a class="challenge-link" href="https://github.com/ai4mobility/ai4mobility.github.io/issues" target="_blank" rel="noopener" aria-label="Discuss Near-Miss and Conflict Analysis on GitHub">Discuss on GitHub →</a>
+</article>
+
+<article class="challenge-card">
+<header class="challenge-card-header">
+<h4>Signal Operations and Anomaly Detection</h4>
+<span class="status-tag status-example">Example Challenge</span>
+</header>
+<dl class="challenge-meta">
+<dt>Operational context</dt>
+<dd>Signal timing issues, detector failures, and unusual congestion patterns can be hard to diagnose quickly.</dd>
+<dt>Possible AI direction</dt>
+<dd>Time-series anomaly detection, traffic state prediction, and AI-assisted diagnostic reports.</dd>
+<dt>Considerations</dt>
+<dd>Signal logs, detector data, probe data, interpretability.</dd>
+</dl>
+<a class="challenge-link" href="https://github.com/ai4mobility/ai4mobility.github.io/issues" target="_blank" rel="noopener" aria-label="Discuss Signal Operations and Anomaly Detection on GitHub">Discuss on GitHub →</a>
+</article>
+
+<article class="challenge-card">
+<header class="challenge-card-header">
+<h4>Work Zone Safety Monitoring</h4>
+<span class="status-tag status-example">Example Challenge</span>
+</header>
+<dl class="challenge-meta">
+<dt>Operational context</dt>
+<dd>Agencies need better awareness of risky interactions between vehicles, workers, and temporary traffic control.</dd>
+<dt>Possible AI direction</dt>
+<dd>Real-time object detection, intrusion detection, and safety alerting.</dd>
+<dt>Considerations</dt>
+<dd>Edge computing, low-light conditions, false positive management.</dd>
+</dl>
+<a class="challenge-link" href="https://github.com/ai4mobility/ai4mobility.github.io/issues" target="_blank" rel="noopener" aria-label="Discuss Work Zone Safety Monitoring on GitHub">Discuss on GitHub →</a>
+</article>
+
+</div>
+
+<div class="cta-row">
+<a class="cta-button" href="https://github.com/ai4mobility/ai4mobility.github.io/issues" target="_blank" rel="noopener">Submit or Discuss a Mobility Challenge</a>
+</div>
+
+<p class="challenge-note"><em>Practitioners do not need to propose an AI method. A clear description of the operational problem is enough.</em></p>
 
 ## Student Project Showcase
 
