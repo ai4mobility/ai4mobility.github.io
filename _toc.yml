@@ -18,6 +18,7 @@ parts:
           - file: module1/lab1
           - file: module1/lab2_word_embeddings
           - file: module1/lab3_image_embeddings
+          - file: module1/lab4_clip_vs_traditional_cv
       - file: module2/index
       - file: module3/index
       - file: module4/index
