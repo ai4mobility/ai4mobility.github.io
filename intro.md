@@ -231,6 +231,19 @@ Local transportation agencies and public-sector partners are invited to help sha
 <a class="cta-button cta-secondary" href="mailto:haozhou1@usf.edu?subject=Project%20Partner%20Inquiry%20%E2%80%94%20AI%20for%20Mobility">Become a Project Partner</a>
 </div>
 
+### Suggest a Workflow for Students
+
+Have a real, time-consuming workflow that AI might help with? Tell us about it below. A student team of 3–4 will spend a semester mapping how it works today, finding where AI genuinely helps, building a working prototype with a human in the loop, validating it against your current process, and handing it back with documentation.
+
+The best candidates are tasks that are repetitive, data- or document-heavy, and where a human still makes the final call. You don't need to propose an AI method — a clear description of the operational problem is enough. Prefer to work offline? <a href="_static/AI_for_Mobility_Partner_Intake_Template.docx">Download the intake form (Word)</a>, or post your idea as a <a href="https://github.com/ai4mobility/ai4mobility.github.io/issues" target="_blank" rel="noopener">GitHub issue</a>.
+
+<div class="gform-embed">
+<iframe
+  title="AI for Mobility — Suggest a Workflow"
+  src="https://docs.google.com/forms/d/e/1FAIpQLScCKF43644uLZDST8DAuU8MICFamktw2FH_vlRubPxhDTjAXQ/viewform?embedded=true"
+  loading="lazy">Loading the form…</iframe>
+</div>
+
 ## Open Mobility Challenges
 
 Transportation agencies and industry partners often face practical operational challenges that may benefit from AI, but these problems are not always easy to formulate as research or student project topics. The *Open Mobility Challenges* section provides a structured space to document real-world needs, discuss feasibility, and connect practitioners with students and researchers.
