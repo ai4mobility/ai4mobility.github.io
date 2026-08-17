@@ -2,19 +2,37 @@
 
 # AI for Mobility
 
-Welcome to **AI for Mobility** — an open graduate-level course on how artificial intelligence is transforming transportation systems. The course is structured as an applied **AI Mobility Systems Studio**: students learn AI foundations, hear from domain experts, work on agency-informed problems, and present solutions to real stakeholders.
+Welcome to **AI for Mobility** — a graduate course at the University of South Florida on how artificial intelligence is transforming transportation systems. The course is structured as an applied **AI Mobility Systems Studio**: students learn AI foundations, hear from domain experts, work on agency-informed problems, and present solutions to real stakeholders. Course materials are openly licensed, so anyone can follow along.
+
+:::{admonition} Fall 2026 offering
+:class: tip
+
+**CGN 6933, Section 903** (CRN 85372) · Thursdays, 5:00–7:45 PM · NES 103
+First class Thursday, August 27, 2026
+
+No prerequisites and no prior AI coursework required — open to graduate students across
+engineering. Full details on the {doc}`syllabus` page.
+:::
 
 ## Course Overview
 
 This course is designed for:
 
-- **Graduate students** in transportation engineering, civil engineering, computer science, or related fields who want to understand how AI is reshaping mobility.
-- **Practicing transportation engineers** looking to add machine learning and computer vision to their toolkit.
+- **USF graduate students** in transportation engineering, civil engineering, computer science, electrical engineering, or related fields who want to understand how AI is reshaping mobility — and to build things with it.
+- **Practicing transportation engineers** looking to add machine learning, computer vision, and AI-assisted workflows to their toolkit.
 - **Self-learners** anywhere in the world who are curious about AI applications in driving, traffic monitoring, and simulation.
 
-You'll get the most out of the course if you have basic Python familiarity and have seen a probability or linear algebra course at some point. See {doc}`prerequisites` for details.
+You'll get the most out of the course if you have basic Python familiarity and have seen a probability or linear algebra course at some point. Advanced programming experience is not required. See {doc}`prerequisites` for details.
 
-**By the end of the course** you will be able to explain the major AI methods being applied to mobility problems and where each one fits best; build computer-vision pipelines for traffic monitoring (vehicle detection, tracking, hazard recognition); reason about the role of AI in driving automation (ADAS, autonomous vehicles, V2X connectivity); use AI-augmented traffic simulation tools to test and evaluate transportation interventions; and critically read AI-mobility research papers, identifying where claims are vs. aren't supported.
+**By the end of the course** you will be able to:
+
+- Describe core AI concepts relevant to mobility systems — neural networks, representation learning, transformers, generative models, reinforcement learning, and agentic AI — and identify which mobility problems each is suited to.
+- Apply AI tools, notebook-based exercises, and transportation datasets to structured mobility analysis and modeling tasks.
+- Interpret model outputs and assess their relevance, limitations, and likely sources of error in transportation applications.
+- Read AI-mobility research critically and summarize the problem setting, method, data, findings, and limitations.
+- Develop a group project applying an AI method, AI-assisted workflow, or hardware-integrated prototype to a real transportation problem.
+- Communicate methods, results, limitations, and practical implications in written and oral form.
+- Reason about responsible use of human-in-the-loop AI in transportation: reliability, robustness, safety, privacy, interpretability, human oversight, and professional accountability.
 
 ## From Mobility Operations to AI Solutions
 
@@ -56,7 +74,7 @@ This course is organized around a problem-to-solution learning model. Students d
 
 ## Learning Modules
 
-The course is organized into four modules. Each module contains lecture notes, a video walkthrough on YouTube, hands-on lab notebooks (runnable in Google Colab), and recommended readings.
+Course materials are organized into four modules. Each contains lecture notes, a video walkthrough on YouTube, hands-on lab notebooks (runnable in Google Colab), and recommended readings. Enrolled students follow the week-by-week sequence on the {doc}`syllabus` page, which draws on these modules alongside additional material on generative AI, agentic workflows, and edge deployment.
 
 | Module | Topic |
 |---|---|
