@@ -1,4 +1,6 @@
-# Module 1 — Foundations of AI for Mobility
+# Module 1 — Foundations and Representation Learning
+
+*Weeks 1–3 of the {doc}`../syllabus`.*
 
 ## Overview
 

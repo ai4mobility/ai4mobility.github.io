@@ -1,29 +1,51 @@
-# Module 4 — AI Traffic Simulation and Digital Twin
+# Module 4 — Adapting and Orchestrating Models
+
+*Weeks 6 and 7 of the {doc}`../syllabus`.*
 
 ## Overview
 
-Traffic simulation has been a workhorse of transportation engineering for decades — microsimulators like SUMO, VISSIM, and Aimsun let us evaluate signal plans, geometric changes, and operational strategies before building them. AI is now reshaping this space in two ways: (1) **learned components inside simulators** — neural car-following models, RL-based signal controllers, learned demand generators; and (2) **digital twins** — continuously calibrated real-time replicas of corridors and networks that ingest live sensor data.
+You will almost never train a foundation model. You will adapt one, and then wire it into a
+workflow that does something useful.
+
+This module covers both halves. The first is **adaptation**: prompting, retrieval-augmented
+generation, fine-tuning, LoRA, instruction tuning, and RLHF — a ladder of increasingly
+expensive interventions, where the practical skill is knowing which rung a problem actually
+needs. Most transportation problems that people reach for fine-tuning to solve are retrieval
+problems.
+
+The second is **orchestration**: agentic AI, where a model calls tools, holds state across
+steps, invokes APIs, writes and runs code, and works through a task that no single prompt
+could complete. This is where the productivity gains in agency workflows are, and also where
+the failure modes get genuinely difficult to see.
 
 ## Learning objectives
 
 By the end of this module you will be able to:
 
-- Set up and run a basic microscopic traffic simulation in SUMO.
-- Train a reinforcement-learning agent to control a single signalized intersection.
-- Explain how neural network car-following and lane-changing models compare to calibrated classical models (IDM, Wiedemann, MOBIL).
-- Describe what makes a "digital twin" different from a traditional offline simulation, and what real-world data and computation it requires.
-- Critique a claimed RL-based traffic-control result — is it reproducible, does it transfer, does it beat actuated baselines?
+- Choose among prompting, RAG, fine-tuning, and LoRA for a given mobility task, and justify
+  the choice on cost, data requirements, and maintenance burden.
+- Build a retrieval pipeline over transportation documents, and evaluate retrieval quality
+  separately from generation quality.
+- Explain instruction tuning and RLHF, and state what alignment does and does not guarantee.
+- Design an agentic workflow with explicit tool calls and a human in the loop at the decision
+  points that matter.
+- Use AI-assisted coding on a real analysis task, and verify the result rather than trusting it.
+- Identify the conditions under which an agentic workflow should not be trusted with a
+  transportation decision.
 
 ## Topics
 
-- Microscopic, mesoscopic, and macroscopic traffic simulation
-- Calibration and validation of microsimulation models
-- Neural car-following and lane-changing models
-- Reinforcement learning for traffic signal control
-- Multi-agent RL for coordinated signal networks
-- Digital twins: architecture, data flows, calibration loops
-- Online learning and model drift
-- Surrogate models — replacing expensive simulators with neural emulators
+- Prompt design, context construction, and structured output
+- Retrieval-augmented generation: chunking, embedding, retrieval, reranking, grounding
+- Evaluating retrieval independently of the generator
+- Full fine-tuning vs. parameter-efficient methods; LoRA and adapters
+- Instruction tuning; RLHF and preference optimization
+- Alignment: what it addresses, and the failure modes it doesn't
+- Agent loops: tool use, memory, skills, planning, and termination
+- API calling, token cost, and latency budgets
+- AI-assisted coding for engineering and data analysis
+- Human-in-the-loop design: where to put the human, and where it's theater
+- Evaluating agentic systems when the output is a process, not a number
 
 ## Video lectures
 
@@ -31,11 +53,20 @@ By the end of this module you will be able to:
 
 ## Recommended readings
 
-- Treiber, Hennecke, & Helbing (2000). *Congested traffic states in empirical observations and microscopic simulations (Intelligent Driver Model).* Physical Review E.
-- Wei et al. (2019). *PressLight: Learning Max Pressure Control to Coordinate Traffic Signals in Arterial Network.* KDD.
-- Chen et al. (2020). *Toward A Thousand Lights: Decentralized Deep Reinforcement Learning for Large-Scale Traffic Signal Control.* AAAI.
-- Saroj et al. (2021). *Development of a Connected Corridor Real-Time Data-Driven Traffic Digital Twin Simulation Model.* J. Transp. Eng. A.
+- Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. *NeurIPS*.
+- Hu, E. J., et al. (2022). LoRA: Low-rank adaptation of large language models. *ICLR*.
+- Ouyang, L., et al. (2022). Training language models to follow instructions with human feedback. *NeurIPS*. *(InstructGPT — the RLHF reference.)*
+- Wei, J., et al. (2022). Chain-of-thought prompting elicits reasoning in large language models. *NeurIPS*.
+- Yao, S., et al. (2023). ReAct: Synergizing reasoning and acting in language models. *ICLR*.
+- Schick, T., et al. (2023). Toolformer: Language models can teach themselves to use tools. *NeurIPS*.
 
-## Lab
+## Labs
 
-*Coming soon:* Use SUMO and a reinforcement-learning library to train a Q-learning signal controller on a single intersection, then compare its performance against a fixed-time baseline and a fully-actuated baseline.
+- **A retrieval assistant over transportation documents.** Build a RAG pipeline over a real
+  corpus — a design manual, a set of agency reports, or a standards document — then measure
+  retrieval quality on its own before judging the answers. The lesson most people skip: when
+  the output is wrong, it is usually retrieval that failed, not the model.
+
+- **An agentic workflow for a recurring task.** Take an analysis you would otherwise do by
+  hand every month, decompose it into tool calls, and build an agent that completes it — with
+  a verification step you designed, not one the agent reports on itself.

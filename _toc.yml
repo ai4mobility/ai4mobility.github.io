@@ -10,7 +10,7 @@ parts:
       - file: prerequisites
       - file: syllabus
 
-  - caption: Course Modules
+  - caption: Part I — AI Foundations Through a Transportation Lens
     chapters:
       - file: module1/index
         sections:
@@ -22,6 +22,17 @@ parts:
       - file: module2/index
       - file: module3/index
       - file: module4/index
+
+  - caption: Part II — Applied Mobility Systems
+    chapters:
+      - file: module5/index
+      - file: module6/index
+      - file: module7/index
+      - file: module8/index
+
+  - caption: Capstone
+    chapters:
+      - file: capstone/index
 
   - caption: Resources
     chapters:

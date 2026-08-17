@@ -74,14 +74,27 @@ This course is organized around a problem-to-solution learning model. Students d
 
 ## Learning Modules
 
-Course materials are organized into four modules. Each contains lecture notes, a video walkthrough on YouTube, hands-on lab notebooks (runnable in Google Colab), and recommended readings. Enrolled students follow the week-by-week sequence on the {doc}`syllabus` page, which draws on these modules alongside additional material on generative AI, agentic workflows, and edge deployment.
+Course materials are organized into eight modules across two parts, plus a capstone. Each module contains lecture notes, a video walkthrough on YouTube, hands-on lab notebooks (runnable in Google Colab), and recommended readings. The module sequence follows the week-by-week schedule on the {doc}`syllabus` page.
 
-| Module | Topic |
-|---|---|
-| {doc}`module1/index` | Foundations of AI for Mobility |
-| {doc}`module2/index` | AI Sensing for Traffic Monitoring |
-| {doc}`module3/index` | AI for Driving Automation and Connectivity |
-| {doc}`module4/index` | AI Traffic Simulation and Digital Twin |
+**Part I — AI foundations through a transportation lens**
+
+| Module | Topic | Weeks |
+|---|---|---|
+| {doc}`module1/index` | Foundations and Representation Learning | 1–3 |
+| {doc}`module2/index` | Transformers, LLMs, and Multimodal Models | 4 |
+| {doc}`module3/index` | Generative AI and World Models | 5, 13 |
+| {doc}`module4/index` | Adapting and Orchestrating Models | 6–7 |
+
+**Part II — Applied mobility systems**
+
+| Module | Topic | Weeks |
+|---|---|---|
+| {doc}`module5/index` | Mobility Sensing and Edge AI | 8–9 |
+| {doc}`module6/index` | AI for Autonomous Driving and Connectivity | 10 |
+| {doc}`module7/index` | Traffic Simulation, Digital Twins, and Operations | 11 |
+| {doc}`module8/index` | Safety, Agency Practice, and Responsible Use | 12–13 |
+
+The {doc}`capstone/index` runs alongside from Week 8 and is worth half the course grade.
 
 ## Guest Speakers & Course Contributors
 

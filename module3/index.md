@@ -1,31 +1,51 @@
-# Module 3 — AI for Driving Automation and Connectivity
+# Module 3 — Generative AI and World Models
+
+*Weeks 5 and 13 of the {doc}`../syllabus`.*
 
 ## Overview
 
-This module covers AI's role in the vehicle itself — Advanced Driver Assistance Systems (ADAS), automated driving stacks, and the connectivity layer that lets vehicles share information with each other and with infrastructure (V2X). We focus on how AI components plug into the broader perception–prediction–planning–control pipeline, what they're good at, and where they fail.
+Everything so far has been discriminative: given data, predict a label or a value. Generative
+models ask the harder question — what does the *distribution* of plausible traffic states look
+like, and can we sample new ones from it?
+
+This matters in transportation for an unglamorous reason: the situations we most need to plan
+for are the ones we have the least data on. Crashes, evacuations, sensor failures, and unusual
+demand patterns are rare by definition. Generative models offer a way to reason about, and
+sometimes synthesize, the tail.
+
+The transportation on-ramp here is **macroscopic state reduction**. You already accept that a
+whole corridor's behavior can be summarized by a handful of numbers — density, flow, speed.
+A latent-variable model does the same thing, except it learns which few numbers to keep. This
+module builds from that idea through VAEs, GANs, and diffusion, and closes with world
+models — the attempt to learn a simulator rather than write one.
 
 ## Learning objectives
 
 By the end of this module you will be able to:
 
-- Map the major modules of an automated-driving stack (perception, localization, prediction, planning, control) and identify where AI is used in each.
-- Describe how production ADAS features (lane-keeping assist, adaptive cruise control, automatic emergency braking) work — and how AI changes them.
-- Analyze trajectory-prediction approaches (social pooling, graph neural networks, transformer-based predictors).
-- Reason about the safety, efficiency, and equity implications of AV adoption on traffic flow.
-- Explain V2X (V2V, V2I) technologies and how AI is being applied to cooperative perception, cooperative driving, and connected signal control.
+- Explain latent-variable modeling as a learned generalization of macroscopic state reduction.
+- Describe the VAE — encoder, decoder, reconstruction loss, and the KL term — and interpret
+  the structure of a latent space fitted to real traffic states.
+- Contrast GAN and diffusion training dynamics, and explain why diffusion largely displaced
+  GANs for high-fidelity generation.
+- Explain forward and reverse diffusion, and state precisely what the denoising network is
+  trained to predict.
+- Describe what a world model is, and what "learning the simulator" would require for traffic.
+- Evaluate a synthetic-data claim: does the generated data improve a downstream task relative
+  to a classical generator or simple augmentation?
 
 ## Topics
 
-- Architecture of modern automated-driving stacks (modular vs end-to-end)
-- Perception fusion: camera + lidar + radar
-- Behavior prediction: model-based vs learned
-- Motion planning under uncertainty
-- Lane-keeping and longitudinal control with neural networks
-- Imitation learning and end-to-end driving
-- V2V, V2I, V2X protocols (DSRC, C-V2X)
-- Cooperative perception and cooperative driving
-- Mixed-traffic dynamics: how AVs interact with human drivers
-- Safety, verification, and validation
+- Latent variables, manifolds, and dimensionality reduction
+- Autoencoders → variational autoencoders; the ELBO (referenced, not re-derived)
+- Reading a latent space: structure, interpolation, and fragmentation
+- Generative adversarial networks; mode collapse and training instability
+- Forward and reverse diffusion; denoising diffusion probabilistic models
+- What the denoiser actually learns, and why the conditional mean explains the blur
+- Latent diffusion and conditional generation
+- World models: learned dynamics, imagination-based rollout
+- Synthetic data for rare events — and how to tell whether it helped
+- Evaluating generative models when there's no ground-truth label
 
 ## Video lectures
 
@@ -33,11 +53,23 @@ By the end of this module you will be able to:
 
 ## Recommended readings
 
-- Yurtsever et al. (2020). *A Survey of Autonomous Driving: Common Practices and Emerging Technologies.* IEEE Access.
-- Bojarski et al. (2016). *End to End Learning for Self-Driving Cars.* (NVIDIA PilotNet — historical but illustrative.)
-- Casas et al. (2020). *Implicit Latent Variable Model for Scene-Consistent Motion Forecasting.* ECCV.
-- Talebpour & Mahmassani (2016). *Influence of connected and autonomous vehicles on traffic flow stability and throughput.* Transportation Research Part C.
+- Kingma, D. P., & Welling, M. (2014). Auto-encoding variational Bayes. *ICLR*.
+- Goodfellow, I., et al. (2014). Generative adversarial nets. *NeurIPS*.
+- Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. *NeurIPS*.
+- Rombach, R., Blattmann, A., Lorenz, D., Esser, P., & Ommer, B. (2022). High-resolution image synthesis with latent diffusion models. *CVPR*.
+- Ha, D., & Schmidhuber, J. (2018). World models. *NeurIPS*.
+- Hafner, D., Lillicrap, T., Ba, J., & Norouzi, M. (2020). Dream to control: Learning behaviors by latent imagination. *ICLR*. *(Dreamer.)*
 
-## Lab
+## Labs
 
-*Coming soon:* Train a small CNN-based lane-keeping policy from front-camera images, evaluate it in a simulator, and analyze failure cases.
+- **VAE on traffic state heatmaps.** Train an image VAE on speed heatmaps generated by a cell
+  transmission model, then read the latent space — what does the model choose to encode when
+  forced through a narrow bottleneck, and what does it throw away?
+
+- **From VAE to diffusion.** Rather than asserting that diffusion is better, this lab measures
+  where the VAE actually breaks on the same traffic data, then motivates the diffusion
+  formulation as a response to those specific, observed failures.
+
+- **Training the denoiser.** Build and train the denoising network in numpy, then confront the
+  payoff question: what is the network really predicting at each noise level, and why does the
+  conditional-mean answer explain everything you see in the samples?
