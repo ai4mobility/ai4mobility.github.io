@@ -1,13 +1,13 @@
 # Open Mobility AI Ecosystem
 
 <section class="resource-hero">
-  <div class="resource-eyebrow">USF · AI Mobility Technologies</div>
+  <div class="resource-eyebrow">USF · AI for Mobility</div>
   <h2>Open Mobility AI Ecosystem <span>Resource Hub</span></h2>
   <p>Curated tools, datasets, platforms, and agency-facing resources for practical AI applications in transportation and mobility.</p>
   <div class="resource-meta">
     <span>Graduate course resource</span>
     <span>Research-to-practice focus</span>
-    <span>Last updated: May 2026</span>
+    <span>Last updated: August 2026</span>
   </div>
 </section>
 
@@ -149,6 +149,29 @@
   </div>
 </section>
 
+<section class="resource-section" id="dotpilot">
+  <div class="resource-section-header">
+    <h2>Course Baseline Platform: DoTPilot</h2>
+    <span>MOTIF Lab project</span>
+  </div>
+  <p class="section-intro">DoTPilot is the MOTIF Lab's own open-source platform, built by forking sunnypilot (itself a fork of comma.ai's openpilot) and adding an LLM-based agent layer for transportation-agency use cases. It is the baseline repository for this course: rather than building vehicle sensing and control from scratch, students fork DoTPilot and add new agency-facing functions on top of it.</p>
+
+  <div class="resource-grid">
+    <article class="resource-card" data-resource data-search="dotpilot motif lab agency transportation fleet sunnypilot openpilot fork road damage inspection road asset inspection travel advisory advisories fl511 work zone workzone data exchange ai dashcam llm agent v2x traffic adas agency advanced">
+      <div class="resource-card-top"><p class="resource-category">Agency Platform</p><span class="level-badge level-advanced">Advanced</span></div>
+      <h3>DoTPilot</h3>
+      <p>MOTIF Lab's open-source agency fork of sunnypilot/openpilot for state and county transportation fleets — the course's baseline repository for capstone projects.</p>
+      <div class="tag-row"><span>Agency</span><span>AI Dashcam</span><span>Course Baseline</span></div>
+      <a class="resource-link" href="https://github.com/HaoZhouGT/DoTPilot" target="_blank" rel="noopener">github.com/HaoZhouGT/DoTPilot</a>
+    </article>
+  </div>
+
+  <div class="placeholder-panel">
+    <p><strong>What's implemented today.</strong> Three branches carry the active features: <code>llm-agent</code> runs a managed on-device agent that sends forward-camera crops to a vision model and flags pavement defects, flooding, blocked drainage, debris, shoulder erosion, faded markings, sign or signal damage, guardrail issues, bridge issues, and work zones as onroad findings; <code>v2x-traffic-advisor-f511</code> fetches public Florida 511 event data and filters it on-device by GPS position, vehicle heading, and route corridor to surface travel advisories, closures, incidents, and construction; and the fleet-log-export branches add a Wi-Fi-only, route-grouped Dropbox uploader for agency review. Every feature publishes advisory findings or warnings to the driver — none of them takes control of steering, throttle, or braking.</p>
+    <p><strong>How to build on it.</strong> Fork the repository and branch from whichever feature is closest to your project — <code>llm-agent</code> for a new hazard or road-asset class, <code>v2x-traffic-advisor-f511</code> for a new advisory source. Capstone teams are encouraged to extend the platform with additional inspection categories, new agency data feeds beyond FL511, alternate upload destinations, or a standards-based work-zone data exchange (e.g., <a href="https://ops.fhwa.dot.gov/wz/wzdx/index.htm" target="_blank" rel="noopener">WZDx</a>) rather than rebuilding the vehicle sensing and driver-assist stack underneath it.</p>
+  </div>
+</section>
+
 <section class="resource-section" id="simulation-v2x">
   <div class="resource-section-header">
     <h2>Simulation, V2X & Connected Vehicles</h2>
@@ -254,6 +277,7 @@
         <tr><td>Post-storm generator deployment</td><td>Dynamic routing and replanning</td><td>SUMO, GIS, optimization</td></tr>
         <tr><td>Near-miss detection</td><td>Video-based conflict and behavior analysis</td><td>VLMs, object detection, tracking</td></tr>
         <tr><td>Connected vehicle safety</td><td>V2X mobile and infrastructure applications</td><td>USDOT V2X mobile app, ITS CodeHub</td></tr>
+        <tr><td>Road damage inspection, travel advisories, work zone data</td><td>Agency-facing AI dashcam + advisory platform, forked and extended</td><td>DoTPilot, OpenAI Vision API, FL511</td></tr>
       </tbody>
     </table>
   </div>
