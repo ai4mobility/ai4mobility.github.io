@@ -1,6 +1,12 @@
 # Module 7 — Traffic Simulation, Digital Twins, and Operations
 
-*Week 11 of the {doc}`../syllabus`.*
+*Week 11 of the {doc}`../syllabus` — Nov 5, 2026.*
+
+## Class meetings
+
+| Date | Session topic | Due before class |
+|---|---|---|
+| Nov 5 | AI for traffic simulation, digital twins, and traffic operations: SUMO/CARLA, signal control, and transportation system management | Project progress update · *rotating project progress report* |
 
 ## Overview
 
@@ -32,6 +38,9 @@ By the end of this module you will be able to:
 - Describe what makes a digital twin different from an offline simulation, and what data,
   calibration loop, and computation it requires.
 - Use CARLA to generate sensor data for a perception or control component.
+- Identify where AI fits into day-to-day transportation systems management and operations —
+  signal retiming, ramp metering, incident detection and response, performance measurement —
+  and what data an agency would already have to have.
 - Reason about simulating conditions outside the calibration range — evacuation, incident, and
   hurricane mobility scenarios.
 - Critique a claimed RL traffic-control result: is it reproducible, does it transfer, does it
@@ -45,6 +54,10 @@ By the end of this module you will be able to:
 - Reinforcement learning for traffic signal control
 - Multi-agent RL for coordinated signal networks
 - Digital twins: architecture, data flows, calibration loops
+- Transportation systems management and operations (TSM&O): where the AI actually lands —
+  automated signal performance measures, adaptive and retiming workflows, ramp metering,
+  incident detection and response, work-zone and event management
+- Operational data an agency already owns: ATSPM, ATMS logs, detector health, probe travel times
 - Online learning and model drift
 - Surrogate models — replacing expensive simulators with neural emulators
 - CARLA and sensor-level simulation for driving stacks

@@ -1,6 +1,13 @@
 # Module 3 — Generative AI and World Models
 
-*Weeks 5 and 13 of the {doc}`../syllabus`.*
+*Weeks 5 and 13 of the {doc}`../syllabus` — Sept 24 and Nov 19, 2026.*
+
+## Class meetings
+
+| Date | Session topic | Due before class |
+|---|---|---|
+| Sept 24 | Generative AI foundations, including latent variables, VAE, GAN, diffusion models, and world models | **One-page project proposal** |
+| Nov 19 | World model applications in mobility *(shared session — model reliability and the cost, computation, and deployment side are covered in {doc}`../module8/index`)* | Draft final project materials |
 
 ## Overview
 
@@ -31,6 +38,8 @@ By the end of this module you will be able to:
 - Explain forward and reverse diffusion, and state precisely what the denoising network is
   trained to predict.
 - Describe what a world model is, and what "learning the simulator" would require for traffic.
+- Assess a mobility world-model application — scenario generation, driving-video prediction,
+  learned simulation — against what a calibrated conventional model already gives you.
 - Evaluate a synthetic-data claim: does the generated data improve a downstream task relative
   to a classical generator or simple augmentation?
 
@@ -46,6 +55,13 @@ By the end of this module you will be able to:
 - World models: learned dynamics, imagination-based rollout
 - Synthetic data for rare events — and how to tell whether it helped
 - Evaluating generative models when there's no ground-truth label
+
+*Week 13 returns to the last of these at the application level:*
+
+- Driving world models: generating drivable video, and what "drivable" has to mean to be useful
+- Scenario generation for testing ADAS and automated driving stacks
+- Learned traffic simulators, and what one would have to reproduce before it could replace a calibrated microsimulator
+- Where a world model beats writing the model down, and where it plainly does not
 
 ## Video lectures
 

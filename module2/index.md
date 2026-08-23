@@ -1,6 +1,12 @@
 # Module 2 — Transformers, LLMs, and Multimodal Models
 
-*Week 4 of the {doc}`../syllabus`.*
+*Week 4 of the {doc}`../syllabus` — Sept 17, 2026.*
+
+## Class meetings
+
+| Date | Session topic | Due before class |
+|---|---|---|
+| Sept 17 | Transformers, large language models, vision-language models, and multimodal foundation models | **Confirmed project team and topic**; short assignment as assigned |
 
 ## Overview
 

@@ -1,6 +1,12 @@
 # Module 6 — AI for Autonomous Driving and Connectivity
 
-*Week 10 of the {doc}`../syllabus`.*
+*Week 10 of the {doc}`../syllabus` — Oct 29, 2026.*
+
+## Class meetings
+
+| Date | Session topic | Due before class |
+|---|---|---|
+| Oct 29 | AI for vehicle intelligence and driver-assistance systems: longitudinal control, lane-keeping, vehicle data, and transportation system applications | **First project progress report** · *rotating project progress report or project clinic* |
 
 ## Overview
 
