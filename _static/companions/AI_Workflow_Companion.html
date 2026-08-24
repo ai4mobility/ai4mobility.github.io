@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is an AI Workflow?</title>
+<style>
+  :root{
+    --usf-green:#006747;--usf-green-d:#00543a;--usf-gold:#CFC493;--gold-deep:#b9a96a;
+    --ink:#1c2422;--muted:#5b6b66;--paper:#f6f8f7;--card:#fff;--line:#e2e8e5;
+    --ex:#1f8a70;--cl:#1f6f8b;--ge:#7b4fbd;--re:#c98a12;--pr:#e07a1f;--ju:#c0392b;--hu:#5b6b66;
+    --good:#2a9d8f;--bad:#e76f51;--mid:#e9b949;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 6px 22px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--paper);line-height:1.55}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding:30px 28px 24px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--usf-gold);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:27px;font-weight:750}
+  header.hero p{margin:0;max-width:900px;color:#e7efeb;font-size:15px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:4px;flex-wrap:wrap;padding:6px 20px}
+  nav.tabs button{border:none;background:transparent;font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 13px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  main{padding:24px 0 80px}
+  section.tab{display:none;animation:fade .25s ease}section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  h2.sec{font-size:22px;margin:6px 0 2px;color:var(--usf-green-d)}
+  .lead{color:var(--muted);max-width:900px;margin:0 0 18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow);margin-bottom:18px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+  @media(max-width:880px){.grid2,.grid3{grid-template-columns:1fr}}
+  h3{font-size:16px;margin:2px 0 8px;color:var(--ink)}
+  h4{font-size:14px;margin:14px 0 4px;color:var(--usf-green-d);text-transform:uppercase;letter-spacing:.06em}
+  p{margin:8px 0}small{color:var(--muted)}
+  ul{margin:8px 0;padding-left:20px}li{margin:5px 0}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .chip{border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:999px;cursor:pointer;transition:.15s}
+  .chip:hover{border-color:var(--usf-green)}
+  .chip.active{background:var(--usf-green);color:#fff;border-color:var(--usf-green)}
+  .tg{border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:13px;font-weight:600;padding:7px 13px;border-radius:9px;cursor:pointer}
+  .tg.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  table.syn{width:100%;border-collapse:collapse;font-size:13.5px}
+  table.syn th,table.syn td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.syn th{background:var(--paper);color:var(--usf-green-d);font-weight:700}
+  table.syn tr.gate td{background:#fdf6f4}
+  .callout{border-left:4px solid var(--usf-gold);background:#fbfaf3;padding:12px 16px;border-radius:0 10px 10px 0;margin:12px 0}
+  .warn{border-left:4px solid var(--bad);background:#fdeee9;padding:12px 16px;border-radius:0 10px 10px 0;margin:12px 0}
+  .lv{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;white-space:nowrap}
+  .lv-ex{background:var(--ex)}.lv-cl{background:var(--cl)}.lv-ge{background:var(--ge)}
+  .lv-re{background:var(--re)}.lv-pr{background:var(--pr)}.lv-ju{background:var(--ju)}
+  .lv-hu{background:#fff;color:var(--muted);border:1px solid var(--line)}
+  .tagline{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--usf-green);background:#e9f2ef;padding:3px 10px;border-radius:999px}
+  .flow{display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;margin:16px 0}
+  .fbox{flex:1;min-width:118px;border:1px solid var(--line);border-radius:11px;padding:11px 10px;background:var(--card);text-align:center}
+  .fbox b{display:block;font-size:13px}
+  .fbox small{display:block;font-size:11.5px;line-height:1.35;margin-top:3px}
+  .fbox.ai{border-color:var(--cl);background:#f2f8fa}
+  .fbox.gate{border-color:var(--ju);background:#fdf3f1}
+  .farrow{align-self:center;font-size:20px;color:var(--muted)}
+  .kpis{display:flex;gap:22px;flex-wrap:wrap;margin-top:10px}
+  .kpi{flex:1;min-width:160px;border:1px solid var(--line);border-radius:11px;padding:12px;background:var(--paper)}
+  .kpi b{display:block;font-size:14px;color:var(--usf-green-d)}
+  .kpi small{font-size:12.5px}
+  .qrow{border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:10px;background:var(--card)}
+  .qrow .qtext{font-size:14px;font-weight:600;margin-bottom:8px}
+  .qopts{display:flex;gap:6px;flex-wrap:wrap}
+  .qopt{border:1px solid var(--line);background:var(--paper);font-size:12px;font-weight:600;padding:5px 10px;border-radius:8px;cursor:pointer}
+  .qopt:hover{border-color:var(--ink)}
+  .qopt.right{background:#e7f5f2;border-color:#7fc9bb;color:#1c6b5e}
+  .qopt.wrong{background:#fdeee9;border-color:#f3cbbd;color:#a8412a}
+  .qfb{font-size:13px;margin-top:8px;color:var(--muted);display:none}
+  .qfb.show{display:block}
+  .score{font-size:14px;font-weight:700;color:var(--usf-green-d);margin-top:6px}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:10px 0}
+  .steplist{counter-reset:s}
+  .num{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--usf-green);color:#fff;font-size:11px;font-weight:700;align-items:center;justify-content:center;margin-right:7px;vertical-align:1px}
+  .star{color:var(--ju);font-weight:700}
+  footer{border-top:1px solid var(--line);padding:18px 0;color:var(--muted);font-size:12.5px}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · CGN 6933 · Week 1 companion</div>
+  <h1>What Is an AI <em>Workflow</em>?</h1>
+  <p>Before you pick a project, you need one idea straight: this course is not about training a model. It is about rebuilding a piece of transportation work that someone does today — slowly, manually, or not at all — so that an AI system does part of it and a human still owns the result. That thing is a workflow. You have been building workflows since your first semester; you just called them procedures, pipelines, and models.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap" id="tabbar">
+  <button class="active" data-t="def">1 · The idea</button>
+  <button data-t="ana">2 · Anatomy</button>
+  <button data-t="ex">3 · Four workflows</button>
+  <button data-t="quiz">4 · Try it</button>
+  <button data-t="base">5 · Baseline &amp; failure</button>
+  <button data-t="skills">6 · What you already know</button>
+  <button data-t="pick">7 · Pick a project</button>
+</div></nav>
+
+<main><div class="wrap">
+
+<!-- ==================== 1 · THE IDEA ==================== -->
+<section class="tab active" id="def">
+  <h2 class="sec">A model answers a question. A workflow gets a job done.</h2>
+  <p class="lead">Most AI coursework stops at the model: data in, prediction out, accuracy on a held-out set. That is one box. A workflow is the whole diagram around it — where the input comes from, what happens to the output, who is accountable, and what happens on the day the model is wrong.</p>
+
+  <div class="card">
+    <h3>Working definition</h3>
+    <p style="font-size:16px"><strong>An AI workflow is a repeatable sequence of steps that turns a real input into a decision or artifact someone acts on, where one or more steps are performed by an AI system and <em>every</em> step has an owner.</strong></p>
+    <div class="callout">Three words carry the weight. <b>Repeatable</b> — it runs again next week without you. <b>Acts on</b> — something changes in the world: a ticket is filed, a timing plan is pushed, a figure enters a paper. <b>Owner</b> — for each step, a named human or a named model, and for the whole thing, a named human.</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>Model thinking</h3>
+      <table class="syn">
+        <tr><th>Question</th><th>Answer</th></tr>
+        <tr><td>What is it?</td><td>Input → prediction</td></tr>
+        <tr><td>Judged by</td><td>Accuracy, F1, RMSE on a test set</td></tr>
+        <tr><td>Lives in</td><td>A notebook</td></tr>
+        <tr><td>When wrong</td><td>Fails silently</td></tr>
+        <tr><td>Done when</td><td>The metric stops improving</td></tr>
+      </table>
+    </div>
+    <div class="card"><h3>Workflow thinking</h3>
+      <table class="syn">
+        <tr><th>Question</th><th>Answer</th></tr>
+        <tr><td>What is it?</td><td>Trigger → steps → checkpoint → output → record</td></tr>
+        <tr><td>Judged by</td><td>Time, error rate, cost, and what it does on ugly cases</td></tr>
+        <tr><td>Lives in</td><td>Someone's actual week</td></tr>
+        <tr><td>When wrong</td><td>Fails at a checkpoint — because you put one there</td></tr>
+        <tr><td>Done when</td><td>Someone uses it twice without you in the room</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>You already build these</h3>
+    <p>Take the four-step travel demand model, stripped of its vocabulary:</p>
+    <div class="flow">
+      <div class="fbox"><b>Inputs</b><small>land use, network, survey</small></div><div class="farrow">→</div>
+      <div class="fbox"><b>Generation</b><small>trips produced/attracted</small></div><div class="farrow">→</div>
+      <div class="fbox"><b>Distribution</b><small>OD matrix</small></div><div class="farrow">→</div>
+      <div class="fbox"><b>Mode split</b><small>shares by mode</small></div><div class="farrow">→</div>
+      <div class="fbox"><b>Assignment</b><small>link volumes</small></div><div class="farrow">→</div>
+      <div class="fbox gate"><b>Validation</b><small>counts match? ★</small></div><div class="farrow">→</div>
+      <div class="fbox"><b>Forecast</b><small>a document someone plans around</small></div>
+    </div>
+    <p>Repeatable sequence. Defined inputs. Intermediate artifacts. A validation gate where a human decides whether the run is credible. An output that a capital program depends on. <strong>Nobody calls it AI, and its anatomy is identical to every workflow in this course.</strong></p>
+    <p>The same is true of an HCM level-of-service procedure, a crash-data screening for HSIP candidates, a signal retiming study, a simulation calibration loop, and the arc of your own thesis: collect → clean → fit → validate → compare to a baseline → write. Learning "AI workflows" is mostly learning where AI can take over a box, and — more importantly — which boxes it must never take over alone.</p>
+  </div>
+
+  <div class="card">
+    <h3>Why the course is built this way</h3>
+    <div class="kpis">
+      <div class="kpi"><b>Because agencies buy workflows, not models</b><small>No DOT procures "a 94% classifier." They procure a way to get inspections done, with a record of who approved what.</small></div>
+      <div class="kpi"><b>Because a workflow can be started before you know any AI</b><small>Mapping the current process and measuring its baseline needs zero machine learning. That is Round 1, and you can start it the week you pick a topic.</small></div>
+      <div class="kpi"><b>Because it makes your degree the scarce part</b><small>Anyone can call an API. Knowing which step is safe to automate, and what the answer looks like when it is right, is a transportation question.</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2 · ANATOMY ==================== -->
+<section class="tab" id="ana">
+  <h2 class="sec">Anatomy: six parts, and one taxonomy you will use all semester</h2>
+  <p class="lead">Every workflow in this course decomposes into the same six parts. Draw them in this order and you will not forget the two that students always skip — the checkpoint and the record.</p>
+
+  <div class="card">
+    <div class="flow">
+      <div class="fbox"><b>1 Trigger</b><small>what starts it: a schedule, an upload, a request, a drive</small></div><div class="farrow">→</div>
+      <div class="fbox"><b>2 Ingest</b><small>get the raw thing: video, PDF, CSV, CAN bus, API pull</small></div><div class="farrow">→</div>
+      <div class="fbox ai"><b>3 Transform</b><small>the AI steps: extract, classify, generate, retrieve, predict</small></div><div class="farrow">→</div>
+      <div class="fbox ai"><b>4 Act</b><small>write to a system: draft a ticket, post a file, call a tool</small></div><div class="farrow">→</div>
+      <div class="fbox gate"><b>5 Checkpoint ★</b><small>a human approves, edits, or rejects</small></div><div class="farrow">→</div>
+      <div class="fbox"><b>6 Record</b><small>log the input, output, and decision — this is your evaluation data</small></div>
+    </div>
+    <div class="callout"><b>Placement rule for the checkpoint:</b> it goes immediately before the first <em>irreversible</em> action — before something is filed, published, dispatched, billed, or pushed to a field controller. Everything upstream of that point can be automated aggressively, because a mistake there is cheap. Everything downstream is expensive to undo.</div>
+    <p><b>Part 6 is not paperwork.</b> The record of what the AI proposed and what the human changed is exactly the dataset you need to answer "is this actually working?" — and the only honest source of the failure modes you will report in Round 2. Design it in on day one; you cannot reconstruct it later.</p>
+  </div>
+
+  <h3 style="margin-top:24px">The AI-leverage taxonomy</h3>
+  <p class="lead">Label every step in your workflow with exactly one of these six. You will do it formally on slide 5 of your Round 1 presentation, so start now.</p>
+
+  <div class="card">
+    <table class="syn">
+      <tr><th style="width:130px">Label</th><th>What the step does</th><th>Mobility examples</th></tr>
+      <tr><td><span class="lv lv-ex">extraction</span></td><td>Pull structured fields out of unstructured input.</td><td>Crash narrative → vehicle count, maneuver, lighting condition. Permit PDF → parcel ID, dates, applicant. Scanned as-built → sign inventory.</td></tr>
+      <tr><td><span class="lv lv-cl">classification</span></td><td>Assign a label from a fixed set.</td><td>Is this pavement distress a pothole, a patch, or alligator cracking? Is this crash a rear-end? Is this frame worth a human's attention?</td></tr>
+      <tr><td><span class="lv lv-ge">generation</span></td><td>Produce draft text, code, or scenarios.</td><td>Draft the maintenance work order. Write the SUMO config for a scenario. Draft the methods paragraph. Synthesize a rare cut-in event for testing.</td></tr>
+      <tr><td><span class="lv lv-re">retrieval</span></td><td>Find the relevant passage or record among many.</td><td>Which MUTCD or Green Book clause governs this case? Which of 3,000 prior FDOT projects used this treatment? Which segment ID does this GPS point belong to?</td></tr>
+      <tr><td><span class="lv lv-pr">prediction</span></td><td>Estimate a number or a future state from data.</td><td>Travel time in 15 minutes. Expected crash frequency on a segment. EV energy consumption on a trip. Time-to-collision in the next 3 seconds.</td></tr>
+      <tr><td><span class="lv lv-ju">judgment</span></td><td>Weigh trade-offs, accept consequences, sign the result.</td><td>Should this intersection get the money? Is this crash record correct enough to enter the state database? Is this finding publishable? Do we close the lane?</td></tr>
+    </table>
+    <div class="warn"><b>The line runs after row five.</b> The first five are steps you can hand to a machine <em>because you can write a test for them</em> — you can hold out 200 labeled cases and measure. Judgment is not a step you can hand over; it is the reason a human stays in the loop. In your Round 1 presentation you must mark at least one step <b>"AI must not act alone here"</b> and give your reason. That slide is not a formality — it is the part practitioners on the advisory committee will read first.</div>
+    <p><b>A useful test if you are unsure:</b> ask "if this step is wrong and nobody notices for six months, what does it cost?" Cheap and visible → automate it. Expensive and invisible → that is where the checkpoint goes.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>Pipeline or loop?</h3>
+      <p>A <b>pipeline</b> runs each step once, in order. Most inspection, coding, and reporting workflows are pipelines.</p>
+      <p>A <b>loop</b> — propose, act, observe, revise — repeats until a stopping rule is met. Simulation calibration is a loop. So is hyperparameter search, and so is an agent that keeps querying a tool until it has an answer.</p>
+      <p>Loops are more powerful and much easier to get wrong, because <em>you</em> must supply the objective and the stopping rule. An optimizer with a badly chosen objective will happily find parameters that match your counts and violate the fundamental diagram. We build agentic loops on <b>Oct 8</b>; start with a pipeline.</p>
+    </div>
+    <div class="card"><h3>Where the semester plugs in</h3>
+      <table class="syn">
+        <tr><th>Date</th><th>What it gives your workflow</th></tr>
+        <tr><td>Sept 10</td><td>Representations — put images, text, and trajectories into one pipeline</td></tr>
+        <tr><td>Sept 17</td><td>Transformers &amp; vision-language models — the extraction and classification steps</td></tr>
+        <tr><td>Sept 24</td><td>Generative models — synthesis, rare-event scenarios, world models</td></tr>
+        <tr><td>Oct 1</td><td>RAG, fine-tuning, <b>evaluation</b> — makes agency manuals usable and results defensible</td></tr>
+        <tr><td>Oct 8</td><td>Agentic AI, tool use, API calling — turns a pipeline into a loop</td></tr>
+        <tr><td>Oct 15 / 22</td><td>Sensing and edge AI — puts the workflow on a vehicle or a roadside box</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 3 · FOUR WORKFLOWS ==================== -->
+<section class="tab" id="ex">
+  <h2 class="sec">Four worked workflows</h2>
+  <p class="lead">Two from agency practice, two from research. Pick one and read the step table — the point is not the AI, it is how few of the steps are AI and how much of the work is knowing what the steps <em>are</em>.</p>
+
+  <div class="btnrow" id="wfPicker"></div>
+
+  <div class="card" id="wfCard"></div>
+
+  <div class="card">
+    <h3>Eight more, in one line each</h3>
+    <ul>
+      <li><b>Traveler advisory filtering.</b> Pull the statewide FL511 event feed, keep only what matters for this vehicle's route and heading, speak it aloud. <span class="lv lv-re">retrieval</span> <span class="lv lv-cl">classification</span> — a live DoTPilot branch.</li>
+      <li><b>Literature screening.</b> 900 abstracts → 60 worth reading → an evidence table with the extracted design parameters. <span class="lv lv-cl">classification</span> <span class="lv lv-ex">extraction</span></li>
+      <li><b>Public comment synthesis.</b> 1,200 comments from a corridor study → themed summary with representative quotes and counts, for the planning report. <span class="lv lv-cl">classification</span> <span class="lv lv-ge">generation</span></li>
+      <li><b>Signal request triage.</b> Citizen complaints and 311 tickets → routed to the right district engineer, with the relevant timing plan and count history attached. <span class="lv lv-cl">classification</span> <span class="lv lv-re">retrieval</span></li>
+      <li><b>Work-zone plan review.</b> A submitted TTC plan → check against the MUTCD clauses that govern it, flag the three items a reviewer should look at first. <span class="lv lv-re">retrieval</span> <span class="lv lv-ju">judgment stays human</span></li>
+      <li><b>Transit reliability reporting.</b> AVL feed → on-time performance by route → a monthly narrative that says what changed and why. <span class="lv lv-pr">prediction</span> <span class="lv lv-ge">generation</span></li>
+      <li><b>ADAS log triage.</b> Hours of driving logs → the 40 seconds where lane keeping disengaged, clipped and labeled with context. <span class="lv lv-cl">classification</span> <span class="lv lv-ex">extraction</span></li>
+      <li><b>EV charging siting support.</b> Parcel, utility, and traffic layers → candidate sites with a written rationale a planner can defend in a public meeting. <span class="lv lv-pr">prediction</span> <span class="lv lv-ge">generation</span></li>
+    </ul>
+    <p><small>Any of these is a legitimate capstone. So is a workflow you bring from your own lab, your assistantship, or your employer — those are usually the best ones, because the baseline numbers already exist and someone actually wants the answer.</small></p>
+  </div>
+</section>
+
+<!-- ==================== 4 · QUIZ ==================== -->
+<section class="tab" id="quiz">
+  <h2 class="sec">Try it: label the step</h2>
+  <p class="lead">Ten steps pulled from real mobility workflows. Give each one a leverage label. There is one intended answer per item, but the interesting ones are where you disagree — bring those to class.</p>
+  <div class="legend">
+    <span class="lv lv-ex">extraction</span><span class="lv lv-cl">classification</span><span class="lv lv-ge">generation</span>
+    <span class="lv lv-re">retrieval</span><span class="lv lv-pr">prediction</span><span class="lv lv-ju">judgment</span>
+  </div>
+  <div id="quizBox"></div>
+  <div class="card"><div class="score" id="scoreOut">Answered 0 of 10.</div>
+    <p><small>If you scored well on the first five and hesitated on judgment, that is the right instinct. Judgment steps are rarely labeled as such by the person doing them — they are buried inside a step that looks routine. Finding them is the analytical work of Round 1.</small></p>
+  </div>
+</section>
+
+<!-- ==================== 5 · BASELINE ==================== -->
+<section class="tab" id="base">
+  <h2 class="sec">"Better" is a comparison. Better than <em>what</em>?</h2>
+  <p class="lead">This is the question that decides your grade, and the one an advisory committee member will ask in the first ninety seconds. A workflow with no baseline is a demo, and a demo is worth less than a measured 12% improvement on something boring.</p>
+
+  <div class="card">
+    <h3>The four numbers to bring back from your partner</h3>
+    <div class="kpis">
+      <div class="kpi"><b>How long?</b><small>Minutes per case, hours per week. Measure one real case end to end if nobody knows.</small></div>
+      <div class="kpi"><b>How often?</b><small>Cases per week. A 90% time saving on something done twice a year is not a project.</small></div>
+      <div class="kpi"><b>How wrong, how often?</b><small>Current error rate, and how errors are caught today. Often the answer is "they aren't" — that <em>is</em> a finding.</small></div>
+      <div class="kpi"><b>What does an error cost?</b><small>A rework hour? A wasted truck roll? A miscoded fatal crash that skews HSIP rankings for five years?</small></div>
+    </div>
+    <div class="callout">If your partner does not measure these, say so and explain how you estimated them. A team that reports <em>"the district does not track this; we timed four cases ourselves and got 22–31 minutes"</em> is doing the work correctly. A team that reports a confident number it invented is not.</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>Choosing the comparison</h3>
+      <p>Your baseline is <b>the tuned conventional method</b>, not "nothing" and not "a smaller neural network."</p>
+      <ul>
+        <li>Beating a manual process → compare on time <em>and</em> agreement with the human's answer.</li>
+        <li>Beating a classical model → tune it properly first. A well-fit IDM, a calibrated HCM procedure, or a negative-binomial SPF is a serious opponent.</li>
+        <li>Beating a keyword search → it is a strong baseline for retrieval, and it is free.</li>
+      </ul>
+      <p>In this course a <b>tuned classical baseline is worth more to your grade than a second neural architecture.</b> That is not a rhetorical position; it is how the rubric works.</p>
+    </div>
+    <div class="card"><h3>Five ways an AI workflow fails</h3>
+      <ul>
+        <li><b>Silent failure.</b> It returns a fluent, plausible, wrong answer with no error message. Classical code crashes; models improvise.</li>
+        <li><b>Distribution shift.</b> Fine on the clear-day daytime footage you tested; useless at night, in rain, in a work zone, or on the district that paints its markings differently.</li>
+        <li><b>Automation bias.</b> The human checkpoint becomes a rubber stamp by week three. Design against this: show the reviewer the evidence, not just the conclusion.</li>
+        <li><b>Cost at scale.</b> Fine for 50 frames, unaffordable for 50,000. Get the cost per case early — this is a design constraint, not an afterthought.</li>
+        <li><b>Governance.</b> Video of identifiable people, addresses, employee records. Ask what may leave the building <em>before</em> you build around a cloud API. Identifiable data means instructor approval and IRB consultation before any collection.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>The two questions that end a weak project early</h3>
+    <p><b>"And then what?"</b> — Your workflow outputs a number, a label, a ranked list. Who receives it, and what do they do differently? If the honest answer is "nothing," the problem is the framing, not the model.</p>
+    <p><b>"How would you know if it got worse?"</b> — Six months after you graduate, the camera is repositioned, the vendor updates the model, the reporting form changes. What in your workflow notices? If nothing notices, you have built a demonstration, not a workflow.</p>
+  </div>
+</section>
+
+<!-- ==================== 6 · SKILLS ==================== -->
+<section class="tab" id="skills">
+  <h2 class="sec">What you already know how to do</h2>
+  <p class="lead">You may be the only person in the room who has not trained a neural network from scratch, and it is worth being clear about how little that matters here. The scarce skill in an AI workflow is not building the model. It is knowing which step is safe to automate, what the output should look like when it is right, and how to prove it. All three are transportation questions.</p>
+
+  <div class="card">
+    <table class="syn">
+      <tr><th style="width:270px">What your program gave you</th><th>What it buys you in an AI workflow</th></tr>
+      <tr><td><b>Traffic flow theory</b><br><small>fundamental diagram, shockwaves, capacity, car-following</small></td>
+        <td>You know what a physically impossible output looks like. Speed rising with density, flow above capacity, a 0.4 s headway held for a minute, a "predicted" queue that discharges faster than saturation flow — these are lie detectors you can code as automatic checks on any model's output. <b>A generative or predictive model has no physics; you supply it.</b> This is the single most transferable thing you own.</td></tr>
+      <tr><td><b>Statistics &amp; econometrics</b><br><small>sampling, inference, confounding, model selection</small></td>
+        <td>You know that accuracy on a test set is not evidence of impact, that the test set has to be split by site or by day and not at random, that a rare-event problem needs more than a confusion matrix, and that "we improved from 0.81 to 0.83" with n=60 is noise. You will design the evaluation while everyone else designs the model.</td></tr>
+      <tr><td><b>Travel demand modeling</b><br><small>four-step, calibration, validation targets</small></td>
+        <td>You have already built, calibrated, and defended a multi-stage pipeline whose stages feed each other and whose errors compound. That <em>is</em> workflow engineering. You also know what a validation target is and what it costs to miss one.</td></tr>
+      <tr><td><b>Traffic simulation</b><br><small>SUMO, VISSIM, CORSIM, CARLA</small></td>
+        <td>Two things nobody else brings: you can build the environment an agent loops against, and you can generate labeled data for events too rare or too dangerous to collect in the field. Half the "we have no labels" problems in this course are solvable in a simulator by someone who knows one.</td></tr>
+      <tr><td><b>Design standards &amp; manuals</b><br><small>HCM, MUTCD, AASHTO Green Book, FDOT Design Manual, agency SOPs</small></td>
+        <td>Domain rules become three concrete things: the <em>specification</em> the workflow must satisfy, the <em>retrieval corpus</em> a language model reads from, and the <em>acceptance test</em> that catches an answer which is fluent but out of policy. You can tell the difference between a plausible answer and a compliant one. A model cannot.</td></tr>
+      <tr><td><b>Safety analysis</b><br><small>SPFs, HSM, crash typing, countermeasure selection</small></td>
+        <td>You understand asymmetric error costs and liability. That is precisely the reasoning that places the human checkpoint and defines "AI must not act alone here." You also know the difference between correlation in a crash database and a countermeasure that works.</td></tr>
+      <tr><td><b>Field data collection &amp; sensors</b><br><small>counts, probes, GPS, CAN, video, lidar</small></td>
+        <td>You know what dirty data looks like before a model does — dropouts, clock drift, unit errors, a detector stuck at 255, a GPS point in the Gulf of Mexico. You also know what personally identifiable information you are holding and what that obliges you to do.</td></tr>
+      <tr><td><b>ITS &amp; TSMO operations</b><br><small>ATMS, work orders, districts, procurement</small></td>
+        <td>You know the system of record, who signs, what a truck roll costs, and why a workflow that cannot write into the existing database will never be used no matter how good it is. Deployment reality is a competitive advantage in this room.</td></tr>
+      <tr><td><b>Programming, GIS, databases</b><br><small>Python, R, pandas, spatial joins, SQL</small></td>
+        <td>The glue. Realistically, 70% of the code in your project is ingest, joins, schema wrangling, and plumbing between an API and a dataframe. This is the part AI coding assistants help with most — and the part where an assistant's silent mistake does the most damage, because it looks like it worked.</td></tr>
+      <tr><td><b>Technical writing &amp; agency reporting</b><br><small>memos, TRB papers, public meetings</small></td>
+        <td>The real output of most workflows is a document someone signs or presents. Knowing the format, the audience, and what a reviewer will attack is the difference between a result and a result that gets used.</td></tr>
+    </table>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>The honest inventory</h3>
+      <p>Things you probably cannot do yet, and when we cover them: training and adapting a model (Sept 3 – Oct 1), using a vision-language model on your own images (Sept 17), retrieval over your own documents (Oct 1), getting a model to call tools in a loop (Oct 8), running any of it on a device in a vehicle (Oct 22).</p>
+      <p>None of these blocks the start of your project, because <b>Round 1 requires no AI at all</b> — it asks you to map the workflow, measure the baseline, and classify the steps. Every one of those is something you can do this week.</p>
+    </div>
+    <div class="card"><h3>How the two halves meet</h3>
+      <p>The recurring failure in AI-for-transportation work is a technically excellent system solving a problem no agency has, evaluated against nothing, deployed nowhere. The mirror-image failure is a real problem attacked with a method the team does not understand well enough to know when it is lying.</p>
+      <p>You are being asked to hold both ends: <b>bring the problem and the judgment, learn enough of the method to be dangerous, and never stop asking what the result is compared against.</b> That combination is rarer than either half, and it is what the advisory committee is coming to evaluate on December 3.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 7 · PICK ==================== -->
+<section class="tab" id="pick">
+  <h2 class="sec">From workflow to project</h2>
+  <p class="lead">You will see a set of candidate topics in a moment, and you may modify one or propose your own. Either way, run the idea through these five questions before you commit. They take ten minutes and they save weeks.</p>
+
+  <div class="card">
+    <h3>Five questions</h3>
+    <p><span class="num">1</span><b>Whose job is this?</b> Name a person or a role — a district maintenance engineer, a signal timing engineer, a transit planner, a PhD student in your lab. If you cannot name anyone, you have a topic, not a workflow.</p>
+    <p><span class="num">2</span><b>Can you watch it happen once?</b> An hour of watching someone do the work beats a week of assuming. Ask them to narrate. The pain point is almost never the step you guessed.</p>
+    <p><span class="num">3</span><b>Do you have the four baseline numbers?</b> How long, how often, how wrong, what an error costs. If not, getting them <em>is</em> your first deliverable.</p>
+    <p><span class="num">4</span><b>Can you label every step?</b> Extraction, classification, generation, retrieval, prediction, or judgment — and at least one marked <span class="star">"AI must not act alone here."</span></p>
+    <p><span class="num">5</span><b>Can you get the data before October?</b> Data access is what kills projects, not modeling. Topics are confirmed <b>Sept 17</b> and presentations are <b>Dec 3</b>. Confirm access before you commit, not after.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>Scope tests</h3>
+      <ul>
+        <li><b>The two-step rule.</b> Automate two steps well rather than eight badly. A workflow where AI helps with two of six steps, with evidence, beats a full pipeline nobody can check.</li>
+        <li><b>The ugly-case rule.</b> Before you build, find the ten cases that will break it — night, rain, a form filled out wrong, a segment with no ID. If you cannot name ten, you do not understand the work yet.</li>
+        <li><b>The demo rule.</b> A working narrow thing beats an ambitious broken thing. Every time.</li>
+        <li><b>The integration rule.</b> Teams that split by component and never integrate discover the integration problems in the last week. Integrate early with placeholder pieces.</li>
+      </ul>
+    </div>
+    <div class="card"><h3>What is due, and when</h3>
+      <table class="syn">
+        <tr><th>Due before class</th><th>Deliverable</th></tr>
+        <tr><td>Sept 3</td><td>Project interest survey — topics, skills, preferred role</td></tr>
+        <tr><td>Sept 10</td><td>Preliminary idea memo — a short list of directions</td></tr>
+        <tr><td>Sept 17</td><td>Confirmed team and topic</td></tr>
+        <tr><td>Sept 24</td><td>One-page proposal — problem, data, method, baseline, output</td></tr>
+        <tr><td>Oct 15</td><td>Final project proposal (graded)</td></tr>
+        <tr><td>Dec 3</td><td>Presentations to the class and the advisory committee</td></tr>
+      </table>
+      <p><small>Round 1 of the rotation asks for exactly five slides: the workflow in one picture, the baseline, the pain point, the data on hand, and the AI-leverage classification. Nothing on that list requires AI.</small></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Your first artifact — do this before you write anything else</h3>
+    <p>One page. Boxes and arrows. For every box: <b>what comes in, what goes out, and who owns it today.</b> Put a star ★ at the first irreversible action. Shade the boxes you believe a machine could do, and write one sentence under each shaded box saying how you would know it was wrong.</p>
+    <div class="callout">If you can draw that page for a real job that a real person does, you have a project. Everything else this semester is learning how to fill the shaded boxes — and learning to defend the ones you left unshaded.</div>
+  </div>
+</section>
+
+</div></main>
+
+<footer><div class="wrap">AI for Mobility · CGN 6933 · Fall 2026 · University of South Florida — Week 1 companion. Course site: ai4mobility.github.io</div></footer>
+
+<script>
+/* ---------- tabs ---------- */
+document.getElementById('tabbar').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#tabbar button').forEach(function(x){x.classList.remove('active')});
+  b.classList.add('active');
+  document.querySelectorAll('section.tab').forEach(function(s){s.classList.remove('active')});
+  document.getElementById(b.dataset.t).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- workflow data ---------- */
+var LV = {ex:['lv-ex','extraction'],cl:['lv-cl','classification'],ge:['lv-ge','generation'],
+          re:['lv-re','retrieval'],pr:['lv-pr','prediction'],ju:['lv-ju','judgment'],hu:['lv-hu','human only']};
+
+var WF = [
+{
+ id:'crash', chip:'Crash report → coded record', tag:'Agency practice',
+ title:'Officer crash report → coded crash record → safety screening',
+ job:'Every crash report written by an officer has to become a structured record — dozens of coded fields — before anyone can use it for network screening, before-after studies, or an HSIP application. In Florida that record lands in the statewide crash system that analysts query through Signal Four Analytics.',
+ today:'A trained coder reads the narrative and the diagram, fills the fields, locates the crash on the roadway network, and a supervisor spot-checks a sample.',
+ steps:[
+  ['Report arrives from the reporting agency','clerk','hu',''],
+  ['Read the narrative and the crash diagram','coder','hu','The unstructured part — free text plus a hand-drawn or template diagram.'],
+  ['Pull fields: vehicles, maneuvers, lighting, surface, injuries','coder','ex','A language model reads the narrative and proposes each field with the sentence it came from.'],
+  ['Assign manner of collision and crash type','coder','cl','A fixed label set — exactly what classification is for.'],
+  ['Locate the crash on the roadway network','coder / GIS','re','Match the described location to a segment or intersection ID in the roadway inventory.'],
+  ['Cross-check against roadway inventory for contradictions','QC analyst','cl','Flag records where the coded facts and the inventory disagree — a divided-highway head-on, a signal crash at an unsignalized node.'],
+  ['Approve the record and commit it to the database','supervisor','ju','★ FIRST IRREVERSIBLE ACTION. A miscoded fatal or a wrong segment ID propagates into every screening and every study for years.'],
+  ['Analyst screens the network for candidate sites','analyst','pr','Downstream, and a different workflow.']
+ ],
+ gate:6,
+ pain:'Reading and coding is slow and monotonous, backlogs build after storms and holiday weekends, and consistency drifts between coders and between districts.',
+ enters:'Extraction and classification carry almost all of the value. Retrieval does the location match. Notice that no prediction happens anywhere in this workflow — a large, useful, fundable AI workflow with no forecasting in it at all.',
+ breaks:['Ambiguous narratives where the officer was uncertain — the model will not be uncertain, which is worse.','Rare crash types are exactly the ones safety analysis cares about and exactly the ones with the fewest training examples.','A supervisor who approves 200 records a day stops reading. Show the source sentence next to every proposed field so review stays cheap and real.']
+},
+{
+ id:'asset', chip:'Dashcam → inspection log', tag:'Agency practice',
+ title:'Forward-camera video → roadway asset and hazard inspection log',
+ job:'Districts need to know the condition of signs, markings, guardrail, and pavement across thousands of lane-miles. Dedicated inspection vehicles are expensive and infrequent; ordinary fleet vehicles drive those roads every day.',
+ today:'Scheduled windshield surveys, plus complaint-driven inspection. Between surveys, condition data is stale and coverage is uneven.',
+ steps:[
+  ['Vehicle drives its normal route','driver','hu','The trigger is free — the trip was happening anyway.'],
+  ['Capture frames with GPS, heading, and timestamp','device','hu','This is the openpilot / comma 3x layer in DoTPilot.'],
+  ['Discard frames not worth analyzing','edge model','cl','Blur, night, wipers, stopped in traffic. Cuts cost by an order of magnitude before any expensive call.'],
+  ['Describe and classify condition in the frame','vision-language model','cl','Faded marking, damaged sign, pothole, obstructed sign, debris.'],
+  ['Extract what is identifiable: sign legend, mile marker','vision-language model','ex','Turns a picture into a record that can be joined to the asset inventory.'],
+  ['Match the detection to an asset ID and segment','geo join','re','Without this the finding is a photo, not a maintenance record.'],
+  ['Collapse repeat detections across passes and days','clustering','cl','Otherwise the same pothole becomes forty tickets. Repeat detection is also your free confidence signal.'],
+  ['Draft a maintenance ticket with photo, location, severity','language model','ge','Draft. Not filed.'],
+  ['Inspector reviews the draft and files or rejects it','inspector','ju','★ FIRST IRREVERSIBLE ACTION. Filing dispatches a crew and spends money.'],
+  ['Log the decision: filed, edited, rejected, and why','system','hu','This is your evaluation dataset and your precision estimate. Build it in from the start.']
+ ],
+ gate:8,
+ pain:'Coverage and staleness. The value is not better detection than a human inspector — it is a hundred times more looks per month at near-zero marginal cost.',
+ enters:'Classification, extraction, generation, and a retrieval-style geo join. The DoTPilot repository is the designated baseline platform for this workflow: it already runs vision-model calls on forward-camera crops. Fork it and add your own agency-facing function rather than starting from a blank file.',
+ breaks:['Night, rain, sun glare, and dirty windshields. Report performance by condition or the number is meaningless.','Hallucinated defects — a shadow becomes a pothole. Precision matters more than recall here, because every false positive costs a crew visit.','Privacy: forward-facing video captures license plates, pedestrians, and driveways. Identifiable data requires instructor approval and IRB consultation before any collection.','Double counting across passes, which silently inflates every count you report.']
+},
+{
+ id:'traj', chip:'Trajectories → calibrated model', tag:'Research',
+ title:'Raw trajectory / CAN data → calibrated car-following model → a defended finding',
+ job:'You want to say something about how vehicles — human-driven or ACC-equipped — actually behave, and support it with data. This is the shape of a large fraction of transportation dissertations.',
+ today:'Manual cleaning scripts, hand-tuned event segmentation, a fitting routine, and a comparison that often is not made.',
+ steps:[
+  ['Acquire trajectories: CAN logs, I-24 MOTION, highD, openACC','you','hu','Access and licensing before anything else.'],
+  ['Clean: dropouts, GPS jumps, unit errors, clock drift','script','cl','Anomaly detection is a classification step. It is also where projects quietly die.'],
+  ['Segment into valid car-following events','script + you','cl','Leader present, no lane change, minimum duration. The rule set is a modeling decision, not a preprocessing detail.'],
+  ['Retrieve prior parameter ranges from the literature','you','re','What has been reported for this vehicle class, this model, this facility type?'],
+  ['Fit parameters (IDM, Gipps, OVM, or a neural model)','optimizer','pr','Automatable, and the least interesting step.'],
+  ['Validate on held-out events, split by driver or by site','you','hu','Random splits leak. Split by the unit you want to generalize over.'],
+  ['Compare against a properly tuned classical baseline','you','ju','★ THE STEP THAT DECIDES WHETHER THE FINDING STANDS. An untuned baseline is not a comparison, it is a straw man.'],
+  ['Check outputs against traffic flow theory','you','ju','Does the calibrated model reproduce a sane fundamental diagram? Are the headways physically possible? Is string stability where theory says it should be?'],
+  ['Generate figures, tables, and draft prose','you + assistant','ge','Fast to draft, and every number in it is still yours to verify.']
+ ],
+ gate:6,
+ pain:'Cleaning and segmentation eat most of the calendar; the comparison that would make the result defensible often gets skipped for lack of time.',
+ enters:'Anomaly detection in cleaning, code generation for the fitting harness, retrieval for the literature, drafting for the write-up. What stays yours: what counts as a valid event, what counts as a good fit, and whether the result is physically believable.',
+ breaks:['An AI-written cleaning script that silently drops 40% of your data and improves your fit. Always report how many events survived each filter.','Fitting a model that matches trajectories but produces an impossible fundamental diagram. Your traffic flow theory is the only thing that catches this.','Random train/test splits across a single driver — near-perfect scores that mean nothing.','Drafted prose that overstates what the numbers support. You sign it, so you own it.']
+},
+{
+ id:'sim', chip:'Simulation calibration loop', tag:'Research + operations',
+ title:'Simulation calibration as an agentic loop',
+ job:'A network model has to reproduce observed conditions before anyone will believe what it says about a scenario that has not happened yet. Calibration is iterative, tedious, and largely judgment about which knob to turn next.',
+ today:'An engineer adjusts parameters, reruns, compares to counts and speeds, and repeats — sometimes for weeks — until the acceptance criteria are met.',
+ steps:[
+  ['Build the network and load demand','you','hu','The modeling work. Not automatable, and not the bottleneck.'],
+  ['Assemble field observations: counts, speeds, travel times','you','hu','Your ground truth, with its own error bars.'],
+  ['Define the objective and the acceptance criteria','you','ju','★ THE STEP THAT MAKES THE LOOP SAFE OR DANGEROUS. GEH below 5 on 85% of links is a criterion; "looks about right" is not.'],
+  ['Propose a parameter set','agent','pr','A search step: Bayesian optimization, an evolutionary method, or an LLM agent reasoning over prior runs.'],
+  ['Run the simulation','tool call','hu','The agent calls SUMO or VISSIM as a tool and waits for output.'],
+  ['Compare simulated to observed; compute the objective','script','hu','Deterministic. Keep it that way.'],
+  ['Decide whether to stop, continue, or change strategy','agent + you','ju','A stopping rule you wrote. Loops without one burn compute and overfit.'],
+  ['Check the winning parameters for physical plausibility','you','ju','Did it match the counts with a 0.4 s reaction time and a 3-metre jam spacing? Then it matched the counts by being wrong.'],
+  ['Document the calibration for whoever inherits the model','you + assistant','ge','What was tuned, over what range, against what data, with what result.']
+ ],
+ gate:2,
+ pain:'It is slow, it is repetitive, and the tacit knowledge of which knob to turn lives in one person\'s head and leaves when they do.',
+ enters:'This is the cleanest example of an agentic loop in transportation: propose → act → observe → revise, with the simulator as the tool. It is also the clearest illustration of why loops need a human. The agent optimizes exactly what you wrote down, and nothing else.',
+ breaks:['Objective gaming — matching counts by violating car-following physics. Add plausibility constraints as hard bounds, not as hopes.','Overfitting to one day of counts. Hold out a day, or a season.','Runaway cost: a thousand simulation runs is real money and real hours. Cap the budget in the stopping rule.','Nobody can reproduce the calibration six months later. The documentation step is not optional.']
+}
+];
+
+function stepRow(s, isGate){
+  var lv = LV[s[2]];
+  return '<tr class="'+(isGate?'gate':'')+'">'+
+    '<td>'+(isGate?'<span class="star">★ </span>':'')+s[0]+'</td>'+
+    '<td><small>'+s[1]+'</small></td>'+
+    '<td><span class="lv '+lv[0]+'">'+lv[1]+'</span></td>'+
+    '<td><small>'+s[3]+'</small></td></tr>';
+}
+
+function renderWF(id){
+  var w = WF.filter(function(x){return x.id===id})[0];
+  var rows = w.steps.map(function(s,i){return stepRow(s, i===w.gate)}).join('');
+  var breaks = w.breaks.map(function(b){return '<li>'+b+'</li>'}).join('');
+  document.getElementById('wfCard').innerHTML =
+    '<span class="tagline">'+w.tag+'</span>'+
+    '<h3 style="font-size:18px;margin-top:8px">'+w.title+'</h3>'+
+    '<p>'+w.job+'</p>'+
+    '<p><b>How it is done today:</b> '+w.today+'</p>'+
+    '<h4>The steps</h4>'+
+    '<table class="syn"><tr><th style="width:33%">Step</th><th style="width:13%">Owner today</th><th style="width:14%">Leverage</th><th>Note</th></tr>'+rows+'</table>'+
+    '<div class="grid2" style="margin-top:16px">'+
+      '<div><h4>The pain point</h4><p>'+w.pain+'</p><h4>Where AI enters</h4><p>'+w.enters+'</p></div>'+
+      '<div><h4>What breaks</h4><ul>'+breaks+'</ul></div>'+
+    '</div>';
+  document.querySelectorAll('#wfPicker .chip').forEach(function(c){
+    c.classList.toggle('active', c.dataset.w===id);
+  });
+}
+
+var picker = document.getElementById('wfPicker');
+picker.innerHTML = WF.map(function(w){return '<button class="chip" data-w="'+w.id+'">'+w.chip+'</button>'}).join('');
+picker.addEventListener('click', function(e){
+  var b = e.target.closest('.chip'); if(!b) return; renderWF(b.dataset.w);
+});
+renderWF('crash');
+
+/* ---------- quiz ---------- */
+var QUIZ = [
+ ['Read 40 pages of a work-zone traffic control plan and find the three MUTCD provisions that govern this closure type.','re','Finding the governing passage among many is retrieval. Deciding whether the plan complies is judgment, and it is a different step.'],
+ ['Given a forward-camera frame, decide whether the lane marking is acceptable, worn, or gone.','cl','A fixed label set applied to one input. Classic classification — and one you can test on 200 held-out frames.'],
+ ['Turn an officer\'s free-text narrative into the twelve coded fields the state crash form requires.','ex','Structured fields out of unstructured text. Extraction is the most under-appreciated leverage type in agency work.'],
+ ['Estimate the travel time on this corridor fifteen minutes from now.','pr','A number about a future state from current data. Note that a good prediction still does not tell anyone what to do about it.'],
+ ['Write the first draft of the methods section describing how the model was calibrated.','ge','Generation. Fast to produce, and every claim in it remains yours to verify before you sign it.'],
+ ['Decide whether this intersection makes the district\'s funded safety improvement list.','ju','Money, priorities, and consequences. AI can rank candidates and assemble the evidence; it cannot take responsibility for the choice.'],
+ ['Scan 900 abstracts and mark which 60 are worth reading in full.','cl','Binary relevance labeling — classification. The screening decision is cheap to reverse, which is why it is safe to automate.'],
+ ['Flag GPS points that jump 400 metres between consecutive 10 Hz samples.','cl','Anomaly detection is classification: normal or not. A simple physical rule beats a learned model here, and that is a legitimate finding.'],
+ ['Choose which parameter set the calibration loop should try next, given every run so far.','pr','A search step estimating where the objective improves. The stopping rule and the plausibility constraints around it are judgment, and stay yours.'],
+ ['Decide that the workflow\'s output is accurate enough to be entered into the system of record.','ju','This is the checkpoint. If your workflow has no step that looks like this, you have not found the irreversible action yet.']
+];
+var LVKEYS = ['ex','cl','ge','re','pr','ju'];
+var answered = {}, correct = 0;
+
+document.getElementById('quizBox').innerHTML = QUIZ.map(function(q,i){
+  var opts = LVKEYS.map(function(k){
+    return '<button class="qopt" data-q="'+i+'" data-k="'+k+'">'+LV[k][1]+'</button>';
+  }).join('');
+  return '<div class="qrow"><div class="qtext">'+(i+1)+'. '+q[0]+'</div>'+
+         '<div class="qopts">'+opts+'</div><div class="qfb" id="fb'+i+'"></div></div>';
+}).join('');
+
+document.getElementById('quizBox').addEventListener('click', function(e){
+  var b = e.target.closest('.qopt'); if(!b) return;
+  var i = +b.dataset.q; if(answered[i]) return;
+  answered[i] = true;
+  var right = QUIZ[i][1];
+  document.querySelectorAll('.qopt[data-q="'+i+'"]').forEach(function(o){
+    if(o.dataset.k===right) o.classList.add('right');
+    else if(o===b) o.classList.add('wrong');
+  });
+  if(b.dataset.k===right) correct++;
+  var fb = document.getElementById('fb'+i);
+  fb.innerHTML = '<b>'+LV[right][1]+'.</b> '+QUIZ[i][2];
+  fb.classList.add('show');
+  var n = Object.keys(answered).length;
+  document.getElementById('scoreOut').textContent =
+    'Answered '+n+' of '+QUIZ.length+' — '+correct+' matched the intended label.';
+});
+</script>
+</body>
+</html>

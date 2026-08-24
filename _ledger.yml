@@ -1,0 +1,432 @@
+# =============================================================================
+# CONTENT LEDGER — AI for Mobility course notes
+# =============================================================================
+# One row per teaching artifact. This is the inventory that makes incremental
+# note-building possible: any session can read this file and know what exists,
+# where it belongs, and what still has to be written.
+#
+# Companion process doc: NOTES_GUIDE.md
+#
+# status values
+#   raw         file exists, nothing written about it in the notes yet
+#   drafted     prose exists in a notes chapter but has not been reviewed
+#   integrated  reviewed, wired into a notes chapter, cross-linked
+#   published   integrated AND pushed live to ai4mobility.github.io
+#   superseded  replaced by something else; kept only for history
+#   debt        promised on the site or in the syllabus but not built yet
+#
+# kind values
+#   companion   self-contained interactive HTML page
+#   lab         Jupyter notebook students run
+#   case        worked example / narrative case study
+#   handout     assignment, rubric, or template given to students
+#   notes       a notes chapter on the site
+#   deck        slide deck
+#   internal    instructor-only; never goes to students
+#
+# paths are relative to the AI_Mobility_Class folder unless they start with
+# "site/", which means the ai4mobility.github.io repo root.
+# =============================================================================
+
+meta:
+  updated: 2026-08-24
+  notes_granularity: one chapter per module
+  chapter_files: site/moduleN/notes.md
+  companion_mount: site/_static/companions/   # served at _static/companions/<file>
+  intake_folder: inbox/                       # drop new slides/materials here
+
+# -----------------------------------------------------------------------------
+# MODULE 1 — Foundations and Representation Learning (Aug 27 / Sept 3 / Sept 10)
+# -----------------------------------------------------------------------------
+items:
+
+  - id: m1-notes
+    file: site/module1/notes.md
+    kind: notes
+    module: 1
+    session: [2026-08-27, 2026-09-03, 2026-09-10]
+    status: drafted
+    notes: >
+      Pilot chapter. Establishes the template all other chapters follow.
+      Built 2026-08-24 from lecture1.md, the four Module 1 companions,
+      and the four Module 1 labs.
+
+  - id: m1-lecture1
+    file: site/module1/lecture1.md
+    kind: notes
+    module: 1
+    session: 2026-08-27
+    status: superseded
+    dest: site/module1/notes.md
+    notes: >
+      DECISION PENDING. Its Part 2 (embeddings) prose is now expanded inside
+      notes.md, and its "How this course is organized" section still uses the
+      retired 4-module numbering (says Module 2 = AI sensing; that is now
+      Module 5). Either fold the remaining unique content into notes.md and
+      drop the page, or keep it as the Lecture 1 recording page and cut its
+      duplicated body. Do not leave both as-is past Aug 27.
+
+  - id: m1-workflow-companion
+    file: AI_Workflow_Companion.html
+    kind: companion
+    module: 1
+    session: 2026-08-27
+    status: integrated
+    dest: site/module1/notes.md#the-unit-of-work-is-the-workflow
+    mounted: site/_static/companions/AI_Workflow_Companion.html
+    notes: >
+      Seven tabs. Locks the six-label leverage taxonomy used all semester.
+      Contains no invented performance numbers by design — do not add any.
+
+  - id: m1-tim-case
+    file: TIM_AI_Workflow_Case.html
+    kind: case
+    module: 1
+    session: 2026-08-27
+    status: integrated
+    dest: site/module1/notes.md#worked-case-traffic-incident-management
+    mounted: site/_static/companions/TIM_AI_Workflow_Case.html
+    notes: Florida-anchored; verified FDOT/FHWA figures; four capstone tracks.
+
+  - id: m1-sigmoid-tanh
+    file: Sigmoid_Tanh_Companion.html
+    kind: companion
+    module: 1
+    session: 2026-09-03
+    status: integrated
+    dest: site/module1/notes.md#the-logit-you-already-use
+    mounted: site/_static/companions/Sigmoid_Tanh_Companion.html
+
+  - id: m1-multilayer
+    file: Multilayer_Networks_Companion.html
+    kind: companion
+    module: 1
+    session: 2026-09-03
+    status: integrated
+    dest: site/module1/notes.md#stacking-layers-a-basis-that-moves
+    mounted: site/_static/companions/Multilayer_Networks_Companion.html
+
+  - id: m1-lab1
+    file: site/module1/lab1.ipynb
+    kind: lab
+    module: 1
+    session: 2026-09-03
+    status: integrated
+    dest: site/module1/notes.md#labs
+
+  - id: m1-lab2
+    file: site/module1/lab2_word_embeddings.ipynb
+    kind: lab
+    module: 1
+    session: 2026-09-10
+    status: integrated
+    dest: site/module1/notes.md#labs
+    notes: Word2Vec to Road2Vec; USF Tampa road network.
+
+  - id: m1-lab3
+    file: site/module1/lab3_image_embeddings.ipynb
+    kind: lab
+    module: 1
+    session: 2026-09-10
+    status: integrated
+    dest: site/module1/notes.md#labs
+
+  - id: m1-lab4
+    file: site/module1/lab4_clip_vs_traditional_cv.ipynb
+    kind: lab
+    module: 1
+    session: 2026-09-10
+    status: integrated
+    dest: site/module1/notes.md#labs
+    notes: Physically lives in module1; cross-referenced from Module 2 as the bridge.
+
+  - id: m1-word2vec-pipeline
+    file: word2vec_training_pipeline.html
+    kind: companion
+    module: 1
+    session: 2026-09-10
+    status: raw
+    notes: Not yet mounted or referenced. Candidate embed for the Word2Vec section.
+
+  - id: m1-cnn-embeddings-viz
+    file: cnn_embeddings_visualization.html
+    kind: companion
+    module: 1
+    session: 2026-09-10
+    status: raw
+    notes: Not yet mounted or referenced. Candidate embed for the image-embedding section.
+
+  - id: m1-deck
+    file: null
+    kind: deck
+    module: 1
+    session: [2026-08-27, 2026-09-03, 2026-09-10]
+    status: debt
+    notes: Slides/ folder is empty. Decks are the intended input to every chapter.
+
+# -----------------------------------------------------------------------------
+# MODULE 2 — Transformers, LLMs, Multimodal (Sept 17)
+# -----------------------------------------------------------------------------
+
+  - id: m2-notes
+    file: site/module2/notes.md
+    kind: notes
+    module: 2
+    session: 2026-09-17
+    status: debt
+
+  - id: m2-cross-attention-companion
+    file: Cross_Attention_Sanity_Check_Companion.html
+    kind: companion
+    module: 2
+    session: 2026-09-17
+    status: raw
+    notes: Lab 7 companion. Head-router result. Not yet on the site.
+
+  - id: m2-cross-attention-lab
+    file: Labs/cross_attention_sanity_check_lab.ipynb
+    kind: lab
+    module: 2
+    session: 2026-09-17
+    status: raw
+
+  - id: m2-gpt2-tokens
+    file: gpt2_tokens_embeddings_live_demo.ipynb
+    kind: lab
+    module: 2
+    session: 2026-09-17
+    status: raw
+    notes: Live demo, not yet a graded lab. Also gpt2_tokens_and_embeddings.py.
+
+  - id: m2-multihead-merge
+    file: multihead_attention_merge_demo.ipynb
+    kind: lab
+    module: 2
+    session: 2026-09-17
+    status: raw
+
+  - id: m2-transformer-hidden
+    file: transformer_hidden_representations.ipynb
+    kind: lab
+    module: 2
+    session: 2026-09-17
+    status: raw
+
+  - id: m2-masked-link-state
+    file: Labs/masked_link_state_modeling_assignment.md
+    kind: handout
+    module: 2
+    session: 2026-09-17
+    status: raw
+    notes: >
+      Needs a home — Sept 17 (masked modeling on a road network) or Nov 5.
+      Closest thing the course has to GNNs on road networks, flagged in the
+      structure review as the most conspicuous content gap.
+
+# -----------------------------------------------------------------------------
+# MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)
+# -----------------------------------------------------------------------------
+
+  - id: m3-notes
+    file: site/module3/notes.md
+    kind: notes
+    module: 3
+    session: [2026-09-24, 2026-11-19]
+    status: debt
+
+  - id: m3-vae-traffic-lab-companion
+    file: VAE_Traffic_Lab.html
+    kind: companion
+    module: 3
+    session: 2026-09-24
+    status: raw
+
+  - id: m3-vae-to-diffusion
+    file: VAE_to_Diffusion_Lab.html
+    kind: companion
+    module: 3
+    session: 2026-09-24
+    status: raw
+    notes: ~2 MB. Check repo weight before mounting into _static/companions/.
+
+  - id: m3-forward-diffusion
+    file: Forward_Diffusion_Lab.html
+    kind: companion
+    module: 3
+    session: 2026-09-24
+    status: raw
+
+  - id: m3-reverse-diffusion
+    file: Reverse_Diffusion_Intuition.html
+    kind: companion
+    module: 3
+    session: 2026-09-24
+    status: raw
+
+  - id: m3-decoder-training
+    file: Decoder_Training_Companion.html
+    kind: companion
+    module: 3
+    session: 2026-09-24
+    status: raw
+    notes: Siblings Decoder_Crafts_Detail.html and Decoder_Patch_Dictionary.html.
+
+  - id: m3-image-vae-lab
+    file: Labs/image_vae_lab_notebook.ipynb
+    kind: lab
+    module: 3
+    session: 2026-09-24
+    status: raw
+    notes: Depends on ctm_simulation.py, ctm_vae.py, data.npz, vae.npz.
+
+  - id: m3-dashcam-vae-lab
+    file: Labs/dashcam_vae_lab_notebook.ipynb
+    kind: lab
+    module: 3
+    session: 2026-09-24
+    status: raw
+    notes: Solution notebook exists (dashcam_vae_lab_SOLUTION.ipynb) — keep off the site.
+
+  - id: m3-decoder-training-lab
+    file: Labs/decoder_training_lab.ipynb
+    kind: lab
+    module: 3
+    session: 2026-09-24
+    status: raw
+
+  - id: m3-vae-motivation
+    file: VAE_motivation_fragmented_latent_space.ipynb
+    kind: lab
+    module: 3
+    session: 2026-09-24
+    status: raw
+
+  - id: m3-representation-quality
+    file: Representation_Quality_Companion.html
+    kind: companion
+    module: 3
+    session: 2026-09-24
+    status: raw
+    notes: >
+      Lab 8. Probing / clustering / intrinsic dimension / transfer on a frozen
+      CTM-VAE. Could also home in Module 1 section 1.3 as the
+      "how do you know a representation is good" close. Notebook:
+      Labs/representation_quality_lab.ipynb.
+
+# -----------------------------------------------------------------------------
+# MODULES 4-8 — no built artifacts yet
+# -----------------------------------------------------------------------------
+
+  - id: m4-notes
+    file: site/module4/notes.md
+    kind: notes
+    module: 4
+    session: [2026-10-01, 2026-10-08]
+    status: debt
+    notes: Evaluation for transportation tasks lands here — see NOTES_GUIDE.md.
+
+  - id: m5-notes
+    file: site/module5/notes.md
+    kind: notes
+    module: 5
+    session: [2026-10-15, 2026-10-22]
+    status: debt
+
+  - id: m6-notes
+    file: site/module6/notes.md
+    kind: notes
+    module: 6
+    session: 2026-10-29
+    status: debt
+
+  - id: m7-notes
+    file: site/module7/notes.md
+    kind: notes
+    module: 7
+    session: 2026-11-05
+    status: debt
+
+  - id: m8-notes
+    file: site/module8/notes.md
+    kind: notes
+    module: 8
+    session: [2026-11-12, 2026-11-19]
+    status: debt
+
+  - id: m4-m8-labs
+    file: null
+    kind: lab
+    module: [4, 5, 6, 7, 8]
+    status: debt
+    notes: >
+      Ten labs are described on the module pages and none are built. This is
+      the top feasibility risk in the structure review, and it competes with
+      notes authoring for the same hours. See NOTES_GUIDE.md "when a week
+      runs short".
+
+# -----------------------------------------------------------------------------
+# CAPSTONE AND COURSE-WIDE
+# -----------------------------------------------------------------------------
+
+  - id: capstone-handout
+    file: AI_for_Mobility_Capstone_Project_Handout.docx
+    kind: handout
+    module: capstone
+    status: raw
+    notes: >
+      Still uses week numbers that match none of the live calendars —
+      convert to dates before posting.
+
+  - id: partner-intake
+    file: AI_for_Mobility_Partner_Intake_Template.docx
+    kind: handout
+    module: capstone
+    status: published
+    notes: Already mirrored at site/_static/AI_for_Mobility_Partner_Intake_Template.docx.
+
+  - id: rotation-handout
+    file: Project_Rotation_Handout.md
+    kind: handout
+    module: capstone
+    status: raw
+    notes: >
+      Says Round 1 starts Sept 17; the site syllabus and capstone page say
+      Oct 1. Both are student-facing. Reconcile before Canvas.
+
+  - id: setup-guide
+    file: SETUP.md
+    kind: handout
+    module: 0
+    status: raw
+    dest: site/prerequisites.md
+    notes: Covers installation, not readiness. No readiness diagnostic exists yet.
+
+  - id: structure-review
+    file: Course_Structure_Review_Fall2026.md
+    kind: internal
+    status: raw
+
+  - id: schedule-revision
+    file: Schedule_Revision_Fall2026.md
+    kind: internal
+    status: raw
+
+  - id: google-form-setup
+    file: Google_Form_Setup.md
+    kind: internal
+    status: raw
+
+  - id: stale-site-copy
+    file: ai4mobility-site/
+    kind: internal
+    status: superseded
+    notes: >
+      An older 4-module copy of the site with no .git directory. Not the
+      deployed repo. Delete or archive — it is a live confusion hazard when
+      searching the folder for a page to edit.
+
+  - id: stale-resources-html
+    file: resources.html
+    kind: internal
+    status: superseded
+    notes: Predates site/resources.md, which is the live version.

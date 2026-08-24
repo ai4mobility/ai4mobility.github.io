@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learnable Basis Functions — Visual Companion | AI for Mobility</title>
+<style>
+  :root{
+    --usf-green:#006747;--usf-green-d:#00543a;--usf-gold:#CFC493;--gold-deep:#b9a96a;
+    --ink:#1c2422;--muted:#5b6b66;--paper:#f6f8f7;--card:#fff;--line:#e2e8e5;
+    --fix:#1f6f8b;--lrn:#006747;--alt:#9b5de5;--warn:#c0392b;--grey:#b3c0bb;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 6px 22px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--paper);line-height:1.58}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding:32px 0 26px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--usf-gold);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:28px;font-weight:780}
+  header.hero p{margin:0;max-width:880px;color:#e7efeb;font-size:15px}
+  nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:4px;flex-wrap:wrap;padding-top:7px;padding-bottom:7px}
+  nav.tabs button{border:none;background:transparent;font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 14px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  section.page{display:none;padding:24px 0 10px}
+  section.page.active{display:block}
+  h2.sec{font-size:23px;margin:4px 0 2px;color:var(--usf-green-d)}
+  h3{font-size:16px;margin:20px 0 6px;color:var(--ink)}
+  .lead{color:var(--muted);max-width:880px;margin:0 0 16px;font-size:15px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+  .eq{background:#0f1c18;color:#eafff5;border-radius:10px;padding:14px 18px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14.5px;line-height:1.95;white-space:pre-wrap}
+  .eq b{color:var(--usf-gold)}.eq .g{color:#7fd8b0}.eq .bl{color:#6fc3e0}.eq .rd{color:#ff9b8f}.eq .dim{color:#7f948d}
+  .callout{border-left:4px solid var(--usf-gold);background:#fffdf3;padding:11px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:13.8px}
+  .callout.good{border-left-color:#1e9e57;background:#f3fbf6}
+  .callout.sig{border-left-color:var(--fix);background:#f1f8fb}
+  .callout.warn{border-left-color:var(--warn);background:#fdf4f2}
+  .small{font-size:12px;color:var(--muted)}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;margin:6px 0 16px}
+  .ctrl{display:flex;flex-direction:column;gap:5px;min-width:150px}
+  .ctrl label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .ctrl label.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  .ctrl input[type=range]{width:220px;accent-color:var(--usf-green)}
+  .ctrl select{font:inherit;font-size:13.5px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .ctrl .val{font-family:ui-monospace,monospace;font-size:13px;color:var(--usf-green-d);font-weight:700}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 10px}
+  button.act{border:1px solid var(--usf-green);background:var(--usf-green);color:#fff;font-weight:700;font-size:13.5px;padding:9px 15px;border-radius:9px;cursor:pointer}
+  button.act:hover{background:var(--usf-green-d)}
+  button.act:disabled{opacity:.5;cursor:progress}
+  button.ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:13.5px;padding:9px 14px;border-radius:9px;cursor:pointer}
+  button.ghost:hover{background:var(--paper)}
+  .readout{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+  .stat{background:#fbfdfc;border:1px solid var(--line);border-radius:11px;padding:9px 14px;min-width:112px;text-align:center}
+  .stat .n{font-size:18px;font-weight:780;font-family:ui-monospace,monospace;color:var(--usf-green-d)}
+  .stat .n.t{color:var(--fix)}.stat .n.w{color:var(--warn)}.stat .n.r{color:var(--alt)}
+  .stat .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+  .stat .l.raw{text-transform:none;letter-spacing:.02em;font-size:11px}
+  canvas{border-radius:10px;border:1px solid var(--line);background:#fff;display:block}
+  .canvasrow{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+  figure{margin:0}
+  figcaption{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;text-align:center}
+  .prog{height:6px;background:#eef2f0;border-radius:4px;overflow:hidden;margin:8px 0 2px;max-width:420px}
+  .prog > i{display:block;height:100%;width:0;background:var(--usf-green);transition:width .1s linear}
+  table.map{width:100%;border-collapse:collapse;font-size:13.4px;margin-top:8px}
+  table.map th,table.map td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.map th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--line)}
+  table.map th.raw{text-transform:none;letter-spacing:.02em;font-size:12px}
+  table.map td:first-child{font-weight:700;color:var(--usf-green-d)}
+  table.num td,table.num th{font-family:ui-monospace,Menlo,monospace;font-size:12.8px}
+  table.num td:first-child{font-family:-apple-system,system-ui,sans-serif}
+  .swatch{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:baseline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);font-weight:600;margin:2px 0 10px}
+  footer{padding:26px 0;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);margin-top:18px}
+  @media(max-width:700px){.ctrl input[type=range]{width:min(72vw,220px)}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · Neural Network Basics · University of South Florida</div>
+  <h1>What it means for the basis functions to be learnable</h1>
+  <p>Bishop §6.2: <em>"the key idea behind neural networks is to choose basis functions φ<sub>j</sub>(x)
+     that themselves have learnable parameters."</em> You have been choosing basis functions your whole
+     career — the interaction terms in a mode-choice utility, the breakpoint in a triangular fundamental
+     diagram, the knots in a spline. This page makes that step visible, then hands it to the optimizer and
+     measures exactly what you gain and what you lose. Some of the results below argue <em>against</em>
+     neural networks. Everything runs locally in your browser.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap">
+  <button data-tab="p1" class="active">1 · You already choose φ</button>
+  <button data-tab="p2">2 · Let the knots move</button>
+  <button data-tab="p3">3 · Where it flips: dimension</button>
+  <button data-tab="p4">4 · Why <em>jointly</em></button>
+  <button data-tab="p5">5 · What it costs</button>
+  <button data-tab="p6">6 · Two things to get right</button>
+</div></nav>
+
+<!-- ==================== PAGE 1 ==================== -->
+<section class="page active" id="p1"><div class="wrap">
+  <h2 class="sec">The specification step is a fit you did by eye</h2>
+  <p class="lead">A linear basis-function model is <span class="mono">y(x,w) = Σ w<sub>j</sub> φ<sub>j</sub>(x)</span>.
+     It is linear in <span class="mono">w</span>, the error surface is a bowl, and one matrix solve gives you
+     the global optimum. That is a real and underrated advantage. But it only holds <em>after</em> somebody
+     has written down the φ's — and that somebody was you.</p>
+
+  <div class="card">
+    <h3>Every one of these is a choice of φ</h3>
+    <table class="map">
+      <tr><th>What you wrote</th><th class="raw">The basis functions φ<sub>j</sub>(x)</th><th>What estimation fits</th></tr>
+      <tr><td>Mode-choice utility<br><span class="small mono">V = β₁t + β₂c + β₃(t×inc) + β₄log(hw)</span></td>
+          <td>t, c, the interaction t×inc, log(hw), your peak/off-peak dummies</td>
+          <td>only the β's</td></tr>
+      <tr><td>Triangular fundamental diagram</td>
+          <td>two ramps meeting at a critical density <em>you specified</em></td>
+          <td>free-flow speed, wave speed</td></tr>
+      <tr><td>IDM car-following</td>
+          <td>(v/v₀)<sup>δ</sup> and (s*/s)² — a hand-designed nonlinear form</td>
+          <td>a, b, T, s₀, v₀</td></tr>
+      <tr><td>Regression spline on a speed profile</td>
+          <td>one hinge per knot, knots placed by you at quantiles</td>
+          <td>the hinge coefficients</td></tr>
+      <tr><td>Pre-2012 computer vision</td>
+          <td>HOG, SIFT, Haar wavelets — twenty years of hand-designed φ</td>
+          <td>an SVM on top</td></tr>
+    </table>
+    <div class="callout">The specification step feels like <em>modeling</em>, not <em>fitting</em>, which is
+      why it is easy to miss. But you did choose those functions, you chose them before seeing the residuals,
+      and nothing in the estimation loop could tell you that you chose wrong. Bishop's sentence is about
+      closing that loop.</div>
+  </div>
+
+  <div class="card">
+    <h3>A corridor with a shockwave</h3>
+    <p class="lead" style="margin-bottom:10px">120 probe-vehicle speed samples along a corridor. There is a
+      sharp queue front near position 0.45 and a gradual recovery downstream. Noise is 1.5 mph. Pick a
+      basis family and watch the closed-form least-squares fit. Nothing here is trained by gradient
+      descent — every one of these is a single solve.</p>
+    <div class="controls">
+      <div class="ctrl"><label>Basis family</label>
+        <select id="b1sel">
+          <option value="poly3">Polynomial, degree 3</option>
+          <option value="poly8">Polynomial, degree 8</option>
+          <option value="eng">Hand-picked engineering features</option>
+          <option value="gauss8">Gaussian bumps on a grid, M = 8</option>
+          <option value="gauss24" selected>Gaussian bumps on a grid, M = 24</option>
+          <option value="gauss60">Gaussian bumps on a grid, M = 60</option>
+          <option value="hinge24">Hinges on a grid, M = 24</option>
+        </select></div>
+      <div class="ctrl"><label class="raw">Show the individual φ<sub>j</sub></label>
+        <div><input type="checkbox" id="b1phi" style="accent-color:var(--alt);transform:scale(1.15)"></div></div>
+    </div>
+    <div class="legend">
+      <span><span class="swatch" style="background:#c9d4d0"></span>observations</span>
+      <span><span class="swatch" style="background:var(--warn)"></span>truth</span>
+      <span><span class="swatch" style="background:var(--fix)"></span>fixed-basis fit</span>
+      <span><span class="swatch" style="background:var(--alt)"></span>the φ<sub>j</sub>, scaled by their weights</span>
+    </div>
+    <figure><canvas id="c1" data-w="920" data-h="330"></canvas>
+      <figcaption>The fit is only as good as the basis you handed it.</figcaption></figure>
+    <div class="readout">
+      <div class="stat"><div class="n t" id="s1rmse">–</div><div class="l raw">test RMSE vs truth (mph)</div></div>
+      <div class="stat"><div class="n" id="s1par">–</div><div class="l">parameters</div></div>
+      <div class="stat"><div class="n" id="s1sol">1 solve</div><div class="l raw">optimization</div></div>
+      <div class="stat"><div class="n" id="s1cvx">convex</div><div class="l raw">error surface</div></div>
+    </div>
+    <div class="callout sig">Step through the list. Degree-3 polynomial cannot bend fast enough anywhere.
+      Degree 8 rings across the whole corridor trying to catch one discontinuity — a global basis pays for a
+      local feature everywhere. The hand-picked engineering features are the ones that <em>look</em> most
+      like domain knowledge, and they barely beat the cubic. Only the dense local bases (M = 24, M = 60) get
+      close, and they get there by brute force: cover the whole line finely enough and something will land
+      on the shock.</div>
+    <div class="callout">Tick <b>show the individual φ<sub>j</sub></b> on the M = 24 grid. Notice how many of
+      those bumps are sitting in the flat free-flow stretch where nothing happens, contributing almost
+      nothing. That wasted capacity is the thing learnable basis functions are meant to recover — and in the
+      next tab we find out how much it is actually worth.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 2 ==================== -->
+<section class="page" id="p2"><div class="wrap">
+  <h2 class="sec">Now let the knots move</h2>
+  <p class="lead">Same data, same basis <em>family</em> — hinges, <span class="mono">max(0, a·x + b)</span> —
+     so this is a clean apples-to-apples test. The only difference is whether the knot positions are placed
+     by you on a grid or learned by gradient descent along with the output weights. This is exactly Bishop's
+     (6.7)–(6.8) in one dimension, and a ReLU network in one dimension <em>is</em> a free-knot linear spline.</p>
+
+  <div class="card">
+    <div class="eq"><span class="dim">fixed knots  </span> y = w₀ + Σ<sub>j</sub> <b>w<sub>j</sub></b> · max(0, x − <span class="dim">κ<sub>j</sub></span>)     <span class="dim">κ<sub>j</sub> on a grid — 1 free parameter per basis function</span>
+<span class="dim">free knots   </span> y = w₀ + Σ<sub>j</sub> <b>w<sub>j</sub></b> · max(0, <b>a<sub>j</sub></b>x + <b>b<sub>j</sub></b>)   <span class="dim">knot at −b<sub>j</sub>/a<sub>j</sub> — 3 free parameters per basis function</span></div>
+    <p class="small" style="margin-top:12px">Read the second line as a hidden layer: <span class="mono">a<sub>j</sub></span>
+      is the weight, <span class="mono">b<sub>j</sub></span> the bias, <span class="mono">w<sub>j</sub></span> the
+      output weight. The <b>bias is the location of the kink</b> and the weight is its steepness. That is what a
+      learnable parameter inside φ physically means here: <em>where the breakpoint goes</em>.</p>
+  </div>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label class="raw">Fixed grid: number of knots</label>
+        <input id="b2mf" type="range" min="4" max="60" step="1" value="24"><span class="val">M = <span id="b2mfv">24</span> · <span id="b2mfp">25</span> params</span></div>
+      <div class="ctrl"><label class="raw">Free knots: number of hinges</label>
+        <input id="b2ml" type="range" min="3" max="16" step="1" value="8"><span class="val">M = <span id="b2mlv">8</span> · <span id="b2mlp">25</span> params</span></div>
+    </div>
+    <div class="btnrow">
+      <button class="act" id="b2run">Train the free-knot model</button>
+      <button class="ghost" id="b2match">Match parameter counts</button>
+      <span class="small" id="b2status">15,000 Adam steps × 3 restarts, animated</span>
+    </div>
+    <div class="prog"><i id="b2prog"></i></div>
+    <div class="legend">
+      <span><span class="swatch" style="background:#c9d4d0"></span>observations</span>
+      <span><span class="swatch" style="background:var(--warn)"></span>truth</span>
+      <span><span class="swatch" style="background:var(--fix)"></span>fixed knots (solid)</span>
+      <span><span class="swatch" style="background:var(--lrn)"></span>free knots (dashed)</span>
+      <span><span class="swatch" style="background:var(--gold-deep)"></span>knot positions</span>
+    </div>
+    <div class="canvasrow">
+      <figure><canvas id="c2a" data-w="450" data-h="320"></canvas>
+        <figcaption>The two fits</figcaption></figure>
+      <figure><canvas id="c2b" data-w="450" data-h="320"></canvas>
+        <figcaption>Where the free knots travel during training</figcaption></figure>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n t" id="s2f">–</div><div class="l raw">fixed-knot RMSE</div></div>
+      <div class="stat"><div class="n" id="s2l">–</div><div class="l raw">free-knot RMSE (best of 3)</div></div>
+      <div class="stat"><div class="n r" id="s2k">–</div><div class="l raw">knots that landed in the shock</div></div>
+      <div class="stat"><div class="n w" id="s2d">–</div><div class="l raw">knots that left the corridor</div></div>
+    </div>
+    <div class="callout good"><b>What the right-hand plot shows.</b> The knots start evenly spread. Within a
+      few hundred steps most of them stampede to the queue front at 0.45 and stack up there, because that is
+      where the error is. Nobody told the model where the shockwave was. That migration <em>is</em> Bishop's
+      sentence, animated: the basis functions have parameters, and the parameters are being adjusted by the
+      same gradient that fits the output weights.</div>
+    <div class="callout warn"><b>And now the honest part.</b> Press <b>match parameter counts</b>. At 25
+      parameters each, the <em>fixed</em> grid wins — by a wide margin. This is not a bug in the training;
+      run it from several starts and the answer holds. The arithmetic is the reason: in one dimension a fixed
+      basis function costs <b>1</b> parameter and a learnable one costs <b>3</b>. You are paying triple for
+      the privilege of placing each knot, and on a single axis you did not need to place them well — you
+      could just cover the whole line. <em>In one dimension, learnable basis functions are a bad deal.</em></div>
+    <div class="callout">Keep that result. Anyone who tells you neural networks are better function
+      approximators has not run this experiment. The next tab is where the arithmetic reverses, and it
+      reverses for a reason you can compute on paper.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 3 ==================== -->
+<section class="page" id="p3"><div class="wrap">
+  <h2 class="sec">Where it flips: dimension</h2>
+  <p class="lead">A fixed basis has to cover the input space <em>before</em> it knows where the function
+     varies. Covering a line is cheap. Covering a 10-dimensional space is not. A learnable basis function
+     costs more each, but you need vastly fewer of them — provided the function has structure worth
+     aligning to. That trade has an exact crossover, and it is much earlier than most people guess.</p>
+
+  <div class="card">
+    <h3>The arithmetic, on paper</h3>
+    <div class="eq"><span class="dim">fixed grid, K knots per axis</span>   parameters = <b>K<sup>D</sup></b>          <span class="dim">1 weight each — but you must tile</span>
+<span class="dim">learned, M hidden units     </span>   parameters = <b>M(D + 2) + 1</b>   <span class="dim">D weights + bias + output weight each</span></div>
+    <div class="controls" style="margin-top:14px">
+      <div class="ctrl"><label class="raw">Knots per axis K</label>
+        <input id="b3k" type="range" min="3" max="12" step="1" value="5"><span class="val">K = <span id="b3kv">5</span></span></div>
+      <div class="ctrl"><label class="raw">Hidden units M</label>
+        <input id="b3m" type="range" min="4" max="64" step="4" value="8"><span class="val">M = <span id="b3mv">8</span></span></div>
+    </div>
+    <figure><canvas id="c3a" data-w="920" data-h="300"></canvas>
+      <figcaption>Parameters needed, log scale. The lines cross once and never cross back.</figcaption></figure>
+    <div class="readout">
+      <div class="stat"><div class="n r" id="s3cross">–</div><div class="l raw">crossover dimension</div></div>
+      <div class="stat"><div class="n t" id="s3f10">–</div><div class="l raw">fixed grid at D = 10</div></div>
+      <div class="stat"><div class="n" id="s3l10">–</div><div class="l raw">learned at D = 10</div></div>
+      <div class="stat"><div class="n w" id="s3ratio">–</div><div class="l raw">ratio at D = 10</div></div>
+    </div>
+    <div class="callout">With five knots per axis and eight hidden units the crossover is at <b>D = 3</b>.
+      Three inputs. That is a car-following state vector with the lead-vehicle terms dropped. Every real
+      mobility problem you care about — a detector vector, a trajectory window, an image patch — is far to
+      the right of the crossing, where the gap is not a factor of two but a factor of 10<sup>5</sup>.</div>
+  </div>
+
+  <div class="card">
+    <h3>Does it actually work? A breakdown pocket on a diagonal</h3>
+    <p class="lead" style="margin-bottom:10px">The target: risk peaks when one particular <em>weighted
+      combination</em> of D conditions sits in a narrow band — <span class="mono">y = exp(−4(u − ½)²)</span>
+      with <span class="mono">u = a·x</span>, and the direction <span class="mono">a</span> unknown to every
+      model. Physically: breakdown risk that depends on a combined index of flow, truck share, rain, grade
+      and ramp spacing, not on any single one. 500 training samples, whatever D you pick.</p>
+    <p class="lead" style="margin-bottom:10px">Three contenders, and the fixed bases are given every
+      advantage — bandwidth and ridge penalty tuned by grid search on the test set, which is cheating in
+      their favour:</p>
+    <table class="map" style="margin-bottom:14px">
+      <tr><th>Model</th><th class="raw">Basis functions φ<sub>j</sub></th><th>What is learned</th></tr>
+      <tr><td>Additive grid</td><td>8 Gaussian bumps on each input axis separately (a GAM)</td><td>output weights only</td></tr>
+      <tr><td>Random features</td><td>120 fixed random ridge functions cos(ω<sub>j</sub>·x + b<sub>j</sub>)</td><td>output weights only</td></tr>
+      <tr><td>Learned</td><td>8 tanh units — same shape, but ω<sub>j</sub> is trained</td><td>directions, offsets and output weights, jointly</td></tr>
+    </table>
+    <div class="btnrow">
+      <button class="act" id="b3run">Run the dimension sweep</button>
+      <span class="small" id="b3status">D = 2, 4, 8, 16, 32 · takes a few seconds</span>
+    </div>
+    <div class="prog"><i id="b3prog"></i></div>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--warn)"></span>predict the mean (baseline)</span>
+      <span><span class="swatch" style="background:var(--alt)"></span>additive grid</span>
+      <span><span class="swatch" style="background:var(--fix)"></span>fixed random features</span>
+      <span><span class="swatch" style="background:var(--lrn)"></span>learned basis (8 units)</span>
+    </div>
+    <div class="canvasrow">
+      <figure><canvas id="c3b" data-w="450" data-h="320"></canvas>
+        <figcaption>Test RMSE as dimension climbs (log scale)</figcaption></figure>
+      <figure><canvas id="c3c" data-w="450" data-h="320"></canvas>
+        <figcaption>The 32-D data, projected onto the direction the network found</figcaption></figure>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s3cos">–</div><div class="l raw">|cos| between learned w and true a</div></div>
+      <div class="stat"><div class="n t" id="s3rff32">–</div><div class="l raw">best fixed basis at D = 32</div></div>
+      <div class="stat"><div class="n" id="s3mlp32">–</div><div class="l raw">learned at D = 32</div></div>
+      <div class="stat"><div class="n w" id="s3gain">–</div><div class="l raw">error ratio at D = 32</div></div>
+    </div>
+    <div class="callout good"><b>Read the right-hand plot first.</b> Those are 32-dimensional points. Plotted
+      against the single direction the network discovered, they collapse onto a clean one-dimensional curve.
+      The network did not memorize a 32-D function — it found the one combination that mattered and then had
+      an easy 1-D problem left. <b>Learning w<sub>j</sub> is learning which direction in input space
+      matters.</b></div>
+    <div class="callout sig">The additive grid fails for a structural reason worth naming in class: it has a
+      term for every input separately and no term for any combination, so it cannot represent a ridge that
+      runs diagonally. This is the failure mode of every model where you specified the main effects and
+      forgot an interaction — and in D dimensions there are 2<sup>D</sup> possible interactions to forget.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 4 ==================== -->
+<section class="page" id="p4"><div class="wrap">
+  <h2 class="sec">Why <em>jointly</em> is the load-bearing word</h2>
+  <p class="lead">Bishop says the basis-function parameters are adjusted <em>"along with the coefficients
+     {w<sub>j</sub>}, during training."</em> You could instead do it in two stages: compress the inputs
+     first with PCA, then fit a model on the components. People do this constantly with detector data. Here
+     is what it costs.</p>
+
+  <div class="card">
+    <h3>Ten detectors, one predictive combination</h3>
+    <p class="lead" style="margin-bottom:10px">Ten correlated detector readings. Nine directions carry the
+      big daily volume swings. One direction — a small differential between neighbouring stations — carries
+      almost no variance and <em>all</em> of the predictive signal for the outcome. Both pipelines below end
+      in the same 8-unit network with the same training budget. The only difference is whether the
+      projection into a k-dimensional space is chosen by <b>variance</b> or by <b>the loss</b>.</p>
+    <figure><canvas id="c4a" data-w="920" data-h="230"></canvas>
+      <figcaption>Singular values of the detector matrix — the predictive direction is the runt on the right</figcaption></figure>
+    <div class="controls" style="margin-top:16px">
+      <div class="ctrl"><label class="raw">PCA components kept, k</label>
+        <input id="b4k" type="range" min="1" max="10" step="1" value="3"><span class="val">k = <span id="b4kv">3</span> · <span id="b4var">–</span>% of variance</span></div>
+    </div>
+    <div class="btnrow">
+      <button class="act" id="b4run">Run both pipelines</button>
+      <span class="small" id="b4status">600 training samples</span>
+    </div>
+    <div class="prog"><i id="b4prog"></i></div>
+    <div class="canvasrow">
+      <figure><canvas id="c4b" data-w="450" data-h="300"></canvas>
+        <figcaption>Test RMSE: two-stage vs joint</figcaption></figure>
+      <figure><canvas id="c4c" data-w="450" data-h="300"></canvas>
+        <figcaption>Predicted vs actual, both pipelines</figcaption></figure>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n t" id="s4pca">–</div><div class="l raw">PCA-k then network</div></div>
+      <div class="stat"><div class="n" id="s4joint">–</div><div class="l raw">joint, on raw inputs</div></div>
+      <div class="stat"><div class="n w" id="s4base">–</div><div class="l raw">predict the mean</div></div>
+      <div class="stat"><div class="n r" id="s4keep">–</div><div class="l raw">signal retained by PCA-k</div></div>
+    </div>
+    <div class="callout warn">Slide k from 1 to 9 and the two-stage pipeline sits at or slightly worse than
+      the predict-the-mean baseline, no matter how much variance it keeps — 99.8% of the variance at k = 9
+      buys nothing. It only recovers at <b>k = 10</b> —
+      that is, when it throws nothing away and the "compression" is just a rotation. PCA is not bad at
+      compression; it is bad at <em>knowing what to keep</em>, because the criterion it optimizes (variance
+      in x) has no connection to the thing you are predicting.</div>
+    <div class="callout good">Joint training is what removes that disconnect. The gradient arriving at
+      w<sub>j</sub><sup>(1)</sup> carries one message: <em>move this basis function so that the prediction
+      error goes down.</em> The features become task-relevant because the task defined them. That is the
+      whole content of the word "jointly", and it is why the last layer of a network is still an ordinary
+      linear model — everything before it is a machine for manufacturing the regressors that linear model
+      needs.</div>
+    <div class="callout sig"><b>For your own work:</b> the same argument applies to any unsupervised
+      preprocessing you bolt on the front — PCA on detector matrices, k-means on trajectory clusters,
+      hand-rolled congestion indices. None of them can see the label. If the target depends on something
+      those steps discard, no downstream model can recover it.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 5 ==================== -->
+<section class="page" id="p5"><div class="wrap">
+  <h2 class="sec">What learnable basis functions cost</h2>
+  <p class="lead">Bishop's next sentence is the price tag: <em>"we then optimize the whole model by
+     minimizing an error function using gradient-based optimization methods."</em> The moment φ has
+     parameters, the model stops being linear in its parameters. Three consequences, all measurable.</p>
+
+  <div class="card">
+    <h3>1 · The parameters mean nothing individually</h3>
+    <p class="lead" style="margin-bottom:10px">Relabel hidden unit 3 as unit 7 and unit 7 as unit 3, carrying
+      their weights with them. Different parameter vector, bit-for-bit identical function. With M = 8 units
+      there are 8! = 40,320 relabellings of every solution, and sign flips on top of that.</p>
+    <div class="btnrow">
+      <button class="act" id="b5perm">Permute the hidden units</button>
+      <span class="small" id="b5permout">–</span>
+    </div>
+    <div class="callout warn">This is why a hidden weight is not a β. In a logit model, a coefficient has a
+      unit, a sign, and a confidence interval you can defend to a review panel. In a network, the individual
+      φ<sub>j</sub> are not identified at all — only the composed function is. If a vendor shows you
+      "the feature the model learned for pedestrian risk", ask them what happens to that story under a
+      relabelling.</div>
+  </div>
+
+  <div class="card">
+    <h3>2 · Two runs of the same code give two different models</h3>
+    <p class="lead" style="margin-bottom:10px">Six free-knot fits to the corridor data, identical except for
+      the random seed. Look at the knot sets: different counts of active hinges, different placements, some
+      units driven clean out of the domain and left dead. Then look at the curves.</p>
+    <div class="btnrow">
+      <button class="act" id="b5seeds">Fit six seeds</button>
+      <span class="small" id="b5seedstatus">–</span>
+    </div>
+    <div class="prog"><i id="b5prog"></i></div>
+    <div class="canvasrow">
+      <figure><canvas id="c5a" data-w="450" data-h="300"></canvas>
+        <figcaption>Six fitted curves, overlaid</figcaption></figure>
+      <figure><canvas id="c5b" data-w="450" data-h="300"></canvas>
+        <figcaption>Their knot positions — one row per seed</figcaption></figure>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s5spread">–</div><div class="l raw">mean disagreement (mph)</div></div>
+      <div class="stat"><div class="n w" id="s5max">–</div><div class="l raw">worst disagreement (mph)</div></div>
+      <div class="stat"><div class="n t" id="s5rmse">–</div><div class="l raw">RMSE spread across seeds</div></div>
+      <div class="stat"><div class="n r" id="s5dead">–</div><div class="l raw">dead units, worst seed</div></div>
+    </div>
+    <div class="callout">Non-convexity is not a footnote you can cite and move past. It means "the model" is
+      not a well-defined object — it is whatever this run of this optimizer landed on. Report the seed, run
+      more than one, and never present a single training run as if it were an estimate.</div>
+  </div>
+
+  <div class="card">
+    <h3>3 · It needs enough data to find the structure, and below that it is worse than nothing</h3>
+    <p class="lead" style="margin-bottom:10px">Back to the diagonal breakdown pocket, now at D = 12, sweeping
+      the training-set size with three seeds each. Watch for a threshold rather than a gentle curve.</p>
+    <div class="btnrow">
+      <button class="act" id="b5data">Sweep the sample size</button>
+      <span class="small" id="b5datastatus">N = 50, 100, 200, 400 · three seeds each</span>
+    </div>
+    <div class="prog"><i id="b5dprog"></i></div>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--warn)"></span>predict the mean</span>
+      <span><span class="swatch" style="background:var(--fix)"></span>best fixed basis</span>
+      <span><span class="swatch" style="background:var(--lrn)"></span>learned basis, one dot per seed</span>
+    </div>
+    <figure><canvas id="c5c" data-w="920" data-h="320"></canvas>
+      <figcaption>Test RMSE vs training-set size, log scale</figcaption></figure>
+    <div class="callout warn">There is no gentle improvement. Below the threshold the learned basis is
+      <em>no better than predicting the mean, and usually worse</em> — it has enough freedom to chase noise
+      and not enough data to locate the real direction. Right at the threshold the seeds scatter: some runs
+      find the direction, some do not, from identical code. Above it the error falls by nearly two orders of
+      magnitude in a single doubling of the sample size. The fixed basis, meanwhile, improves smoothly and
+      never gets anywhere, at any sample size on the plot.</div>
+    <div class="callout sig"><b>The practical reading.</b> "We tried a neural network and it did not beat our
+      regression" is ambiguous evidence. It can mean the problem has no learnable structure — or it can mean
+      you were on the left side of that cliff. The two look identical in a results table and are fixed by
+      completely different things.</div>
+  </div>
+
+  <div class="card">
+    <h3>And remember tab 2</h3>
+    <div class="callout">On the one-dimensional corridor, at matched parameter counts, the hand-placed grid
+      beat the learned basis. Small data, a low-dimensional input, and a functional form you actually know:
+      that is the regime where the classical model is not the baseline you have to beat — it is the right
+      answer. Learnable φ earns its cost when the input space is too big to tile <em>and</em> the function
+      has structure to align to <em>and</em> you have the samples to find it. Three conditions, not one.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 6 ==================== -->
+<section class="page" id="p6"><div class="wrap">
+  <h2 class="sec">Two things students get wrong about this section</h2>
+
+  <div class="card">
+    <h3>Misconception 1 · "Universal approximation is why neural networks work"</h3>
+    <p class="lead" style="margin-bottom:10px">A two-layer network with enough hidden units can approximate
+      any continuous function to any accuracy. True — and not the reason. A fixed Gaussian grid is <em>also</em>
+      a universal approximator on a bounded interval. Watch a fixed basis walk down to the noise floor on the
+      corridor data with no learnable parameters anywhere in sight.</p>
+    <div class="btnrow"><button class="act" id="b6uat">Grow the fixed basis</button></div>
+    <table class="map num" id="t6uat" style="max-width:520px">
+      <tr><th>Fixed Gaussian grid</th><th>Parameters</th><th>Test RMSE</th></tr>
+    </table>
+    <p class="small" style="margin-top:8px">RMSE is measured against the noise-free truth, so it can and does
+      fall below the 1.5 mph observation noise. Adding basis functions past M = 60 stops helping — at that
+      point the error is set by the 120 samples, not by the basis.</p>
+    <div class="callout">Universality is cheap. Both families have it; it cannot be what separates them.
+      What separates them is <b>how many basis functions you need to get there in D dimensions</b> — which is
+      the counting argument from tab 3, not an approximation theorem. Teaching the theorem as the punchline
+      leaves students unable to explain why anyone abandoned splines.</div>
+  </div>
+
+  <div class="card">
+    <h3>Misconception 2 · "Depth is what adds the nonlinearity"</h3>
+    <p class="lead" style="margin-bottom:10px">Bishop notes that <span class="mono">h(·)</span> must be a
+      differentiable <em>nonlinear</em> function, and that the construction extends recursively. Both
+      conditions are load-bearing. Set <span class="mono">h</span> to the identity and stack as many layers
+      as you like — the composition collapses to a single matrix.</p>
+    <div class="controls">
+      <div class="ctrl"><label class="raw">Layers</label>
+        <input id="b6L" type="range" min="1" max="8" step="1" value="4"><span class="val">L = <span id="b6Lv">4</span></span></div>
+      <div class="ctrl"><label class="raw">Activation h(·)</label>
+        <select id="b6act"><option value="id">identity (linear)</option><option value="tanh" selected>tanh</option></select></div>
+    </div>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--lrn)"></span>the deep composition</span>
+      <span><span class="swatch" style="background:var(--warn)"></span>a single equivalent linear layer</span>
+    </div>
+    <figure><canvas id="c6a" data-w="920" data-h="290"></canvas>
+      <figcaption>One slice through a randomly initialized L-layer network</figcaption></figure>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s6err">–</div><div class="l raw">max |deep − single linear layer|</div></div>
+      <div class="stat"><div class="n t" id="s6par">–</div><div class="l raw">parameters in the stack</div></div>
+      <div class="stat"><div class="n r" id="s6eff">–</div><div class="l raw">effectively distinct parameters</div></div>
+    </div>
+    <div class="callout good">With the identity, the discrepancy is at machine precision — the eight-layer
+      network and the one-layer linear model are the <em>same function</em>, and all those extra parameters
+      are pure redundancy. Switch to tanh and the two curves separate immediately. Nonlinearity and
+      learnability only pay off together: learnable parameters inside a linear φ buy you nothing at all.</div>
+    <div class="callout">The classroom test, worth keeping for the rest of the course: <b>strip every
+      nonlinearity out of an architecture; if it still does the job, you did not need the network.</b></div>
+  </div>
+
+  <div class="card">
+    <h3>The whole section in five lines</h3>
+    <table class="map">
+      <tr><td style="white-space:nowrap">The idea</td><td>A network is a linear model whose regressors are also being fitted. The last layer is still ordinary least squares; everything before it manufactures the features.</td></tr>
+      <tr><td style="white-space:nowrap">The mechanism</td><td>Each φ<sub>j</sub> = h(w<sub>j</sub>·x + w<sub>j0</sub>) has a direction (which combination of inputs it responds to) and an offset (where along that direction it switches). Both are trained.</td></tr>
+      <tr><td style="white-space:nowrap">The reason</td><td>Not expressiveness — <em>parameter efficiency in high dimensions</em>. Fixed grid K<sup>D</sup> vs learned M(D+2)+1; they cross at about D = 3.</td></tr>
+      <tr><td style="white-space:nowrap">The requirement</td><td>Joint training against the task loss, and a nonlinear differentiable h. Drop either one and the idea evaporates.</td></tr>
+      <tr><td style="white-space:nowrap">The bill</td><td>No closed form, no convexity, no identifiability, no single answer, and a sample-size threshold below which it is worse than a constant.</td></tr>
+    </table>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <b>AI for Mobility</b> · companion to Bishop, <em>Deep Learning: Foundations and Concepts</em>, §6.1–6.2.
+  All figures computed live in your browser from seeded pseudorandom data — reload and every number repeats
+  exactly. Fixed-basis baselines are given tuned bandwidth and ridge penalties chosen on the test set,
+  which favours them.
+</div></footer>
+
+<script>
+/* ============================ helpers ============================ */
+const el = id => document.getElementById(id);
+const clampn = (v,a,b) => Math.max(a, Math.min(b, v));
+const sigf = z => 1/(1+Math.exp(-z));
+
+function mulberry32(s){ return function(){ s |= 0; s = s + 0x6D2B79F5 | 0;
+  let t = Math.imul(s ^ s>>>15, 1 | s); t = t + Math.imul(t ^ t>>>7, 61 | t) ^ t;
+  return ((t ^ t>>>14) >>> 0) / 4294967296; }; }
+function gaussRnd(r){ let u=0,v=0; while(u===0)u=r(); while(v===0)v=r();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+
+function mkAxes(cv, xmin, xmax, ymin, ymax, pad){
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const W = +cv.dataset.w, H = +cv.dataset.h;
+  cv.style.width = W+'px'; cv.style.height = H+'px';
+  cv.style.maxWidth = '100%';
+  cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+  const g = cv.getContext('2d');
+  g.setTransform(dpr,0,0,dpr,0,0);
+  const L = pad.l, R = W-pad.r, T = pad.t, B = H-pad.b;
+  return {g,W,H,L,R,T,B,xmin,xmax,ymin,ymax,
+    X: x => L + (x-xmin)/(xmax-xmin)*(R-L),
+    Y: y => B - (y-ymin)/(ymax-ymin)*(B-T)};
+}
+function clear(a){ a.g.clearRect(0,0,a.W,a.H); a.g.fillStyle='#fff'; a.g.fillRect(0,0,a.W,a.H); }
+function frame(a,o){
+  o = o||{}; const g = a.g; g.save();
+  g.strokeStyle = '#eef2f0'; g.lineWidth = 1;
+  (o.yticks||[]).forEach(t => { const y = a.Y(t); g.beginPath(); g.moveTo(a.L,y); g.lineTo(a.R,y); g.stroke(); });
+  (o.xticks||[]).forEach(t => { const x = a.X(t); g.beginPath(); g.moveTo(x,a.T); g.lineTo(x,a.B); g.stroke(); });
+  g.strokeStyle = '#c9d4d0'; g.lineWidth = 1.2;
+  g.beginPath(); g.moveTo(a.L,a.T); g.lineTo(a.L,a.B); g.lineTo(a.R,a.B); g.stroke();
+  g.fillStyle = '#5b6b66'; g.font = '11px ui-monospace,Menlo,Consolas,monospace';
+  g.textAlign = 'center'; g.textBaseline = 'top';
+  (o.xticks||[]).forEach(t => g.fillText(o.xfmt ? o.xfmt(t) : String(t), a.X(t), a.B+5));
+  g.textAlign = 'right'; g.textBaseline = 'middle';
+  (o.yticks||[]).forEach(t => g.fillText(o.yfmt ? o.yfmt(t) : String(t), a.L-6, a.Y(t)));
+  g.font = '600 11.5px -apple-system,system-ui,sans-serif';
+  if(o.xlabel){ g.textAlign='center'; g.textBaseline='bottom'; g.fillText(o.xlabel,(a.L+a.R)/2, a.H-1); }
+  if(o.ylabel){ g.save(); g.translate(12,(a.T+a.B)/2); g.rotate(-Math.PI/2);
+    g.textAlign='center'; g.textBaseline='top'; g.fillText(o.ylabel,0,0); g.restore(); }
+  g.restore();
+}
+function clipArea(a){ const g=a.g; g.save(); g.beginPath();
+  g.rect(a.L-1, a.T-4, a.R-a.L+2, a.B-a.T+8); g.clip(); }
+function curve(a, fn, color, lw, dash){
+  const g = a.g; clipArea(a);
+  g.strokeStyle = color; g.lineWidth = lw||2.4; g.lineJoin='round';
+  if(dash) g.setLineDash(dash);
+  g.beginPath(); let on = false; const N = 700;
+  for(let i=0;i<=N;i++){
+    const x = a.xmin + (a.xmax-a.xmin)*i/N, y = fn(x);
+    if(!isFinite(y)){ on = false; continue; }
+    const py = clampn(a.Y(y), a.T-40, a.B+40);
+    if(!on){ g.moveTo(a.X(x), py); on = true; } else g.lineTo(a.X(x), py);
+  }
+  g.stroke(); g.restore();
+}
+function polyline(a, xs, ys, color, lw, dash){
+  const g=a.g; clipArea(a); g.strokeStyle=color; g.lineWidth=lw||2.4; g.lineJoin='round';
+  if(dash) g.setLineDash(dash);
+  g.beginPath();
+  for(let i=0;i<xs.length;i++){ const px=a.X(xs[i]), py=clampn(a.Y(ys[i]),a.T-40,a.B+40);
+    if(i===0) g.moveTo(px,py); else g.lineTo(px,py); }
+  g.stroke(); g.restore();
+}
+function seg(a,x1,y1,x2,y2,color,lw,dash){
+  const g=a.g; clipArea(a); g.strokeStyle=color; g.lineWidth=lw||1.6;
+  if(dash) g.setLineDash(dash);
+  g.beginPath(); g.moveTo(a.X(x1),a.Y(y1)); g.lineTo(a.X(x2),a.Y(y2)); g.stroke(); g.restore();
+}
+function vmark(a,x,color,dash){ const g=a.g; g.save(); g.strokeStyle=color; g.lineWidth=1.4;
+  g.setLineDash(dash||[4,4]); g.beginPath(); g.moveTo(a.X(x),a.T); g.lineTo(a.X(x),a.B); g.stroke(); g.restore(); }
+function hmark(a,y,color,dash){ const g=a.g; g.save(); g.strokeStyle=color; g.lineWidth=1.4;
+  g.setLineDash(dash||[4,4]); g.beginPath(); g.moveTo(a.L,a.Y(y)); g.lineTo(a.R,a.Y(y)); g.stroke(); g.restore(); }
+function dot(a,x,y,color,r,noStroke){ const g=a.g; clipArea(a); g.fillStyle=color;
+  g.beginPath(); g.arc(a.X(x),a.Y(y),r||5.5,0,Math.PI*2); g.fill();
+  if(!noStroke){ g.strokeStyle='#fff'; g.lineWidth=1.6; g.stroke(); } g.restore(); }
+function tag(a,x,y,text,color,dx,dy){ const g=a.g; g.save();
+  g.font='700 11.5px ui-monospace,Menlo,Consolas,monospace'; g.fillStyle=color;
+  g.textAlign='left'; g.textBaseline='middle'; g.fillText(text, a.X(x)+(dx||8), a.Y(y)+(dy||0)); g.restore(); }
+function logTicks(lo,hi){ const t=[]; for(let e=Math.floor(Math.log10(lo)); e<=Math.ceil(Math.log10(hi)); e++) t.push(Math.pow(10,e)); return t; }
+function fmtLog(v){ if(v>=1) return v>=1e5 ? v.toExponential(0).replace('e+','e') : String(v);
+  return v.toExponential(0).replace('e-','e−'); }
+
+/* ---- linear algebra: ridge via normal equations + Cholesky ---- */
+function ridgeSolve(Phi, y, N, P, lam){
+  const G = new Float64Array(P*P), c = new Float64Array(P);
+  for(let n=0;n<N;n++){
+    const off=n*P, yn=y[n];
+    for(let i=0;i<P;i++){
+      const pi=Phi[off+i]; c[i]+=pi*yn;
+      for(let j=i;j<P;j++) G[i*P+j]+=pi*Phi[off+j];
+    }
+  }
+  for(let i=0;i<P;i++){ G[i*P+i]+=lam; for(let j=0;j<i;j++) G[i*P+j]=G[j*P+i]; }
+  return cholSolve(G, c, P);
+}
+function gramOf(Phi, y, N, P){
+  const G = new Float64Array(P*P), c = new Float64Array(P);
+  for(let n=0;n<N;n++){
+    const off=n*P, yn=y[n];
+    for(let i=0;i<P;i++){
+      const pi=Phi[off+i]; c[i]+=pi*yn;
+      for(let j=i;j<P;j++) G[i*P+j]+=pi*Phi[off+j];
+    }
+  }
+  for(let i=0;i<P;i++) for(let j=0;j<i;j++) G[i*P+j]=G[j*P+i];
+  return {G,c};
+}
+function solveWithLam(G0, c, P, lam){
+  const G = new Float64Array(G0);
+  for(let i=0;i<P;i++) G[i*P+i]+=lam;
+  return cholSolve(G, c, P);
+}
+function cholSolve(A, b, n){
+  const L = new Float64Array(n*n);
+  for(let i=0;i<n;i++){
+    for(let j=0;j<=i;j++){
+      let s = A[i*n+j];
+      for(let k=0;k<j;k++) s -= L[i*n+k]*L[j*n+k];
+      if(i===j){ if(s<=1e-12) s=1e-12; L[i*n+i]=Math.sqrt(s); }
+      else L[i*n+j]=s/L[j*n+j];
+    }
+  }
+  const z = new Float64Array(n), x = new Float64Array(n);
+  for(let i=0;i<n;i++){ let s=b[i]; for(let k=0;k<i;k++) s-=L[i*n+k]*z[k]; z[i]=s/L[i*n+i]; }
+  for(let i=n-1;i>=0;i--){ let s=z[i]; for(let k=i+1;k<n;k++) s-=L[k*n+i]*x[k]; x[i]=s/L[i*n+i]; }
+  return x;
+}
+function predictLin(Phi, w, N, P){
+  const out = new Float64Array(N);
+  for(let n=0;n<N;n++){ let s=0; const off=n*P; for(let i=0;i<P;i++) s+=Phi[off+i]*w[i]; out[n]=s; }
+  return out;
+}
+function rmse(a,b){ let s=0; for(let i=0;i<a.length;i++){ const d=a[i]-b[i]; s+=d*d; } return Math.sqrt(s/a.length); }
+
+/* ---- async chunk runner ---- */
+function runChunks(total, chunk, step, onProgress, done){
+  let i = 0;
+  (function loop(){
+    const end = Math.min(i+chunk, total);
+    for(; i<end; i++) step(i);
+    if(onProgress) onProgress(i/total);
+    if(i < total) requestAnimationFrame(loop); else if(done) done();
+  })();
+}
+
+/* ============================ corridor data ============================ */
+function speedTrue(x){ return 60 - 42*sigf((x-0.45)/0.010) + 38*sigf((x-0.75)/0.07); }
+const CORR = (function(){
+  const N = 120, r = mulberry32(20260903);
+  const x = new Float64Array(N), y = new Float64Array(N);
+  for(let i=0;i<N;i++){ x[i]=i/(N-1); y[i]=speedTrue(x[i]) + 1.5*gaussRnd(r); }
+  const NT = 601, xt = new Float64Array(NT), yt = new Float64Array(NT);
+  for(let i=0;i<NT;i++){ xt[i]=i/(NT-1); yt[i]=speedTrue(xt[i]); }
+  return {N,x,y,NT,xt,yt};
+})();
+
+function basisSpec(kind){
+  switch(kind){
+    case 'poly3':   return {P:4,  name:'polynomial, degree 3'};
+    case 'poly8':   return {P:9,  name:'polynomial, degree 8'};
+    case 'eng':     return {P:6,  name:'hand-picked features'};
+    case 'gauss8':  return {P:9,  name:'Gaussian grid, M = 8'};
+    case 'gauss24': return {P:25, name:'Gaussian grid, M = 24'};
+    case 'gauss60': return {P:61, name:'Gaussian grid, M = 60'};
+    case 'hinge24': return {P:25, name:'hinge grid, M = 24'};
+  }
+}
+function buildBasis(kind, xs){
+  const N = xs.length, P = basisSpec(kind).P, Phi = new Float64Array(N*P);
+  const gaussM = kind==='gauss8'?8:kind==='gauss24'?24:kind==='gauss60'?60:0;
+  for(let n=0;n<N;n++){
+    const x = xs[n], off = n*P;
+    if(kind==='poly3'||kind==='poly8'){ let v=1; for(let i=0;i<P;i++){ Phi[off+i]=v; v*=x; } }
+    else if(kind==='eng'){
+      Phi[off]=1; Phi[off+1]=x; Phi[off+2]=x*x; Phi[off+3]=Math.log(x+0.05);
+      Phi[off+4]=(x>0.5)?1:0; Phi[off+5]=Math.sin(2*Math.PI*x);
+    } else if(gaussM){
+      const s = Math.max(1/(gaussM-1), 0.012)*1.4;
+      Phi[off]=1;
+      for(let j=0;j<gaussM;j++){ const c=j/(gaussM-1), d=(x-c)/s; Phi[off+1+j]=Math.exp(-0.5*d*d); }
+    } else { /* hinge24 */
+      Phi[off]=1;
+      for(let j=0;j<24;j++){ const k=0.02+0.96*j/23; Phi[off+1+j]=Math.max(0,x-k); }
+    }
+  }
+  return Phi;
+}
+function fitFixedBasis(kind){
+  const P = basisSpec(kind).P;
+  const Ptr = buildBasis(kind, CORR.x), Pte = buildBasis(kind, CORR.xt);
+  const {G,c} = gramOf(Ptr, CORR.y, CORR.N, P);
+  let best = {e:Infinity};
+  for(let k=-8;k<=2;k+=0.5){
+    const lam = Math.pow(10,k);
+    const w = solveWithLam(G, c, P, lam);
+    const e = rmse(predictLin(Pte, w, CORR.NT, P), CORR.yt);
+    if(e < best.e) best = {e, w, lam};
+  }
+  return {P, ...best};
+}
+
+/* ============================ page 1 ============================ */
+function drawP1(){
+  const kind = el('b1sel').value;
+  const fit = fitFixedBasis(kind);
+  const a = mkAxes(el('c1'), -0.02, 1.02, 8, 72, {l:56,r:16,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[0,0.2,0.4,0.6,0.8,1], yticks:[10,20,30,40,50,60,70],
+    xfmt:t=>t.toFixed(1), xlabel:'position along the corridor', ylabel:'speed (mph)'});
+  for(let i=0;i<CORR.N;i++) dot(a, CORR.x[i], CORR.y[i], '#c9d4d0', 3, true);
+  polyline(a, CORR.xt, CORR.yt, '#c0392b', 2.2, [6,4]);
+  const pred = predictLin(buildBasis(kind, CORR.xt), fit.w, CORR.NT, fit.P);
+  if(el('b1phi').checked){
+    const P = fit.P;
+    for(let j=1;j<P;j++){
+      const ys = new Float64Array(CORR.NT), Pte = buildBasis(kind, CORR.xt);
+      for(let n=0;n<CORR.NT;n++) ys[n] = 30 + Pte[n*P+j]*fit.w[j];
+      polyline(a, CORR.xt, ys, 'rgba(155,93,229,0.42)', 1.2);
+    }
+  }
+  polyline(a, CORR.xt, pred, '#1f6f8b', 2.9);
+  el('s1rmse').textContent = fit.e.toFixed(2);
+  el('s1par').textContent = fit.P;
+  el('s1cvx').textContent = 'convex';
+}
+
+/* ============================ free-knot hinge trainer ============================ */
+function newHingeModel(M, ymean, seed){
+  const r = mulberry32(seed);
+  const a = new Float64Array(M), b = new Float64Array(M), w = new Float64Array(M);
+  for(let j=0;j<M;j++){ a[j]=1; b[j]=-(0.03+0.94*j/Math.max(M-1,1)); w[j]=0.1*gaussRnd(r); }
+  return {M, a, b, w, c:ymean, t:0,
+    ma:new Float64Array(M), va:new Float64Array(M),
+    mb:new Float64Array(M), vb:new Float64Array(M),
+    mw:new Float64Array(M), vw:new Float64Array(M), mc:0, vc:0};
+}
+function hingePredict(m, xs){
+  const out = new Float64Array(xs.length);
+  for(let n=0;n<xs.length;n++){
+    let s = m.c;
+    for(let j=0;j<m.M;j++){ const z = m.a[j]*xs[n]+m.b[j]; if(z>0) s += m.w[j]*z; }
+    out[n]=s;
+  }
+  return out;
+}
+function hingeStep(m, xs, ys, lr){
+  const N = xs.length, M = m.M;
+  const ga = new Float64Array(M), gb = new Float64Array(M), gw = new Float64Array(M);
+  const zs = new Float64Array(M);
+  let gc = 0;
+  for(let n=0;n<N;n++){
+    let p = m.c;
+    for(let j=0;j<M;j++){ const z=m.a[j]*xs[n]+m.b[j]; zs[j]=z; if(z>0) p += m.w[j]*z; }
+    const go = 2*(p-ys[n])/N; gc += go;
+    for(let j=0;j<M;j++){
+      if(zs[j]>0){ gw[j]+=go*zs[j]; const gz=go*m.w[j]; ga[j]+=gz*xs[n]; gb[j]+=gz; }
+    }
+  }
+  m.t++;
+  const b1=0.9, b2=0.999, eps=1e-8, c1=1-Math.pow(b1,m.t), c2=1-Math.pow(b2,m.t);
+  for(let j=0;j<M;j++){
+    m.ma[j]=b1*m.ma[j]+(1-b1)*ga[j]; m.va[j]=b2*m.va[j]+(1-b2)*ga[j]*ga[j];
+    m.a[j]-=lr*(m.ma[j]/c1)/(Math.sqrt(m.va[j]/c2)+eps);
+    m.mb[j]=b1*m.mb[j]+(1-b1)*gb[j]; m.vb[j]=b2*m.vb[j]+(1-b2)*gb[j]*gb[j];
+    m.b[j]-=lr*(m.mb[j]/c1)/(Math.sqrt(m.vb[j]/c2)+eps);
+    m.mw[j]=b1*m.mw[j]+(1-b1)*gw[j]; m.vw[j]=b2*m.vw[j]+(1-b2)*gw[j]*gw[j];
+    m.w[j]-=lr*(m.mw[j]/c1)/(Math.sqrt(m.vw[j]/c2)+eps);
+  }
+  m.mc=b1*m.mc+(1-b1)*gc; m.vc=b2*m.vc+(1-b2)*gc*gc;
+  m.c-=lr*(m.mc/c1)/(Math.sqrt(m.vc/c2)+eps);
+}
+function knotsOf(m){ const k=[]; for(let j=0;j<m.M;j++) k.push(-m.b[j]/m.a[j]); return k; }
+
+/* ============================ page 2 ============================ */
+let P2 = {model:null, traj:[], busy:false, fixed:null};
+function p2Fixed(M){
+  const P = M+1, N = CORR.N;
+  const build = xs => { const Phi = new Float64Array(xs.length*P);
+    for(let n=0;n<xs.length;n++){ Phi[n*P]=1;
+      for(let j=0;j<M;j++){ const k=0.02+0.96*j/Math.max(M-1,1); Phi[n*P+1+j]=Math.max(0,xs[n]-k); } }
+    return Phi; };
+  const Ptr = build(CORR.x), Pte = build(CORR.xt);
+  const {G,c} = gramOf(Ptr, CORR.y, N, P);
+  let best = {e:Infinity};
+  for(let k=-8;k<=1;k+=0.5){
+    const lam=Math.pow(10,k), w=solveWithLam(G,c,P,lam);
+    const e = rmse(predictLin(Pte,w,CORR.NT,P), CORR.yt);
+    if(e<best.e) best={e,w,lam};
+  }
+  return {P, pred: predictLin(Pte, best.w, CORR.NT, P), e: best.e, knots:
+    Array.from({length:M}, (_,j)=>0.02+0.96*j/Math.max(M-1,1))};
+}
+function drawP2(){
+  const Mf = +el('b2mf').value, Ml = +el('b2ml').value;
+  el('b2mfv').textContent = Mf; el('b2mfp').textContent = Mf+1;
+  el('b2mlv').textContent = Ml; el('b2mlp').textContent = 3*Ml+1;
+  if(!P2.fixed || P2.fixed.M !== Mf){ P2.fixed = p2Fixed(Mf); P2.fixed.M = Mf; }
+
+  const a = mkAxes(el('c2a'), -0.02, 1.02, 8, 72, {l:52,r:12,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[0,0.25,0.5,0.75,1], yticks:[10,20,30,40,50,60,70],
+    xfmt:t=>t.toFixed(2), xlabel:'position along the corridor', ylabel:'speed (mph)'});
+  for(let i=0;i<CORR.N;i++) dot(a, CORR.x[i], CORR.y[i], '#c9d4d0', 2.6, true);
+  polyline(a, CORR.xt, CORR.yt, '#c0392b', 2, [6,4]);
+  polyline(a, CORR.xt, P2.fixed.pred, '#1f6f8b', 2.6);
+  el('s2f').textContent = P2.fixed.e.toFixed(2);
+  if(P2.model){
+    polyline(a, CORR.xt, hingePredict(P2.model, CORR.xt), '#006747', 2.6, [9,5]);
+    const kn = knotsOf(P2.model);
+    kn.forEach(k => { if(k>-0.02 && k<1.02) seg(a,k,9,k,13,'#b9a96a',3); });
+    el('s2l').textContent = rmse(hingePredict(P2.model, CORR.xt), CORR.yt).toFixed(2);
+    el('s2k').textContent = kn.filter(k=>Math.abs(k-0.45)<0.05).length + ' / ' + P2.model.M;
+    el('s2d').textContent = kn.filter(k=>k<0||k>1).length + ' / ' + P2.model.M;
+  } else { el('s2l').textContent='–'; el('s2k').textContent='–'; el('s2d').textContent='–'; }
+
+  const LX = s => Math.log10(1+s);
+  const b = mkAxes(el('c2b'), 0, LX(15000), -0.15, 1.35, {l:54,r:20,t:14,b:38});
+  clear(b);
+  frame(b,{xticks:[0,1,2,3,4], yticks:[0,0.25,0.5,0.75,1], yfmt:t=>t.toFixed(2),
+    xfmt:t=>['0','10','100','1k','10k'][t],
+    xlabel:'training step (log scale)', ylabel:'knot position'});
+  hmark(b, 0.45, '#c0392b');
+  b.g.save(); b.g.font='700 11px ui-monospace,monospace'; b.g.fillStyle='#c0392b';
+  b.g.textAlign='right'; b.g.textBaseline='bottom';
+  b.g.fillText('queue front', b.R-4, b.Y(0.45)-4); b.g.restore();
+  if(P2.traj.length>1){
+    const M = P2.traj[0].k.length;
+    for(let j=0;j<M;j++){
+      const xs=[], ys=[];
+      for(const rec of P2.traj){ xs.push(LX(rec.s)); ys.push(clampn(rec.k[j],-0.3,1.5)); }
+      polyline(b, xs, ys, 'rgba(0,103,71,0.5)', 1.7);
+    }
+    const last = P2.traj[P2.traj.length-1];
+    for(let j=0;j<M;j++) dot(b, LX(15000), clampn(last.k[j],-0.3,1.5), '#b9a96a', 3.4);
+  } else {
+    b.g.fillStyle='#8a9a95'; b.g.font='13px -apple-system,system-ui';
+    b.g.textAlign='center'; b.g.fillText('train the free-knot model',(b.L+b.R)/2,(b.T+b.B)/2);
+  }
+}
+/* record densely early — the migration is over within a few hundred steps */
+function trajDue(i){ return i<60 || (i<600 && i%20===0) || i%250===0; }
+function p2Train(){
+  if(P2.busy) return;
+  P2.busy = true; el('b2run').disabled = true;
+  const Ml = +el('b2ml').value, STEPS = 15000, RESTARTS = 3;
+  let ymean = 0; for(let i=0;i<CORR.N;i++) ymean += CORR.y[i]/CORR.N;
+  const models = [], trajs = [];
+  for(let s=0;s<RESTARTS;s++){
+    models.push(newHingeModel(Ml, ymean, 3+s*101));
+    trajs.push([{s:0, k:knotsOf(models[s])}]);
+  }
+  P2.model = models[0]; P2.traj = trajs[0];
+  el('b2status').textContent = 'training '+RESTARTS+' restarts…';
+  runChunks(STEPS, 250, i => {
+    const lr = 0.05*Math.pow(0.5, 4*(i+1)/STEPS);
+    const due = trajDue(i+1);
+    for(let s=0;s<RESTARTS;s++){
+      hingeStep(models[s], CORR.x, CORR.y, lr);
+      if(due) trajs[s].push({s:i+1, k:knotsOf(models[s])});
+    }
+  }, p => { el('b2prog').style.width = (p*100).toFixed(0)+'%'; if(Math.random()<0.3) drawP2(); },
+  () => {
+    let bi = 0, be = Infinity;
+    models.forEach((m,s)=>{ const e = rmse(hingePredict(m, CORR.xt), CORR.yt);
+      if(e < be){ be = e; bi = s; } });
+    P2.model = models[bi]; P2.traj = trajs[bi];
+    P2.busy=false; el('b2run').disabled=false;
+    el('b2status').textContent = '15,000 Adam steps × '+RESTARTS+' restarts — showing the best one';
+    drawP2();
+  });
+}
+
+/* ============================ page 3: parameter arithmetic ============================ */
+function drawP3a(){
+  const K = +el('b3k').value, M = +el('b3m').value;
+  el('b3kv').textContent = K; el('b3mv').textContent = M;
+  const Dmax = 12;
+  const fixedAt = D => Math.pow(K,D), lrnAt = D => M*(D+2)+1;
+  let cross = null;
+  for(let D=1; D<=40; D++) if(lrnAt(D) < fixedAt(D)){ cross = D; break; }
+  const hi = Math.max(fixedAt(Dmax), lrnAt(Dmax));
+  const a = mkAxes(el('c3a'), 1, Dmax, 0, Math.log10(hi)+0.3, {l:64,r:16,t:16,b:40});
+  clear(a);
+  const yt = []; for(let e=0;e<=Math.ceil(Math.log10(hi));e+=Math.ceil((Math.log10(hi)+1)/8)) yt.push(e);
+  frame(a,{xticks:[1,2,3,4,5,6,7,8,9,10,11,12], yticks:yt,
+    yfmt:v=>v===0?'1':'1e'+v, xlabel:'input dimension D', ylabel:'parameters needed'});
+  const xs=[], f=[], l=[];
+  for(let D=1;D<=Dmax;D++){ xs.push(D); f.push(Math.log10(fixedAt(D))); l.push(Math.log10(lrnAt(D))); }
+  polyline(a, xs, f, '#1f6f8b', 3);
+  polyline(a, xs, l, '#006747', 3);
+  a.g.save(); a.g.font='700 11.5px ui-monospace,Menlo,Consolas,monospace';
+  a.g.textAlign='right'; a.g.textBaseline='bottom';
+  a.g.fillStyle='#1f6f8b'; a.g.fillText('fixed grid  K^D', a.R-6, a.Y(f[Dmax-1])+22);
+  a.g.textBaseline='top';
+  a.g.fillStyle='#006747'; a.g.fillText('learned  M(D+2)+1', a.R-6, a.Y(l[Dmax-1])+8);
+  a.g.restore();
+  if(cross && cross<=Dmax){
+    vmark(a, cross, '#b9a96a', [5,4]);
+    dot(a, cross, Math.log10(lrnAt(cross)), '#9b5de5', 5.5);
+    tag(a, cross, Math.log10(hi)*0.93, 'crossover D = '+cross, '#9b5de5', 8, 0);
+  }
+  el('s3cross').textContent = cross ? 'D = '+cross : 'never';
+  el('s3f10').textContent = fixedAt(10).toExponential(1).replace('e+','e');
+  el('s3l10').textContent = lrnAt(10);
+  el('s3ratio').textContent = (fixedAt(10)/lrnAt(10)).toExponential(1).replace('e+','e') + '×';
+}
+
+/* ============================ page 3: direction task ============================ */
+function makeDirData(D, N, seed, dir){
+  const r = mulberry32(seed);
+  const X = new Float64Array(N*D), y = new Float64Array(N);
+  for(let n=0;n<N;n++){
+    let u=0;
+    for(let i=0;i<D;i++){ const v=gaussRnd(r); X[n*D+i]=v; u+=v*dir[i]; }
+    y[n]=Math.exp(-4*(u-0.5)*(u-0.5));
+  }
+  return {X,y,N,D};
+}
+function unitDir(D, seed){
+  const r = mulberry32(seed); const a = new Float64Array(D); let s=0;
+  for(let i=0;i<D;i++){ a[i]=gaussRnd(r); s+=a[i]*a[i]; }
+  s=Math.sqrt(s); for(let i=0;i<D;i++) a[i]/=s; return a;
+}
+function newMLP(D, M, seed, ymean){
+  const r = mulberry32(seed);
+  const W1 = new Float64Array(D*M), b1 = new Float64Array(M),
+        W2 = new Float64Array(M);
+  for(let i=0;i<D*M;i++) W1[i]=gaussRnd(r)/Math.sqrt(D);
+  for(let j=0;j<M;j++) W2[j]=gaussRnd(r)/Math.sqrt(M);
+  return {D,M,W1,b1,W2,b2:ymean,t:0,
+    m:[new Float64Array(D*M),new Float64Array(M),new Float64Array(M),0],
+    v:[new Float64Array(D*M),new Float64Array(M),new Float64Array(M),0]};
+}
+function mlpForward(net, X, N){
+  const {D,M,W1,b1,W2} = net;
+  const H = new Float64Array(N*M), out = new Float64Array(N);
+  for(let n=0;n<N;n++){
+    let s = net.b2; const xo=n*D, ho=n*M;
+    for(let j=0;j<M;j++){
+      let z=b1[j];
+      for(let i=0;i<D;i++) z += X[xo+i]*W1[i*M+j];
+      const h=Math.tanh(z); H[ho+j]=h; s += h*W2[j];
+    }
+    out[n]=s;
+  }
+  return {H,out};
+}
+function mlpStep(net, X, y, N, lr){
+  const {D,M,W1,b1,W2} = net;
+  const {H,out} = mlpForward(net, X, N);
+  const gW1=new Float64Array(D*M), gb1=new Float64Array(M), gW2=new Float64Array(M);
+  let gb2=0;
+  const gz=new Float64Array(M);
+  for(let n=0;n<N;n++){
+    const go = 2*(out[n]-y[n])/N; gb2 += go;
+    const ho=n*M, xo=n*D;
+    for(let j=0;j<M;j++){ const h=H[ho+j]; gW2[j]+=h*go; gz[j]=go*W2[j]*(1-h*h); gb1[j]+=gz[j]; }
+    for(let i=0;i<D;i++){ const xi=X[xo+i]; if(xi===0) continue; const wo=i*M;
+      for(let j=0;j<M;j++) gW1[wo+j]+=xi*gz[j]; }
+  }
+  net.t++;
+  const b1c=0.9,b2c=0.999,eps=1e-8,c1=1-Math.pow(b1c,net.t),c2=1-Math.pow(b2c,net.t);
+  const upd=(arr,g,mi,vi)=>{ const m=net.m[mi], v=net.v[vi];
+    for(let i=0;i<arr.length;i++){
+      m[i]=b1c*m[i]+(1-b1c)*g[i]; v[i]=b2c*v[i]+(1-b2c)*g[i]*g[i];
+      arr[i]-=lr*(m[i]/c1)/(Math.sqrt(v[i]/c2)+eps);
+    } };
+  upd(W1,gW1,0,0); upd(b1,gb1,1,1); upd(W2,gW2,2,2);
+  net.m[3]=b1c*net.m[3]+(1-b1c)*gb2; net.v[3]=b2c*net.v[3]+(1-b2c)*gb2*gb2;
+  net.b2 -= lr*(net.m[3]/c1)/(Math.sqrt(net.v[3]/c2)+eps);
+}
+function bestCos(net, dir){
+  const {D,M,W1} = net; let best=0;
+  for(let j=0;j<M;j++){
+    let dp=0, nn=0;
+    for(let i=0;i<D;i++){ dp+=W1[i*M+j]*dir[i]; nn+=W1[i*M+j]*W1[i*M+j]; }
+    const c=Math.abs(dp)/Math.sqrt(nn+1e-18); if(c>best) best=c;
+  }
+  return best;
+}
+function rffFit(tr, te, MF, gammas, seedBase){
+  let best = {e:Infinity};
+  for(const gam of gammas){
+    const P = MF+1, r = mulberry32(seedBase);
+    const W = new Float64Array(tr.D*MF), bb = new Float64Array(MF);
+    const sg = Math.sqrt(gam);
+    for(let i=0;i<tr.D*MF;i++) W[i]=gaussRnd(r)*sg;
+    for(let j=0;j<MF;j++) bb[j]=r()*2*Math.PI;
+    const build = (dat) => { const Phi=new Float64Array(dat.N*P), sc=Math.sqrt(2/MF);
+      for(let n=0;n<dat.N;n++){ Phi[n*P]=1; const xo=n*dat.D;
+        for(let j=0;j<MF;j++){ let z=bb[j];
+          for(let i=0;i<dat.D;i++) z+=dat.X[xo+i]*W[i*MF+j];
+          Phi[n*P+1+j]=sc*Math.cos(z); } }
+      return Phi; };
+    const Ptr=build(tr), Pte=build(te);
+    const {G,c} = gramOf(Ptr, tr.y, tr.N, P);
+    for(let k=-5;k<=2;k++){
+      const w = solveWithLam(G,c,P,Math.pow(10,k));
+      const e = rmse(predictLin(Pte,w,te.N,P), te.y);
+      if(e<best.e) best={e,gam,lam:Math.pow(10,k)};
+    }
+  }
+  return best;
+}
+function additiveFit(tr, te){
+  const nb = 8, P = nb*tr.D + 1, s = 6/(nb-1);
+  const build = (dat) => { const Phi=new Float64Array(dat.N*P);
+    for(let n=0;n<dat.N;n++){ Phi[n*P]=1; const xo=n*dat.D;
+      for(let i=0;i<dat.D;i++) for(let j=0;j<nb;j++){
+        const cc=-3+6*j/(nb-1), d=(dat.X[xo+i]-cc)/s;
+        Phi[n*P+1+i*nb+j]=Math.exp(-0.5*d*d); } }
+    return Phi; };
+  const Ptr=build(tr), Pte=build(te);
+  const {G,c} = gramOf(Ptr, tr.y, tr.N, P);
+  let best={e:Infinity};
+  for(let k=-5;k<=3;k++){
+    const w=solveWithLam(G,c,P,Math.pow(10,k));
+    const e=rmse(predictLin(Pte,w,te.N,P), te.y);
+    if(e<best.e) best={e,lam:Math.pow(10,k)};
+  }
+  return best;
+}
+const P3DIMS = [2,4,8,16,32];
+let P3 = {res:null, busy:false, proj:null};
+function p3Run(){
+  if(P3.busy) return; P3.busy=true; el('b3run').disabled=true;
+  const res = [];
+  const jobs = P3DIMS.slice();
+  el('b3status').textContent = 'running…';
+  let jdone = 0;
+  (function next(){
+    if(!jobs.length){
+      P3.res = res; P3.busy=false; el('b3run').disabled=false;
+      el('b3status').textContent = 'done — reload for identical numbers';
+      const last = res[res.length-1];
+      el('s3cos').textContent = last.cos.toFixed(4);
+      el('s3rff32').textContent = Math.min(last.rff,last.add).toFixed(3);
+      el('s3mlp32').textContent = last.mlp.toFixed(4);
+      el('s3gain').textContent = (Math.min(last.rff,last.add)/last.mlp).toFixed(0)+'×';
+      drawP3b(); drawP3c(); return;
+    }
+    const D = jobs.shift();
+    const dir = unitDir(D, 4242+D);
+    const tr = makeDirData(D, 500, 11+D, dir), te = makeDirData(D, 1500, 999+D, dir);
+    let ym=0; for(let i=0;i<tr.N;i++) ym+=tr.y[i]/tr.N;
+    let base=0; for(let i=0;i<te.N;i++) base+=(te.y[i]-ym)*(te.y[i]-ym);
+    base=Math.sqrt(base/te.N);
+    const rff = rffFit(tr, te, 120, [0.05,0.2,0.8,3.2], 5).e;
+    const add = additiveFit(tr, te).e;
+    const net = newMLP(D, 8, 1, ym);
+    const STEPS = 1200 + 25*D;
+    runChunks(STEPS, 40, () => mlpStep(net, tr.X, tr.y, tr.N, 0.03),
+      p => { el('b3prog').style.width = (100*(jdone+p)/P3DIMS.length).toFixed(0)+'%'; },
+      () => {
+        const pr = mlpForward(net, te.X, te.N).out;
+        const e = rmse(pr, te.y);
+        res.push({D, base, rff, add, mlp:e, cos:bestCos(net, dir)});
+        if(D===32){
+          const {D:Dd,M,W1}=net; let bj=0,bc=0;
+          for(let j=0;j<M;j++){ let dp=0,nn=0;
+            for(let i=0;i<Dd;i++){ dp+=W1[i*M+j]*dir[i]; nn+=W1[i*M+j]*W1[i*M+j]; }
+            const c=Math.abs(dp)/Math.sqrt(nn+1e-18); if(c>bc){bc=c;bj=j;} }
+          const proj=[], ys=[], pp=[];
+          let nn=0; for(let i=0;i<Dd;i++) nn+=W1[i*M+bj]*W1[i*M+bj]; nn=Math.sqrt(nn);
+          let sgn=0; for(let i=0;i<Dd;i++) sgn+=W1[i*M+bj]*dir[i]; sgn=sgn<0?-1:1;
+          for(let n=0;n<Math.min(te.N,600);n++){
+            let u=0; for(let i=0;i<Dd;i++) u+=te.X[n*Dd+i]*W1[i*M+bj];
+            proj.push(sgn*u/nn); ys.push(te.y[n]); pp.push(pr[n]);
+          }
+          P3.proj = {proj, ys, pp};
+        }
+        jdone++; next();
+      });
+  })();
+}
+function drawP3b(){
+  const a = mkAxes(el('c3b'), 0, P3DIMS.length-1, -3.2, 0.1, {l:56,r:14,t:16,b:40});
+  clear(a);
+  frame(a,{xticks:P3DIMS.map((_,i)=>i), yticks:[-3,-2,-1,0],
+    xfmt:i=>'D='+P3DIMS[i], yfmt:v=>'1e'+v, xlabel:'input dimension', ylabel:'test RMSE'});
+  if(!P3.res) return;
+  const lg = v => Math.log10(Math.max(v,1e-4));
+  const xs = P3.res.map((_,i)=>i);
+  polyline(a, xs, P3.res.map(r=>lg(r.base)), '#c0392b', 2.2, [6,4]);
+  polyline(a, xs, P3.res.map(r=>lg(r.add)),  '#9b5de5', 2.6);
+  polyline(a, xs, P3.res.map(r=>lg(r.rff)),  '#1f6f8b', 2.6);
+  polyline(a, xs, P3.res.map(r=>lg(r.mlp)),  '#006747', 3);
+  P3.res.forEach((r,i)=>{ dot(a,i,lg(r.mlp),'#006747',4); dot(a,i,lg(r.rff),'#1f6f8b',3.5);
+    dot(a,i,lg(r.add),'#9b5de5',3.5); });
+}
+function drawP3c(){
+  const a = mkAxes(el('c3c'), -3.2, 3.2, -0.1, 1.15, {l:52,r:14,t:16,b:40});
+  clear(a);
+  frame(a,{xticks:[-3,-2,-1,0,1,2,3], yticks:[0,0.25,0.5,0.75,1], yfmt:v=>v.toFixed(2),
+    xlabel:'projection onto the direction the network learned', ylabel:'breakdown risk y'});
+  if(!P3.proj){ a.g.fillStyle='#8a9a95'; a.g.font='13px -apple-system,system-ui';
+    a.g.textAlign='center'; a.g.fillText('run the sweep', (a.L+a.R)/2, (a.T+a.B)/2); return; }
+  const {proj, ys, pp} = P3.proj;
+  for(let i=0;i<proj.length;i++) dot(a, proj[i], ys[i], 'rgba(31,111,139,0.35)', 2.6, true);
+  const idx = proj.map((v,i)=>i).sort((p,q)=>proj[p]-proj[q]);
+  polyline(a, idx.map(i=>proj[i]), idx.map(i=>pp[i]), '#006747', 2.4);
+  tag(a, -3.0, 1.06, '32-D points, one axis', '#1f6f8b', 0, 0);
+}
+
+/* ============================ page 4: joint vs two-stage ============================ */
+const DET = (function(){
+  const D=10, Ntr=600, Nte=1500;
+  const rq = mulberry32(505);
+  // random orthonormal basis via Gram-Schmidt
+  const Q=[]; for(let k=0;k<D;k++){
+    const v=new Float64Array(D); for(let i=0;i<D;i++) v[i]=gaussRnd(rq);
+    for(const u of Q){ let d=0; for(let i=0;i<D;i++) d+=v[i]*u[i];
+      for(let i=0;i<D;i++) v[i]-=d*u[i]; }
+    let n=0; for(let i=0;i<D;i++) n+=v[i]*v[i]; n=Math.sqrt(n);
+    for(let i=0;i<D;i++) v[i]/=n; Q.push(v);
+  }
+  const scales=[6,5.5,5,4.5,4,3.5,3,2.5,2,0.5];
+  const gen=(N,seed)=>{ const r=mulberry32(seed);
+    const X=new Float64Array(N*D), y=new Float64Array(N);
+    for(let n=0;n<N;n++){
+      const z=new Float64Array(D);
+      for(let k=0;k<D;k++) z[k]=gaussRnd(r)*scales[k];
+      for(let i=0;i<D;i++){ let s=0; for(let k=0;k<D;k++) s+=z[k]*Q[k][i]; X[n*D+i]=s; }
+      const u=z[D-1]/scales[D-1];
+      y[n]=Math.exp(-4*(u-0.5)*(u-0.5));
+    }
+    return {X,y,N,D}; };
+  return {D, tr:gen(Ntr,1), te:gen(Nte,2), Q, scales};
+})();
+function jacobiEig(Ain, n){
+  const A = Float64Array.from(Ain), V = new Float64Array(n*n);
+  for(let i=0;i<n;i++) V[i*n+i]=1;
+  for(let sweep=0; sweep<80; sweep++){
+    let off=0;
+    for(let p=0;p<n;p++) for(let q=p+1;q<n;q++) off+=A[p*n+q]*A[p*n+q];
+    if(off < 1e-22) break;
+    for(let p=0;p<n;p++) for(let q=p+1;q<n;q++){
+      if(Math.abs(A[p*n+q]) < 1e-18) continue;
+      const theta=(A[q*n+q]-A[p*n+p])/(2*A[p*n+q]);
+      const t=Math.sign(theta||1)/(Math.abs(theta)+Math.sqrt(theta*theta+1));
+      const c=1/Math.sqrt(t*t+1), s=t*c;
+      for(let k=0;k<n;k++){
+        const akp=A[k*n+p], akq=A[k*n+q];
+        A[k*n+p]=c*akp-s*akq; A[k*n+q]=s*akp+c*akq;
+      }
+      for(let k=0;k<n;k++){
+        const apk=A[p*n+k], aqk=A[q*n+k];
+        A[p*n+k]=c*apk-s*aqk; A[q*n+k]=s*apk+c*aqk;
+      }
+      for(let k=0;k<n;k++){
+        const vkp=V[k*n+p], vkq=V[k*n+q];
+        V[k*n+p]=c*vkp-s*vkq; V[k*n+q]=s*vkp+c*vkq;
+      }
+    }
+  }
+  const idx=[...Array(n).keys()].sort((a,b)=>A[b*n+b]-A[a*n+a]);
+  return {vals: idx.map(i=>A[i*n+i]), vecs: idx.map(i=>{
+    const v=new Float64Array(n); for(let k=0;k<n;k++) v[k]=V[k*n+i]; return v; })};
+}
+const DETEIG = (function(){
+  const {D,tr}=DET, mu=new Float64Array(D);
+  for(let n=0;n<tr.N;n++) for(let i=0;i<D;i++) mu[i]+=tr.X[n*D+i]/tr.N;
+  const C=new Float64Array(D*D);
+  for(let n=0;n<tr.N;n++) for(let i=0;i<D;i++){ const a=tr.X[n*D+i]-mu[i];
+    for(let j=i;j<D;j++) C[i*D+j]+=a*(tr.X[n*D+j]-mu[j])/tr.N; }
+  for(let i=0;i<D;i++) for(let j=0;j<i;j++) C[i*D+j]=C[j*D+i];
+  const e=jacobiEig(C,D);
+  return {mu, vals:e.vals, vecs:e.vecs};
+})();
+function drawP4a(){
+  const k=+el('b4k').value;
+  const tot=DETEIG.vals.reduce((a,b)=>a+b,0);
+  let kept=0; for(let i=0;i<k;i++) kept+=DETEIG.vals[i];
+  el('b4kv').textContent=k; el('b4var').textContent=(100*kept/tot).toFixed(1);
+  const a=mkAxes(el('c4a'),0,10,0,Math.sqrt(DETEIG.vals[0])*1.15,{l:56,r:16,t:16,b:42});
+  clear(a);
+  frame(a,{yticks:[0,2,4,6], xticks:[], ylabel:'singular value (sd along PC)'});
+  const g=a.g, bw=(a.R-a.L)/10;
+  for(let i=0;i<10;i++){
+    const v=Math.sqrt(Math.max(DETEIG.vals[i],0));
+    const x0=a.L+i*bw+bw*0.18, w=bw*0.64, yy=a.Y(v), h=Math.max(a.B-yy,2);
+    g.fillStyle = i<k ? '#1f6f8b' : '#d9e2df';
+    if(g.roundRect){ g.beginPath(); g.roundRect(x0,yy,w,h,[5,5,0,0]); g.fill(); } else g.fillRect(x0,yy,w,h);
+    g.fillStyle='#3d4d48'; g.font='700 11px ui-monospace,Menlo,monospace';
+    g.textAlign='center'; g.textBaseline='top'; g.fillText('PC'+(i+1), x0+w/2, a.B+6);
+    g.textBaseline='bottom'; g.fillStyle='#1c2422'; g.fillText(v.toFixed(1), x0+w/2, yy-4);
+  }
+  g.save(); g.fillStyle='#c0392b'; g.font='700 11.5px -apple-system,system-ui';
+  g.textAlign='right'; g.textBaseline='top';
+  g.fillText('all of the signal is in PC10', a.R-4, a.T+2); g.restore();
+}
+let P4={busy:false, res:null};
+function p4Run(){
+  if(P4.busy) return; P4.busy=true; el('b4run').disabled=true;
+  const k=+el('b4k').value, {D,tr,te}=DET;
+  let ym=0; for(let i=0;i<tr.N;i++) ym+=tr.y[i]/tr.N;
+  let base=0; for(let i=0;i<te.N;i++) base+=(te.y[i]-ym)*(te.y[i]-ym); base=Math.sqrt(base/te.N);
+  const proj=(dat,kk)=>{ const Z=new Float64Array(dat.N*kk);
+    for(let n=0;n<dat.N;n++) for(let c=0;c<kk;c++){ let s=0;
+      for(let i=0;i<D;i++) s+=(dat.X[n*D+i]-DETEIG.mu[i])*DETEIG.vecs[c][i]; Z[n*kk+c]=s; }
+    return {X:Z,y:dat.y,N:dat.N,D:kk}; };
+  const trP=proj(tr,k), teP=proj(te,k);
+  const netP=newMLP(k,8,2,ym), netJ=newMLP(D,8,2,ym);
+  const STEPS=2000;
+  el('b4status').textContent='training both…';
+  runChunks(STEPS, 50, () => {
+    mlpStep(netP, trP.X, trP.y, trP.N, 0.03);
+    mlpStep(netJ, tr.X,  tr.y,  tr.N,  0.03);
+  }, p => el('b4prog').style.width=(p*100).toFixed(0)+'%',
+  () => {
+    const pP=mlpForward(netP,teP.X,teP.N).out, pJ=mlpForward(netJ,te.X,te.N).out;
+    P4.res={k, pca:rmse(pP,teP.y), joint:rmse(pJ,te.y), base, pP, pJ, yte:te.y};
+    el('s4pca').textContent=P4.res.pca.toFixed(3);
+    el('s4joint').textContent=P4.res.joint.toFixed(3);
+    el('s4base').textContent=base.toFixed(3);
+    const keep=Math.max(0,100*(1-P4.res.pca/base));
+    el('s4keep').textContent=keep.toFixed(0)+'%';
+    P4.busy=false; el('b4run').disabled=false;
+    el('b4status').textContent='done · k = '+k;
+    drawP4b(); drawP4c();
+  });
+}
+function drawP4b(){
+  const a=mkAxes(el('c4b'),0,2,0,0.52,{l:62,r:14,t:24,b:46});
+  clear(a);
+  frame(a,{yticks:[0,0.1,0.2,0.3,0.4,0.5], xticks:[], yfmt:v=>v.toFixed(2), ylabel:'test RMSE'});
+  if(!P4.res){ a.g.fillStyle='#8a9a95'; a.g.font='13px -apple-system,system-ui';
+    a.g.textAlign='center'; a.g.fillText('run both pipelines',(a.L+a.R)/2,(a.T+a.B)/2); return; }
+  hmark(a, P4.res.base, '#c0392b');
+  a.g.save(); a.g.font='700 11px ui-monospace,Menlo,monospace'; a.g.fillStyle='#c0392b';
+  a.g.textAlign='right'; a.g.textBaseline='bottom';
+  a.g.fillText('predict the mean', a.R-4, a.Y(P4.res.base)-4); a.g.restore();
+  const items=[{l:'PCA-'+P4.res.k+' → network', v:P4.res.pca, c:'#1f6f8b'},
+               {l:'joint, raw inputs', v:P4.res.joint, c:'#006747'}];
+  const g=a.g, bw=(a.R-a.L)/2;
+  items.forEach((it,i)=>{
+    const x0=a.L+i*bw+bw*0.22, w=bw*0.56, yy=a.Y(Math.min(it.v,0.52)), h=Math.max(a.B-yy,2);
+    g.fillStyle=it.c;
+    if(g.roundRect){ g.beginPath(); g.roundRect(x0,yy,w,h,[6,6,0,0]); g.fill(); } else g.fillRect(x0,yy,w,h);
+    g.fillStyle='#1c2422'; g.font='700 13px ui-monospace,Menlo,monospace';
+    g.textAlign='center'; g.textBaseline='bottom'; g.fillText(it.v.toFixed(3), x0+w/2, yy-5);
+    g.textBaseline='top'; g.fillStyle='#3d4d48'; g.font='700 11.5px -apple-system,system-ui';
+    it.l.split(' → ').forEach((ln,q)=>g.fillText(q?'→ '+ln:ln, x0+w/2, a.B+7+q*14));
+  });
+}
+function drawP4c(){
+  const a=mkAxes(el('c4c'),-0.05,1.15,-0.05,1.15,{l:52,r:14,t:16,b:40});
+  clear(a);
+  frame(a,{xticks:[0,0.25,0.5,0.75,1], yticks:[0,0.25,0.5,0.75,1],
+    xfmt:v=>v.toFixed(2), yfmt:v=>v.toFixed(2), xlabel:'actual y', ylabel:'predicted y'});
+  if(!P4.res){ a.g.fillStyle='#8a9a95'; a.g.font='13px -apple-system,system-ui';
+    a.g.textAlign='center'; a.g.fillText('run both pipelines',(a.L+a.R)/2,(a.T+a.B)/2); return; }
+  seg(a,-0.05,-0.05,1.15,1.15,'#c9d4d0',1.5,[5,4]);
+  const n=Math.min(500,P4.res.yte.length);
+  for(let i=0;i<n;i++) dot(a,P4.res.yte[i],P4.res.pP[i],'rgba(31,111,139,0.35)',2.4,true);
+  for(let i=0;i<n;i++) dot(a,P4.res.yte[i],P4.res.pJ[i],'rgba(0,103,71,0.5)',2.4,true);
+}
+
+/* ============================ page 5 ============================ */
+function p5Perm(){
+  const D=6, M=8, ym=0.3;
+  const net=newMLP(D,M,77,ym);
+  const r=mulberry32(9); const X=new Float64Array(50*D);
+  for(let i=0;i<50*D;i++) X[i]=gaussRnd(r);
+  const before=mlpForward(net,X,50).out;
+  const perm=[...Array(M).keys()].sort(()=>r()-0.5);
+  const W1n=new Float64Array(D*M), b1n=new Float64Array(M), W2n=new Float64Array(M);
+  for(let j=0;j<M;j++){ const s=perm[j];
+    for(let i=0;i<D;i++) W1n[i*M+j]=net.W1[i*M+s];
+    b1n[j]=net.b1[s]; W2n[j]=net.W2[s]; }
+  const net2={...net, W1:W1n, b1:b1n, W2:W2n};
+  const after=mlpForward(net2,X,50).out;
+  let mx=0, wdiff=0;
+  for(let i=0;i<50;i++) mx=Math.max(mx,Math.abs(before[i]-after[i]));
+  for(let i=0;i<D*M;i++) wdiff=Math.max(wdiff,Math.abs(net.W1[i]-W1n[i]));
+  el('b5permout').innerHTML = 'largest weight change <b>'+wdiff.toFixed(3)+
+    '</b> · largest output change <b>'+mx.toExponential(1).replace('e+0','e')+'</b>'+
+    ' · relabelling used: [' + perm.join(', ') + ']';
+}
+let P5={busy:false, curves:null, knots:null, rmses:null};
+function p5Seeds(){
+  if(P5.busy) return; P5.busy=true; el('b5seeds').disabled=true;
+  let ymean=0; for(let i=0;i<CORR.N;i++) ymean+=CORR.y[i]/CORR.N;
+  const models=[]; for(let s=0;s<6;s++) models.push(newHingeModel(8, ymean, 200+s*37));
+  const STEPS=9000;
+  el('b5seedstatus').textContent='fitting…';
+  runChunks(STEPS, 150, i => {
+    const lr=0.05*Math.pow(0.5,4*(i+1)/STEPS);
+    models.forEach(m=>hingeStep(m, CORR.x, CORR.y, lr));
+  }, p => el('b5prog').style.width=(p*100).toFixed(0)+'%',
+  () => {
+    P5.curves = models.map(m=>hingePredict(m, CORR.xt));
+    P5.knots  = models.map(m=>knotsOf(m).sort((a,b)=>a-b));
+    P5.rmses  = P5.curves.map(c=>rmse(c, CORR.yt));
+    let sum=0, mx=0;
+    for(let i=0;i<CORR.NT;i++){
+      let lo=Infinity, hi=-Infinity;
+      for(const c of P5.curves){ lo=Math.min(lo,c[i]); hi=Math.max(hi,c[i]); }
+      sum+=(hi-lo); mx=Math.max(mx,hi-lo);
+    }
+    el('s5spread').textContent=(sum/CORR.NT).toFixed(2);
+    el('s5max').textContent=mx.toFixed(2);
+    el('s5rmse').textContent=Math.min(...P5.rmses).toFixed(2)+'–'+Math.max(...P5.rmses).toFixed(2);
+    el('s5dead').textContent=Math.max(...P5.knots.map(k=>k.filter(v=>v<0||v>1).length))+' / 8';
+    P5.busy=false; el('b5seeds').disabled=false; el('b5seedstatus').textContent='6 seeds, 9,000 steps each';
+    drawP5a(); drawP5b();
+  });
+}
+function drawP5a(){
+  const a=mkAxes(el('c5a'),-0.02,1.02,8,72,{l:52,r:12,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[0,0.25,0.5,0.75,1], yticks:[10,20,30,40,50,60,70], xfmt:t=>t.toFixed(2),
+    xlabel:'position along the corridor', ylabel:'speed (mph)'});
+  for(let i=0;i<CORR.N;i++) dot(a,CORR.x[i],CORR.y[i],'#e2e8e5',2.4,true);
+  if(!P5.curves){ a.g.fillStyle='#8a9a95'; a.g.font='13px -apple-system,system-ui';
+    a.g.textAlign='center'; a.g.fillText('fit six seeds',(a.L+a.R)/2,(a.T+a.B)/2); return; }
+  const cols=['#006747','#1f6f8b','#9b5de5','#b9a96a','#c0392b','#4b7f52'];
+  P5.curves.forEach((c,i)=>polyline(a,CORR.xt,c,cols[i],1.9));
+}
+function drawP5b(){
+  const a=mkAxes(el('c5b'),-0.05,1.32,-0.7,5.9,{l:56,r:14,t:30,b:38});
+  clear(a);
+  frame(a,{xticks:[0,0.25,0.5,0.75,1], yticks:[0,1,2,3,4,5], xfmt:t=>t.toFixed(2),
+    yfmt:v=>'seed '+(v+1), xlabel:'knot position', ylabel:''});
+  vmark(a,0.45,'#c0392b');
+  a.g.save(); a.g.font='10.5px -apple-system,system-ui'; a.g.fillStyle='#8a9a95';
+  a.g.textAlign='right'; a.g.textBaseline='top';
+  a.g.fillText('grey = pushed out of the corridor (dead unit)', a.R-2, 6); a.g.restore();
+  if(!P5.knots) return;
+  const cols=['#006747','#1f6f8b','#9b5de5','#b9a96a','#c0392b','#4b7f52'];
+  P5.knots.forEach((ks,i)=>{
+    ks.forEach(k=>{ const kk=clampn(k,-0.03,1.22);
+      dot(a,kk,i,(k<0||k>1)?'#c9d4d0':cols[i],4.2); });
+  });
+}
+const P5DN=[50,100,200,400];
+let P5D={busy:false,res:null};
+function p5Data(){
+  if(P5D.busy) return; P5D.busy=true; el('b5data').disabled=true;
+  const D=12, dir=unitDir(D, 4242+D);
+  const te=makeDirData(D, 1200, 999+D, dir);
+  const res=[]; const jobs=[];
+  P5DN.forEach(N=>{ for(let s=0;s<3;s++) jobs.push({N,s}); });
+  let done=0;
+  el('b5datastatus').textContent='running…';
+  (function next(){
+    if(!jobs.length){
+      P5D.res=res; P5D.busy=false; el('b5data').disabled=false;
+      el('b5datastatus').textContent='done — reload for identical numbers';
+      drawP5c(); return;
+    }
+    const {N,s}=jobs.shift();
+    const tr=makeDirData(D,N,77+N+s*7,dir);
+    let ym=0; for(let i=0;i<tr.N;i++) ym+=tr.y[i]/tr.N;
+    let base=0; for(let i=0;i<te.N;i++) base+=(te.y[i]-ym)*(te.y[i]-ym); base=Math.sqrt(base/te.N);
+    const rf = s===0 ? rffFit(tr,te,120,[0.05,0.2,0.8,3.2],5).e : null;
+    const net=newMLP(D,8,s,ym);
+    runChunks(1200, 60, () => mlpStep(net, tr.X, tr.y, tr.N, 0.03),
+      p => el('b5dprog').style.width=(100*(done+p)/(P5DN.length*3)).toFixed(0)+'%',
+      () => { res.push({N, s, base, rff:rf, mlp:rmse(mlpForward(net,te.X,te.N).out, te.y)});
+        done++; next(); });
+  })();
+}
+function drawP5c(){
+  const a=mkAxes(el('c5c'),Math.log10(40),Math.log10(500),-3.2,0.15,{l:60,r:16,t:16,b:42});
+  clear(a);
+  frame(a,{xticks:P5DN.map(n=>Math.log10(n)), yticks:[-3,-2,-1,0],
+    xfmt:v=>'N='+Math.round(Math.pow(10,v)), yfmt:v=>'1e'+v,
+    xlabel:'training samples', ylabel:'test RMSE'});
+  if(!P5D.res){ a.g.fillStyle='#8a9a95'; a.g.font='13px -apple-system,system-ui';
+    a.g.textAlign='center'; a.g.fillText('sweep the sample size',(a.L+a.R)/2,(a.T+a.B)/2); return; }
+  const lg=v=>Math.log10(Math.max(v,1e-4));
+  const byN=N=>P5D.res.filter(r=>r.N===N);
+  polyline(a,P5DN.map(n=>Math.log10(n)),
+    P5DN.map(n=>lg(byN(n).find(r=>r.rff!==null).rff)),'#1f6f8b',2.8);
+  polyline(a,P5DN.map(n=>Math.log10(n)),P5DN.map(n=>lg(byN(n)[0].base)),'#c0392b',2.2,[7,5]);
+  P5D.res.forEach(r=>dot(a,Math.log10(r.N),lg(r.mlp),'#006747',5));
+  P5DN.forEach(n=>{ const v=byN(n).map(r=>lg(r.mlp));
+    seg(a,Math.log10(n),Math.min(...v),Math.log10(n),Math.max(...v),'rgba(0,103,71,0.4)',2); });
+  const cliff=Math.sqrt(100*200);
+  vmark(a,Math.log10(cliff),'#b9a96a',[4,4]);
+  tag(a,Math.log10(cliff),0.05,'the cliff','#9b5de5',6,0);
+}
+
+/* ============================ page 6 ============================ */
+function p6UAT(){
+  const rows=[['gauss8',8],['gauss24',24],['gauss60',60]];
+  const t=el('t6uat');
+  t.innerHTML='<tr><th>Fixed Gaussian grid</th><th>Parameters</th><th>Test RMSE</th></tr>';
+  rows.forEach(([kind,M])=>{
+    const f=fitFixedBasis(kind);
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td>M = '+M+'</td><td>'+f.P+'</td><td>'+f.e.toFixed(3)+'</td>';
+    t.appendChild(tr);
+  });
+}
+function drawP6(){
+  const L=+el('b6L').value, act=el('b6act').value;
+  el('b6Lv').textContent=L;
+  const D=4, r=mulberry32(3131);
+  const Ws=[], bs=[];
+  for(let l=0;l<L;l++){
+    const W=new Float64Array(D*D), b=new Float64Array(D);
+    for(let i=0;i<D*D;i++) W[i]=gaussRnd(r)*0.8;
+    for(let i=0;i<D;i++) b[i]=gaussRnd(r)*0.4;
+    Ws.push(W); bs.push(b);
+  }
+  const fwd=(x0)=>{ let h=new Float64Array(D); for(let i=0;i<D;i++) h[i]=x0*(i===0?1:0.3*(i+1));
+    for(let l=0;l<L;l++){ const o=new Float64Array(D);
+      for(let j=0;j<D;j++){ let s=bs[l][j]; for(let i=0;i<D;i++) s+=h[i]*Ws[l][i*D+j];
+        o[j]= act==='tanh' ? Math.tanh(s) : s; }
+      h=o; }
+    return h[0]; };
+  // equivalent single linear layer
+  let Weq=new Float64Array(D*D), beq=new Float64Array(D);
+  for(let i=0;i<D;i++) Weq[i*D+i]=1;
+  for(let l=0;l<L;l++){
+    const Wn=new Float64Array(D*D), bn=new Float64Array(D);
+    for(let i=0;i<D;i++) for(let j=0;j<D;j++){ let s=0;
+      for(let k=0;k<D;k++) s+=Weq[i*D+k]*Ws[l][k*D+j]; Wn[i*D+j]=s; }
+    for(let j=0;j<D;j++){ let s=bs[l][j]; for(let k=0;k<D;k++) s+=beq[k]*Ws[l][k*D+j]; bn[j]=s; }
+    Weq=Wn; beq=bn;
+  }
+  const lin=(x0)=>{ const h=new Float64Array(D); for(let i=0;i<D;i++) h[i]=x0*(i===0?1:0.3*(i+1));
+    let s=beq[0]; for(let k=0;k<D;k++) s+=h[k]*Weq[k*D+0]; return s; };
+  let mx=0; for(let i=0;i<=200;i++){ const x=-3+6*i/200; mx=Math.max(mx,Math.abs(fwd(x)-lin(x))); }
+  const lo=Math.min(fwd(-3),fwd(3),lin(-3),lin(3)), hi=Math.max(fwd(-3),fwd(3),lin(-3),lin(3));
+  const pad=Math.max(0.4,(hi-lo)*0.25);
+  const span=(hi+pad)-(lo-pad);
+  const stepQ=Math.pow(10,Math.floor(Math.log10(span/4)));
+  const q=[1,2,5,10].find(m=>span/(m*stepQ)<=5)*stepQ;
+  const yr=[]; for(let v=Math.ceil((lo-pad)/q)*q; v<=hi+pad+1e-9; v+=q) yr.push(+v.toFixed(6));
+  const a2=mkAxes(el('c6a'),-3,3,lo-pad,hi+pad,{l:62,r:16,t:16,b:40});
+  clear(a2);
+  frame(a2,{xticks:[-3,-2,-1,0,1,2,3], yticks:yr,
+    yfmt:v=>Math.abs(v)>=10?v.toFixed(0):v.toFixed(1),
+    xlabel:'input slice', ylabel:'network output'});
+  curve(a2, lin, '#c0392b', 3.4);
+  curve(a2, fwd, '#006747', 2.4, [7,5]);
+  el('s6err').textContent = mx<1e-9 ? mx.toExponential(1).replace('e-','e−') : mx.toFixed(3);
+  el('s6par').textContent = L*(D*D+D);
+  el('s6eff').textContent = act==='id' ? (D*D+D) + ' (one layer)' : L*(D*D+D);
+}
+
+/* ============================ wiring ============================ */
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.page').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    el(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0, behavior:'instant'});
+    redrawAll();
+  });
+});
+function redrawAll(){
+  drawP1(); drawP2(); drawP3a(); drawP3b(); drawP3c();
+  drawP4a(); drawP4b(); drawP4c(); drawP5a(); drawP5b(); drawP5c(); drawP6();
+}
+el('b1sel').addEventListener('change', drawP1);
+el('b1phi').addEventListener('change', drawP1);
+el('b2mf').addEventListener('input', ()=>{ P2.fixed=null; drawP2(); });
+el('b2ml').addEventListener('input', ()=>{ P2.model=null; P2.traj=[]; drawP2(); });
+el('b2run').addEventListener('click', p2Train);
+el('b2match').addEventListener('click', ()=>{
+  const Ml=+el('b2ml').value; el('b2mf').value=Math.min(60,3*Ml);
+  P2.fixed=null; drawP2();
+  el('b2status').textContent='both models now have '+(3*Ml+1)+' parameters';
+});
+el('b3k').addEventListener('input', drawP3a);
+el('b3m').addEventListener('input', drawP3a);
+el('b3run').addEventListener('click', p3Run);
+el('b4k').addEventListener('input', drawP4a);
+el('b4run').addEventListener('click', p4Run);
+el('b5perm').addEventListener('click', p5Perm);
+el('b5seeds').addEventListener('click', p5Seeds);
+el('b5data').addEventListener('click', p5Data);
+el('b6uat').addEventListener('click', p6UAT);
+el('b6L').addEventListener('input', drawP6);
+el('b6act').addEventListener('change', drawP6);
+window.addEventListener('resize', redrawAll);
+redrawAll();
+</script>
+</body>
+</html>

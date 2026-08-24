@@ -14,6 +14,10 @@ parts:
     chapters:
       - file: module1/index
         sections:
+          # Notes chapter first: one chapter per module, sessions are sections
+          # inside it. See NOTES_GUIDE.md for the template.
+          - file: module1/notes
+            title: Notes
           - file: module1/lecture1
           - file: module1/lab1
           - file: module1/lab2_word_embeddings

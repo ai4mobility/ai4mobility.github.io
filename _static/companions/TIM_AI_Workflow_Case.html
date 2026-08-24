@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traffic Incident Management as an AI Workflow</title>
+<style>
+  :root{
+    --usf-green:#006747;--usf-green-d:#00543a;--usf-gold:#CFC493;--gold-deep:#b9a96a;
+    --ink:#1c2422;--muted:#5b6b66;--paper:#f6f8f7;--card:#fff;--line:#e2e8e5;
+    --ex:#1f8a70;--cl:#1f6f8b;--ge:#7b4fbd;--re:#c98a12;--pr:#e07a1f;--ju:#c0392b;--hu:#5b6b66;
+    --good:#2a9d8f;--bad:#e76f51;--mid:#e9b949;
+    --t1:#e07a1f;--t2:#c98a12;--t3:#1f6f8b;--t4:#2a7fa8;--t5:#1f8a70;--t6:#4a8c6f;--t7:#7b8f88;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 6px 22px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--paper);line-height:1.55}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding:30px 28px 24px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--usf-gold);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:27px;font-weight:750}
+  header.hero p{margin:0;max-width:920px;color:#e7efeb;font-size:15px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:4px;flex-wrap:wrap;padding:6px 20px}
+  nav.tabs button{border:none;background:transparent;font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 13px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  main{padding:24px 0 80px}
+  section.tab{display:none;animation:fade .25s ease}section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  h2.sec{font-size:22px;margin:6px 0 2px;color:var(--usf-green-d)}
+  .lead{color:var(--muted);max-width:920px;margin:0 0 18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow);margin-bottom:18px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+  @media(max-width:880px){.grid2,.grid3{grid-template-columns:1fr}}
+  h3{font-size:16px;margin:2px 0 8px;color:var(--ink)}
+  h4{font-size:13px;margin:14px 0 4px;color:var(--usf-green-d);text-transform:uppercase;letter-spacing:.06em}
+  p{margin:8px 0}small{color:var(--muted)}
+  ul{margin:8px 0;padding-left:20px}li{margin:5px 0}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .chip{border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:999px;cursor:pointer;transition:.15s}
+  .chip:hover{border-color:var(--usf-green)}
+  .chip.active{background:var(--usf-green);color:#fff;border-color:var(--usf-green)}
+  table.syn{width:100%;border-collapse:collapse;font-size:13.5px}
+  table.syn th,table.syn td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.syn th{background:var(--paper);color:var(--usf-green-d);font-weight:700}
+  table.syn tr.gate td{background:#fdf6f4}
+  .callout{border-left:4px solid var(--usf-gold);background:#fbfaf3;padding:12px 16px;border-radius:0 10px 10px 0;margin:12px 0}
+  .warn{border-left:4px solid var(--bad);background:#fdeee9;padding:12px 16px;border-radius:0 10px 10px 0;margin:12px 0}
+  .okbox{border-left:4px solid var(--good);background:#e9f6f3;padding:12px 16px;border-radius:0 10px 10px 0;margin:12px 0}
+  .lv{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;white-space:nowrap}
+  .lv-ex{background:var(--ex)}.lv-cl{background:var(--cl)}.lv-ge{background:var(--ge)}
+  .lv-re{background:var(--re)}.lv-pr{background:var(--pr)}.lv-ju{background:var(--ju)}
+  .lv-hu{background:#fff;color:var(--muted);border:1px solid var(--line)}
+  .tagline{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--usf-green);background:#e9f2ef;padding:3px 10px;border-radius:999px}
+  /* timeline */
+  .tl{margin:18px 0 6px}
+  .tlbar{display:flex;gap:3px;align-items:stretch}
+  .tlseg{flex:1;border:none;border-radius:8px;color:#fff;padding:12px 8px;cursor:pointer;text-align:left;font-family:inherit;transition:.15s;opacity:.82}
+  .tlseg:hover{opacity:1;transform:translateY(-2px)}
+  .tlseg.active{opacity:1;box-shadow:0 0 0 3px rgba(0,103,71,.35)}
+  .tlseg b{display:block;font-size:12.5px;line-height:1.25}
+  .tlseg small{display:block;color:rgba(255,255,255,.9);font-size:11px;margin-top:3px}
+  .tlpoints{display:flex;gap:3px;margin-top:5px;font-size:11px;color:var(--muted)}
+  .tlpoints span{flex:1}
+  .spans{margin-top:12px}
+  .span{display:flex;align-items:center;gap:8px;font-size:12.5px;margin:5px 0}
+  .spanbar{height:9px;border-radius:5px}
+  .kpis{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+  .kpi{flex:1;min-width:165px;border:1px solid var(--line);border-radius:11px;padding:12px;background:var(--paper)}
+  .kpi>b{display:block;font-size:20px;color:var(--usf-green-d);line-height:1.15}
+  .kpi small{font-size:12px;display:block;margin-top:3px}
+  .kpi small b{color:var(--ink)}
+  .feat{border:1px solid var(--line);border-radius:12px;padding:0;margin-bottom:14px;overflow:hidden;background:var(--card)}
+  .feathead{padding:13px 16px;background:var(--paper);border-bottom:1px solid var(--line)}
+  .feathead b{font-size:15px}
+  .feathead .fnum{display:inline-flex;width:22px;height:22px;border-radius:6px;background:var(--usf-green);color:#fff;font-size:12px;font-weight:700;align-items:center;justify-content:center;margin-right:9px;vertical-align:2px}
+  .featbody{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  @media(max-width:820px){.featbody{grid-template-columns:1fr}}
+  .featbody>div{padding:14px 16px}
+  .featbody>div:first-child{border-right:1px solid var(--line);background:#fcfcfb}
+  @media(max-width:820px){.featbody>div:first-child{border-right:none;border-bottom:1px solid var(--line)}}
+  .oldnew{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
+  .oldnew.n{color:var(--usf-green)}
+  .tier{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:6px;white-space:nowrap}
+  .tier-a{background:#e7f5f2;color:#1c6b5e;border:1px solid #9ed4c8}
+  .tier-b{background:#fcf6e3;color:#8a6d12;border:1px solid #eddfae}
+  .tier-c{background:#fdeee9;color:#a8412a;border:1px solid #f3cbbd}
+  .star{color:var(--ju);font-weight:700}
+  .num{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--usf-green);color:#fff;font-size:11px;font-weight:700;align-items:center;justify-content:center;margin-right:7px;vertical-align:1px}
+  .src{font-size:12px;color:var(--muted)}
+  .src a{color:var(--usf-green);text-decoration:none;border-bottom:1px dotted var(--gold-deep)}
+  footer{border-top:1px solid var(--line);padding:18px 0;color:var(--muted);font-size:12.5px}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · CGN 6933 · Worked case</div>
+  <h1>Traffic Incident Management as an AI Workflow</h1>
+  <p>TIM is the best first case in this course, because it is entirely a problem about <em>time</em>. Every stage has a timestamp, every timestamp is already collected, and Florida has a written policy target to beat. That means you can measure the baseline before you build anything — which is exactly what a workflow project demands. This case walks the clock, rebuilds the workflow with AI in it, and is honest about which of the promised gains have actually been demonstrated in the field.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap" id="tabbar">
+  <button class="active" data-t="clock">1 · The clock</button>
+  <button data-t="today">2 · How it works today</button>
+  <button data-t="ai">3 · The AI workflow</button>
+  <button data-t="diff">4 · What actually changes</button>
+  <button data-t="keep">5 · What must not change</button>
+  <button data-t="eviid">6 · The evidence</button>
+  <button data-t="cap">7 · As a capstone</button>
+  <button data-t="src">Sources</button>
+</div></nav>
+
+<main><div class="wrap">
+
+<!-- ==================== 1 · THE CLOCK ==================== -->
+<section class="tab active" id="clock">
+  <h2 class="sec">TIM is a stopwatch problem</h2>
+  <p class="lead">A crash happens. Some interval later, somebody in authority knows. Some interval after that, it is confirmed, resources are sent, they arrive, lanes reopen, the scene empties, and traffic returns to normal. Every improvement in traffic incident management is a reduction in one of those intervals — and every AI question you can ask about TIM reduces to <em>which interval does this shorten, and by how much?</em></p>
+
+  <div class="card">
+    <h3>The incident timeline — click a segment</h3>
+    <div class="tl">
+      <div class="tlbar" id="tlbar"></div>
+      <div class="tlpoints" id="tlpoints"></div>
+    </div>
+    <div class="spans">
+      <div class="span"><span style="width:200px"><b>Roadway Clearance Time (RCT)</b></span>
+        <span style="flex:1;display:flex;gap:3px"><span style="flex:2.0"></span>
+          <span class="spanbar" style="flex:6.2;background:linear-gradient(90deg,var(--t2),var(--t5))"></span>
+          <span style="flex:2.3"></span></span>
+        <span style="width:260px"><small>T1 → all lanes available</small></span></div>
+      <div class="span"><span style="width:200px"><b>Incident Clearance Time (ICT)</b></span>
+        <span style="flex:1;display:flex;gap:3px"><span style="flex:2.0"></span>
+          <span class="spanbar" style="flex:7.2;background:linear-gradient(90deg,var(--t2),var(--t6))"></span>
+          <span style="flex:1.3"></span></span>
+        <span style="width:260px"><small>T1 → last responder leaves</small></span></div>
+      <p class="src" style="margin:8px 0 0">Both measures start at first recordable awareness — so the detection interval, the one an AI workflow can shrink most, sits <em>outside</em> both headline performance measures. So does recovery. What gets measured shapes what gets managed.</p>
+    </div>
+    <div id="tldetail" style="margin-top:16px"></div>
+    <p class="src" style="margin-top:14px">Note on notation: FHWA's performance-measures page lays the timeline out as eight points (T0–T7); the National TIM Responder Training handout compresses it to T0–T6. Both define RCT and ICT identically. Diagrams vary by source — say which one you are using.</p>
+  </div>
+
+  <div class="card">
+    <h3>Where Florida stands</h3>
+    <div class="kpis">
+      <div class="kpi"><b>90 min</b><small><b>Open Roads Policy goal</b> — FDOT and FHP agreed that all incidents be cleared from the roadway within 90 minutes of the arrival of the first responding officer. Weather and safety closures excepted.</small></div>
+      <div class="kpi"><b>33 min</b><small>Average <b>roadway clearance time</b>, Florida limited-access roadways, FY2019/20.</small></div>
+      <div class="kpi"><b>64 min</b><small>Average <b>incident clearance time</b>, same period.</small></div>
+    </div>
+    <div class="warn"><b>The first thing to notice is a gap, not a number.</b> FDOT's own 2026 TIM Strategic Plan does not publish a current statewide RCT/ICT figure — it points to a future reporting product. The FY2019/20 numbers above are the most recent statewide figures traceable to a published FDOT source. If your project needs a current number, <em>getting it is part of the project</em>, and you will get it from a district, not from a document.</div>
+    <p>Nationally the measurement problem is worse. In the 2018 TIM Capability Maturity Self-Assessment, roughly <b>61% of programs reported measuring roadway clearance time and 54% measured incident clearance time</b>. Slightly more than half the country measures the primary outcome of its own program. Before you propose a model, notice that a large share of the available improvement is in <em>measurement</em>, which needs no AI at all.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>Why the clock matters: secondary crashes</h3>
+      <p>An incident that stays on the roadway generates a queue, and the back of that queue is where the next crash happens. That is the safety argument for clearing fast, and it is worth getting the numbers right because the commonly quoted one is old.</p>
+      <p><b>The stat everyone repeats:</b> the likelihood of a secondary crash increases about <b>2.8% per minute</b> the primary incident remains a hazard. That comes from Karlaftis et al. (1999), on a single Indiana dataset, and it is now more than 25 years old.</p>
+      <p><b>The better current citation:</b> a multi-state re-analysis using 2022–2024 crash data from Florida, Maryland, Tennessee and Virginia finds the effect is <b>not constant — it is front-loaded</b>. Roughly +13–21% odds per minute in the first ten minutes, about +3%/min from 10–30, about +1.5%/min from 30–60, and under 1%/min after an hour.</p>
+      <div class="callout"><b>Read what that implies for your workflow.</b> If the risk is concentrated in the first ten minutes, then minutes shaved off <em>detection and verification</em> are worth several times as much as minutes shaved off the tail of clearance. That single finding should shape which interval you attack — and it is the opposite of where most TIM investment goes.</div>
+    </div>
+    <div class="card"><h3>How common are secondary crashes, really?</h3>
+      <p>FHWA's 2023 multi-state analysis started from 5.46 million crashes across ten states, of which 51,856 (0.94%) had been <em>flagged</em> as secondary. After spatial-temporal verification, only <b>15,448 — 0.28% — were confirmed</b>. Under a third of the flags held up.</p>
+      <p><b>Florida specifically:</b> a 67.1% verification rate (second-highest of the ten states) and confirmed secondary crashes at <b>0.13% of all Florida crashes</b>. Of the confirmed ones, roughly 30% occur simultaneously with the primary and about half within twenty minutes.</p>
+      <div class="warn"><b>An unresolved conflict, and you should know about it.</b> A widely circulated infographic states "up to 1 in 13 crashes are secondary" — roughly 7.7%, which is more than an order of magnitude above the FHWA verified rate. The two use different denominators and methods, and the discrepancy is not reconciled in the sources. If you cite a secondary-crash rate in front of practitioners, say which one and why.</div>
+      <p><small>This is a live example of a course theme: the number that circulates is rarely the number that survives verification, and knowing the difference is the transportation engineer's job, not the model's.</small></p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2 · TODAY ==================== -->
+<section class="tab" id="today">
+  <h2 class="sec">The workflow as it runs today</h2>
+  <p class="lead">Before proposing anything, map the current process. Here is a Florida freeway incident from occurrence to recovery, with the owner of each step. Notice how much of it is a person deciding, typing, or telephoning — and notice where the AI-leverage labels already fit even though no AI is present.</p>
+
+  <div class="card">
+    <table class="syn">
+      <tr><th style="width:31%">Step</th><th style="width:15%">Owner today</th><th style="width:13%">Nature of the step</th><th>What actually happens</th></tr>
+      <tr><td>Incident occurs</td><td>—</td><td><span class="lv lv-hu">no owner</span></td><td>The clock starts and nobody knows it. This interval is invisible in most performance data.</td></tr>
+      <tr><td>Someone becomes aware</td><td>motorist / FHP / Road Ranger / TMC operator</td><td><span class="lv lv-cl">classification</span></td><td>A 911 call, a trooper on patrol, a Road Ranger who drives up on it, a Waze report, or an operator noticing a slowdown on a video wall. Whichever happens first sets T1.</td></tr>
+      <tr><td>Find and confirm on camera</td><td>TMC operator</td><td><span class="lv lv-re">retrieval</span></td><td>Identify which camera covers the reported location, slew it, and look. A search task performed by a person under time pressure across many camera views.</td></tr>
+      <tr><td>Determine what it is and what is blocked</td><td>TMC operator</td><td><span class="lv lv-cl">classification</span></td><td>Crash or debris or disabled vehicle; how many vehicles; how many lanes blocked; commercial vehicle or placard visible; fire.</td></tr>
+      <tr><td>Open the event in SunGuide and type it up</td><td>TMC operator</td><td><span class="lv lv-ex">extraction</span></td><td>The structured record is created by hand from what the operator sees and hears. Everything downstream waits on this.</td></tr>
+      <tr><td>Notify and dispatch</td><td>operator + FHP dispatch</td><td><span class="lv lv-ju">judgment</span></td><td>Road Ranger, FHP, fire/EMS as needed. Response package chosen from protocol plus experience.</td></tr>
+      <tr><td>Post traveler information</td><td>operator</td><td><span class="lv lv-ge">generation</span></td><td>Dynamic message signs, FL511, feeds to third-party navigation. Serialized behind the same operator who is still working the event.</td></tr>
+      <tr><td>Responders arrive; scene assessed</td><td>first responders</td><td><span class="lv lv-ju">judgment</span></td><td>The first accurate picture of what the incident really is. Often the moment the response is discovered to be under-scaled.</td></tr>
+      <tr><td>Escalate if needed — heavy wrecker, RISC activation</td><td>FHP / FDOT</td><td><span class="lv lv-ju">judgment</span></td><td>★ Escalation happens <em>after</em> discovery. A heavy-recovery need found at minute 40 costs the 40 minutes plus the response time.</td></tr>
+      <tr><td>Clear the roadway; declare all lanes open</td><td>incident commander</td><td><span class="lv lv-ju">judgment</span></td><td>★ Stops the RCT clock. A person on scene, with authority and liability.</td></tr>
+      <tr><td>Scene cleared; last responder departs</td><td>responders</td><td><span class="lv lv-hu">human only</span></td><td>Stops the ICT clock.</td></tr>
+      <tr><td>Log the event; compute performance measures</td><td>SunGuide + analysts</td><td><span class="lv lv-ex">extraction</span></td><td>Timestamps come from operator entries. Data quality is only as good as what a busy person typed while the incident was active.</td></tr>
+    </table>
+  </div>
+
+  <div class="grid3">
+    <div class="card"><h3>Road Rangers</h3>
+      <p>Free service patrol, contracted by FDOT and partners. Motorists reach them at <b>*347</b>. Coverage is <b>2,100+ centerline miles</b> across <b>105+ contracted beats</b> spanning FDOT districts, the Turnpike, and three expressway authorities. <b>489,000+ assists</b> in FY2021/22, and a reported benefit-cost ratio of <b>$12.60 returned per $1 spent</b>.</p>
+      <p><small>Note the number that matters for an AI project: Road Rangers are already patrolling the network continuously. Every beat vehicle is a sensor platform that is already paid for.</small></p>
+    </div>
+    <div class="card"><h3>RISC</h3>
+      <p><b>Rapid Incident Scene Clearance</b> — pre-contracted heavy recovery with an incentive clock. From FHP's Notice to Proceed: one heavy wrecker on scene within <b>45 minutes</b>, all equipment within <b>60</b>, roadway open within <b>90</b> → a <b>$2,500 bonus</b>. Past 150 minutes, a <b>$10-per-minute</b> penalty.</p>
+      <p>Statewide FY2022/23: <b>499 activations, $1,470,300</b> in bonus payments. Turnpike two-year averages: 48-minute response, 50-minute clearance, over 95% success against the 90-minute goal.</p>
+      <p><small>RISC is where duration prediction would pay. The decision to activate is currently made after someone sees the scene.</small></p>
+    </div>
+    <div class="card"><h3>The systems of record</h3>
+      <p><b>SunGuide</b> is FDOT's ATMS, running at every district RTMC — Tampa Bay's since 2006. It holds the event log, integrates FHP computer-aided-dispatch data, detectors, cameras and Road Ranger data, and computes RCT, ICT and secondary-crash counts.</p>
+      <p><b>FL511</b> is the public face, aggregating FDOT sensors and cameras through SunGuide plus FHP, Road Ranger and local law-enforcement reports, Waze crowdsourced data, and NOAA weather — roughly <b>81,000 information requests a day</b>.</p>
+      <p><small>Any workflow that cannot write into SunGuide will not be used, no matter how good it is.</small></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Local detail worth knowing</h3>
+    <p>The Tampa Bay Regional TMC operates around the clock across <b>12 jurisdictions — five counties (Hillsborough, Pinellas, Pasco, Hernando, Citrus) and seven cities</b> — under a five-year, $31 million operations contract confirmed in April 2026. Nothing in the public contract materials describes an AI capability.</p>
+    <p>And a detail that surprises people: the <b>Severe Incident Response Vehicle (SIRV)</b> program — a dedicated FDOT incident-response unit that puts a trained responder on scene with equipment and authority — operates in <b>District 4 only</b> (Broward, plus the I-95 Express Lanes in Miami-Dade). It is not in District 7. FDOT's 2026 TIM Strategic Plan lists exploring scalable replication to other districts as a one-to-three-year action item.</p>
+    <div class="callout">That is a real, current, local gap in a written state plan. A project that asks <em>"what would SIRV-equivalent capability look like in District 7, and could part of it be delivered by better information rather than another vehicle?"</em> is a project with a live audience.</div>
+  </div>
+</section>
+
+<!-- ==================== 3 · THE AI WORKFLOW ==================== -->
+<section class="tab" id="ai">
+  <h2 class="sec">The same job, rebuilt</h2>
+  <p class="lead">Same incident, same agencies, same legal authority. What changes is where the machine sits. Read the owner column carefully: no responder is replaced, and three steps are marked as places AI must not act alone.</p>
+
+  <div class="card">
+    <table class="syn">
+      <tr><th style="width:29%">Step</th><th style="width:16%">Owner</th><th style="width:13%">Leverage</th><th>What changes</th></tr>
+      <tr><td>Continuous signal monitoring</td><td>fusion service</td><td><span class="lv lv-cl">classification</span></td><td>Probe-speed anomalies, detector occupancy, Waze reports, camera analytics, and connected-vehicle event data are watched together rather than separately. No single source has to be conclusive.</td></tr>
+      <tr><td>Raise a ranked incident alert</td><td>fusion service</td><td><span class="lv lv-pr">prediction</span></td><td>A location, a confidence score, and the signals that produced it. The operator sees <em>why</em> the alert fired, not just that it did.</td></tr>
+      <tr><td>Pre-position the evidence</td><td>system</td><td><span class="lv lv-re">retrieval</span></td><td>Nearest cameras auto-slewed to the alert location; recent probe speed profile and the last similar events pulled up. The operator's search step disappears.</td></tr>
+      <tr><td>Propose what it is and what is blocked</td><td>vision-language model</td><td><span class="lv lv-cl">classification</span></td><td>Draft incident type, lanes blocked, vehicles involved, commercial vehicle or visible placard. A <em>proposal</em> attached to the frame it came from.</td></tr>
+      <tr class="gate"><td><span class="star">★ </span>Operator verifies or rejects</td><td>TMC operator</td><td><span class="lv lv-ju">judgment</span></td><td>★ FIRST CHECKPOINT. One click to confirm, edit, or dismiss. The operator is deciding, not searching and typing. Everything downstream is gated here.</td></tr>
+      <tr><td>Write the structured event record</td><td>system</td><td><span class="lv lv-ex">extraction</span></td><td>The verified attributes become the SunGuide event automatically, with machine-accurate timestamps rather than typed ones.</td></tr>
+      <tr><td>Predict clearance duration and resource need</td><td>model</td><td><span class="lv lv-pr">prediction</span></td><td>From attributes known <em>at verification</em>: is this a 20-minute event or a three-hour one, and does it need heavy recovery? Reported with an honest uncertainty band, not a point estimate.</td></tr>
+      <tr class="gate"><td><span class="star">★ </span>Dispatch and escalation decision</td><td>FHP / FDOT / operator</td><td><span class="lv lv-ju">judgment</span></td><td>★ SECOND CHECKPOINT. The model recommends a response package and flags RISC candidacy. A person dispatches. Money and safety are on this line.</td></tr>
+      <tr><td>Fan out concurrently</td><td>system</td><td><span class="lv lv-ge">generation</span></td><td>DMS, FL511, navigation feeds, arterial signal plans and Road Ranger notification fire in parallel from the one verified record instead of queuing behind one keyboard.</td></tr>
+      <tr><td>Estimate the queue tail and warn upstream</td><td>model</td><td><span class="lv lv-pr">prediction</span></td><td>Where is the back of the queue right now? Push a targeted warning to signs and vehicles approaching it. <b>This step has no equivalent in the current workflow.</b></td></tr>
+      <tr><td>Track the scene; update the estimate</td><td>model + responders</td><td><span class="lv lv-pr">prediction</span></td><td>As the scene changes, the clearance estimate and the public message update instead of going stale.</td></tr>
+      <tr class="gate"><td><span class="star">★ </span>Declare all lanes open</td><td>incident commander</td><td><span class="lv lv-ju">judgment</span></td><td>★ THIRD CHECKPOINT, and the one that never moves. A person on scene, with authority and liability, stops the RCT clock.</td></tr>
+      <tr><td>Close out; record predicted vs. actual</td><td>system</td><td><span class="lv lv-ex">extraction</span></td><td>Performance measures and a labeled training example fall out of the event itself. This is the step that makes next month better than this month.</td></tr>
+    </table>
+    <div class="okbox"><b>Count what moved.</b> Twelve steps, three human checkpoints, and every responder role intact. The AI did not take over incident management — it took over <em>searching, typing, notifying, and estimating</em>, so that the people can spend their attention on deciding. That is what a well-built AI workflow looks like, and it is much less dramatic than the vendor version.</div>
+  </div>
+</section>
+
+<!-- ==================== 4 · WHAT CHANGES ==================== -->
+<section class="tab" id="diff">
+  <h2 class="sec">Eight things that actually change</h2>
+  <p class="lead">This is the answer to "how is it different from the traditional way?" Not "it uses AI" — these eight structural differences. Six are speed-ups of something that already happens. Two are capabilities the traditional workflow does not have at all, and those two are where the interesting projects live.</p>
+
+  <div class="feat">
+    <div class="feathead"><span class="fnum">1</span><b>Detection stops waiting to be told</b></div>
+    <div class="featbody">
+      <div><span class="oldnew">Traditional</span><p>The clock from occurrence to awareness belongs to nobody. It ends when a motorist calls, a trooper drives up, or an operator happens to glance at the right monitor. It is luck, and because it is luck it is rarely measured.</p></div>
+      <div><span class="oldnew n">AI workflow</span><p>Many weak signals — a probe-speed drop, detector occupancy, a cluster of Waze reports, hard-braking events, camera analytics — are fused into one alert with a confidence score. No single signal has to be conclusive, which is precisely what single-source automatic incident detection could never do. <b>The system proposes an incident before anyone reports it, and the interval becomes a measurable, ownable quantity.</b></p></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feathead"><span class="fnum">2</span><b>Verification becomes a confirmation, not a search</b></div>
+    <div class="featbody">
+      <div><span class="oldnew">Traditional</span><p>The operator must work out which camera sees the reported location, slew it, interpret what is on screen, and then type it into the event record. Under load, across many simultaneous events, this is where the queue forms.</p></div>
+      <div><span class="oldnew n">AI workflow</span><p>The alert arrives with the cameras already pointed and a draft description attached to the frame it came from. The operator's job collapses to confirm, edit, or dismiss. <b>The step is not automated away — it is pre-loaded.</b> This is the single most realistic near-term gain, and it is also the checkpoint, so it is safe to make it fast.</p></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feathead"><span class="fnum">3</span><b>Escalation moves from discovery to prediction</b></div>
+    <div class="featbody">
+      <div><span class="oldnew">Traditional</span><p>Response is scaled from a coarse incident type, then corrected once someone sees the scene. A heavy-recovery need discovered at minute 40 costs those 40 minutes <em>plus</em> the 45-minute RISC response window that then starts.</p></div>
+      <div><span class="oldnew n">AI workflow</span><p>Duration and resource requirements are estimated at verification, so RISC candidacy is a decision available at minute three. <b>This is the largest single time lever in the whole workflow — and the shakiest model.</b> Incident duration is heavy-tailed; published models predict the middle well and the tail badly, and the tail is exactly what RISC exists for. Any honest version of this reports accuracy separately for short, medium and long incidents.</p></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feathead"><span class="fnum">4</span><b>The shape changes from a chain to a fan</b></div>
+    <div class="featbody">
+      <div><span class="oldnew">Traditional</span><p>One operator does things in sequence: type the event, then post the signs, then update 511, then make calls. Downstream actions are serialized behind one person's keyboard, and the busier the incident, the longer the chain.</p></div>
+      <div><span class="oldnew n">AI workflow</span><p>One verified record triggers everything at once — signs, 511, navigation feeds, arterial signal plans, Road Ranger notification. <b>This is a workflow-architecture change, not a model.</b> It is also the cheapest thing on this list to build, and the easiest to overlook because there is nothing clever in it.</p></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feathead"><span class="fnum">5</span><b>Traveler information addresses drivers, not signs</b></div>
+    <div class="featbody">
+      <div><span class="oldnew">Traditional</span><p>"CRASH AHEAD — EXPECT DELAYS" on a dynamic message sign, seen identically by everyone who passes it, including the drivers exiting before the incident.</p></div>
+      <div><span class="oldnew n">AI workflow</span><p>An advisory filtered by the vehicle's route and heading, carrying a predicted clearance time and a diversion worth taking. The unit of information changes from a sign to a driver. <b>You can build this now:</b> the DoTPilot <code>v2x-traffic-advisor-f511</code> branch already filters the FL511 feed on-device by GPS, heading and route.</p></div>
+    </div>
+  </div>
+
+  <div class="feat" style="border-color:var(--usf-gold);border-width:2px">
+    <div class="feathead" style="background:#fbfaf3"><span class="fnum" style="background:var(--gold-deep)">6</span><b>A new output: where the back of the queue is right now</b> <span class="tagline" style="margin-left:8px">no traditional equivalent</span></div>
+    <div class="featbody">
+      <div><span class="oldnew">Traditional</span><p>Nobody knows the queue tail location in real time. It is inferred from experience and from whichever detector last showed a speed drop. The tail is where secondary crashes happen, and it moves.</p></div>
+      <div><span class="oldnew n">AI workflow</span><p>Estimate the tail continuously from probe and detector data and push a warning to the signs and the vehicles approaching it. <b>This is not an automation of an existing step — the traditional workflow has no such step.</b> And recall the secondary-crash finding: risk is concentrated in the first minutes, which is exactly when the tail is growing fastest and least predictable. Of everything on this page, this is the most valuable and the least built.</p></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feathead"><span class="fnum">7</span><b>Measurement becomes a by-product instead of a project</b></div>
+    <div class="featbody">
+      <div><span class="oldnew">Traditional</span><p>RCT and ICT are reconstructed from timestamps a busy operator typed while the incident was still running. Nationally, only about 61% of programs measure RCT at all and 54% measure ICT. The data quality problem is structural, not lazy.</p></div>
+      <div><span class="oldnew n">AI workflow</span><p>The system's own trace is the record. Timestamps are machine-accurate, the lane-blockage timeline is continuous rather than a handful of entries, and the after-action summary drafts itself. <b>This is why the "record" step exists in the workflow anatomy</b> — without it there is no honest evaluation and no next version.</p></div>
+    </div>
+  </div>
+
+  <div class="feat" style="border-color:var(--usf-gold);border-width:2px">
+    <div class="feathead" style="background:#fbfaf3"><span class="fnum" style="background:var(--gold-deep)">8</span><b>The loop closes</b> <span class="tagline" style="margin-left:8px">no traditional equivalent</span></div>
+    <div class="featbody">
+      <div><span class="oldnew">Traditional</span><p>After-action review happens for major incidents. The other several hundred thousand events a year teach the system nothing, because nothing is comparing what was expected to what happened.</p></div>
+      <div><span class="oldnew n">AI workflow</span><p>Every incident yields labels: predicted duration versus actual, recommended resources versus what was needed, alerts that were real versus phantom. <b>Traditional TIM has no learning loop; this one does</b> — and that is the difference that compounds. It only exists if feature 7 was built first, which is why measurement is not the boring part of the project.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>The pattern underneath all eight</h3>
+    <p>Six of these are the machine taking over <b>searching, typing, notifying, and estimating</b>. Two — the queue tail and the learning loop — are genuinely new capability. Not one of them is the machine taking over a decision.</p>
+    <div class="callout">If you can state your project's difference in that form — <em>"today this interval is owned by nobody and measured by no one; here is the signal that would shorten it; here is the person who still decides"</em> — you have a workflow project. If the only difference you can name is "we use a neural network," you have a method looking for a problem.</div>
+  </div>
+</section>
+
+<!-- ==================== 5 · WHAT MUST NOT CHANGE ==================== -->
+<section class="tab" id="keep">
+  <h2 class="sec">What must not change</h2>
+  <p class="lead">Round 1 requires you to mark at least one step "AI must not act alone here" with a reason. TIM has several, and the reasons are not squeamishness — they are authority, liability, and the structure of emergency response.</p>
+
+  <div class="grid2">
+    <div class="card"><h3>Four steps that stay human</h3>
+      <p><span class="num">1</span><b>Declaring all lanes open.</b> This stops the RCT clock and puts traffic back through a scene. The person who declares it is on the ground, can see what a camera cannot, and carries the liability. No confidence score substitutes for that.</p>
+      <p><span class="num">2</span><b>Dispatching emergency responders.</b> A model can rank, recommend, and pre-fill. Sending people into a live roadway is a dispatcher's decision inside an established chain of command.</p>
+      <p><span class="num">3</span><b>Activating RISC.</b> It spends money on a contract with a bonus-and-penalty clock, triggered by FHP's Notice to Proceed. Prediction informs it; a person authorizes it.</p>
+      <p><span class="num">4</span><b>Anything involving injury, fatality, hazmat, or a criminal scene.</b> Investigation requirements, medical examiner control, and evidence preservation govern the scene, and they are not trade-offs to optimize.</p>
+    </div>
+    <div class="card"><h3>Two structural constraints</h3>
+      <p><b>Incident command is human by doctrine.</b> TIM is multi-agency by definition — FHP, fire, EMS, FDOT, towing, sometimes the medical examiner — coordinated under unified command. A workflow that only works inside the TMC has optimized the one agency whose actions least determine clearance time. The responders on scene determine it.</p>
+      <p><b>The 90-minute goal is a policy, not an objective function.</b> The Open Roads Policy states the goal and explicitly excepts weather and safety closures. An optimizer handed "minimize clearance time" will eventually recommend clearing a scene that should not yet be cleared. The trade-off between reopening fast and investigating a fatal crash properly is a judgment a state has already made in writing — and your workflow must encode that policy as a constraint, not rediscover it as a cost.</p>
+      <div class="warn"><b>Automation bias is the failure mode to design against.</b> An operator who confirms three hundred machine proposals a shift stops reading them. Show the evidence next to the proposal — the frame, the signals that fired, the confidence — so that confirming stays a real act. A checkpoint that has become a reflex is not a checkpoint.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>And a privacy line</h3>
+    <p>TIM data touches identifiable people: camera imagery of a crash scene, CAD records, and anything about injuries. For your project, <b>video, imagery, or other data about identifiable people requires instructor approval and IRB consultation before any collection begins</b> — and that conversation starts when you pick the topic, not when you are ready to collect. Agency-held incident data usually comes with its own conditions on what may leave the building; find out before you design around a cloud service.</p>
+  </div>
+</section>
+
+<!-- ==================== 6 · EVIDENCE ==================== -->
+<section class="tab" id="eviid">
+  <h2 class="sec">What has actually been demonstrated</h2>
+  <p class="lead">Everything on tab 4 is plausible. Plausible is not evidence. Here is the same field sorted by how much you should trust it — a habit worth more than any of the individual facts.</p>
+
+  <div class="card">
+    <h3>Sorted by evidence quality</h3>
+    <table class="syn">
+      <tr><th style="width:135px">Tier</th><th style="width:28%">Claim</th><th>What it rests on</th></tr>
+      <tr><td><span class="tier tier-a">independent eval</span></td>
+        <td><b>Georgia DOT</b> cut average time-to-locate a stranded motorist from <b>23 minutes to 3</b> — an 85% decrease.</td>
+        <td>A three-month, fifteen-license pilot of a cloud 911-geolocation tool, evaluated by the USDOT ITS Joint Program Office rather than the vendor. Note what it is <em>not</em>: this is call-taking and geolocation, not video AI. The best-documented detection-time reduction in the field is not a computer vision result.</td></tr>
+      <tr><td><span class="tier tier-b">simulation only</span></td>
+        <td><b>FHWA research</b> reports up to <b>99.8% detection rate</b> at <b>0.0–0.2% false alarm</b>, detecting in 65–97 seconds, against the California Algorithm #7's 46–90.9%.</td>
+        <td>A 2022 Turner-Fairbank report testing a neural-network framework on loop-detector data <b>inside PTV VISSIM</b>. The report states plainly that it lacks field validation. Those numbers describe a simulation, and quoting them as field performance is the most common error in this literature.</td></tr>
+      <tr><td><span class="tier tier-c">vendor-reported</span></td>
+        <td>Nevada's Waycare pilot: 18% reduction in primary crashes, 16× ROI. Rekor: "cuts response time by 60%," now under multi-state contracts. INRIX: partner DOTs seeing 11% crash reductions.</td>
+        <td>Press releases. No independent agency-side evaluation confirming these figures was located. They may well be true; they are not yet evidence. When a practitioner on your committee asks where a number came from, "the vendor said so" is an answer you should be able to give without embarrassment — or not use the number.</td></tr>
+    </table>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>Why automatic incident detection failed the first time</h3>
+      <p>Loop-detector AID algorithms — the California algorithm, McMaster, and a decade of successors — were deployed widely and then quietly abandoned. The reasons are worth knowing, because they are the reasons your version could fail too.</p>
+      <ul>
+        <li><b>The trilemma is structural.</b> Detection rate, time-to-detect and false-alarm rate trade against each other, and no calibration optimizes all three. A Texas DOT-funded evaluation concluded that site-specific calibration procedures for some deployed systems were never developed at all.</li>
+        <li><b>Weather broke them.</b> McMaster improved on California but misread storm-induced speed drops as incidents.</li>
+        <li><b>And so operators turned them off.</b> The same evaluation reports the blunt outcome: <em>"most implementations of ATMS operate with the incident detection algorithm turned off."</em></li>
+      </ul>
+      <div class="callout"><b>What is different now is the number of independent signals, not the cleverness of the algorithm.</b> One detector station could never be sure. Probe speed plus Waze plus camera plus connected-vehicle events can be, because their errors are uncorrelated. If your project's answer to "why won't this fail like the last one" is "better model," it will fail like the last one.</div>
+    </div>
+    <div class="card"><h3>Where Florida actually is</h3>
+      <p>As of August 2026 there is <b>no publicly reported operational AI or computer-vision incident detection deployment in Florida TIM</b>. FDOT's own 2026 TIM Strategic Plan lists emerging technologies — photogrammetry and robotic surveying for crash investigation, connected LED flares, automated debris removal, third-party navigation integration — and AI-based video incident detection is not among them.</p>
+      <p>Read that as an opportunity with a warning attached. The opportunity is obvious. The warning is that a state with one of the most mature TIM programs in the country, which has been running SunGuide since the mid-2000s and measures its own clearance times, has not adopted this. <b>Find out why before you assume nobody thought of it.</b> That question is a good first email to a district TIM engineer, and the answer is worth more to your project than another week of modeling.</p>
+      <p><small>The honest possibilities include: procurement cycles, the false-alarm history above, the fact that Road Rangers already provide dense human coverage on the corridors that matter, or that nobody has shown a benefit-cost ratio that beats $12.60 to $1.</small></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>The hardest technical problem, stated honestly</h3>
+    <p><b>Incident duration prediction is heavy-tailed and nobody has solved it.</b> A systematic overview of the literature finds the duration distribution has a long tail that models fail to capture, with no consistent distributional fit across studies — log-normal, log-logistic, Weibull and generalized-F all reported as best by different authors. In one five-method comparison, only the neural-network model could predict incidents longer than 90 minutes at all. Hazard-based models handle central tendency and struggle at the extremes.</p>
+    <div class="warn"><b>Read what that means operationally.</b> The incidents where duration prediction would create the most value — the ones that justify RISC activation, the ones that generate the queues where secondary crashes happen — are exactly the ones the models predict worst. A duration model reported as a single MAPE across all incidents is hiding this. <b>Report performance separately for short, medium and long incidents, or you have not reported it.</b></div>
+  </div>
+</section>
+
+<!-- ==================== 7 · CAPSTONE ==================== -->
+<section class="tab" id="cap">
+  <h2 class="sec">TIM as a capstone project</h2>
+  <p class="lead">Four scoped versions, ordered by how likely they are to finish in eleven weeks. Every one of them is a real project. The first involves no machine learning whatsoever and is the one most likely to produce something an agency uses.</p>
+
+  <div class="card">
+    <span class="tagline">Track A · lowest risk, high value</span>
+    <h3 style="margin-top:8px">Measure where the time actually goes</h3>
+    <p>Reconstruct the incident timeline for one Tampa Bay corridor from archived event records. Break RCT and ICT into their component intervals. Find which interval carries the most variance, not the most minutes — variance is where the manageable losses hide. Segment by time of day, incident type, and whether a Road Ranger was first on scene.</p>
+    <p><b>Deliverable:</b> the current-state measurement FDOT's own 2026 plan says is not yet published, for one corridor. <b>Method:</b> data work and statistics. <b>AI content:</b> optional, and honestly not needed.</p>
+    <p><small>Do not underrate this one. It answers a question a district can act on, it is finishable, and every other track needs its output anyway.</small></p>
+  </div>
+
+  <div class="card">
+    <span class="tagline">Track B · the honest version of automatic detection</span>
+    <h3 style="margin-top:8px">Could we have known sooner?</h3>
+    <p>Offline replay on historical data. Take probe speeds, detector data, and Waze or FL511 event records for a corridor and a period, and build a fusion detector. Then compare its alert time against the <em>recorded</em> first-awareness timestamp for each real incident.</p>
+    <p><b>The metric is the whole project:</b> minutes earlier, against false alarms per beat per week. Report both or neither. A detector that fires four minutes earlier and cries wolf twice a shift is worse than nothing, and you should be the one to say so.</p>
+    <p><b>Why this scopes well:</b> you are competing against a recorded timestamp, so the baseline is unambiguous and already in the data. No live system, no deployment, no IRB complication if the data is aggregate.</p>
+  </div>
+
+  <div class="card">
+    <span class="tagline">Track C · high ceiling, needs discipline</span>
+    <h3 style="margin-top:8px">Duration prediction with an honest tail</h3>
+    <p>Predict roadway clearance time from attributes known <em>at verification</em> — not attributes known afterward, which is the leak that makes published models look better than they are. Then do the thing the literature mostly does not: report accuracy separately for under 30 minutes, 30 to 90, and over 90.</p>
+    <p><b>The deliverable is not the model.</b> It is a decision rule: at what predicted duration and what confidence should RISC activation be considered, given a $2,500 bonus, a $10-per-minute penalty past 150 minutes, and the cost of activating for an incident that would have cleared anyway? That question is answerable, it is economic rather than architectural, and it is the one a practitioner will ask you.</p>
+  </div>
+
+  <div class="card">
+    <span class="tagline">Track D · hardware-integrated</span>
+    <h3 style="margin-top:8px">Queue-tail warning on the vehicle</h3>
+    <p>Estimate the back-of-queue location from probe or detector data during an incident and deliver a targeted warning to an approaching vehicle. Fork the DoTPilot <code>v2x-traffic-advisor-f511</code> branch, which already filters the FL511 feed on-device by GPS, heading and route, and add tail estimation and an approach warning.</p>
+    <p><b>Why it is worth the risk:</b> this is feature 6 — the capability the traditional workflow does not have — aimed at the interval where the secondary-crash evidence says the risk is concentrated. <b>Scope it to one corridor and one direction</b> and demonstrate on recorded data before attempting anything live.</p>
+  </div>
+
+  <div class="card">
+    <h3>The constraint that decides all four</h3>
+    <p><b>Data access, not modeling.</b> SunGuide event records and FHP computer-aided-dispatch data sit inside agency systems with their own agreements. Start that conversation the week you choose the topic — topics are confirmed <b>Sept 17</b> and presentations are <b>Dec 3</b>. A team still negotiating access in October has already lost.</p>
+    <p>Tracks that survive a slow data agreement: Track B on any state's open incident archive, or Track C on published datasets, with Florida framing. Have that fallback identified before you commit.</p>
+    <div class="callout"><b>Round 1, for any of these tracks:</b> the workflow in one picture, the baseline in real numbers, the pain point, the data on hand and its governance, and every step labeled — with at least one marked "AI must not act alone here." Tab 2 of this page is most of your first slide already.</div>
+  </div>
+</section>
+
+<!-- ==================== SOURCES ==================== -->
+<section class="tab" id="src">
+  <h2 class="sec">Sources</h2>
+  <p class="lead">Check these yourself. Two habits worth forming: notice whether a number came from an agency, a peer-reviewed study, a simulation, or a press release — and notice what is missing.</p>
+
+  <div class="card">
+    <h4>FHWA — timeline, performance measures, secondary crashes</h4>
+    <ul class="src">
+      <li><a href="https://ops.fhwa.dot.gov/tim/preparedness/tim/performance_measures.htm">TIM Performance Measures</a> — the T0–T7 timeline and the RCT/ICT definitions.</li>
+      <li><a href="https://topslab.wisc.edu/wp-content/uploads/2019/04/TIM-Responder-Trng-Student-Handout-072017.pdf">National TIM Responder Training student handout</a> — the T0–T6 version taught to responders.</li>
+      <li><a href="https://transops.s3.amazonaws.com/uploaded_files/FHWA-HOP-10-013-Traffic-Incident-Management-Handbook.pdf">TIM Handbook (FHWA-HOP-10-013)</a></li>
+      <li><a href="https://ops.fhwa.dot.gov/publications/fhwahop23043/fhwahop23043.pdf">Secondary Crash Identification, multi-state (FHWA-HOP-23-043, 2023)</a> — the 0.28% verified rate; Florida 0.13%.</li>
+      <li><a href="https://ops.fhwa.dot.gov/publications/fhwahop19007/index.htm">2018 TIM Capability Maturity Self-Assessment</a> — 70.4% national; 61% measure RCT, 54% measure ICT. No newer national cycle was located.</li>
+    </ul>
+    <h4>Florida programs</h4>
+    <ul class="src">
+      <li><a href="https://www.fdot.gov/docs/default-source/traffic/traf_incident/pdf/Open_Roads_Policy_FDOT_FHP.pdf">FDOT/FHP Open Roads Policy</a> — the 90-minute goal (agreement dated January 2014; still referenced as current in the 2026 strategic plan).</li>
+      <li><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/traffic/cvotim/tim/publications/tim-strategic-plan-2026-update_final.pdf">FDOT TIM Strategic Plan, 2026 update</a> — Road Ranger coverage, RISC FY2022/23 activations, SIRV District 4 status and replication recommendation, emerging-technology list.</li>
+      <li><a href="https://www.fdot.gov/traffic/cvotim/tim/roadrangers/about.htm">Road Rangers</a> · <a href="https://transops.s3.amazonaws.com/uploaded_files/Floridas-Turnpike-RISC-fact-sheet.pdf">Turnpike RISC fact sheet</a> — the 45/60/90-minute structure, $2,500 bonus, $10/min penalty.</li>
+      <li><a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/research/reports/fdot-bdv24-977-37-rpt.pdf">FDOT research report BDV24-977-37</a> — Florida FY2019/20 RCT 33 min, ICT 64 min.</li>
+      <li><a href="https://www.fdot.gov/traffic/its/projects-arch/sunguide.shtm">SunGuide</a> · <a href="https://fl511.com/about">FL511</a> — systems of record and public feed.</li>
+      <li><a href="https://www.iteris.com/news/iteris-awarded-31-million-contract-extending-critical-support-for-tampa-area-regional-transportation-management-center">Tampa Bay RTMC operations contract (April 2026)</a></li>
+    </ul>
+    <h4>AI in TIM — read the source type before the number</h4>
+    <ul class="src">
+      <li><a href="https://highways.dot.gov/sites/fhwa.dot.gov/files/FHWA-HRT-21-081.pdf">FHWA-HRT-21-081 (2022)</a> — the 99.8%/0.2% figures. <b>Simulation in VISSIM; the report states it lacks field validation.</b></li>
+      <li><a href="https://www.itskrs.its.dot.gov/2022-b01616">USDOT ITS JPO evaluation of the Georgia DOT geolocation pilot</a> — 23 min → 3 min. Independent evaluation.</li>
+      <li><a href="https://library.ctr.utexas.edu/hostedpdfs/tti/0-4770-1.pdf">UT Austin CTR report 0-4770-1</a> — the detection-rate / time / false-alarm trilemma, and "most implementations of ATMS operate with the incident detection algorithm turned off."</li>
+      <li><a href="https://rno-its.piarc.org/en/network-monitoring-its-network-monitoring-vehicles-roadways/automatic-incident-detection">PIARC on automatic incident detection</a> — mixed success, driven by false-alarm rates.</li>
+      <li><a href="https://link.springer.com/article/10.1186/s12544-018-0300-1">Overview of traffic incident duration analysis and prediction (ETRR, 2018)</a> — the long tail; only the ANN model predicted incidents over 90 minutes.</li>
+      <li><a href="https://tetcoalition.org/wp-content/uploads/2026/01/Secondary-Crash-Factors_Final.pdf">TETC multi-state secondary-crash re-analysis (FL/MD/TN/VA, 2022–2024)</a> — the non-linear, front-loaded per-minute risk.</li>
+    </ul>
+    <div class="warn"><b>Gaps in the record, stated as gaps.</b> No statewide Florida RCT/ICT figure published after FY2019/20. No national TIM self-assessment newer than 2018 located. No credible national average for detection, verification or response time exists in a form worth citing — do not invent one. The current SunGuide version could not be confirmed. The widely circulated "1 in 13 crashes are secondary" claim conflicts by more than an order of magnitude with FHWA's verified 0.28% and is not reconciled in the sources. And the "2.8% per minute" secondary-crash figure traces to a single Indiana dataset from 1999.</div>
+  </div>
+</section>
+
+</div></main>
+
+<footer><div class="wrap">AI for Mobility · CGN 6933 · Fall 2026 · University of South Florida — worked case. Facts current as of August 2026; verify before citing.</div></footer>
+
+<script>
+document.getElementById('tabbar').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#tabbar button').forEach(function(x){x.classList.remove('active')});
+  b.classList.add('active');
+  document.querySelectorAll('section.tab').forEach(function(s){s.classList.remove('active')});
+  document.getElementById(b.dataset.t).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+var SEG = [
+ {k:'det', label:'Detection', pts:'T0 → T1', color:'var(--t1)', flex:2.0,
+  name:'Occurrence to first recordable awareness',
+  today:'Belongs to nobody. It ends when a motorist calls *347 or 911, a trooper or Road Ranger drives up on it, a cluster of Waze reports appears, or a TMC operator notices a slowdown. Whichever comes first sets T1 — and because it is essentially luck, this interval is the least measured in the whole timeline.',
+  ai:'The clearest target for signal fusion, and the one place where an AI workflow can create time that did not exist before. Probe-speed anomalies, detector occupancy, crowdsourced reports and connected-vehicle events combined into one ranked alert.',
+  why:'Also the interval where the secondary-crash evidence says risk is most concentrated — the multi-state re-analysis puts the odds increase at roughly 13–21% per minute in the first ten minutes.'},
+ {k:'ver', label:'Verification', pts:'T1 → T2', color:'var(--t2)', flex:1.2,
+  name:'Awareness to verification',
+  today:'A TMC operator works out which camera covers the reported location, slews it, interprets the scene, and types the event into SunGuide. A search task under time pressure, and the place where a queue forms when several incidents run at once.',
+  ai:'Pre-position the evidence: auto-slew the nearest cameras and attach a draft description of type, lanes blocked and vehicles involved. The operator confirms rather than searches. This is the most realistic near-term gain in the whole timeline.',
+  why:'It is also the human checkpoint, which is what makes it safe to speed up aggressively — nothing irreversible has happened yet.'},
+ {k:'dsp', label:'Dispatch', pts:'T2 → T3', color:'var(--t3)', flex:1.0,
+  name:'Verification to response dispatched',
+  today:'Response package chosen from incident type plus experience, then dispatched by phone and radio across agencies. Traveler information, signs and 511 updates are serialized behind the same operator.',
+  ai:'Two changes: a predicted duration and resource requirement available at this moment rather than after someone sees the scene, and a fan-out so that signs, 511, navigation feeds and arterial plans fire concurrently from the verified record.',
+  why:'Dispatch itself stays human. The model recommends; a person sends people into a live roadway.'},
+ {k:'arr', label:'Travel', pts:'T3 → T4', color:'var(--t4)', flex:1.6,
+  name:'Dispatch to responders on scene',
+  today:'Physical travel time. Road Rangers patrolling 2,100+ centerline miles across 105+ beats are often closest. RISC heavy recovery is contracted to arrive within 45 minutes of FHP\'s Notice to Proceed.',
+  ai:'Mostly outside software\'s reach — this interval is geography and staging. The lever is not routing but ordering: if escalation is predicted at verification instead of discovered on scene, the RISC clock starts 30 or 40 minutes earlier.',
+  why:'A useful reminder that not every interval yields to AI. Recognizing which ones do not is part of the analysis.'},
+ {k:'clr', label:'On scene → lanes open', pts:'T4 → T5', color:'var(--t5)', flex:2.4,
+  name:'Arrival to all lanes available — the end of RCT',
+  today:'The working part of the incident: assessment, patient care, investigation, recovery, and the decision to reopen. Usually the largest single block of time, and the one governed by the fewest software constraints.',
+  ai:'Support, not control. Keep the clearance estimate and the public message updating as the scene changes, and estimate the queue tail continuously so upstream traffic can be warned while the scene is still active.',
+  why:'★ Declaring all lanes open is a human checkpoint that never moves. It stops the RCT clock and puts traffic back through a scene, and the person who declares it carries the liability.'},
+ {k:'dep', label:'Scene clear', pts:'T5 → T6', color:'var(--t6)', flex:1.0,
+  name:'Lanes open to last responder departing — the end of ICT',
+  today:'Equipment recovery, debris, final documentation. Traffic is already moving, so the pressure drops — which is exactly why this interval drifts.',
+  ai:'Little operational leverage, but this is where the record gets written. Machine-accurate timestamps and an auto-drafted event summary turn performance measurement into a by-product instead of a separate project.',
+  why:'Nationally only about 54% of TIM programs measure incident clearance time at all. Some of the available improvement here is just measuring.'},
+ {k:'rec', label:'Recovery', pts:'T6 → T7', color:'var(--t7)', flex:1.3,
+  name:'Last responder departs to normal flow returns',
+  today:'The queue dissipates. Rarely measured, rarely managed, and invisible in both headline performance measures.',
+  ai:'Predict dissipation and time the removal of diversion messages and signal plans, so travelers are not still being routed around an incident that ended twenty minutes ago.',
+  why:'Neither RCT nor ICT covers this interval. A performance measure that stops before the delay does is worth pointing out — measurement choices shape what gets managed.'}
+];
+
+var bar = document.getElementById('tlbar'), pts = document.getElementById('tlpoints');
+bar.innerHTML = SEG.map(function(s,i){
+  return '<button class="tlseg'+(i===0?' active':'')+'" data-i="'+i+'" style="flex:'+s.flex+';background:'+s.color+'">'+
+         '<b>'+s.label+'</b><small>'+s.pts+'</small></button>';
+}).join('');
+pts.innerHTML = SEG.map(function(s){return '<span style="flex:'+s.flex+'">'+s.pts.split(' → ')[0]+'</span>'}).join('');
+
+function showSeg(i){
+  var s = SEG[i];
+  document.querySelectorAll('.tlseg').forEach(function(b){b.classList.toggle('active', +b.dataset.i===i)});
+  document.getElementById('tldetail').innerHTML =
+    '<h3 style="color:'+s.color+'">'+s.pts+' · '+s.name+'</h3>'+
+    '<div class="grid2" style="margin-top:10px">'+
+      '<div><h4>Today</h4><p>'+s.today+'</p></div>'+
+      '<div><h4>With an AI workflow</h4><p>'+s.ai+'</p><h4>Worth noticing</h4><p>'+s.why+'</p></div>'+
+    '</div>';
+}
+bar.addEventListener('click', function(e){
+  var b = e.target.closest('.tlseg'); if(!b) return; showSeg(+b.dataset.i);
+});
+showSeg(0);
+</script>
+</body>
+</html>

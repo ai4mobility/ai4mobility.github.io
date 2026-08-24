@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sigmoid, Tanh &amp; Softmax — Visual Companion | AI for Mobility</title>
+<style>
+  :root{
+    --usf-green:#006747;--usf-green-d:#00543a;--usf-gold:#CFC493;--gold-deep:#b9a96a;
+    --ink:#1c2422;--muted:#5b6b66;--paper:#f6f8f7;--card:#fff;--line:#e2e8e5;
+    --sig:#006747;--tan:#1f6f8b;--relu:#9b5de5;--warn:#c0392b;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 6px 22px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--paper);line-height:1.58}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding:32px 0 26px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--usf-gold);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:28px;font-weight:780}
+  header.hero p{margin:0;max-width:880px;color:#e7efeb;font-size:15px}
+  nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:4px;flex-wrap:wrap;padding-top:7px;padding-bottom:7px}
+  nav.tabs button{border:none;background:transparent;font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 14px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  section.page{display:none;padding:24px 0 10px}
+  section.page.active{display:block}
+  h2.sec{font-size:23px;margin:4px 0 2px;color:var(--usf-green-d)}
+  h3{font-size:16px;margin:20px 0 6px;color:var(--ink)}
+  .lead{color:var(--muted);max-width:880px;margin:0 0 16px;font-size:15px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+  .eq{background:#0f1c18;color:#eafff5;border-radius:10px;padding:14px 18px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14.5px;line-height:1.95;white-space:pre-wrap}
+  .eq b{color:var(--usf-gold)}.eq .g{color:#7fd8b0}.eq .bl{color:#6fc3e0}.eq .rd{color:#ff9b8f}.eq .dim{color:#7f948d}
+  .callout{border-left:4px solid var(--usf-gold);background:#fffdf3;padding:11px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:13.8px}
+  .callout.good{border-left-color:#1e9e57;background:#f3fbf6}
+  .callout.sig{border-left-color:var(--tan);background:#f1f8fb}
+  .callout.warn{border-left-color:var(--warn);background:#fdf4f2}
+  .small{font-size:12px;color:var(--muted)}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;margin:6px 0 16px}
+  .ctrl{display:flex;flex-direction:column;gap:5px;min-width:150px}
+  .ctrl label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .ctrl label.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  .ctrl input[type=range]{width:220px;accent-color:var(--usf-green)}
+  .ctrl select{font:inherit;font-size:13.5px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .ctrl .val{font-family:ui-monospace,monospace;font-size:13px;color:var(--usf-green-d);font-weight:700}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  button.act{border:1px solid var(--usf-green);background:var(--usf-green);color:#fff;font-weight:700;font-size:13.5px;padding:9px 15px;border-radius:9px;cursor:pointer}
+  button.act:hover{background:var(--usf-green-d)}
+  button.ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:13.5px;padding:9px 14px;border-radius:9px;cursor:pointer}
+  button.ghost:hover{background:var(--paper)}
+  .readout{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+  .stat{background:#fbfdfc;border:1px solid var(--line);border-radius:11px;padding:9px 14px;min-width:108px;text-align:center}
+  .stat .n{font-size:18px;font-weight:780;font-family:ui-monospace,monospace;color:var(--usf-green-d)}
+  .stat .n.t{color:var(--tan)}.stat .n.w{color:var(--warn)}.stat .n.r{color:var(--relu)}
+  .stat .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+  .stat .l.raw{text-transform:none;letter-spacing:.02em;font-size:11px}
+  canvas{border-radius:10px;border:1px solid var(--line);background:#fff;display:block}
+  .canvasrow{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+  figure{margin:0}
+  figcaption{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;text-align:center}
+  .bar{height:13px;background:#eef2f0;border-radius:7px;overflow:hidden;margin-top:5px}
+  .bar > i{display:block;height:100%;border-radius:7px;transition:width .12s linear}
+  .bars{display:grid;grid-template-columns:120px 1fr 82px;gap:8px 12px;align-items:center;margin-top:8px;font-size:13px}
+  .bars .lbl{font-weight:700;color:var(--muted);font-size:12px}
+  .bars .num{font-family:ui-monospace,monospace;font-size:12.5px;text-align:right;font-weight:700}
+  table.map{width:100%;border-collapse:collapse;font-size:13.4px;margin-top:8px}
+  table.map th,table.map td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.map th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--line)}
+  table.map td:first-child{font-weight:700;color:var(--usf-green-d);white-space:nowrap}
+  .swatch{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:baseline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);font-weight:600;margin:2px 0 10px}
+  footer{padding:26px 0;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);margin-top:18px}
+  @media(max-width:700px){.ctrl input[type=range]{width:min(72vw,220px)}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · Neural Network Basics · University of South Florida</div>
+  <h1>Sigmoid, Tanh &amp; Softmax — the squashing functions you already use</h1>
+  <p>You have fitted these before. Every binary logit mode-choice model you have ever estimated
+     <em>is</em> a sigmoid; every multinomial logit route-choice model <em>is</em> a softmax. This
+     companion starts from that, generalizes to signal-control policies, then follows the same curves
+     into the two facts that shaped the entire history of deep learning: <b>saturation</b> and the
+     <b>vanishing gradient</b>. Everything runs locally in your browser — nothing to install, no data
+     leaves the page.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap">
+  <button data-tab="p1" class="active">1 · You already use it</button>
+  <button data-tab="p2">2 · Sigmoid vs. tanh</button>
+  <button data-tab="psm">3 · Softmax &amp; signal control</button>
+  <button data-tab="p3">4 · Saturation</button>
+  <button data-tab="p4">5 · Vanishing gradient</button>
+  <button data-tab="p5">6 · Train one neuron</button>
+</div></nav>
+
+<!-- ==================== PAGE 1 ==================== -->
+<section class="page active" id="p1"><div class="wrap">
+  <h2 class="sec">The binary logit model is a neuron</h2>
+  <p class="lead">Start with something familiar. A traveler chooses between transit and car. Random utility
+     theory gives each alternative a systematic utility, and the probability of choosing transit is the
+     binary logit formula. Write it out, cancel the common term, and a sigmoid falls out — the same
+     function, with the same shape, that sits inside every neural network.</p>
+
+  <div class="card">
+    <div class="eq"><span class="dim">binary logit</span>   P(transit) = e<sup>μV<sub>t</sub></sup> / (e<sup>μV<sub>t</sub></sup> + e<sup>μV<sub>c</sub></sup>) = 1 / (1 + e<sup>−μ(V<sub>t</sub>−V<sub>c</sub>)</sup>) = <b>σ(μ·ΔV)</b>
+<span class="dim">a neuron    </span>   a = <b>σ(z)</b>,  z = <span class="g">w</span>·x + <span class="bl">b</span>
+<span class="dim">where       </span>   σ(z) = 1 / (1 + e<sup>−z</sup>)</div>
+    <p class="small" style="margin-top:12px">Same equation. The scale parameter <span class="mono">μ</span> is
+      the <b>weight</b>; the alternative-specific constant is the <b>bias</b>; the attribute difference is the
+      <b>input</b>. What changes in a neural network is not the function — it is that
+      <span class="mono">w</span> and <span class="mono">b</span> are <em>learned by gradient descent</em>
+      instead of estimated by maximum likelihood, and that thousands of these units get stacked.</p>
+  </div>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label class="raw">Utility difference ΔV</label>
+        <input id="t1dv" type="range" min="-6" max="6" step="0.1" value="1.5"><span class="val">ΔV = <span id="t1dvv">1.5</span></span></div>
+      <div class="ctrl"><label class="raw">Scale μ  (= weight w)</label>
+        <input id="t1mu" type="range" min="0.05" max="3" step="0.05" value="1"><span class="val">μ = <span id="t1muv">1.00</span></span></div>
+      <div class="ctrl"><label class="raw">Constant ASC (= bias b)</label>
+        <input id="t1asc" type="range" min="-3" max="3" step="0.1" value="0"><span class="val">ASC = <span id="t1ascv">0.0</span></span></div>
+    </div>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--usf-green)"></span>P = σ(μ·ΔV + ASC)</span>
+      <span><span class="swatch" style="background:#cfd9d5"></span>reference: μ = 1, ASC = 0</span>
+    </div>
+    <figure><canvas id="c1" data-w="620" data-h="300"></canvas>
+      <figcaption>The choice curve — and the activation curve. They are the same object.</figcaption></figure>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s1z">1.50</div><div class="l raw">z = μ·ΔV + ASC</div></div>
+      <div class="stat"><div class="n" id="s1p">0.818</div><div class="l raw">P(transit)</div></div>
+      <div class="stat"><div class="n t" id="s1odds">4.48</div><div class="l">odds</div></div>
+      <div class="stat"><div class="n" id="s1shape">decisive</div><div class="l">curve character</div></div>
+    </div>
+    <div class="callout">Push <b>μ</b> toward 3: the curve stiffens into a step — travelers become
+      deterministic, choosing the better alternative almost every time. Pull <b>μ</b> toward 0: the curve
+      flattens to a coin flip regardless of utility. In neural-network language, the weight controls
+      <em>how sharply the unit commits</em>. The bias slides the whole curve left or right, setting
+      <em>where</em> the threshold sits — exactly what an alternative-specific constant does.</div>
+    <div class="callout sig">Read the pre-activation <span class="mono">z</span> as a <b>log-odds score</b>:
+      <span class="mono">z = ln(P / (1−P))</span>. A neuron does not output a probability internally —
+      it outputs evidence on a log-odds scale, and the sigmoid is the dictionary that converts evidence
+      into probability. Every logit coefficient you have ever interpreted is a weight in this sense.</div>
+  </div>
+
+  <div class="card">
+    <h3>Why a squashing function at all?</h3>
+    <p class="lead" style="margin-bottom:6px">Because without one, depth buys you nothing. Stack two linear
+      layers and you get <span class="mono">W₂(W₁x) = (W₂W₁)x</span> — still a single linear model, no matter
+      how many layers you add. The nonlinearity between layers is what makes a deep network more expressive
+      than a regression. Sigmoid was the first popular choice for two reasons that mattered in 1986: it is
+      smooth (so it is differentiable everywhere, which backpropagation needs), and it is bounded (so a unit
+      cannot blow up).</p>
+    <div class="callout good">Keep this test in your pocket for the rest of the course: <b>if you remove
+      every nonlinearity from an architecture and it still does the job, you did not need the network.</b>
+      A linear model that you can interpret and defend to a review panel is almost always the better answer.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 2 ==================== -->
+<section class="page" id="p2"><div class="wrap">
+  <h2 class="sec">Sigmoid vs. tanh: the same curve, recentered</h2>
+  <p class="lead">Tanh is not a different idea. It is a sigmoid stretched to twice the slope and shifted
+     down so it straddles zero. The algebra is exact, and you can check it below by overlaying the two.
+     What differs is the <em>range</em>, and range is what decides which one belongs in which slot of a
+     mobility model.</p>
+
+  <div class="card">
+    <div class="eq">tanh(z) = (e<sup>z</sup> − e<sup>−z</sup>) / (e<sup>z</sup> + e<sup>−z</sup>) = <b>2σ(2z) − 1</b>
+<span class="dim">range</span>   σ: <span class="g">(0, 1)</span> — one-sided, never negative   |   tanh: <span class="bl">(−1, 1)</span> — signed, zero-centred</div>
+    <div class="btnrow" style="margin-top:14px">
+      <label class="small" style="font-weight:700;display:flex;align-items:center;gap:7px;cursor:pointer">
+        <input type="checkbox" id="t2chk" style="accent-color:var(--relu)"> overlay 2σ(2z) − 1 on tanh</label>
+    </div>
+    <div class="legend" style="margin-top:10px">
+      <span><span class="swatch" style="background:var(--sig)"></span>σ(z)</span>
+      <span><span class="swatch" style="background:var(--tan)"></span>tanh(z)</span>
+      <span><span class="swatch" style="background:var(--relu)"></span>2σ(2z) − 1</span>
+    </div>
+    <figure><canvas id="c2a" data-w="620" data-h="300"></canvas>
+      <figcaption>Tick the box: the purple dashes land exactly on the tanh curve.</figcaption></figure>
+    <div class="callout sig"><b>Why zero-centring matters.</b> Sigmoid outputs are always positive, so every
+      input a downstream unit receives has the same sign. The gradients for all of that unit's weights then
+      share a sign too, and the update can only move diagonally — all up or all down — forcing a zig-zag
+      path to the optimum. Tanh's outputs average near zero, which removes that bias. This is the practical
+      reason tanh replaced sigmoid in hidden layers through the 1990s and 2000s.</div>
+  </div>
+
+  <div class="card">
+    <h3>Which one for which mobility quantity?</h3>
+    <table class="map">
+      <tr><th>Use</th><th>Function</th><th>Why</th></tr>
+      <tr><td>Probability of congestion, crash, lane change</td><td>sigmoid</td>
+          <td>The quantity is bounded in [0,1] and one-sided. This is the output layer of a binary classifier.</td></tr>
+      <tr><td>A gate — "how much of this signal do I let through?"</td><td>sigmoid</td>
+          <td>0 = closed, 1 = open, like a ramp-metering rate. LSTM and GRU gates are literally this.</td></tr>
+      <tr><td>Acceleration response to a speed difference</td><td>tanh</td>
+          <td>Signed and odd-symmetric: closing on a slower leader mirrors falling behind a faster one, and both saturate at a physical limit.</td></tr>
+      <tr><td>Steering correction from lane-centre offset</td><td>tanh</td>
+          <td>Left and right are symmetric; the correction saturates at the steering-rate limit.</td></tr>
+      <tr><td>Deviation from a desired speed or headway</td><td>tanh</td>
+          <td>The natural zero is "on target", and errors go both ways.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Tanh is already in your car-following models</h3>
+    <p class="lead" style="margin-bottom:10px">A driver closing on a slower leader decelerates; a driver
+      falling behind a faster leader accelerates; and in both directions the response flattens out at the
+      limit of what tyres and engine can deliver. That is an odd-symmetric saturating function of the speed
+      difference — which is to say, a scaled tanh. Vary the sensitivity below and watch the two regimes:
+      near <span class="mono">Δv = 0</span> the response is essentially linear (this is the classical
+      linear car-following model), and far from zero it saturates.</p>
+    <div class="controls">
+      <div class="ctrl"><label class="raw">Max accel a<sub>max</sub> (m/s²)</label>
+        <input id="t2am" type="range" min="0.8" max="4" step="0.1" value="2.5"><span class="val">a<sub>max</sub> = <span id="t2amv">2.5</span></span></div>
+      <div class="ctrl"><label class="raw">Sensitivity scale k (m/s)</label>
+        <input id="t2k" type="range" min="1" max="14" step="0.5" value="5"><span class="val">k = <span id="t2kv">5.0</span></span></div>
+    </div>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--tan)"></span>a = a<sub>max</sub>·tanh(Δv / k)</span>
+      <span><span class="swatch" style="background:#cfd9d5"></span>linear model a = (a<sub>max</sub>/k)·Δv</span>
+      <span><span class="swatch" style="background:var(--warn)"></span>±a<sub>max</sub> (physical limit)</span>
+    </div>
+    <figure><canvas id="c2b" data-w="620" data-h="300"></canvas>
+      <figcaption>The grey line is the linear car-following model; tanh is that model with the physics put back in.</figcaption></figure>
+    <div class="callout">Drop <b>k</b> to 1: the driver is hair-trigger, slamming to full braking for a 2 m/s
+      difference. Raise <b>k</b> to 14: sluggish, barely responding until the gap is closing fast. Same
+      parameter, same meaning as the weight <span class="mono">w</span> on page 1 — it is the slope through
+      the origin, and it decides how much of the curve you actually operate on.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE SOFTMAX ==================== -->
+<section class="page" id="psm"><div class="wrap">
+  <h2 class="sec">Softmax: the same logit, with more than two alternatives</h2>
+  <p class="lead">A sigmoid answers "transit or car?" — one probability, two alternatives. Real mobility
+     decisions rarely stop at two. Which of five routes? Which of four signal phases? Which of eight
+     vehicle classes is this blob in the camera frame? The generalization is <b>softmax</b>, and once
+     again you already know it: softmax <em>is</em> the multinomial logit model.</p>
+
+  <div class="card">
+    <div class="eq"><span class="dim">softmax          </span>   softmax(<b>z</b>)<sub>i</sub> = e<sup>z<sub>i</sub></sup> / <b>Σ</b><sub>j</sub> e<sup>z<sub>j</sub></sup>
+<span class="dim">multinomial logit</span>   P(i) = e<sup>μV<sub>i</sub></sup> / <b>Σ</b><sub>j</sub> e<sup>μV<sub>j</sub></sup>            <span class="dim">← identical, with z<sub>i</sub> = μV<sub>i</sub></span>
+<span class="dim">two alternatives </span>   softmax([z₁, z₂])₁ = <b>σ(z₁ − z₂)</b>       <span class="dim">← sigmoid is the N = 2 case</span></div>
+    <p class="small" style="margin-top:12px">Three properties earn their keep, and all three have a
+      discrete-choice reading you already own:</p>
+    <table class="map">
+      <tr><th>Property</th><th>What it means</th><th>The discrete-choice reading</th></tr>
+      <tr><td>Outputs sum to 1</td><td>The result is a probability distribution over the alternatives, not N independent scores.</td>
+          <td>Choice shares across a full choice set must add to one.</td></tr>
+      <tr><td>Shift-invariant</td><td>softmax(<b>z</b> + c) = softmax(<b>z</b>). Adding the same constant to every score changes nothing.</td>
+          <td>Only utility <em>differences</em> are identified. You cannot estimate a level of utility, only who beats whom.</td></tr>
+      <tr><td>Temperature τ</td><td>softmax(<b>z</b>/τ). Small τ → near argmax; large τ → near uniform.</td>
+          <td>τ = 1/μ. It is the logit scale parameter, inverted — the same decisiveness knob from page 1.</td></tr>
+    </table>
+    <div class="callout sig">Shift-invariance is not a curiosity — it is what makes softmax computable.
+      Since subtracting a constant changes nothing, every real implementation subtracts
+      <span class="mono">max(z)</span> before exponentiating, so the largest exponent is
+      <span class="mono">e⁰ = 1</span> and nothing overflows. If you ever write softmax by hand and skip
+      that step, a score of 800 gives you <span class="mono">Inf/Inf = NaN</span>. That is the same
+      feature-scaling failure from page 4, in a different costume.</div>
+  </div>
+
+  <div class="card">
+    <h3>Route choice, and the flaw you inherit with it</h3>
+    <p class="lead" style="margin-bottom:10px">Three routes between the same origin and destination, with
+      utility <span class="mono">V = −travel time</span>. Move the times and the scale parameter and watch
+      the shares move. Then tick the clone box — it adds a fourth route <em>identical to B</em>, the way a
+      network editor might split one link into two parallel ones, or the way a classifier might carry two
+      labels for the same thing.</p>
+    <div class="controls">
+      <div class="ctrl"><label class="raw">Route A time (min)</label>
+        <input id="tsA" type="range" min="8" max="40" step="0.5" value="18"><span class="val">A = <span id="tsAv">18.0</span></span></div>
+      <div class="ctrl"><label class="raw">Route B time (min)</label>
+        <input id="tsB" type="range" min="8" max="40" step="0.5" value="21"><span class="val">B = <span id="tsBv">21.0</span></span></div>
+      <div class="ctrl"><label class="raw">Route C time (min)</label>
+        <input id="tsC" type="range" min="8" max="40" step="0.5" value="26"><span class="val">C = <span id="tsCv">26.0</span></span></div>
+      <div class="ctrl"><label class="raw">Scale μ  (= 1/τ)</label>
+        <input id="tsMu" type="range" min="0.05" max="1.5" step="0.05" value="0.35"><span class="val">μ = <span id="tsMuv">0.35</span></span></div>
+    </div>
+    <div class="btnrow" style="margin-bottom:6px">
+      <label class="small" style="font-weight:700;display:flex;align-items:center;gap:7px;cursor:pointer">
+        <input type="checkbox" id="tsClone" style="accent-color:var(--warn)"> add Route B′ — an exact duplicate of B</label>
+    </div>
+    <figure><canvas id="c6a" data-w="620" data-h="300"></canvas>
+      <figcaption>Choice shares from softmax(μ·V), V = −travel time</figcaption></figure>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s6ratio">2.10</div><div class="l raw">odds ratio A : C</div></div>
+      <div class="stat"><div class="n t" id="s6ent">1.02</div><div class="l raw">entropy (nats)</div></div>
+      <div class="stat"><div class="n" id="s6top">Route A</div><div class="l raw">most-chosen</div></div>
+      <div class="stat"><div class="n w" id="s6bshare">33%</div><div class="l raw">share on B (+ B′)</div></div>
+    </div>
+    <div class="callout warn"><b>Independence of Irrelevant Alternatives.</b> Watch the A : C odds ratio
+      while you tick the clone on and off — it does not move. Softmax splits B's share between B and B′ and
+      leaves every other ratio untouched. For genuinely distinct alternatives that is the right behaviour.
+      For a duplicate it is nonsense: two names for one road should not take a bigger combined share than
+      one name for it. This is the red-bus / blue-bus problem, and it is the reason nested and mixed logit
+      exist. The identical flaw rides into deep learning the moment you softmax over classes that overlap —
+      "sedan" and "car", "bus" and "transit vehicle" — and it shows up as a confidently split, wrongly
+      calibrated prediction.</div>
+  </div>
+
+  <div class="card">
+    <h3>Signal control: turning scores into a phase decision</h3>
+    <p class="lead" style="margin-bottom:10px">A reinforcement-learning signal controller reads the state
+      of the intersection and produces one score per phase. Those scores are not probabilities and they are
+      not comparable across intersections — they are just numbers. Softmax converts them into an actual
+      policy: a distribution over which phase to serve next. Here the score is simply the queue on that
+      phase's approaches, and τ is the controller's decisiveness.</p>
+    <div class="controls">
+      <div class="ctrl"><label class="raw">Φ2 N–S thru queue</label>
+        <input id="q0" type="range" min="0" max="40" step="1" value="22"><span class="val"><span id="q0v">22</span> veh</span></div>
+      <div class="ctrl"><label class="raw">Φ4 E–W thru queue</label>
+        <input id="q1" type="range" min="0" max="40" step="1" value="17"><span class="val"><span id="q1v">17</span> veh</span></div>
+      <div class="ctrl"><label class="raw">Φ1 N–S left queue</label>
+        <input id="q2" type="range" min="0" max="40" step="1" value="6"><span class="val"><span id="q2v">6</span> veh</span></div>
+      <div class="ctrl"><label class="raw">Φ3 E–W left queue</label>
+        <input id="q3" type="range" min="0" max="40" step="1" value="9"><span class="val"><span id="q3v">9</span> veh</span></div>
+      <div class="ctrl"><label class="raw">Temperature τ</label>
+        <input id="tau" type="range" min="0.5" max="30" step="0.5" value="6"><span class="val">τ = <span id="tauv">6.0</span></span></div>
+      <div class="btnrow">
+        <button class="ghost" id="tauLo">τ → 0.5 (greedy)</button>
+        <button class="ghost" id="tauHi">τ → 30 (random)</button>
+      </div>
+    </div>
+    <figure><canvas id="c6b" data-w="620" data-h="300"></canvas>
+      <figcaption>Policy π(phase) = softmax(queue / τ)</figcaption></figure>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s6pmax">0.63</div><div class="l raw">π(longest queue)</div></div>
+      <div class="stat"><div class="n t" id="s6pent">0.98</div><div class="l raw">policy entropy (nats)</div></div>
+      <div class="stat"><div class="n" id="s6reg">balanced</div><div class="l raw">regime</div></div>
+      <div class="stat"><div class="n w" id="s6starve">0.05</div><div class="l raw">π(shortest queue)</div></div>
+    </div>
+    <div class="callout">Drive τ to 0.5 and the policy collapses onto the longest queue — a pure
+      longest-queue-first controller, which is a perfectly respectable classical heuristic and needs no
+      neural network at all. Drive τ to 30 and it becomes a random phase selector, which is worse than
+      fixed-time. Everything interesting lives in between, and τ is how you get there.</div>
+  </div>
+
+  <div class="card">
+    <h3>Why softmax and not just argmax?</h3>
+    <p class="lead" style="margin-bottom:10px">"Serve the phase with the highest score" is
+      <span class="mono">argmax</span>, and argmax has two fatal properties for learning: its derivative is
+      zero everywhere it is defined, so no gradient can flow back into the scores; and it never tries
+      anything it does not already believe in, so it cannot discover that a belief is wrong. Softmax is the
+      smooth, differentiable relaxation of argmax — exactly as sigmoid is the smooth relaxation of a step
+      function. That is the same trade, made twice.</p>
+    <p class="lead" style="margin-bottom:10px">Below, four phases have unknown true clearance rates. The
+      controller keeps a running estimate of each, picks with softmax(Q/τ), and updates the estimate from
+      what it observes. Its <em>initial</em> estimates are wrong: it starts out believing Φ2 is the best
+      phase and Φ4 the worst, when in fact Φ4 is by far the best. Three controllers with three temperatures
+      run on the same random stream.</p>
+    <div class="controls">
+      <div class="btnrow">
+        <button class="act" id="simRun">▶ Run 800 decisions</button>
+        <button class="ghost" id="simReset">Reset</button>
+      </div>
+    </div>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--warn)"></span>τ = 0.02 — near-greedy</span>
+      <span><span class="swatch" style="background:var(--usf-green)"></span>τ = 0.15 — balanced</span>
+      <span><span class="swatch" style="background:var(--relu)"></span>τ = 1.50 — near-random</span>
+    </div>
+    <figure><canvas id="c6c" data-w="620" data-h="320"></canvas>
+      <figcaption>Share of the last 60 decisions that went to the genuinely best phase (Φ4)</figcaption></figure>
+    <div class="readout">
+      <div class="stat"><div class="n w" id="s6g1">—</div><div class="l raw">greedy: veh cleared</div></div>
+      <div class="stat"><div class="n" id="s6g2">—</div><div class="l raw">balanced: veh cleared</div></div>
+      <div class="stat"><div class="n r" id="s6g3">—</div><div class="l raw">random: veh cleared</div></div>
+      <div class="stat"><div class="n t" id="s6orc">—</div><div class="l raw">oracle ceiling</div></div>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n w" id="s6q1">—</div><div class="l raw">greedy: final Q̂(Φ4)</div></div>
+      <div class="stat"><div class="n" id="s6q2">—</div><div class="l raw">balanced: final Q̂(Φ4)</div></div>
+      <div class="stat"><div class="n r" id="s6q3">—</div><div class="l raw">random: final Q̂(Φ4)</div></div>
+      <div class="stat"><div class="n t">0.95</div><div class="l raw">Φ4 true value</div></div>
+    </div>
+    <div class="callout warn" id="simMsg">Press Run, then read the two rows of numbers together. The
+      question to hold in mind: which controller ends up <em>knowing</em> the intersection, and which one
+      merely ends up <em>confident</em> about it?</div>
+    <div class="callout good"><b>The engineering reading.</b> Temperature is not a hyperparameter you
+      tune once and forget — it is the explicit dial between "act on what I have learned" and "check
+      whether I am wrong". Deployed RL signal controllers anneal it: high early in training, near zero at
+      deployment. Anneal too fast and you get the red curve, which is worse than exploring at random.
+      Two things follow. First, when a paper claims an RL controller beats actuated control, the
+      exploration schedule belongs on your list of questions, next to the baseline and the test corridor.
+      Second, an RL controller that has never served a phase cannot have learned anything about it — so
+      ask what the policy does at 3&nbsp;a.m., during an incident, or on a movement that is rare in the
+      training data. Those are exactly the states where the stale estimate lives.</div>
+  </div>
+
+  <div class="card">
+    <h3>The gradient, and where softmax shows up</h3>
+    <div class="eq"><span class="dim">softmax + cross-entropy</span>   ∂L/∂z<sub>i</sub> = <b>p<sub>i</sub> − y<sub>i</sub></b>   <span class="dim">← the Jacobian cancels, exactly as on page 6</span>
+<span class="dim">softmax Jacobian      </span>   ∂p<sub>i</sub>/∂z<sub>j</sub> = p<sub>i</sub>(δ<sub>ij</sub> − p<sub>j</sub>)   <span class="dim">← → 0 as any p<sub>i</sub> → 1: softmax saturates too</span></div>
+    <p class="small" style="margin-top:12px">The first line is the multi-class version of the cancellation
+      you will meet on page 6, and it is why "softmax + cross-entropy" is written as one layer in every
+      framework. The second line is the warning: a softmax that has already committed to one alternative
+      has a vanishing Jacobian, so a confidently wrong classifier is as hard to correct as a saturated
+      sigmoid.</p>
+    <table class="map">
+      <tr><th>Where</th><th>What the scores are</th><th>What τ or μ controls</th></tr>
+      <tr><td>Route / mode choice</td><td>Systematic utilities V<sub>i</sub></td><td>How deterministic travelers are; estimated, not chosen.</td></tr>
+      <tr><td>RL signal control policy</td><td>Phase preference from the value network</td><td>Exploration vs. exploitation; annealed during training.</td></tr>
+      <tr><td>Vehicle classification from video</td><td>Class logits from the CNN head</td><td>Usually fixed at 1; calibration is handled separately.</td></tr>
+      <tr><td>Attention weights</td><td>Query · key similarity, scaled by 1/√d</td><td>That √d <em>is</em> a temperature — it keeps the softmax off its saturated tails. Module 4.</td></tr>
+      <tr><td>Next-token choice in an LLM</td><td>Vocabulary logits</td><td>The "temperature" setting you have already used in an API call.</td></tr>
+    </table>
+    <div class="callout warn"><b>The deployment trap worth remembering.</b> Softmax always returns a
+      distribution that sums to 1 — it has no way to say "none of these". A vehicle classifier trained on
+      car / truck / bus / motorcycle will assign a confident label to a shopping cart, a shadow, or a deer,
+      because the only outputs it owns are those four. If you are evaluating an AI traffic-monitoring
+      product, ask what happens on out-of-distribution objects, and treat a high softmax probability as a
+      <em>ranking</em>, not as a calibrated confidence, unless the vendor can show you a reliability
+      diagram.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 3 ==================== -->
+<section class="page" id="p3"><div class="wrap">
+  <h2 class="sec">Saturation: a neuron that has pegged its detector</h2>
+  <p class="lead">Here is the flaw that these two functions carry by construction. Both are flat in the
+     tails. Flat means the derivative is near zero, and the derivative is the only channel through which
+     learning happens. A unit driven far from zero stops responding to change — and stops learning.</p>
+
+  <div class="card">
+    <div class="eq">   σ′(z) = <b>σ(z)·(1 − σ(z))</b>    <span class="dim">max value 0.25, at z = 0</span>
+tanh′(z) = <b>1 − tanh²(z)</b>       <span class="dim">max value 1.00, at z = 0</span></div>
+    <div class="controls" style="margin-top:16px">
+      <div class="ctrl" style="min-width:280px"><label class="raw">Pre-activation z = w·x + b</label>
+        <input id="t3z" type="range" min="-8" max="8" step="0.05" value="0.8" style="width:340px"><span class="val">z = <span id="t3zv">0.80</span></span></div>
+      <div class="btnrow">
+        <button class="ghost" id="t3a">z = 0 (best)</button>
+        <button class="ghost" id="t3b">z = 3</button>
+        <button class="ghost" id="t3c">z = 6 (saturated)</button>
+      </div>
+    </div>
+    <div class="canvasrow">
+      <figure><canvas id="c3a" data-w="450" data-h="280"></canvas>
+        <figcaption>Activation, with the tangent line at z</figcaption></figure>
+      <figure><canvas id="c3b" data-w="450" data-h="280"></canvas>
+        <figcaption>Derivative — the learning channel</figcaption></figure>
+    </div>
+    <div class="bars">
+      <div class="lbl">σ′(z)</div>
+      <div class="bar"><i id="b3s" style="background:var(--sig);width:100%"></i></div>
+      <div class="num" id="n3s">0.213</div>
+      <div class="lbl">tanh′(z)</div>
+      <div class="bar"><i id="b3t" style="background:var(--tan);width:100%"></i></div>
+      <div class="num" id="n3t">0.560</div>
+      <div class="lbl">ReLU′(z)</div>
+      <div class="bar"><i id="b3r" style="background:var(--relu);width:100%"></i></div>
+      <div class="num" id="n3r">1.000</div>
+    </div>
+    <p class="small" style="margin-top:6px">Bars are scaled against a derivative of 1.0 — the largest slope any
+      of the three can produce.</p>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s3sig">0.690</div><div class="l raw">σ(z)</div></div>
+      <div class="stat"><div class="n t" id="s3tanh">0.664</div><div class="l raw">tanh(z)</div></div>
+      <div class="stat"><div class="n w" id="s3slow">1.2×</div><div class="l">slower than best</div></div>
+      <div class="stat"><div class="n" id="s3state">responsive</div><div class="l">unit state</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>The transportation version of this failure</h3>
+    <p class="lead" style="margin-bottom:10px">You have seen saturation destroy information before. A loop
+      detector reporting occupancy pegs near 100% once the link jams. From that moment the reading cannot
+      distinguish a ten-vehicle queue from a two-hundred-vehicle queue — the derivative of the
+      <em>reading</em> with respect to the <em>true state</em> has gone to zero. The detector is still
+      reporting, confidently, and it is telling you nothing you can act on.</p>
+    <p class="lead" style="margin-bottom:10px">A saturated neuron is a pegged detector. Its output is a
+      confident 1 (or 0). Nudge its weights and the output barely moves, so the loss barely moves, so the
+      gradient is essentially zero, so the optimizer has no signal about which direction to go. The unit is
+      frozen.</p>
+    <div class="callout warn"><b>The worst case is saturated <em>and</em> wrong.</b> A unit that is confidently
+      predicting "free flow" on a jammed link has both a large error and no gradient to fix it. This is not
+      a hypothetical — on page 5 you will cause it on purpose, and watch a model with <em>two parameters</em>
+      need 400× more iterations to dig itself out.</div>
+    <div class="callout sig"><b>Softmax saturates in exactly the same way.</b> Its Jacobian is
+      ∂p<sub>i</sub>/∂z<sub>j</sub> = p<sub>i</sub>(δ<sub>ij</sub> − p<sub>j</sub>), which goes to zero as
+      any p<sub>i</sub> → 1. A classifier that is already certain, and a softmax policy at low temperature,
+      are both pegged detectors — same disease, one dimension higher. This is why attention scores are
+      divided by √d before the softmax: with d = 64, raw dot products run in the tens, the softmax pegs to
+      one-hot, and no gradient flows. The scaling is a temperature, and its job is to keep the softmax off
+      its tails. Module 4 returns to this.</div>
+    <div class="callout">A number worth carrying: at <span class="mono">|z| = 6</span>, σ′ ≈ 0.0025 — one
+      hundredth of its best value. And feature scale is what puts you there. If you feed <b>raw density</b>
+      (say 80 veh/mi/ln) into a unit with weight 1, then <span class="mono">z = 80</span> and
+      σ′(80) ≈ 10<sup>−35</sup>. The unit is dead before the first gradient step. This is the whole reason
+      inputs get standardized, and it is the most common cause of a network that "won't train" in a
+      student project.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 4 ==================== -->
+<section class="page" id="p4"><div class="wrap">
+  <h2 class="sec">Depth: where saturation becomes the vanishing gradient</h2>
+  <p class="lead">Backpropagation assigns blame. To tell layer 1 how it contributed to the error at the
+     output, the chain rule multiplies one derivative per layer along the way. Multiply enough numbers
+     smaller than one and the blame arriving at the early layers rounds to nothing — they never learn.
+     This single fact is why neural networks were stuck at two or three layers until roughly 2011.</p>
+
+  <div class="card">
+    <div class="eq"><span class="dim">gradient reaching layer 1</span> ∝ <b>∏</b><sub>ℓ</sub> ( <span class="g">f′(z<sub>ℓ</sub>)</span> · w<sub>ℓ</sub> )
+<span class="dim">with sigmoid, every factor obeys</span> <span class="g">σ′ ≤ 0.25</span> <span class="dim">⇒ after L layers, at best</span> <b>0.25<sup>L</sup> = 4<sup>−L</sup></b></div>
+    <div class="controls" style="margin-top:16px">
+      <div class="ctrl"><label>Network depth L</label>
+        <input id="t4L" type="range" min="1" max="14" step="1" value="8"><span class="val">L = <span id="t4Lv">8</span> layers</span></div>
+      <div class="ctrl"><label class="raw">Typical |z| in the network</label>
+        <input id="t4z" type="range" min="0" max="5" step="0.1" value="0"><span class="val">|z| = <span id="t4zv">0.0</span></span></div>
+      <div class="btnrow"><button class="ghost" id="t4r">reset to best case</button></div>
+    </div>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--sig)"></span>sigmoid</span>
+      <span><span class="swatch" style="background:var(--tan)"></span>tanh</span>
+      <span><span class="swatch" style="background:var(--relu)"></span>ReLU (active unit)</span>
+    </div>
+    <figure><canvas id="c4" data-w="620" data-h="320"></canvas>
+      <figcaption>Gradient magnitude surviving after k layers of backpropagation — log scale, weights held at 1 so you see the activation's contribution alone.</figcaption></figure>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s4s">1.5e-05</div><div class="l">sigmoid @ layer 1</div></div>
+      <div class="stat"><div class="n t" id="s4t">1.0e+00</div><div class="l">tanh @ layer 1</div></div>
+      <div class="stat"><div class="n r" id="s4r">1.0e+00</div><div class="l">ReLU @ layer 1</div></div>
+      <div class="stat"><div class="n w" id="s4ratio">65536×</div><div class="l">tanh advantage</div></div>
+    </div>
+    <div class="callout">Leave <b>|z| = 0</b> — the most generous case, every unit sitting at its steepest
+      point — and slide <b>L</b> out to 14. Sigmoid delivers about 10<sup>−9</sup> of the gradient to the
+      first layer. Those weights are frozen at their random initial values; the network is deep on paper and
+      shallow in practice.</div>
+    <div class="callout warn"><b>Now slide |z| up, and watch tanh lose.</b> At |z| = 3, σ′ ≈ 0.045 but
+      tanh′ ≈ 0.0099 — tanh has fallen <em>below</em> sigmoid. Tanh's advantage is real only near the origin,
+      where its slope is 1 against sigmoid's 0.25. Once units drift into their tails, tanh saturates harder,
+      because it compresses the same output range across a steeper curve. ReLU holds a derivative of exactly
+      1 for any active unit, at any magnitude — which is the whole reason it took over around 2011 and why
+      it is the default you will meet in every architecture later in this course.</div>
+  </div>
+
+  <div class="card">
+    <h3>So are sigmoid and tanh obsolete?</h3>
+    <p class="lead" style="margin-bottom:10px">No — they were displaced from <em>hidden layers</em>, not from
+      the field. They remain the right tool wherever you need a bounded output rather than an unbounded
+      feature:</p>
+    <table class="map">
+      <tr><th>Where</th><th>Which</th><th>Why it survives there</th></tr>
+      <tr><td>Output layer, binary classification</td><td>sigmoid</td>
+          <td>You need a probability. Paired with cross-entropy loss, the saturation problem cancels out — page 5 shows this.</td></tr>
+      <tr><td>Output layer, multi-class</td><td>softmax</td>
+          <td>Softmax is the multi-alternative sibling of sigmoid — the multinomial logit, which you already know.</td></tr>
+      <tr><td>LSTM and GRU gates</td><td>sigmoid</td>
+          <td>A gate must mean "fraction admitted", which is bounded in [0,1] by definition.</td></tr>
+      <tr><td>Bounded control heads (steering, throttle)</td><td>tanh</td>
+          <td>The action is physically bounded and signed; the network should not be able to command 40 m/s².</td></tr>
+      <tr><td>Attention weights</td><td>softmax</td>
+          <td>Same logit machinery, applied to "which input do I read from" — Module 4 builds this.</td></tr>
+    </table>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 5 ==================== -->
+<section class="page" id="p5"><div class="wrap">
+  <h2 class="sec">Train one neuron on a congestion detector</h2>
+  <p class="lead">One input (link density), one sigmoid unit, two parameters. The label is 1 if the measured
+     speed is below 45 mph. This is logistic regression, trained by gradient descent instead of maximum
+     likelihood — and it is the smallest complete neural network there is. Use it to see saturation cost
+     you real training time, and to see the fix.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label>Loss function</label>
+        <select id="t5loss">
+          <option value="bce">Cross-entropy  (standard)</option>
+          <option value="mse">Squared error  (the trap)</option>
+        </select></div>
+      <div class="ctrl"><label>Initialization</label>
+        <select id="t5init">
+          <option value="zero">Sensible:  w = 0, b = 0</option>
+          <option value="bad">Confidently wrong:  w = −7, b = 2.5</option>
+        </select></div>
+      <div class="ctrl"><label>Learning rate</label>
+        <input id="t5lr" type="range" min="0.05" max="2" step="0.05" value="0.6"><span class="val">lr = <span id="t5lrv">0.60</span></span></div>
+      <div class="btnrow">
+        <button class="act" id="t5run">▶ Run</button>
+        <button class="ghost" id="t5step">+25 steps</button>
+        <button class="ghost" id="t5step2">+1000 steps</button>
+        <button class="ghost" id="t5reset">Reset</button>
+      </div>
+    </div>
+    <div class="canvasrow">
+      <figure><canvas id="c5a" data-w="450" data-h="290"></canvas>
+        <figcaption>Data and the fitted curve P(congested | density)</figcaption></figure>
+      <figure><canvas id="c5b" data-w="450" data-h="290"></canvas>
+        <figcaption>Accuracy over training (comparable across both losses)</figcaption></figure>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s5it">0</div><div class="l">iteration</div></div>
+      <div class="stat"><div class="n" id="s5w">0.00</div><div class="l raw">weight w</div></div>
+      <div class="stat"><div class="n" id="s5b">0.00</div><div class="l raw">bias b</div></div>
+      <div class="stat"><div class="n t" id="s5loss">0.693</div><div class="l">loss</div></div>
+      <div class="stat"><div class="n" id="s5acc">50.0%</div><div class="l">accuracy</div></div>
+      <div class="stat"><div class="n w" id="s5g">0.0e+00</div><div class="l raw">gradient norm</div></div>
+    </div>
+    <div class="callout" id="t5msg">Start with the defaults and press Run: cross-entropy from a sensible
+      start converges in a couple of hundred steps.</div>
+  </div>
+
+  <div class="card">
+    <h3>The experiment worth running</h3>
+    <p class="lead" style="margin-bottom:10px">Set <b>Initialization → confidently wrong</b>, then run each
+      loss in turn and compare. The two runs differ by one term in the gradient:</p>
+    <div class="eq"><span class="dim">squared error</span>   ∂L/∂z = (a − y) · <span class="rd">σ′(z)</span>   <span class="dim">← saturated unit ⇒ σ′ ≈ 0 ⇒ no gradient</span>
+<span class="dim">cross-entropy</span>   ∂L/∂z = (a − y)           <span class="dim">← the σ′ term </span><b>cancels</b><span class="dim">; gradient stays ≈ ±1</span></div>
+    <div class="callout good"><b>Cross-entropy was designed to cancel exactly this term.</b> That is not a
+      convenience — it is why a sigmoid output layer is still perfectly usable in 2026 while sigmoid hidden
+      layers are not. There is no matching cancellation in the middle of a network, so nothing rescues a
+      saturated hidden unit. If you take one practical rule from this page: <b>never pair a sigmoid output
+      with squared-error loss.</b> It is a quiet, common bug, and it looks exactly like "my model won't
+      learn."</div>
+    <div class="callout sig"><b>A second thing to try.</b> Reset, then push the learning rate to 2.0 with the
+      confidently-wrong start and cross-entropy. Watch the fitted curve overshoot past the data before
+      settling. Saturation and step size interact: too large a step throws units into the tails, where they
+      can no longer generate the gradient needed to come back.</div>
+  </div>
+
+  <div class="card">
+    <h3>What to carry into the rest of the course</h3>
+    <table class="map">
+      <tr><th>Idea</th><th>The short version</th></tr>
+      <tr><td>Sigmoid is a logit</td><td>You already know it. Weight = scale parameter, bias = alternative-specific constant, pre-activation = log-odds.</td></tr>
+      <tr><td>Tanh is a rescaled sigmoid</td><td>2σ(2z) − 1. Use it for signed, symmetric, physically bounded quantities.</td></tr>
+      <tr><td>Softmax is a multinomial logit</td><td>Same model, N alternatives; sigmoid is the N = 2 case. Only score <em>differences</em> matter.</td></tr>
+      <tr><td>Softmax is a smooth argmax</td><td>Temperature interpolates from argmax (τ → 0) to uniform (τ → ∞). It is what makes a discrete choice trainable — and what makes an RL signal controller explore.</td></tr>
+      <tr><td>Softmax inherits IIA</td><td>Adding a duplicate alternative leaves every other odds ratio untouched. Red bus / blue bus, now inside your classifier.</td></tr>
+      <tr><td>Saturation kills gradients</td><td>Flat tails mean no learning signal. σ′ ≤ 0.25 always; at |z| = 6 it is 0.0025.</td></tr>
+      <tr><td>Scale your inputs</td><td>Raw density through weight 1 gives z ≈ 80 and a dead unit. Standardize before you debug anything else.</td></tr>
+      <tr><td>Depth multiplies the damage</td><td>0.25<sup>L</sup>. This is why ReLU replaced both in hidden layers.</td></tr>
+      <tr><td>Pair the loss to the output</td><td>Sigmoid + binary cross-entropy, softmax + categorical cross-entropy. Both cancel the saturating term; squared error does not.</td></tr>
+      <tr><td>They are not obsolete</td><td>Output layers, gates, bounded control heads, RL policies, and attention all still run on this machinery.</td></tr>
+    </table>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <b>AI for Mobility</b> · CGN 6933 · University of South Florida — Module 1, neural network basics.
+  Self-contained page: all computation runs in your browser, nothing is sent anywhere.
+</div></footer>
+
+<script>
+/* ============================ helpers ============================ */
+const el = id => document.getElementById(id);
+const sig = z => 1/(1+Math.exp(-z));
+const sigp = z => { const s = sig(z); return s*(1-s); };
+const th  = Math.tanh;
+const thp = z => { const t = Math.tanh(z); return 1 - t*t; };
+const clampn = (v,a,b) => Math.max(a, Math.min(b, v));
+const esci = v => v.toExponential(1);
+
+function mkAxes(cv, xmin, xmax, ymin, ymax, pad){
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const W = +cv.dataset.w, H = +cv.dataset.h;
+  cv.style.width = W+'px'; cv.style.height = H+'px';
+  cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+  const g = cv.getContext('2d');
+  g.setTransform(dpr,0,0,dpr,0,0);
+  const L = pad.l, R = W-pad.r, T = pad.t, B = H-pad.b;
+  return {g,W,H,L,R,T,B,xmin,xmax,ymin,ymax,
+    X: x => L + (x-xmin)/(xmax-xmin)*(R-L),
+    Y: y => B - (y-ymin)/(ymax-ymin)*(B-T)};
+}
+function clear(a){ a.g.clearRect(0,0,a.W,a.H); a.g.fillStyle='#fff'; a.g.fillRect(0,0,a.W,a.H); }
+function frame(a,o){
+  o = o||{}; const g = a.g; g.save();
+  g.strokeStyle = '#eef2f0'; g.lineWidth = 1;
+  (o.yticks||[]).forEach(t => { const y = a.Y(t); g.beginPath(); g.moveTo(a.L,y); g.lineTo(a.R,y); g.stroke(); });
+  (o.xticks||[]).forEach(t => { const x = a.X(t); g.beginPath(); g.moveTo(x,a.T); g.lineTo(x,a.B); g.stroke(); });
+  if(o.zeroy && a.ymin < 0 && a.ymax > 0){ g.strokeStyle='#c9d4d0'; g.lineWidth=1.2;
+    const y=a.Y(0); g.beginPath(); g.moveTo(a.L,y); g.lineTo(a.R,y); g.stroke(); }
+  g.strokeStyle = '#c9d4d0'; g.lineWidth = 1.2;
+  g.beginPath(); g.moveTo(a.L,a.T); g.lineTo(a.L,a.B); g.lineTo(a.R,a.B); g.stroke();
+  g.fillStyle = '#5b6b66'; g.font = '11px ui-monospace,Menlo,Consolas,monospace';
+  g.textAlign = 'center'; g.textBaseline = 'top';
+  (o.xticks||[]).forEach(t => g.fillText(o.xfmt ? o.xfmt(t) : String(t), a.X(t), a.B+5));
+  g.textAlign = 'right'; g.textBaseline = 'middle';
+  (o.yticks||[]).forEach(t => g.fillText(o.yfmt ? o.yfmt(t) : String(t), a.L-6, a.Y(t)));
+  g.font = '600 11.5px -apple-system,system-ui,sans-serif';
+  if(o.xlabel){ g.textAlign='center'; g.textBaseline='bottom'; g.fillText(o.xlabel,(a.L+a.R)/2, a.H-1); }
+  if(o.ylabel){ g.save(); g.translate(12,(a.T+a.B)/2); g.rotate(-Math.PI/2);
+    g.textAlign='center'; g.textBaseline='top'; g.fillText(o.ylabel,0,0); g.restore(); }
+  g.restore();
+}
+function clipArea(a){ const g=a.g; g.save(); g.beginPath();
+  g.rect(a.L-1, a.T-4, a.R-a.L+2, a.B-a.T+8); g.clip(); }
+function curve(a, fn, color, lw, dash){
+  const g = a.g; clipArea(a);
+  g.strokeStyle = color; g.lineWidth = lw||2.4; g.lineJoin='round';
+  if(dash) g.setLineDash(dash);
+  g.beginPath(); let on = false; const N = 500;
+  for(let i=0;i<=N;i++){
+    const x = a.xmin + (a.xmax-a.xmin)*i/N, y = fn(x);
+    if(!isFinite(y)){ on = false; continue; }
+    const py = clampn(a.Y(y), a.T-30, a.B+30);
+    if(!on){ g.moveTo(a.X(x), py); on = true; } else g.lineTo(a.X(x), py);
+  }
+  g.stroke(); g.restore();
+}
+function seg(a,x1,y1,x2,y2,color,lw,dash){
+  const g=a.g; clipArea(a); g.strokeStyle=color; g.lineWidth=lw||1.6;
+  if(dash) g.setLineDash(dash);
+  g.beginPath(); g.moveTo(a.X(x1),a.Y(y1)); g.lineTo(a.X(x2),a.Y(y2)); g.stroke(); g.restore();
+}
+function vmark(a,x,color){ const g=a.g; g.save(); g.strokeStyle=color; g.lineWidth=1.4; g.setLineDash([4,4]);
+  g.beginPath(); g.moveTo(a.X(x),a.T); g.lineTo(a.X(x),a.B); g.stroke(); g.restore(); }
+function hmark(a,y,color){ const g=a.g; g.save(); g.strokeStyle=color; g.lineWidth=1.4; g.setLineDash([4,4]);
+  g.beginPath(); g.moveTo(a.L,a.Y(y)); g.lineTo(a.R,a.Y(y)); g.stroke(); g.restore(); }
+function dot(a,x,y,color,r){ const g=a.g; clipArea(a); g.fillStyle=color; g.strokeStyle='#fff'; g.lineWidth=2;
+  g.beginPath(); g.arc(a.X(x),a.Y(y),r||5.5,0,Math.PI*2); g.fill(); g.stroke(); g.restore(); }
+function tag(a,x,y,text,color,dx,dy){ const g=a.g; g.save();
+  g.font='700 11.5px ui-monospace,Menlo,Consolas,monospace'; g.fillStyle=color;
+  g.textAlign='left'; g.textBaseline='middle'; g.fillText(text, a.X(x)+(dx||8), a.Y(y)+(dy||0)); g.restore(); }
+
+/* ============================ page 1 ============================ */
+function drawT1(){
+  const dv = +el('t1dv').value, mu = +el('t1mu').value, asc = +el('t1asc').value;
+  el('t1dvv').textContent = dv.toFixed(1);
+  el('t1muv').textContent = mu.toFixed(2);
+  el('t1ascv').textContent = asc.toFixed(1);
+
+  const a = mkAxes(el('c1'), -8, 8, -0.06, 1.06, {l:60,r:16,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[-8,-6,-4,-2,0,2,4,6,8], yticks:[0,.25,.5,.75,1],
+    yfmt:t=>t.toFixed(2), xlabel:'utility difference  ΔV = V_transit − V_car',
+    ylabel:'P(choose transit)'});
+  curve(a, x => sig(x), '#cfd9d5', 1.8, [5,4]);
+  curve(a, x => sig(mu*x + asc), '#006747', 2.8);
+
+  const z = mu*dv + asc, p = sig(z);
+  vmark(a, dv, '#b9a96a'); hmark(a, p, '#b9a96a');
+  dot(a, dv, p, '#c0392b');
+  tag(a, dv, p, 'P = '+p.toFixed(3), '#c0392b', 10, -12);
+
+  el('s1z').textContent = z.toFixed(2);
+  el('s1p').textContent = p.toFixed(3);
+  el('s1odds').textContent = (p/(1-p) > 999 ? '>999' : (p/(1-p)).toFixed(2));
+  el('s1shape').textContent = mu < 0.4 ? 'near coin-flip' : (mu > 1.8 ? 'near step' : 'graded');
+}
+
+/* ============================ page 2 ============================ */
+function drawT2a(){
+  const show = el('t2chk').checked;
+  const a = mkAxes(el('c2a'), -6, 6, -1.15, 1.15, {l:58,r:16,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[-6,-4,-2,0,2,4,6], yticks:[-1,-0.5,0,0.5,1], zeroy:true,
+    yfmt:t=>t.toFixed(1), xlabel:'pre-activation  z', ylabel:'activation'});
+  curve(a, z => sig(z), '#006747', 2.8);
+  curve(a, z => th(z), '#1f6f8b', 2.8);
+  if(show) curve(a, z => 2*sig(2*z) - 1, '#9b5de5', 3.2, [7,5]);
+  tag(a, 2.2, sig(2.2), 'σ', '#006747', 8, -12);
+  tag(a, -3.2, th(-3.2), 'tanh', '#1f6f8b', 8, 14);
+}
+function drawT2b(){
+  const am = +el('t2am').value, k = +el('t2k').value;
+  el('t2amv').textContent = am.toFixed(1);
+  el('t2kv').textContent  = k.toFixed(1);
+  const lim = am*1.35;
+  const a = mkAxes(el('c2b'), -20, 20, -lim, lim, {l:58,r:16,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[-20,-15,-10,-5,0,5,10,15,20],
+    yticks:[-Math.round(am*10)/10, -Math.round(am*5)/10, 0, Math.round(am*5)/10, Math.round(am*10)/10],
+    zeroy:true, yfmt:t=>t.toFixed(1),
+    xlabel:'speed difference  Δv = v_leader − v_follower  (m/s)',
+    ylabel:'acceleration  (m/s²)'});
+  hmark(a, am, '#c0392b'); hmark(a, -am, '#c0392b');
+  curve(a, dv => (am/k)*dv, '#b3c0bb', 2, [6,4]);
+  curve(a, dv => am*th(dv/k), '#1f6f8b', 2.9);
+  tag(a, 12, am, 'a_max', '#c0392b', 6, -10);
+}
+
+/* ============================ page softmax ============================ */
+function softmax(zs){
+  const m = Math.max(...zs);                       // shift-invariance, for stability
+  const ex = zs.map(z => Math.exp(z - m));
+  const S = ex.reduce((a,b)=>a+b,0);
+  return ex.map(e => e/S);
+}
+function entropy(ps){ return -ps.reduce((a,p) => a + (p > 1e-12 ? p*Math.log(p) : 0), 0); }
+
+function vbars(cv, items, o){
+  o = o||{};
+  const a = mkAxes(cv, 0, items.length, 0, o.ymax || 1.06, {l:56,r:16,t:20,b:o.b||54});
+  clear(a);
+  frame(a,{yticks:o.yticks||[0,0.25,0.5,0.75,1], xticks:[],
+    yfmt:o.yfmt || (v=>v.toFixed(2)), ylabel:o.ylabel||''});
+  const g = a.g, bw = (a.R-a.L)/items.length;
+  items.forEach((it,i) => {
+    const x0 = a.L + i*bw + bw*0.17, w = bw*0.66;
+    const y = a.Y(Math.min(it.value, a.ymax)), h = Math.max(a.B - y, 1.5);
+    g.fillStyle = it.color;
+    if(g.roundRect){ g.beginPath(); g.roundRect(x0, y, w, h, [6,6,0,0]); g.fill(); }
+    else g.fillRect(x0, y, w, h);
+    g.textAlign = 'center';
+    g.fillStyle = '#1c2422'; g.font = '700 12.5px ui-monospace,Menlo,Consolas,monospace';
+    g.textBaseline = 'bottom';
+    g.fillText(o.fmt ? o.fmt(it.value) : it.value.toFixed(3), x0+w/2, y-5);
+    g.textBaseline = 'top';
+    g.fillStyle = it.dim ? '#8a9a95' : '#3d4d48';
+    g.font = '700 11.5px -apple-system,system-ui,sans-serif';
+    String(it.label).split('\n').forEach((ln,k) => g.fillText(ln, x0+w/2, a.B+7+k*13));
+    if(it.sub){ g.fillStyle='#8a9a95'; g.font='11px ui-monospace,Menlo,monospace';
+      g.fillText(it.sub, x0+w/2, a.B+7+String(it.label).split('\n').length*13); }
+  });
+  return a;
+}
+
+/* --- route choice + IIA --- */
+function drawRoutes(){
+  const tA = +el('tsA').value, tB = +el('tsB').value, tC = +el('tsC').value, mu = +el('tsMu').value;
+  const clone = el('tsClone').checked;
+  el('tsAv').textContent = tA.toFixed(1); el('tsBv').textContent = tB.toFixed(1);
+  el('tsCv').textContent = tC.toFixed(1); el('tsMuv').textContent = mu.toFixed(2);
+
+  const names = ['Route A','Route B','Route C'], times = [tA,tB,tC];
+  if(clone){ names.splice(2,0,'Route B′'); times.splice(2,0,tB); }
+  const p = softmax(times.map(t => mu*(-t)));
+  const cols = names.map(n => n === 'Route B′' ? '#c0392b' : (n === 'Route B' ? '#1f6f8b' : '#006747'));
+
+  vbars(el('c6a'), names.map((n,i) => ({label:n, sub:times[i].toFixed(1)+' min',
+    value:p[i], color:cols[i]})), {ylabel:'choice share', fmt:v => (v*100).toFixed(1)+'%'});
+
+  const iA = 0, iC = names.indexOf('Route C');
+  el('s6ratio').textContent = (p[iA]/p[iC]).toFixed(2);
+  el('s6ent').textContent = entropy(p).toFixed(3);
+  el('s6top').textContent = names[p.indexOf(Math.max(...p))];
+  const bShare = clone ? p[1] + p[2] : p[1];
+  el('s6bshare').textContent = (bShare*100).toFixed(1)+'%';
+}
+
+/* --- signal phase policy --- */
+const PHASES = ['Φ2\nN–S thru','Φ4\nE–W thru','Φ1\nN–S left','Φ3\nE–W left'];
+function drawPhases(){
+  const q = [0,1,2,3].map(i => +el('q'+i).value);
+  q.forEach((v,i) => el('q'+i+'v').textContent = v);
+  const tau = +el('tau').value;
+  el('tauv').textContent = tau.toFixed(1);
+
+  const p = softmax(q.map(v => v/tau));
+  const iMax = q.indexOf(Math.max(...q)), iMin = q.indexOf(Math.min(...q));
+  vbars(el('c6b'), PHASES.map((n,i) => ({label:n, sub:q[i]+' veh', value:p[i],
+    color: i === iMax ? '#006747' : '#7fb3a3'})), {ylabel:'π(serve this phase)',
+    fmt:v => (v*100).toFixed(1)+'%'});
+
+  const H = entropy(p), Hmax = Math.log(4);
+  el('s6pmax').textContent = p[iMax].toFixed(3);
+  el('s6pent').textContent = H.toFixed(3);
+  el('s6starve').textContent = p[iMin].toFixed(3);
+  const r = H/Hmax;
+  el('s6reg').textContent = r < 0.35 ? 'greedy' : (r < 0.85 ? 'balanced' : 'near-random');
+  el('s6reg').className = 'n' + (r < 0.35 ? ' t' : (r < 0.85 ? '' : ' w'));
+}
+
+/* --- softmax vs argmax: exploration --- */
+const SIM = {
+  trueRate: [0.55, 0.95, 0.42, 0.60],   // Φ4 (index 1) is genuinely best
+  Qinit:    [0.90, 0.30, 0.62, 0.80],   // the controller starts out believing the opposite
+  best: 1, steps: 800, alpha: 0.08, win: 60,
+  taus: [0.02, 0.15, 1.5], cols: ['#c0392b','#006747','#9b5de5'],
+  curves: null, cleared: null, oracle: 0, finalQ: null
+};
+function runSim(){
+  const out = [], tot = [], qs = [];
+  SIM.taus.forEach(tau => {
+    const rnd = mulberry32(31337);                       // same stream for every temperature
+    const Q = SIM.Qinit.slice();
+    const hits = [], curve = []; let cleared = 0;
+    for(let t=0;t<SIM.steps;t++){
+      const p = softmax(Q.map(v => v/tau));
+      let u = rnd(), i = 0, acc = 0;
+      while(i < p.length-1){ acc += p[i]; if(u < acc) break; i++; }
+      const noise = (rnd()+rnd()+rnd()+rnd()-2) * 0.22;  // ~N(0, .22), from the same stream
+      const r = SIM.trueRate[i] + noise;
+      Q[i] += SIM.alpha*(r - Q[i]);
+      cleared += SIM.trueRate[i];
+      hits.push(i === SIM.best ? 1 : 0);
+      if(hits.length > SIM.win) hits.shift();
+      curve.push(hits.reduce((a,b)=>a+b,0)/hits.length);
+    }
+    out.push(curve); tot.push(cleared); qs.push(Q.slice());
+  });
+  SIM.curves = out; SIM.cleared = tot; SIM.finalQ = qs;
+  SIM.oracle = SIM.trueRate[SIM.best]*SIM.steps;
+  drawSim();
+}
+function drawSim(){
+  const a = mkAxes(el('c6c'), 0, SIM.steps, -0.07, 1.05, {l:60,r:16,t:16,b:40});
+  clear(a);
+  frame(a,{xticks:[0,200,400,600,800], yticks:[0,0.25,0.5,0.75,1],
+    yfmt:v => (v*100).toFixed(0)+'%', xlabel:'decision number',
+    ylabel:'share of recent decisions on the best phase'});
+  hmark(a, 0.25, '#dfe6e3');
+  tag(a, 0, 0.25, 'uniform-random level', '#9aa8a3', 6, -9);
+  if(!SIM.curves){
+    const g = a.g; g.fillStyle = '#8a9a95'; g.font = '600 13px -apple-system,system-ui,sans-serif';
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('press Run', (a.L+a.R)/2, (a.T+a.B)/2);
+    ['s6g1','s6g2','s6g3','s6orc','s6q1','s6q2','s6q3'].forEach(id => el(id).textContent = '—');
+    return;
+  }
+  SIM.curves.forEach((c,k) => {
+    const g = a.g; clipArea(a);
+    g.strokeStyle = SIM.cols[k]; g.lineWidth = 2.6; g.lineJoin = 'round'; g.beginPath();
+    c.forEach((v,i) => { const x = a.X(i), y = a.Y(v); i ? g.lineTo(x,y) : g.moveTo(x,y); });
+    g.stroke(); g.restore();
+  });
+  ['s6g1','s6g2','s6g3'].forEach((id,k) => el(id).textContent =
+    Math.round(SIM.cleared[k]) + '  (' + (100*SIM.cleared[k]/SIM.oracle).toFixed(0) + '%)');
+  el('s6orc').textContent = Math.round(SIM.oracle);
+  ['s6q1','s6q2','s6q3'].forEach((id,k) => el(id).textContent = SIM.finalQ[k][SIM.best].toFixed(2));
+  const pct = k => (100*SIM.cleared[k]/SIM.oracle).toFixed(0);
+  el('simMsg').innerHTML = '<b>Near-greedy clears '+pct(0)+'% of the oracle. Balanced clears '+pct(1)+
+    '%. Near-random clears '+pct(2)+'% — and beats the greedy controller.</b> Look at the bottom row: the '+
+    'greedy controller finishes believing Φ4 is worth '+SIM.finalQ[0][SIM.best].toFixed(2)+', when it is '+
+    'actually worth 0.95. It served Φ4 on <b>zero</b> of 800 decisions, so that opening estimate was never '+
+    'once corrected. It settles on Φ3 instead — the second-best phase — and its estimates for every phase '+
+    'it <em>does</em> serve are accurate, so nothing in its own diagnostics looks wrong. The near-random '+
+    'controller has the opposite problem: its estimates are all correct, it simply acts on them too weakly. '+
+    'Acting decisively on a stale belief costs more than acting indecisively on a good one.';
+}
+
+/* ============================ page 3 ============================ */
+function drawT3(){
+  const z = +el('t3z').value;
+  el('t3zv').textContent = z.toFixed(2);
+  const s = sig(z), t = th(z), ds = sigp(z), dt = thp(z);
+
+  // left: activations + tangent
+  const a = mkAxes(el('c3a'), -8, 8, -1.15, 1.15, {l:56,r:14,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[-8,-4,0,4,8], yticks:[-1,-0.5,0,0.5,1], zeroy:true,
+    yfmt:v=>v.toFixed(1), xlabel:'z', ylabel:'activation'});
+  curve(a, x => sig(x), '#006747', 2.6);
+  curve(a, x => th(x), '#1f6f8b', 2.6);
+  seg(a, z-3, s-3*ds, z+3, s+3*ds, '#c0392b', 2, [6,4]);
+  vmark(a, z, '#b9a96a');
+  dot(a, z, s, '#006747', 5);
+  dot(a, z, t, '#1f6f8b', 5);
+
+  // right: derivatives
+  const b = mkAxes(el('c3b'), -8, 8, -0.05, 1.08, {l:58,r:14,t:14,b:38});
+  clear(b);
+  frame(b,{xticks:[-8,-4,0,4,8], yticks:[0,0.25,0.5,0.75,1],
+    yfmt:v=>v.toFixed(2), xlabel:'z', ylabel:'derivative  f′(z)'});
+  seg(b, -8, 1, 8, 1, '#e6dcc0', 2, [6,4]);
+  curve(b, x => sigp(x), '#006747', 2.6);
+  curve(b, x => thp(x), '#1f6f8b', 2.6);
+  vmark(b, z, '#b9a96a');
+  dot(b, z, ds, '#006747', 5);
+  dot(b, z, dt, '#1f6f8b', 5);
+  tag(b, -7.6, 1, 'ReLU′ = 1', '#b9a96a', 4, -9);
+
+  el('b3s').style.width = (ds*100).toFixed(2)+'%';
+  el('b3t').style.width = (dt*100).toFixed(2)+'%';
+  el('b3r').style.width = '100%';
+  el('n3s').textContent = ds < 1e-3 ? esci(ds) : ds.toFixed(3);
+  el('n3t').textContent = dt < 1e-3 ? esci(dt) : dt.toFixed(3);
+  el('n3r').textContent = '1.000';
+  el('s3sig').textContent  = s.toFixed(3);
+  el('s3tanh').textContent = t.toFixed(3);
+  const slow = 0.25/ds;
+  el('s3slow').textContent = slow < 1000 ? slow.toFixed(1)+'×' : esci(slow)+'×';
+  el('s3slow').className = 'n' + (slow < 2 ? '' : (slow < 10 ? ' t' : ' w'));
+  const az = Math.abs(z);
+  el('s3state').textContent = az < 1.5 ? 'responsive' : (az < 3.5 ? 'slowing' : (az < 5.5 ? 'saturating' : 'frozen'));
+  el('s3state').className = 'n' + (az < 1.5 ? '' : (az < 3.5 ? ' t' : ' w'));
+}
+
+/* ============================ page 4 ============================ */
+function drawT4(){
+  const L = +el('t4L').value, zz = +el('t4z').value;
+  el('t4Lv').textContent = L; el('t4zv').textContent = zz.toFixed(1);
+  const fs = sigp(zz), ft = thp(zz), fr = 1;
+
+  const lo = Math.min(L*Math.log10(Math.max(fs,1e-300)), L*Math.log10(Math.max(ft,1e-300)));
+  const FLOOR = clampn(Math.floor(lo/4)*4 - 2, -64, -4);
+  const step = Math.max(1, Math.ceil(-FLOOR/5));
+  const yt = []; for(let v=0; v>=FLOOR; v-=step) yt.push(v);
+  const a = mkAxes(el('c4'), 0, Math.max(L,1), FLOOR, -FLOOR*0.03, {l:70,r:16,t:16,b:40});
+  clear(a);
+  const xt = []; for(let i=0;i<=L;i++) if(L<=8 || i%2===0) xt.push(i);
+  frame(a,{xticks:xt, yticks:yt,
+    yfmt:v => v===0 ? '1' : '1e'+v,
+    xlabel:'layers back-propagated through', ylabel:'surviving gradient magnitude'});
+
+  const series = [[fs,'#006747'],[ft,'#1f6f8b'],[fr,'#9b5de5']];
+  series.forEach(([f,color]) => {
+    const g = a.g; clipArea(a);
+    g.strokeStyle = color; g.lineWidth = 2.6; g.lineJoin = 'round'; g.beginPath();
+    for(let k=0;k<=L;k++){
+      const v = Math.pow(Math.max(f,1e-300), k);
+      const ly = clampn(v > 0 ? Math.log10(v) : FLOOR, FLOOR, -FLOOR*0.03);
+      if(k===0) g.moveTo(a.X(0), a.Y(0)); else g.lineTo(a.X(k), a.Y(ly));
+    }
+    g.stroke(); g.restore();
+    for(let k=0;k<=L;k++){
+      const v = Math.pow(Math.max(f,1e-300), k);
+      const ly = clampn(v > 0 ? Math.log10(v) : FLOOR, FLOOR, -FLOOR*0.03);
+      dot(a, k, ly, color, 3.6);
+    }
+  });
+
+  const vs = Math.pow(fs,L), vt = Math.pow(ft,L), vr = Math.pow(fr,L);
+  el('s4s').textContent = esci(vs);
+  el('s4t').textContent = esci(vt);
+  el('s4r').textContent = esci(vr);
+  const ratio = vt/Math.max(vs,1e-300);
+  el('s4ratio').textContent = ratio >= 1
+    ? (ratio < 1e4 ? Math.round(ratio).toLocaleString()+'×' : esci(ratio)+'×')
+    : (ratio > 1e-4 ? (1/ratio).toFixed(0)+'× worse' : esci(1/ratio)+'× worse');
+}
+
+/* ============================ page 5 ============================ */
+function mulberry32(s){ return function(){ s |= 0; s = s + 0x6D2B79F5 | 0;
+  let t = Math.imul(s ^ s>>>15, 1 | s); t = t + Math.imul(t ^ t>>>7, 61 | t) ^ t;
+  return ((t ^ t>>>14) >>> 0) / 4294967296; }; }
+const R5 = mulberry32(20260827);
+function gauss(){ let u=0,v=0; while(u===0) u=R5(); while(v===0) v=R5();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+
+const D = (() => {
+  const k=[], y=[]; const N=180;
+  for(let i=0;i<N;i++){
+    const kk = 5 + R5()*75;
+    const vv = 66*(1 - kk/125) + 6*gauss();
+    k.push(kk); y.push(vv < 45 ? 1 : 0);
+  }
+  const mean = k.reduce((s,v)=>s+v,0)/N;
+  const sd = Math.sqrt(k.reduce((s,v)=>s+(v-mean)*(v-mean),0)/N);
+  const pos = y.reduce((s,v)=>s+v,0);
+  return {k, y, N, mean, sd, xs: k.map(v => (v-mean)/sd),
+          base: Math.max(pos, N-pos)/N};
+})();
+
+const S5 = {w:0, b:0, it:0, hist:[], timer:null, gnorm:0};
+
+function resetT5(){
+  if(S5.timer){ clearInterval(S5.timer); S5.timer=null; el('t5run').textContent='▶ Run'; }
+  const init = el('t5init').value;
+  if(init === 'bad'){ S5.w = -7; S5.b = 2.5; } else { S5.w = 0; S5.b = 0; }
+  S5.it = 0; S5.gnorm = 0; S5.hist = [];
+  pushHist(); drawT5();
+}
+function metrics(){
+  let loss=0, correct=0;
+  const useBCE = el('t5loss').value === 'bce';
+  for(let i=0;i<D.N;i++){
+    const p = clampn(sig(S5.w*D.xs[i] + S5.b), 1e-9, 1-1e-9);
+    loss += useBCE ? -(D.y[i]*Math.log(p) + (1-D.y[i])*Math.log(1-p))
+                   : 0.5*(p-D.y[i])*(p-D.y[i]);
+    if((p >= 0.5 ? 1 : 0) === D.y[i]) correct++;
+  }
+  return {loss: loss/D.N, acc: correct/D.N};
+}
+function pushHist(){ const m = metrics(); S5.hist.push(m.acc); return m; }
+function stepT5(n){
+  const useBCE = el('t5loss').value === 'bce';
+  const lr = +el('t5lr').value;
+  for(let s=0;s<n;s++){
+    let dw=0, db=0;
+    for(let i=0;i<D.N;i++){
+      const z = S5.w*D.xs[i] + S5.b, p = sig(z);
+      const gz = useBCE ? (p - D.y[i]) : (p - D.y[i])*p*(1-p);
+      dw += gz*D.xs[i]; db += gz;
+    }
+    dw /= D.N; db /= D.N;
+    S5.gnorm = Math.sqrt(dw*dw + db*db);
+    S5.w -= lr*dw; S5.b -= lr*db;
+    S5.it++;
+    if(S5.it % 5 === 0) pushHist();
+  }
+  drawT5();
+}
+function drawT5(){
+  el('t5lrv').textContent = (+el('t5lr').value).toFixed(2);
+
+  // left: data + fitted curve
+  const a = mkAxes(el('c5a'), 0, 90, -0.12, 1.12, {l:56,r:14,t:14,b:40});
+  clear(a);
+  frame(a,{xticks:[0,15,30,45,60,75,90], yticks:[0,0.5,1], yfmt:v=>v.toFixed(1),
+    xlabel:'link density  (veh / mi / lane)', ylabel:'P(congested)'});
+  const g = a.g; clipArea(a);
+  for(let i=0;i<D.N;i++){
+    const jitter = (i%9 - 4)*0.012;
+    g.fillStyle = D.y[i] ? 'rgba(192,57,43,.55)' : 'rgba(0,103,71,.5)';
+    g.beginPath(); g.arc(a.X(D.k[i]), a.Y(D.y[i] + (D.y[i] ? -0.05 : 0.05) + jitter), 3.1, 0, Math.PI*2); g.fill();
+  }
+  g.restore();
+  hmark(a, 0.5, '#dfe6e3');
+  curve(a, kk => sig(S5.w*((kk-D.mean)/D.sd) + S5.b), '#006747', 3);
+
+  // right: accuracy history
+  const nH = Math.max(S5.hist.length, 2);
+  const b = mkAxes(el('c5b'), 0, Math.max((nH-1)*5, 50), 0, 1.05, {l:64,r:14,t:14,b:40});
+  clear(b);
+  frame(b,{xticks:[0, Math.round(Math.max((nH-1)*5,50)/2), Math.max((nH-1)*5,50)],
+    yticks:[0,0.25,0.5,0.75,1], yfmt:v=>(v*100).toFixed(0)+'%',
+    xlabel:'iteration', ylabel:'classification accuracy'});
+  hmark(b, D.base, '#c0392b');
+  tag(b, 0, D.base, 'always-guess-majority baseline', '#c0392b', 6, -9);
+  const g2 = b.g; clipArea(b);
+  g2.strokeStyle = '#1f6f8b'; g2.lineWidth = 2.6; g2.lineJoin='round'; g2.beginPath();
+  S5.hist.forEach((v,i) => { const x = b.X(i*5), y = b.Y(v); i ? g2.lineTo(x,y) : g2.moveTo(x,y); });
+  g2.stroke(); g2.restore();
+
+  const m = metrics();
+  el('s5it').textContent = S5.it;
+  el('s5w').textContent = S5.w.toFixed(2);
+  el('s5b').textContent = S5.b.toFixed(2);
+  el('s5loss').textContent = m.loss < 1e-3 ? esci(m.loss) : m.loss.toFixed(4);
+  el('s5acc').textContent = (m.acc*100).toFixed(1)+'%';
+  el('s5g').textContent = esci(S5.gnorm);
+
+  const bad = el('t5init').value === 'bad', mse = el('t5loss').value === 'mse';
+  const msg = el('t5msg');
+  if(bad && mse) msg.innerHTML = '<b>Squared error + a saturated, wrong unit.</b> Accuracy starts near 19% — '+
+    'worse than guessing — and stays below the majority baseline for well over a thousand iterations while '+
+    'the gradient norm sits near zero. It does eventually escape, at roughly <b>10,000 iterations</b> — about '+
+    '<b>400× longer</b> than cross-entropy needs, on a model with two parameters. Scale that penalty to a '+
+    'real network and it is indistinguishable from "the model does not train".';
+  else if(bad) msg.innerHTML = '<b>Cross-entropy rescues the same broken start.</b> Identical initialization, '+
+    'identical data, identical learning rate — the only change is that ∂L/∂z no longer carries the σ′ factor. '+
+    'A confidently wrong unit still produces a gradient of about ±1, so it turns itself around inside the '+
+    'first few dozen steps. Press Reset and step through 25 at a time to watch it flip.';
+  else if(mse) msg.innerHTML = 'Squared error from a sensible start does converge — just noticeably slower, '+
+    'because every gradient is scaled down by σ′ ≤ 0.25. Now switch the initialization to <b>confidently '+
+    'wrong</b> and run it again.';
+  else msg.innerHTML = 'Cross-entropy from a sensible start converges in a couple of hundred steps. '+
+    'Now switch the initialization to <b>confidently wrong</b> and compare the two losses.';
+}
+
+/* ============================ wiring ============================ */
+function redrawAll(){ drawT1(); drawT2a(); drawT2b(); drawRoutes(); drawPhases(); drawSim(); drawT3(); drawT4(); drawT5(); }
+
+['t1dv','t1mu','t1asc'].forEach(id => el(id).addEventListener('input', drawT1));
+el('t2chk').addEventListener('change', drawT2a);
+['t2am','t2k'].forEach(id => el(id).addEventListener('input', drawT2b));
+['tsA','tsB','tsC','tsMu'].forEach(id => el(id).addEventListener('input', drawRoutes));
+el('tsClone').addEventListener('change', drawRoutes);
+['q0','q1','q2','q3','tau'].forEach(id => el(id).addEventListener('input', drawPhases));
+el('tauLo').onclick = () => { el('tau').value = 0.5; drawPhases(); };
+el('tauHi').onclick = () => { el('tau').value = 30;  drawPhases(); };
+el('simRun').onclick = runSim;
+el('simReset').onclick = () => { SIM.curves = null; SIM.finalQ = null; drawSim();
+  el('simMsg').innerHTML = 'Press Run, then read the two rows of numbers together. The question to hold '+
+  'in mind: which controller ends up <em>knowing</em> the intersection, and which one merely ends up '+
+  '<em>confident</em> about it?'; };
+el('t3z').addEventListener('input', drawT3);
+el('t3a').onclick = () => { el('t3z').value = 0;   drawT3(); };
+el('t3b').onclick = () => { el('t3z').value = 3;   drawT3(); };
+el('t3c').onclick = () => { el('t3z').value = 6;   drawT3(); };
+['t4L','t4z'].forEach(id => el(id).addEventListener('input', drawT4));
+el('t4r').onclick = () => { el('t4z').value = 0; drawT4(); };
+
+el('t5lr').addEventListener('input', drawT5);
+el('t5loss').addEventListener('change', resetT5);
+el('t5init').addEventListener('change', resetT5);
+el('t5reset').onclick = resetT5;
+el('t5step').onclick  = () => stepT5(25);
+el('t5step2').onclick = () => stepT5(1000);
+el('t5run').onclick = () => {
+  if(S5.timer){ clearInterval(S5.timer); S5.timer = null; el('t5run').textContent = '▶ Run'; return; }
+  el('t5run').textContent = '❚❚ Pause';
+  S5.timer = setInterval(() => {
+    stepT5(30);
+    if(S5.it >= 12000){ clearInterval(S5.timer); S5.timer = null; el('t5run').textContent = '▶ Run'; }
+  }, 30);
+};
+
+document.querySelectorAll('nav.tabs button').forEach(btn => btn.onclick = () => {
+  document.querySelectorAll('nav.tabs button').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('section.page').forEach(x => x.classList.remove('active'));
+  btn.classList.add('active');
+  el(btn.dataset.tab).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  redrawAll();
+});
+
+resetT5();
+redrawAll();
+</script>
+</body>
+</html>
