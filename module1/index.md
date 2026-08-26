@@ -6,9 +6,37 @@
 
 | Date | Session topic | Due before class |
 |---|---|---|
-| Aug 27 | Course introduction; overview of AI for mobility; course expectations; project overview; example project topics and datasets | — |
+| Aug 27 | Course introduction; overview of AI for mobility; course expectations; project overview; example project topics and datasets | **Before We Start** intake survey |
 | Sept 3 | Neural network basics and deep learning foundations | **Project interest survey** |
 | Sept 10 | Representation learning, embeddings, transfer learning, contrastive learning, and mobility representations | Preliminary project idea memo; lab preparation as assigned |
+
+## Before the first class
+
+Fill this out before we meet on **Aug 27**. It takes about 12 minutes, and what comes back
+decides how fast the labs move, how project teams get formed, and which examples this course
+leads with.
+
+Answer honestly rather than impressively — "never done it" is a useful answer and it costs you
+nothing. Nothing here is graded on content. The section on what feels uncomfortable about using
+AI is anonymized: names are stripped before those answers are read as a set, and the aggregate
+goes on screen in the first class without attribution.
+
+The survey stores nothing on its own and sends nothing anywhere. When you finish it, it hands
+you a block of text — copy that into the **"Before We Start"** submission in Canvas.
+
+<div class="resource-callout">
+  <strong><a href="../_static/companions/AI4Mobility_Intake_Survey.html" target="_blank" rel="noopener">Open the survey full screen &#8599;</a></strong>
+  — it is long, and it fills in more comfortably outside the frame below. Either way your
+  progress is saved in your own browser as you go, so you can stop and come back to it.
+</div>
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Intake survey — Before We Start</span>
+    <a href="../_static/companions/AI4Mobility_Intake_Survey.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/AI4Mobility_Intake_Survey.html" title="Before We Start — intake survey" loading="lazy"></iframe>
+</div>
 
 ## Overview
 

@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Pre-class intake survey for CGN 6933 AI for Mobility, Fall 2026.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%9A%A6%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<title>Before We Start</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+
+<style>
+  :root{
+    --ground:#FAFBF9; --surface:#FFFFFF; --surface-2:#F1F5F2; --surface-3:#E9EFEA;
+    --ink:#16211C; --ink-2:#4A5C53; --ink-3:#78877E;
+    --line:#DCE4DE; --line-2:#C1CFC6;
+    --brand:#006747; --brand-deep:#003E2A; --brand-mid:#2E7D5C; --on-brand:#FFFFFF;
+    --gold:#B79F4D; --gold-ink:#7A6829; --gold-wash:#F4EFDC;
+    --focus:#006747;
+    --shadow:0 1px 2px rgba(0,45,28,.05), 0 10px 28px -16px rgba(0,45,28,.22);
+    --serif:"IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --sans:"IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0C1410; --surface:#131E18; --surface-2:#18251E; --surface-3:#1E2D25;
+      --ink:#E9F0EB; --ink-2:#A6BAAF; --ink-3:#7C9187;
+      --line:#25342C; --line-2:#33453B;
+      --brand:#57B98F; --brand-deep:#8FD6B4; --brand-mid:#4FA882; --on-brand:#0C1410;
+      --gold:#CFC493; --gold-ink:#DCD3A8; --gold-wash:#26261A;
+      --focus:#57B98F;
+      --shadow:0 1px 2px rgba(0,0,0,.45), 0 10px 28px -16px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0C1410; --surface:#131E18; --surface-2:#18251E; --surface-3:#1E2D25;
+    --ink:#E9F0EB; --ink-2:#A6BAAF; --ink-3:#7C9187;
+    --line:#25342C; --line-2:#33453B;
+    --brand:#57B98F; --brand-deep:#8FD6B4; --brand-mid:#4FA882; --on-brand:#0C1410;
+    --gold:#CFC493; --gold-ink:#DCD3A8; --gold-wash:#26261A;
+    --focus:#57B98F;
+    --shadow:0 1px 2px rgba(0,0,0,.45), 0 10px 28px -16px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--sans); font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold); color:#003E2A;}
+
+  /* progress rail */
+  #bar{position:fixed; inset:0 auto auto 0; height:3px; width:0%; background:var(--brand); z-index:50; transition:width .35s cubic-bezier(.4,0,.2,1);}
+
+  .wrap{max-width:53rem; margin:0 auto; padding:0 1.5rem 6rem;}
+
+  /* ---------- masthead ---------- */
+  header.mast{padding:4.5rem 0 0;}
+  .eyebrow{
+    font-family:var(--mono); font-size:.7rem; font-weight:500;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--gold-ink);
+    display:flex; align-items:center; gap:.7rem; flex-wrap:wrap;
+  }
+  .eyebrow::after{content:""; flex:1 1 2rem; height:1px; background:var(--gold); opacity:.55; min-width:1rem;}
+  h1{
+    font-family:var(--serif); font-weight:600; font-size:clamp(2.4rem,6.5vw,3.6rem);
+    line-height:1.04; letter-spacing:-.022em; margin:1.1rem 0 0; text-wrap:balance; color:var(--ink);
+  }
+  .standfirst{
+    font-family:var(--serif); font-size:clamp(1.05rem,2.2vw,1.2rem); line-height:1.65;
+    color:var(--ink-2); max-width:38rem; margin:1.4rem 0 0;
+  }
+  .standfirst em{color:var(--ink); font-style:italic;}
+
+  .facts{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(11rem,1fr)); gap:1px;
+    background:var(--line); border:1px solid var(--line);
+    margin:2.6rem 0 0; border-radius:3px; overflow:hidden;
+  }
+  .fact{background:var(--surface); padding:.95rem 1.1rem;}
+  .fact dt{font-family:var(--mono); font-size:.66rem; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-3); margin:0;}
+  .fact dd{margin:.3rem 0 0; font-size:.9rem; font-weight:500; color:var(--ink);}
+
+  .pledge{
+    margin:2rem 0 0; padding:1.1rem 1.25rem; border-radius:3px;
+    background:var(--gold-wash); border:1px solid var(--gold);
+    font-size:.92rem; line-height:1.6; color:var(--ink);
+  }
+  .pledge b{font-weight:600;}
+
+  /* ---------- sections ---------- */
+  section.part{margin:4.2rem 0 0; scroll-margin-top:2rem;}
+  .part-head{display:flex; gap:1.15rem; align-items:flex-start;}
+  .ord{
+    flex:0 0 auto; font-family:var(--mono); font-size:.78rem; font-weight:600;
+    color:var(--brand); padding-top:.42rem; letter-spacing:.04em;
+  }
+  .part-title{
+    font-family:var(--serif); font-weight:600; font-size:1.55rem; line-height:1.22;
+    letter-spacing:-.012em; margin:0; color:var(--ink); text-wrap:balance;
+  }
+  .part-blurb{margin:.5rem 0 0; font-size:.93rem; color:var(--ink-2); max-width:36rem;}
+  .part-rule{height:1px; background:var(--line); margin:1.2rem 0 0;}
+  .part-note{
+    margin:1.2rem 0 0; padding:.85rem 1rem; border-left:2px solid var(--gold);
+    background:var(--surface-2); font-size:.88rem; color:var(--ink-2); border-radius:0 3px 3px 0;
+  }
+  .part-note b{color:var(--ink); font-weight:600;}
+
+  /* ---------- questions ---------- */
+  .q{
+    background:var(--surface); border:1px solid var(--line); border-radius:4px;
+    padding:1.3rem 1.4rem; margin:1.1rem 0 0; box-shadow:var(--shadow);
+    transition:border-color .18s ease;
+  }
+  .q:focus-within{border-color:var(--line-2);}
+  .q.answered{border-left:2px solid var(--brand); padding-left:calc(1.4rem - 1px);}
+  .q-top{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap-reverse;}
+  .q-label{font-family:var(--mono); font-size:.68rem; color:var(--ink-3); letter-spacing:.06em;}
+  .tag{
+    font-family:var(--mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--brand); border:1px solid var(--line-2); border-radius:2px;
+    padding:.15rem .45rem; white-space:nowrap;
+  }
+  .tag.anon{color:var(--gold-ink); border-color:var(--gold);}
+  .q-text{font-size:1.02rem; font-weight:600; line-height:1.45; margin:.5rem 0 0; color:var(--ink); text-wrap:balance;}
+  .q-help{font-size:.87rem; color:var(--ink-2); margin:.4rem 0 0;}
+  .req{color:var(--gold-ink); font-weight:600;}
+  .opt{color:var(--ink-3); font-weight:400; font-size:.85em;}
+
+  .choices{display:flex; flex-direction:column; gap:.4rem; margin:.95rem 0 0;}
+  .choices.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(15rem,1fr)); gap:.4rem;}
+  .choice{
+    display:flex; align-items:flex-start; gap:.65rem; padding:.6rem .75rem;
+    border:1px solid var(--line); border-radius:3px; cursor:pointer;
+    background:var(--surface); font-size:.93rem; line-height:1.45;
+    transition:background .14s ease, border-color .14s ease;
+  }
+  .choice:hover{background:var(--surface-2);}
+  .choice input{
+    appearance:none; -webkit-appearance:none; margin:.25rem 0 0; flex:0 0 auto;
+    width:1rem; height:1rem; border:1.5px solid var(--line-2); background:var(--surface);
+    cursor:pointer; position:relative; transition:border-color .14s, background .14s;
+  }
+  .choice input[type=radio]{border-radius:50%;}
+  .choice input[type=checkbox]{border-radius:2px;}
+  .choice input:checked{background:var(--brand); border-color:var(--brand);}
+  .choice input[type=radio]:checked::after{
+    content:""; position:absolute; inset:.24rem; border-radius:50%; background:var(--on-brand);
+  }
+  .choice input[type=checkbox]:checked::after{
+    content:""; position:absolute; inset:0; background:var(--on-brand);
+    clip-path:polygon(16% 52%, 38% 74%, 84% 24%, 92% 34%, 38% 90%, 8% 60%);
+  }
+  .choice:has(input:checked){border-color:var(--brand); background:var(--surface-2);}
+  .choice input:focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+  .choice:has(input:disabled){opacity:.42; cursor:default;}
+  .choice:has(input:disabled):hover{background:var(--surface);}
+  .choice input:disabled{cursor:default;}
+
+  .cap{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.04em;
+    color:var(--ink-3); margin:.6rem 0 0;
+  }
+  .cap.full{color:var(--gold-ink);}
+  .comment-label{
+    font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--ink-3); margin:1.1rem 0 -.35rem;
+  }
+  .comment-label .opt{text-transform:none; letter-spacing:0; font-family:var(--sans);}
+  textarea.comment-box{min-height:3.4rem;}
+
+  input[type=text], textarea{
+    width:100%; margin:.9rem 0 0; padding:.65rem .8rem; font-family:var(--sans);
+    font-size:.95rem; line-height:1.55; color:var(--ink); background:var(--surface-2);
+    border:1px solid var(--line); border-radius:3px; resize:vertical;
+  }
+  input[type=text]:focus, textarea:focus{outline:2px solid var(--focus); outline-offset:-1px; background:var(--surface);}
+  textarea{min-height:5.2rem;}
+  .sub{display:grid; grid-template-columns:repeat(auto-fit,minmax(13rem,1fr)); gap:1.1rem; margin:.95rem 0 0;}
+  .sub-h{font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin:0 0 .45rem;}
+  .sub .choices{margin:0;}
+
+  /* rank */
+  .rank{display:flex; flex-direction:column; gap:.4rem; margin:.95rem 0 0;}
+  .rank-item{
+    display:flex; align-items:center; gap:.75rem; padding:.6rem .75rem; cursor:pointer;
+    border:1px solid var(--line); border-radius:3px; background:var(--surface);
+    font-size:.93rem; text-align:left; color:var(--ink); font-family:var(--sans);
+    transition:background .14s, border-color .14s;
+  }
+  .rank-item:hover{background:var(--surface-2);}
+  .rank-item:focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+  .rank-num{
+    flex:0 0 auto; width:1.55rem; height:1.55rem; border-radius:50%;
+    display:grid; place-items:center; font-family:var(--mono); font-size:.75rem; font-weight:600;
+    border:1.5px dashed var(--line-2); color:var(--ink-3); background:var(--surface);
+  }
+  .rank-item.set .rank-num{border:none; background:var(--brand); color:var(--on-brand); font-weight:600;}
+  .rank-item.set{border-color:var(--brand); background:var(--surface-2);}
+
+  /* ---------- submit ---------- */
+  .submit-zone{margin:4rem 0 0; padding:2rem 0 0; border-top:1px solid var(--line);}
+  .tally{font-family:var(--mono); font-size:.78rem; color:var(--ink-2); letter-spacing:.03em;}
+  .tally b{color:var(--brand); font-weight:600;}
+  .actions{display:flex; gap:.7rem; flex-wrap:wrap; margin:1rem 0 0;}
+  button.btn{
+    font-family:var(--sans); font-size:.92rem; font-weight:600; padding:.7rem 1.2rem;
+    border-radius:3px; border:1px solid transparent; cursor:pointer;
+    transition:opacity .15s ease, background .15s ease;
+  }
+  button.btn:focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+  .btn-primary{background:var(--brand); color:var(--on-brand);}
+  .btn-primary:hover{opacity:.88;}
+  .btn-ghost{background:transparent; color:var(--ink); border-color:var(--line-2);}
+  .btn-ghost:hover{background:var(--surface-2);}
+  .btn-gold{background:var(--gold); color:#003E2A;}
+  .btn-gold:hover{opacity:.88;}
+
+  .missing{
+    margin:1rem 0 0; padding:.85rem 1rem; border-left:2px solid var(--gold);
+    background:var(--gold-wash); font-size:.89rem; color:var(--ink); border-radius:0 3px 3px 0;
+  }
+  .missing a{color:var(--brand); text-decoration-thickness:1px; text-underline-offset:2px;}
+
+  .fatal{
+    margin:3rem 0 0; padding:1.1rem 1.25rem; border-radius:3px; font-size:.92rem; line-height:1.6;
+    background:var(--gold-wash); border:1px solid var(--gold); color:var(--ink);
+  }
+  .fatal code{font-family:var(--mono); font-size:.86em; background:var(--surface); padding:.05rem .3rem; border-radius:2px;}
+
+  #out{display:none; margin:1.6rem 0 0;}
+  #out.on{display:block;}
+  #out h2{font-family:var(--serif); font-size:1.25rem; font-weight:600; margin:0 0 .5rem; color:var(--ink);}
+  #out p.lead{font-size:.92rem; color:var(--ink-2); margin:0 0 1rem; max-width:36rem;}
+  #transcript{
+    width:100%; min-height:20rem; font-family:var(--mono); font-size:.78rem; line-height:1.65;
+    background:var(--surface-2); color:var(--ink); border:1px solid var(--line);
+    border-radius:3px; padding:1rem; margin:0;
+  }
+  .said{font-family:var(--mono); font-size:.75rem; color:var(--brand); margin:.7rem 0 0; min-height:1.1rem;}
+
+  footer.foot{
+    margin:5rem 0 0; padding:1.5rem 0 0; border-top:1px solid var(--line);
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.05em; color:var(--ink-3);
+    display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+  }
+
+  @media (max-width:640px){
+    .wrap{padding:0 1.1rem 5rem;}
+    header.mast{padding-top:3rem;}
+    .part-head{gap:.8rem;}
+    .q{padding:1.1rem;}
+    .q.answered{padding-left:calc(1.1rem - 1px);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; animation:none !important;}
+  }
+</style>
+
+<div id="bar" role="presentation"></div>
+
+<div class="wrap">
+
+  <div id="bootfail" class="fatal">
+    <b>The question bank didn&rsquo;t load.</b>
+    If you are editing this file, there is almost certainly a typo in the <code>PAGE</code> or <code>SURVEY</code>
+    block near the top of the script &mdash; most often a missing comma between items, or a missing
+    <code>]</code> or <code>}</code>. Undo your last change and reload. This notice disappears on its own when the
+    file is valid.
+  </div>
+
+  <header class="mast" id="mast"></header>
+
+  <main id="form"></main>
+
+  <div class="submit-zone">
+    <p class="tally" id="tally"></p>
+    <div class="actions">
+      <button class="btn btn-primary" id="build" type="button">Review &amp; finish</button>
+      <button class="btn btn-ghost" id="clear" type="button">Clear all answers</button>
+    </div>
+    <div id="missing"></div>
+
+    <div id="out">
+      <h2>Your responses</h2>
+      <p class="lead" id="handin"></p>
+      <textarea id="transcript" readonly spellcheck="false"></textarea>
+      <div class="actions">
+        <button class="btn btn-gold" id="copy" type="button">Copy to clipboard</button>
+        <button class="btn btn-ghost" id="dl" type="button" hidden>Download as a file</button>
+      </div>
+      <p class="said" id="said"></p>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span id="foot-l"></span>
+    <span id="foot-r"></span>
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ==========================================================================
+   EDIT EVERYTHING BETWEEN HERE AND THE "STOP EDITING" LINE.
+   Nothing below that line needs to change to add, remove, or reword questions.
+
+   PAGE  — the masthead: course line, title, intro, the four fact tiles, the
+           privacy note. Change the due date and room here.
+
+   SURVEY — a list of parts. Each part is:
+       { n:"01", title:"...", blurb:"...", note:"...", items:[ ... ] }
+       blurb and note are optional. `note` is the boxed caveat (Part 5 uses it)
+       and it accepts HTML, so <b>bold</b> works.
+
+   Each item in `items` is one question:
+       id    a short unique key, letters/numbers/underscore only. Changing an
+             id discards any answer a student had already typed into it.
+       type  "text"      one-line answer
+             "textarea"  paragraph answer
+             "radio"     pick one          (needs opts)
+             "check"     pick any number   (needs opts)
+             "rank"      click-to-rank     (needs opts)
+             "subgroup"  two or more small radio sets side by side (needs subs)
+       q     the question itself
+       help  optional grey line underneath
+       tag   the small label top-right saying what the answer is used for
+       opts  ["choice one", "choice two", ...]
+       req   true  -> must be answered before the student can finish
+       opt   true  -> shows "(optional)" after the question
+       grid  true  -> lays the choices out in columns instead of one per row
+       anon  true  -> renders the tag in gold, for the anonymized section
+       ph    optional placeholder text inside the box
+       max   for "check" only: the most boxes a student may tick, e.g. max:3.
+             Extra ticks are refused and the remaining boxes grey out.
+       comment  adds an optional free-text box under the choices, for an
+             "anything else / other" follow-up:
+             comment:{ label:"Something not on this list?", ph:"Optional" }
+             It is never required and never counted in the progress tally.
+       subs  for "subgroup" only: [{id:"os", label:"...", opts:[...]}, ...]
+
+   Punctuation to watch: every item ends with a comma, every list closes with
+   a ] and every block with a }. If the page comes up with a gold warning box,
+   that is the only thing that has gone wrong — undo and reload.
+   ========================================================================== */
+
+const PAGE = {
+  eyebrow: "CGN 6933 · AI for Mobility · Fall 2026",
+  title: "Before We Start",
+  standfirst: `This course is built around one question: <em>which steps of your work can safely be
+    handed to a machine, and how would you prove the result?</em> I can only teach that well if I know
+    where you&rsquo;re starting from. Answer honestly rather than impressively &mdash;
+    &ldquo;never done it&rdquo; is a useful answer and it costs you nothing.`,
+  facts: [
+    { k: "Takes",      v: "About 12 minutes" },
+    { k: "Due",        v: "Thu Aug 27, 12:00 pm" },
+    { k: "Counts as",  v: "Participation credit" },
+    { k: "First class", v: "Thu Aug 27, 5:00 pm · NES 103" }
+  ],
+  pledge: `<b>How your answers get used.</b> Parts 1&ndash;4 and 7 are read by me alone, and inform how I
+    group teams and how fast the labs move. <b>Part 5 is anonymized</b> — I strip names before I read it as
+    a set, and I&rsquo;ll show the aggregate on day one without attribution. Nothing here is graded on
+    content. Your progress saves in this browser as you go.`,
+  footerLeft: "Hao Zhou · CUTR 231 · office hours Tue 3–5",
+  footerRight: "ai4mobility.github.io",
+  /* what the student is told to do with their answers once they finish */
+  handIn: `Copy the block below and paste it into the <b>&ldquo;Before We Start&rdquo;</b> submission in
+    Canvas. Nothing was sent from this page — it stays in your browser until you hand it in.`
+};
+
+const SURVEY = [
+  {
+    n: "01", title: "Who you are",
+    blurb: "The roster basics. Skip anything that doesn't apply.",
+    items: [
+      {id:"name", type:"text", tag:"identifies you", q:"Your name", req:true, ph:"First and last"},
+      {id:"program", type:"radio", tag:"for me", q:"Program and degree track", req:true,
+       opts:["PhD","MS — thesis","MS — non-thesis","Other / not yet declared"]},
+      {id:"advisor", type:"text", tag:"for me", q:"Advisor or research group", help:"“None yet” is a perfectly normal answer.", ph:"Name, or “none yet”"},
+      {id:"path", type:"radio", tag:"shapes examples", q:"Most likely path after you graduate",
+       help:"Undecided is a real answer, not a cop-out. I use this to pick which examples I lead with.", req:true,
+       opts:["Public agency — DOT, MPO, city","Consulting","Academia or postdoc","Tech company or vehicle OEM","Startup / my own thing","Undecided"],
+       comment:{label:"Anything else about your path you'd like me to know?",
+                ph:"Optional — a career change, a visa timeline, a specific job you're aiming at…"}}
+    ]
+  },
+  {
+    n: "02", title: "What you'd want to work on",
+    blurb: "Your semester project is a group project, and I form teams from these answers.",
+    items: [
+      {id:"topics", type:"check", tag:"used for teams", q:"Topics you'd happily spend a semester on", help:"Check as many as apply.", req:true, grid:true,
+       opts:["Driving safety and ADAS","Transportation safety analysis","Traffic operations and signals","Transportation optimization","Simulation and digital twins","Sensing — camera, lidar, radar","Freight and logistics","Transit","Air mobility / UAM","Travel behavior and demand","EV and energy","Planning and policy","Infrastructure and asset management","Something else — I'll say below"]},
+      {id:"topics_other", type:"text", tag:"used for teams", q:"If “something else,” what?", opt:true, ph:"One line"},
+      {id:"data", type:"textarea", tag:"predicts a good project", req:true,
+       q:"Do you already have access to data or a system you could bring to a project?",
+       help:"Your advisor's trajectories, an agency contact, a dashcam, a simulation setup, an instrumented vehicle, lab hardware. This single answer does more to make a capstone good than anything else on this form. “No” is completely fine — say so and move on.",
+       ph:"One or two lines — what it is, and whether you can actually share it."}
+    ]
+  },
+  {
+    n: "03", title: "Where you're starting, technically",
+    blurb: "Hands-on labs are 40% of your grade and they begin in week two. I would rather scope them correctly than watch half the class fall behind. There is no wrong answer here and none of it is graded.",
+    items: [
+      {id:"coding", type:"radio", tag:"shapes the labs", req:true,
+       q:"How do you write code these days?",
+       help:"Pick the line closest to your normal working mode, not your best day.",
+       opts:[
+        "I don't really write code",
+        "I write it myself, mostly without AI",
+        "I write it myself, and use AI to debug or explain parts",
+        "I describe what I want, AI writes it, and I read and test it before I use it",
+        "I describe what I want, AI writes it, and I mostly run it as-is"
+       ]},
+      {id:"vibe_for", type:"check", tag:"shapes the labs", req:true, grid:true,
+       q:"When you let AI write code for you, what is it for?",
+       help:"Check all that apply.",
+       opts:[
+        "Software development — tools or apps other people use",
+        "Research programming — analysis, models, simulation",
+        "Homework and class projects",
+        "Quick one-off scripts and data wrangling",
+        "I don't let AI write code for me"
+       ]},
+      {id:"done", type:"check", tag:"shapes the labs", q:"Check everything you have actually done at least once", help:"Once, for a class, counts.", grid:true,
+       opts:["Jupyter or Google Colab","git","A command line, for more than one command","Trained any ML model — regression in scikit-learn counts","Trained a neural network","Used a GPU","Called an API from code","Used SUMO, VISSIM, Aimsun, or CARLA","Labeled or annotated data by hand","None of these yet"]},
+      {id:"courses", type:"check", tag:"shapes the labs", q:"Prior coursework", grid:true,
+       opts:["None of the below","Statistics or econometrics","Machine learning","Deep learning","Computer vision or NLP"]},
+      {id:"machine", type:"subgroup", tag:"shapes the labs", q:"Your laptop", help:"Some labs use edge hardware and local installs, so I need to know what the room is carrying.", req:true,
+       subs:[
+        {id:"os", label:"Operating system", opts:["macOS","Windows","Linux"]},
+        {id:"admin", label:"Can you install software on it?", opts:["Yes","No","Not sure"]},
+        {id:"agent", label:"Could it install and run a coding agent — Claude Code, Codex?",
+         opts:["Already have one running","Yes, I think so","No","Not sure what that means"]}
+       ]},
+      {id:"tools", type:"check", tag:"shapes the labs", q:"Which AI tools do you have working access to right now?", req:true, grid:true,
+       help:"Paid or free. I ask because one October lab is not runnable on a free tier, and I'd rather find that out in August.",
+       opts:["ChatGPT — free","ChatGPT — paid","Claude — free","Claude — paid","Gemini","GitHub Copilot","Cursor or Windsurf","Claude Code or Codex CLI","An API key of any kind","None right now"]}
+    ]
+  },
+  {
+    n: "04", title: "How you actually use AI",
+    blurb: "Not how you think you should be using it. The real answer.",
+    items: [
+      {id:"freq", type:"radio", tag:"for me", req:true,
+       q:"How much do you use an AI assistant for coursework or research?",
+       opts:[
+        "More than 4 hours a day",
+        "1–4 hours a day",
+        "Daily, but under an hour",
+        "A few times a week",
+        "A few times a month",
+        "Rarely",
+        "Never"
+       ]},
+      {id:"ladder", type:"check", tag:"shapes the labs", q:"Check every one you have done yourself", req:true,
+       help:"Done yourself — not watched a video about, not seen a colleague do.",
+       opts:[
+        "Asked questions in a chat window",
+        "Had AI write or fix code that you then ran",
+        "Used a coding agent that edits files and runs commands on its own (Claude Code, Codex, Cursor agent)",
+        "Given AI a set of documents or data to work from — uploaded files, a project folder, retrieval",
+        "Chained several steps into something repeatable: a script or pipeline that calls AI more than once without you retyping the prompt",
+        "Written reusable instructions, templates, or skills that you load every time",
+        "Orchestrated multiple agents, or built your own harness or evaluation loop",
+        "Fine-tuned or trained a model",
+        "None of these yet"
+       ]},
+      {id:"ceiling", type:"radio", tag:"shapes the labs", req:true,
+       q:"Of the things you just checked, which one goes the furthest?",
+       help:"Pick the most advanced item you checked above. If someone else set it up and you only ran it, choose the one before it.",
+       opts:[
+        "Nothing yet",
+        "Chat questions",
+        "AI-written code that I ran",
+        "A coding agent working on its own",
+        "Giving it documents or data to work from",
+        "A repeatable multi-step pipeline",
+        "Reusable instructions or skills",
+        "Multiple agents, a custom harness, or an eval loop",
+        "Fine-tuning or training a model"
+       ]},
+      {id:"style", type:"check", tag:"shapes the labs", req:true, grid:true,
+       q:"When you ask AI for help, what is your usual style?",
+       help:"Check all that apply.",
+       opts:[
+        "I state a broad goal and let AI propose a process",
+        "I provide detailed instructions or constraints",
+        "I ask AI to explain assumptions, steps, or uncertainty",
+        "I give examples of the output I want",
+        "I break the task into multiple prompts",
+        "I use reusable prompts, templates, or custom instructions",
+        "I use multiple AI tools or agents together",
+        "I rarely prompt AI myself"
+       ]},
+      {id:"verify", type:"textarea", tag:"the course's real subject", req:true,
+       q:"When AI gives you an answer you can't immediately verify, what do you do?",
+       help:"Two or three sentences. Describe what you actually do, including “I usually just use it.” This is the question this whole course is about, and I'd rather know the honest baseline.",
+       ph:"What actually happens, in practice…"}
+    ]
+  },
+  {
+    n: "05", title: "What's uncomfortable",
+    blurb: "The parts nobody puts in a course evaluation.",
+    note: "<b>This section is anonymized.</b> I separate these answers from names before reading them as a set, and on day one I'll put the aggregate on screen and tell you what this course does about each one. If something here is still too close to the bone, leave it blank — that's not held against you.",
+    items: [
+      {id:"discomfort", type:"check", tag:"anonymized", anon:true, grid:true,
+       q:"What feels most uncomfortable, frustrating, or uncertain when you interact with AI?",
+       help:"Check all that are true.",
+       opts:[
+        "I don't know how much I can trust the answer",
+        "I don't know how to ask good questions",
+        "It can't get it right, because the whole context of the problem is hard to put into a prompt",
+        "It can't be trusted, because it is always trying to please me based on what I said",
+        "It doesn't understand my domain or context",
+        "It can't speak the domain language when writing journal papers",
+        "It has been confidently wrong about something in my own field",
+        "I'm unsure how much AI help is acceptable in class or research work",
+        "I worry about plagiarism or academic integrity",
+        "I worry about privacy or sharing sensitive data",
+        "I feel it may change how I think, write, or learn",
+        "I feel it may impede my communication or even my critical thinking",
+        "I wouldn't want my advisor or supervisor to know how much I use it",
+        "It wasted more time than it saved",
+        "I worry about what it means for the job I'm training for",
+        "I haven't used AI enough to know yet",
+        "Nothing so far has made me uncomfortable"
+       ]},
+      {id:"discomfort_text", type:"textarea", tag:"anonymized", anon:true,
+       q:"Describe the one that bothers you most, in your own words",
+       help:"Two or three sentences. This is the answer I most want.",
+       ph:"…"}
+    ]
+  },
+  {
+    n: "06", title: "What you want out of this",
+    blurb: "This section genuinely shapes what I teach. Where the class clusters, I adjust.",
+    items: [
+      {id:"baseline", type:"textarea", tag:"revisited in December", req:true,
+       q:"Name a task in your research or work that takes you real time today — and say what stops AI from doing it well right now.",
+       help:"Be specific about the task rather than about AI in general. Don't polish this: I'm asking you the same question in December, and we'll compare the two side by side.",
+       ph:"The task:…    What stops AI from doing it:…"},
+      {id:"self", type:"textarea", tag:"shapes the labs", req:true,
+       q:"As the person using AI — what do you want to get better at?",
+       help:"One or two sentences. This one is about you, not the model.",
+       ph:"…"},
+      {id:"knowledge", type:"check", tag:"shapes the syllabus", req:true, max:3, grid:true,
+       q:"What knowledge do you most want to gain?",
+       help:"Choose up to three.",
+       opts:[
+        "Foundations of AI and machine learning for mobility systems",
+        "How large language models work",
+        "How to use AI tools effectively for research",
+        "How to evaluate whether AI outputs are reliable",
+        "AI for transportation safety",
+        "AI for traffic, simulation, and operations",
+        "AI for autonomous and connected vehicles",
+        "AI for air mobility and emerging mobility systems",
+        "Ethical, legal, and policy issues",
+        "Human–AI collaboration"
+       ],
+       comment:{label:"Something not on this list?", ph:"Optional"}},
+      {id:"skills", type:"check", tag:"shapes the labs", req:true, max:3, grid:true,
+       q:"What skills or hands-on experience do you most want to develop?",
+       help:"Choose up to three.",
+       opts:[
+        "Using AI for literature review",
+        "Using AI for coding",
+        "Using AI for data cleaning and analysis",
+        "Building AI-assisted research or professional workflows",
+        "Evaluating AI-generated outputs critically",
+        "Designing prompts and reusable instructions",
+        "Applying AI to transportation datasets",
+        "Communicating AI-assisted research results",
+        "Building a class project with AI"
+       ],
+       comment:{label:"Something not on this list?", ph:"Optional"}},
+      {id:"december", type:"text", tag:"shapes the syllabus", req:true,
+       q:"Finish the sentence: by December, I want to be able to …",
+       help:"The more specific, the more likely I can actually deliver it.",
+       ph:"…"},
+      {id:"priority", type:"rank", tag:"shapes the syllabus", req:true,
+       q:"Rank these by what matters most to you",
+       help:"Click in order — first click is your #1. Click a ranked item again to unset it.",
+       opts:[
+        "Understanding how these methods actually work",
+        "Being able to build things myself",
+        "Finishing a project I can show someone",
+        "Knowing what's possible, so I can direct other people who build"
+       ]},
+      {id:"artifact", type:"textarea", tag:"shapes the capstone", opt:true,
+       q:"What would you want to be able to show an advisor, an employer, or a committee in December?",
+       help:"Optional. Your final project is reviewed by an advisory committee of local transportation experts, so this is a real question, not a hypothetical.",
+       ph:"…"},
+      {id:"waste", type:"textarea", tag:"shapes the syllabus", req:true,
+       q:"What would make this course a waste of your time?",
+       help:"Be blunt. I would much rather read it now than in the evaluations.",
+       ph:"…"}
+    ]
+  },
+  {
+    n: "07", title: "Logistics",
+    blurb: "Two minutes, and then you're done.",
+    items: [
+      {id:"hours", type:"radio", tag:"shapes the labs", req:true,
+       q:"Realistically, how many hours a week outside class can you give this course?",
+       help:"Answer honestly. Roughly 70% of your grade sits in labs and the group project, and I would rather scope them to the room than watch people drown quietly.",
+       opts:["2–4 hours","5–7 hours","8–10 hours","More than 10"]},
+      {id:"groupwork", type:"textarea", tag:"used for teams", opt:true,
+       q:"Anything that affects group work?",
+       help:"A standing conflict, a long commute, work hours, a teammate you already want to pair with.",
+       ph:"Optional"},
+      {id:"consent", type:"radio", tag:"day-one slide", req:true,
+       q:"May I show anonymized, aggregated results from this survey in class?",
+       help:"No names, no attribution — counts and themes only.",
+       opts:["Yes","No"]}
+    ]
+  }
+];
+
+/* ==========================  STOP EDITING HERE  ==========================
+   Everything below is the machinery that draws the page, saves progress, and
+   builds the transcript. You should not need to touch any of it.
+   ========================================================================== */
+
+/* ---------- state ---------- */
+const KEY = "ai4mob-intake-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch(e){ state = {}; }
+
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){ /* private window, blocked storage */ }
+}
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- render ---------- */
+function renderMast(){
+  document.getElementById("mast").innerHTML = `
+    <p class="eyebrow">${PAGE.eyebrow}</p>
+    <h1>${PAGE.title}</h1>
+    <p class="standfirst">${PAGE.standfirst}</p>
+    <dl class="facts">${PAGE.facts.map(f =>
+      `<div class="fact"><dt>${f.k}</dt><dd>${f.v}</dd></div>`).join("")}</dl>
+    <p class="pledge">${PAGE.pledge}</p>`;
+  document.getElementById("handin").innerHTML = PAGE.handIn;
+  document.getElementById("foot-l").textContent = PAGE.footerLeft;
+  document.getElementById("foot-r").textContent = PAGE.footerRight;
+  document.title = PAGE.title;
+}
+
+function render(){
+  const root = document.getElementById("form");
+  let qn = 0;
+  const html = SURVEY.map(sec => {
+    const items = sec.items.map(it => {
+      qn++;
+      return questionHTML(it, qn);
+    }).join("");
+    return `<section class="part" id="part-${sec.n}">
+      <div class="part-head">
+        <div class="ord">${sec.n}</div>
+        <div style="flex:1 1 auto; min-width:0;">
+          <h2 class="part-title">${sec.title}</h2>
+          ${sec.blurb ? `<p class="part-blurb">${sec.blurb}</p>` : ""}
+        </div>
+      </div>
+      <div class="part-rule"></div>
+      ${sec.note ? `<div class="part-note">${sec.note}</div>` : ""}
+      ${items}
+    </section>`;
+  }).join("");
+  root.innerHTML = html;
+  refresh();
+}
+
+function questionHTML(it, n){
+  const num = String(n).padStart(2,"0");
+  const tag = `<span class="tag${it.anon ? " anon" : ""}">${esc(it.tag||"")}</span>`;
+  const flag = it.req ? ` <span class="req">*</span>` : (it.opt ? ` <span class="opt">(optional)</span>` : "");
+  let body = "";
+
+  if(it.type === "text"){
+    body = `<input type="text" id="f-${it.id}" data-id="${it.id}" placeholder="${esc(it.ph||"")}" value="${esc(state[it.id]||"")}">`;
+  } else if(it.type === "textarea"){
+    body = `<textarea id="f-${it.id}" data-id="${it.id}" placeholder="${esc(it.ph||"")}">${esc(state[it.id]||"")}</textarea>`;
+  } else if(it.type === "radio"){
+    body = `<div class="choices${it.grid ? " grid" : ""}">` + it.opts.map((o,i) =>
+      `<label class="choice"><input type="radio" name="${it.id}" data-id="${it.id}" value="${esc(o)}"${state[it.id]===o?" checked":""}><span>${esc(o)}</span></label>`
+    ).join("") + `</div>`;
+  } else if(it.type === "check"){
+    const cur = Array.isArray(state[it.id]) ? state[it.id] : [];
+    const atCap = it.max && cur.length >= it.max;
+    body = `<div class="choices${it.grid ? " grid" : ""}">` + it.opts.map(o => {
+      const on = cur.indexOf(o) > -1;
+      return `<label class="choice"><input type="checkbox" name="${it.id}" data-id="${it.id}" value="${esc(o)}"${on?" checked":""}${(!on && atCap)?" disabled":""}><span>${esc(o)}</span></label>`;
+    }).join("") + `</div>`;
+    if(it.max) body += `<p class="cap" id="cap-${it.id}"></p>`;
+  } else if(it.type === "subgroup"){
+    body = `<div class="sub">` + it.subs.map(sg => {
+      const key = it.id + "." + sg.id;
+      return `<div><p class="sub-h">${esc(sg.label)}</p><div class="choices">` + sg.opts.map(o =>
+        `<label class="choice"><input type="radio" name="${key}" data-id="${key}" value="${esc(o)}"${state[key]===o?" checked":""}><span>${esc(o)}</span></label>`
+      ).join("") + `</div></div>`;
+    }).join("") + `</div>`;
+  } else if(it.type === "rank"){
+    const cur = Array.isArray(state[it.id]) ? state[it.id] : [];
+    body = `<div class="rank" data-rank="${it.id}">` + it.opts.map(o => {
+      const pos = cur.indexOf(o);
+      return `<button type="button" class="rank-item${pos>-1?" set":""}" data-rank-opt="${esc(o)}" data-id="${it.id}">
+        <span class="rank-num">${pos>-1 ? pos+1 : "&nbsp;"}</span><span>${esc(o)}</span></button>`;
+    }).join("") + `</div>`;
+  }
+
+  if(it.comment){
+    const ck = it.id + "__c";
+    body += `<p class="comment-label">${esc(it.comment.label)} <span class="opt">(optional)</span></p>
+      <textarea class="comment-box" id="f-${ck}" data-id="${ck}" placeholder="${esc(it.comment.ph||"")}">${esc(state[ck]||"")}</textarea>`;
+  }
+
+  return `<div class="q" data-q="${it.id}" data-req="${it.req?1:0}">
+    <div class="q-top"><span class="q-label">${num}</span>${tag}</div>
+    <p class="q-text">${it.q}${flag}</p>
+    ${it.help ? `<p class="q-help">${it.help}</p>` : ""}
+    ${body}
+  </div>`;
+}
+
+/* ---------- interaction ---------- */
+function wire(){
+  document.getElementById("form").addEventListener("input", e => {
+    const el = e.target;
+    if(!el.dataset || !el.dataset.id) return;
+    if(el.type === "checkbox"){
+      const id = el.dataset.id;
+      const def = BY_ID[id];
+      const boxes = Array.from(document.querySelectorAll(`input[name="${id}"]`));
+      let picked = boxes.filter(b => b.checked).map(b => b.value);
+      if(def && def.max && picked.length > def.max){
+        el.checked = false;                                   // refuse the extra tick
+        picked = picked.filter(v => v !== el.value);
+      }
+      state[id] = picked;
+    } else {
+      state[el.dataset.id] = el.value;
+    }
+    save(); refresh();
+  });
+
+  document.getElementById("form").addEventListener("click", e => {
+    const btn = e.target.closest("[data-rank-opt]");
+    if(!btn) return;
+    const id = btn.dataset.id, opt = btn.dataset.rankOpt;
+    let cur = Array.isArray(state[id]) ? state[id].slice() : [];
+    const at = cur.indexOf(opt);
+    if(at > -1) cur.splice(at,1); else cur.push(opt);
+    state[id] = cur;
+    save();
+    const wrapEl = btn.parentElement;
+    wrapEl.querySelectorAll("[data-rank-opt]").forEach(b => {
+      const p = cur.indexOf(b.dataset.rankOpt);
+      b.classList.toggle("set", p > -1);
+      b.querySelector(".rank-num").innerHTML = p > -1 ? String(p+1) : "&nbsp;";
+    });
+    refresh();
+  });
+
+  document.getElementById("build").addEventListener("click", finish);
+  document.getElementById("clear").addEventListener("click", () => {
+    state = {}; save();
+    document.getElementById("out").classList.remove("on");
+    document.getElementById("missing").innerHTML = "";
+    render();
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+  document.getElementById("copy").addEventListener("click", copyOut);
+  document.getElementById("dl").addEventListener("click", download);
+}
+
+const ALL = SURVEY.flatMap(s => s.items);
+const BY_ID = {};
+ALL.forEach(it => { BY_ID[it.id] = it; });
+
+/* "choose up to three": grey out the rest once the cap is reached */
+function applyMax(def){
+  const cur = Array.isArray(state[def.id]) ? state[def.id] : [];
+  const atCap = cur.length >= def.max;
+  document.querySelectorAll(`input[name="${def.id}"]`).forEach(b => {
+    b.disabled = atCap && !b.checked;
+  });
+  const cap = document.getElementById("cap-" + def.id);
+  if(cap){
+    cap.textContent = atCap
+      ? `${cur.length} of ${def.max} chosen — uncheck one to swap`
+      : `${cur.length} of ${def.max} chosen`;
+    cap.classList.toggle("full", atCap);
+  }
+}
+
+function filled(it){
+  if(it.type === "subgroup") return it.subs.every(sg => !!state[it.id + "." + sg.id]);
+  const v = state[it.id];
+  if(Array.isArray(v)) return v.length > 0;
+  return typeof v === "string" && v.trim().length > 0;
+}
+
+function refresh(){
+  let done = 0;
+  ALL.forEach(it => {
+    const ok = filled(it);
+    if(ok) done++;
+    const card = document.querySelector(`.q[data-q="${it.id}"]`);
+    if(card) card.classList.toggle("answered", ok);
+    if(it.max) applyMax(it);
+  });
+  const pct = Math.round(done / ALL.length * 100);
+  document.getElementById("bar").style.width = pct + "%";
+  document.getElementById("tally").innerHTML =
+    `<b>${done}</b> of ${ALL.length} answered &middot; ${pct}%`;
+}
+
+function finish(){
+  const missing = ALL.filter(it => it.req && !filled(it));
+  const box = document.getElementById("missing");
+  if(missing.length){
+    box.innerHTML = `<div class="missing"><b>${missing.length} required ${missing.length===1?"question is":"questions are"} still blank.</b><br>` +
+      missing.map(it => `<a href="#" data-goto="${it.id}">${esc(it.q.replace(/\s+/g," ").slice(0,72))}${it.q.length>72?"…":""}</a>`).join("<br>") +
+      `</div>`;
+    box.querySelectorAll("[data-goto]").forEach(a => a.addEventListener("click", ev => {
+      ev.preventDefault();
+      const card = document.querySelector(`.q[data-q="${a.dataset.goto}"]`);
+      if(card){ card.scrollIntoView({behavior:"smooth", block:"center"}); }
+    }));
+    box.scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+  box.innerHTML = "";
+  document.getElementById("transcript").value = transcript();
+  document.getElementById("out").classList.add("on");
+  document.getElementById("out").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function transcript(){
+  const L = [];
+  L.push("AI FOR MOBILITY (CGN 6933) — BEFORE WE START");
+  L.push("Completed: " + new Date().toLocaleString());
+  SURVEY.forEach(sec => {
+    L.push("");
+    L.push("=".repeat(60));
+    L.push(sec.n + " · " + sec.title.toUpperCase());
+    L.push("=".repeat(60));
+    sec.items.forEach(it => {
+      const q = it.q.replace(/\s+/g," ");
+      if(it.type === "subgroup"){
+        L.push("");
+        L.push("Q: " + q);
+        it.subs.forEach(sg => L.push("   " + sg.label + ": " + (state[it.id+"."+sg.id] || "(blank)")));
+        return;
+      }
+      const v = state[it.id];
+      L.push("");
+      L.push("Q: " + q);
+      if(Array.isArray(v) && v.length){
+        if(it.type === "rank") v.forEach((o,i) => L.push("   " + (i+1) + ". " + o));
+        else v.forEach(o => L.push("   • " + o));
+      } else if(typeof v === "string" && v.trim()){
+        v.trim().split("\n").forEach(line => L.push("   " + line));
+      } else {
+        L.push("   (blank)");
+      }
+      if(it.comment){
+        const c = state[it.id + "__c"];
+        if(typeof c === "string" && c.trim()){
+          L.push("   [" + it.comment.label + "]");
+          c.trim().split("\n").forEach(line => L.push("   " + line));
+        }
+      }
+    });
+  });
+  L.push("");
+  L.push("=".repeat(60));
+  L.push("END");
+  return L.join("\n");
+}
+
+function slug(){
+  const n = (state.name || "student").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  return (n || "student") + "-before-we-start.txt";
+}
+
+function say(msg){
+  const el = document.getElementById("said");
+  el.textContent = msg;
+  setTimeout(() => { if(el.textContent === msg) el.textContent = ""; }, 4000);
+}
+
+function copyOut(){
+  const ta = document.getElementById("transcript");
+  const text = ta.value;
+  const fallback = () => {
+    ta.focus(); ta.select();
+    try {
+      document.execCommand("copy");
+      say("Copied. Paste it into the Canvas submission.");
+    } catch(e){
+      say("Select the text above and copy it manually.");
+    }
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text)
+      .then(() => say("Copied. Paste it into the Canvas submission."))
+      .catch(fallback);
+  } else fallback();
+}
+
+/* file download, when the viewer grants it */
+let downloads = null;
+const dlBtn = document.getElementById("dl");
+if(window.claude && typeof window.claude.use === "function"){
+  window.claude.use("downloads").then(d => {
+    if(d){ downloads = d; dlBtn.hidden = false; }
+  }).catch(() => {});
+} else {
+  dlBtn.hidden = false; // standalone copy of this page: an ordinary download works
+}
+function download(){
+  const text = document.getElementById("transcript").value;
+  if(downloads){
+    downloads.save({filename: slug(), data: text})
+      .then(() => say("Saved."))
+      .catch(() => say("Download declined — use Copy instead."));
+    return;
+  }
+  try{
+    const url = URL.createObjectURL(new Blob([text], {type:"text/plain;charset=utf-8"}));
+    const a = document.createElement("a");
+    a.href = url; a.download = slug();
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    say("Saved.");
+  } catch(e){ say("Download blocked here — use Copy instead."); }
+}
+
+/* boot. A syntax error in PAGE or SURVEY stops the whole script from running,
+   so the gold warning box in the markup stays visible — that is the signal. */
+try {
+  renderMast();
+  render();
+  wire();
+  const bf = document.getElementById("bootfail");
+  if(bf) bf.remove();
+} catch(err){
+  const bf = document.getElementById("bootfail");
+  if(bf) bf.innerHTML = "<b>The question bank didn&rsquo;t load.</b> " +
+    "Something in the <code>PAGE</code> or <code>SURVEY</code> block is malformed: <code>" +
+    String(err && err.message ? err.message : err).replace(/[<>&]/g, "") +
+    "</code><br>Undo your last change and reload.";
+}
+</script>
+
+</body>
+</html>
