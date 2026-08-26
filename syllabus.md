@@ -88,22 +88,38 @@ Canvas.
 
 | Date | Topic | Due before class |
 |---|---|---|
-| Aug 27 | Course introduction; overview of AI for mobility; expectations and project overview | — |
-| Sept 3 | Neural network basics and deep learning foundations | — |
-| Sept 10 | Representation learning, embeddings, transfer learning, contrastive learning, mobility representations | Lab preparation |
-| Sept 17 | Transformers, LLMs, vision-language models, multimodal foundation models | Short assignment |
-| Sept 24 | Generative AI foundations: latent variables, VAE, GAN, diffusion models, world models | Short reading or lab prep |
-| Oct 1 | Prompting, RAG, fine-tuning, LoRA, instruction tuning, RLHF, and AI alignment for transportation tasks | Lab preparation |
-| Oct 8 | Agentic AI, tool use, memory, skills, API calling, AI-assisted coding, transportation workflow automation | Short assignment |
-| Oct 15 | AI for mobility sensing: computer vision, AI cameras, dashcam data, roadside video, Wi-Fi/Bluetooth, radar, lidar | **Project topic ideas** |
-| Oct 22 | Edge AI and hardware-integrated mobility systems: edge devices, embedded computing, self-driving development devices, AI robotics | **Project topic selection** |
-| Oct 29 | AI for autonomous driving and production vehicle intelligence: longitudinal control, lane-keeping assist, Openpilot, CAN/telematics, vehicle data | **Project proposal draft** |
-| Nov 5 | AI for traffic simulation, digital twins, and traffic operations: SUMO/CARLA, signal control, hurricane mobility applications | **Project proposal due** |
-| Nov 12 | AI for transportation safety, design, and agency decision-making: crash precursor detection, safety analysis, report generation, manuals, planning support | **Project progress update** |
-| Nov 19 | World model applications in mobility; responsible use; tokenomics of AI in mobility | **Project progress materials** |
+| Aug 27 | Course introduction; overview of AI for mobility; expectations; project overview; example project topics and datasets | **Before We Start** intake survey |
+| Sept 3 | Neural network basics and deep learning foundations | **Project interest survey** |
+| Sept 10 | Representation learning, embeddings, transfer learning, contrastive learning, mobility representations | Preliminary project idea memo; lab preparation |
+| Sept 17 | Transformers, LLMs, vision-language models, multimodal foundation models | **Confirmed project team and topic**; short assignment |
+| Sept 24 | Generative AI foundations: latent variables, VAE, GAN, diffusion models, world models | **One-page project proposal** |
+| Oct 1 | Prompting, RAG, fine-tuning, LoRA, instruction tuning, RLHF, and AI alignment for transportation tasks | Revised proposal and initial data/model plan; **rotating project progress report: Team 1** |
+| Oct 8 | Agentic AI, tool use, memory, skills, API calling, AI-assisted coding, transportation workflow automation | Baseline method or data acquisition plan; **rotating project progress report: Team 2** |
+| Oct 15 | AI for mobility sensing: computer vision, AI cameras, dashcam data, roadside video, Wi-Fi/Bluetooth, radar, lidar | **Final project proposal**; **rotating project progress report: Team 3** |
+| Oct 22 | Edge AI and hardware-integrated mobility systems: edge devices, embedded computing, self-driving development devices, AI robotics | **Rotating project progress report: Team 4** |
+| Oct 29 | AI for autonomous driving and production vehicle intelligence: longitudinal control, lane-keeping assist, Openpilot, CAN/telematics, vehicle data | First project progress report; **rotating project progress report: Team 5 or project clinic** |
+| Nov 5 | AI for traffic simulation, digital twins, and traffic operations: SUMO/CARLA, signal control, hurricane mobility applications | Project progress update; **rotating project progress report: Team 1** |
+| Nov 12 | AI for transportation safety, design, and agency decision-making: crash precursor detection, safety analysis, report generation, manuals, planning support | Project progress update; **rotating project progress report: Team 2** |
+| Nov 19 | World model applications in mobility; responsible use; tokenomics of AI in mobility | Draft final project materials; short final-prep updates from remaining teams |
 | Nov 26 | *No class — Thanksgiving holiday* | — |
 | Dec 3 | Final project presentations, demonstrations, and course synthesis | Final project materials in progress |
 | Dec 5–10 | University-scheduled final exam period — may be used for final project submission, demonstrations, or presentations | Final project submission, if assigned |
+
+### Rotating project progress reports
+
+Beginning in October, most Thursday meetings include a short rotating project progress
+report. With approximately four to five project teams, one team normally presents each week,
+with additional short check-ins or project clinic time as needed. The purpose is to help each
+team make steady progress, receive feedback while changes are still possible, and let the
+whole class learn from the practical problems that emerge in real AI mobility projects.
+
+The presenting team should give a concise status report, including the current problem
+statement, data or hardware status, method or workflow, baseline or comparison plan, early
+results, failures or blockers, next steps, and specific questions where feedback would help.
+Students who are not presenting are expected to stay actively involved by listening as
+technical reviewers, asking constructive questions, and submitting brief feedback after the
+presentation. Feedback should include one technical question, one suggestion for improving
+the project, and one connection to the week's course topic.
 
 ## Assessment
 
