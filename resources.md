@@ -12,7 +12,7 @@
 </section>
 
 <div class="resource-callout">
-  <p><strong>How to use this page.</strong> This hub is intentionally selective. It emphasizes public datasets, open-source mobility software, simulation platforms, V2X resources, and agency-relevant examples that connect AI methods with real transportation problems. Physical equipment the course lends out &mdash; robots, in-vehicle ADAS devices, and the like &mdash; is listed separately on the <a href="hardware.html">Hardware You Can Access in This Class</a> page.</p>
+  <p><strong>How to use this page.</strong> This hub is intentionally selective. It emphasizes public datasets, open-source mobility software, simulation platforms, V2X resources, and agency-relevant examples that connect AI methods with real transportation problems. Physical equipment the course lends out &mdash; edge AI computers, cameras, desktop robots, and in-vehicle ADAS devices &mdash; is listed separately on the <a href="hardware.html">Hardware You Can Access in This Class</a> page.</p>
 </div>
 
 <section class="resource-controls" aria-label="Resource search and filters">
