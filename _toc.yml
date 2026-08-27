@@ -42,4 +42,4 @@ parts:
     chapters:
       - file: resources
       - file: hardware
-        title: Hardware
+        title: Hardware for Class
