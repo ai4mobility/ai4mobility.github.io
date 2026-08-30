@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neural Networks &amp; Backpropagation — Visual Companion | AI for Mobility</title>
+<style>
+  :root{
+    --usf-green:#006747;--usf-green-d:#00543a;--usf-gold:#CFC493;--gold-deep:#b9a96a;
+    --ink:#1c2422;--muted:#5b6b66;--paper:#f6f8f7;--card:#fff;--line:#e2e8e5;
+    /* categorical series — validated (light surface): PASS on all six checks */
+    --s1:#00785A;--s2:#8E44AD;--s3:#B5581E;--s4:#0E6E9E;
+    /* diverging pair for gradient sign, neutral gray midpoint */
+    --dn:#0E6E9E;--dp:#B5581E;--dz:#c8d0cd;
+    --warn:#c0392b;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 6px 22px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--paper);line-height:1.58}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding:32px 0 26px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--usf-gold);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:28px;font-weight:780}
+  header.hero p{margin:0;max-width:880px;color:#e7efeb;font-size:15px}
+  nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:4px;flex-wrap:wrap;padding-top:7px;padding-bottom:7px}
+  nav.tabs button{border:none;background:transparent;font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 13px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  section.page{display:none;padding:24px 0 10px}
+  section.page.active{display:block}
+  h2.sec{font-size:23px;margin:4px 0 2px;color:var(--usf-green-d)}
+  h3{font-size:16px;margin:20px 0 6px;color:var(--ink)}
+  h4{font-size:13.5px;margin:14px 0 4px;color:var(--usf-green-d);text-transform:uppercase;letter-spacing:.05em}
+  h4.raw{text-transform:none;letter-spacing:.01em;font-size:15px}
+  .lead{color:var(--muted);max-width:880px;margin:0 0 16px;font-size:15px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+  .card.tight{padding:15px 18px}
+  .eq{background:#0f1c18;color:#eafff5;border-radius:10px;padding:14px 18px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14.5px;line-height:1.95;white-space:pre-wrap}
+  .eq b{color:var(--usf-gold)}.eq .g{color:#7fd8b0}.eq .bl{color:#6fc3e0}.eq .rd{color:#ff9b8f}.eq .dim{color:#7f948d}.eq .yl{color:#ffd98a}
+  .callout{border-left:4px solid var(--usf-gold);background:#fffdf3;padding:11px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:13.8px}
+  .callout.good{border-left-color:#1e9e57;background:#f3fbf6}
+  .callout.sig{border-left-color:var(--s4);background:#f1f8fb}
+  .callout.warn{border-left-color:var(--warn);background:#fdf4f2}
+  .callout b{color:var(--usf-green-d)}
+  .callout.warn b{color:var(--warn)}
+  .small{font-size:12px;color:var(--muted)}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin:6px 0 14px}
+  .ctrl{display:flex;flex-direction:column;gap:5px;min-width:140px}
+  .ctrl label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .ctrl label.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  .ctrl input[type=range]{width:210px;accent-color:var(--usf-green)}
+  .ctrl input[type=range].sm{width:150px}
+  .ctrl select,.ctrl input[type=number]{font:inherit;font-size:13.5px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .ctrl input[type=number]{width:96px;font-family:ui-monospace,monospace}
+  .ctrl .val{font-family:ui-monospace,monospace;font-size:13px;color:var(--usf-green-d);font-weight:700}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 4px}
+  button.act{border:1px solid var(--usf-green);background:var(--usf-green);color:#fff;font-weight:700;font-size:13.5px;padding:9px 15px;border-radius:9px;cursor:pointer}
+  button.act:hover{background:var(--usf-green-d)}
+  button.act:disabled{opacity:.45;cursor:not-allowed}
+  button.ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:13.5px;padding:9px 14px;border-radius:9px;cursor:pointer}
+  button.ghost:hover{background:var(--paper)}
+  button.ghost.on{border-color:var(--usf-green);background:#eef7f3;color:var(--usf-green-d)}
+  .readout{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+  .stat{background:#fbfdfc;border:1px solid var(--line);border-radius:11px;padding:9px 13px;min-width:104px;text-align:center}
+  .stat .n{font-size:18px;font-weight:780;font-family:ui-monospace,monospace;color:var(--usf-green-d)}
+  .stat .n.t{color:var(--s2)}.stat .n.w{color:var(--warn)}.stat .n.r{color:var(--s3)}.stat .n.b{color:var(--s4)}
+  .stat .n.sm{font-size:15px}
+  .stat .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+  .stat .l.raw{text-transform:none;letter-spacing:.02em;font-size:11px}
+  canvas{border-radius:10px;border:1px solid var(--line);background:#fff;display:block;max-width:100%}
+  .canvasrow{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+  figure{margin:0}
+  figcaption{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;text-align:center;max-width:460px}
+  table.map{width:100%;border-collapse:collapse;font-size:13.4px;margin-top:8px}
+  table.map th,table.map td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.map th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--line)}
+  table.map th.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  table.map td:first-child{font-weight:700;color:var(--usf-green-d)}
+  table.map td.num,table.map th.num{text-align:right;font-family:ui-monospace,monospace;font-size:12.8px}
+  table.map tr.hl td{background:#f3fbf6}
+  .swatch{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:baseline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);font-weight:600;margin:4px 0 10px;align-items:center}
+  .legend i{display:inline-block;width:22px;height:0;border-top-width:3px;border-top-style:solid;margin-right:6px;vertical-align:middle}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr}}
+  .narr{background:#f3fbf6;border:1px solid #cfe8dc;border-radius:10px;padding:12px 15px;font-size:13.6px;min-height:74px}
+  .narr b{color:var(--usf-green-d)}
+  .stagebar{display:flex;gap:5px;flex-wrap:wrap;margin:12px 0 10px}
+  .stagebar span{font-size:11px;font-weight:700;padding:5px 9px;border-radius:7px;background:#eef2f0;color:var(--muted);white-space:nowrap}
+  .stagebar span.done{background:#dff0e8;color:var(--usf-green-d)}
+  .stagebar span.now{background:var(--usf-green);color:#fff}
+  .netbox{background:#fbfdfc;border:1px solid var(--line);border-radius:12px;padding:6px}
+  .netbox svg{display:block;width:100%;height:auto}
+  ul.tight{margin:8px 0 0;padding-left:20px}ul.tight li{margin-bottom:5px;font-size:13.8px}
+  ol.tight{margin:8px 0 0;padding-left:20px}ol.tight li{margin-bottom:5px;font-size:13.8px}
+  footer{padding:26px 0;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);margin-top:18px}
+  .progress{height:6px;background:#eef2f0;border-radius:4px;overflow:hidden;margin:8px 0 0;max-width:340px}
+  .progress > i{display:block;height:100%;background:var(--usf-green);width:0%}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#eef7f3;color:var(--usf-green-d);margin-left:6px}
+  .pill.w{background:#fdf1ee;color:var(--warn)}
+  @media(max-width:700px){.ctrl input[type=range]{width:min(72vw,210px)}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · Module 1 · Neural Network Basics · University of South Florida</div>
+  <h1>What a neural network is, and how it learns</h1>
+  <p>Two questions, one page. <b>First:</b> what are the parts — the weights, the connections, the bias,
+     the activation function — and what does each one physically do to a prediction? <b>Second:</b> when
+     we say the network "learns," what exactly moves, and who decides which direction? Everything here runs
+     on two transportation problems you can hold in your head: a loop detector deciding whether a freeway
+     segment is congested, and the same detector deciding whether it is about to break down. Every number
+     on this page is computed live in your browser from a fixed seed — nothing is a stock illustration, and
+     nothing is asserted that you cannot re-derive by dragging a slider.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap">
+  <button data-tab="p1" class="active">1 · One neuron, part by part</button>
+  <button data-tab="p2">2 · What one neuron can't do</button>
+  <button data-tab="p3">3 · Connections &amp; layers</button>
+  <button data-tab="p4">4 · Backpropagation, step by step</button>
+  <button data-tab="p5">5 · Watch it learn</button>
+  <button data-tab="p6">6 · The same machinery, a different question</button>
+</div></nav>
+
+<!-- ==================== PAGE 1 ==================== -->
+<section class="page active" id="p1"><div class="wrap">
+  <h2 class="sec">A neuron is three decisions and one squash</h2>
+  <p class="lead">One detector station on a freeway reports two things every 5 minutes: <b>density</b> k
+     (veh/mi/lane) and <b>demand-to-capacity ratio</b> v/c. We want one number out: the probability that
+     this segment is congested — defined here as mean speed below 45 mph. That is a whole neuron's job.
+     It has exactly three tunable numbers and one fixed shape.</p>
+
+  <div class="card">
+    <div class="eq"><span class="dim">the two inputs, rescaled to 0–1 so the weights are comparable</span>
+   x₁ = k / 90          x₂ = (v/c − 0.30) / 0.75
+
+<span class="dim">weighted sum + bias  (this is the whole "linear" part)</span>
+   z = <span class="g">w₁</span>·x₁ + <span class="g">w₂</span>·x₂ + <span class="bl">b</span>
+
+<span class="dim">activation: squash z into a probability</span>
+   ŷ = <b>σ(z)</b> = 1 / (1 + e<sup>−z</sup>)</div>
+    <p class="small" style="margin-top:12px">Three learnable numbers: <span class="mono">w₁</span>,
+      <span class="mono">w₂</span>, <span class="mono">b</span>. If you have ever estimated a binary logit
+      mode-choice model, you have already fitted this exact object — the scale-times-utility term is
+      <span class="mono">z</span>, the alternative-specific constant is <span class="mono">b</span>. What is
+      different in a neural network is not the equation. It is that these numbers are found by gradient
+      descent instead of maximum likelihood, and that thousands of them get stacked.</p>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">Drag the three numbers. Watch what each one is responsible for.</h4>
+    <div class="controls">
+      <div class="ctrl"><label class="raw">w₁ — weight on density</label>
+        <input id="a_w1" type="range" min="-30" max="30" step="0.5" value="6"><span class="val">w₁ = <span id="a_w1v">6.0</span></span></div>
+      <div class="ctrl"><label class="raw">w₂ — weight on demand</label>
+        <input id="a_w2" type="range" min="-30" max="30" step="0.5" value="2"><span class="val">w₂ = <span id="a_w2v">2.0</span></span></div>
+      <div class="ctrl"><label class="raw">b — bias</label>
+        <input id="a_b" type="range" min="-25" max="15" step="0.25" value="-4"><span class="val">b = <span id="a_bv">−4.00</span></span></div>
+      <div class="ctrl"><label>activation</label>
+        <select id="a_act">
+          <option value="sigmoid" selected>sigmoid — the usual choice</option>
+          <option value="step">step — the 1958 perceptron</option>
+          <option value="linear">linear — no squash at all</option>
+        </select></div>
+    </div>
+    <div class="btnrow">
+      <button class="act" id="a_fit">Fit it with gradient descent</button>
+      <button class="ghost" id="a_fitnb">Refit with the bias frozen at 0</button>
+      <button class="ghost" id="a_reset">Reset to zero</button>
+      <span class="small" id="a_status"></span>
+    </div>
+    <div class="canvasrow" style="margin-top:6px">
+      <figure><canvas id="a_surf" data-w="460" data-h="360"></canvas>
+        <figcaption>The neuron's output over the whole detector plane. Dots are the 400 training
+          intervals; the white line is where the neuron says exactly 50/50.</figcaption></figure>
+      <figure><canvas id="a_slice" data-w="460" data-h="360"></canvas>
+        <figcaption>A vertical cut through that surface at one demand level — the S-curve itself.
+          Drag <span class="mono">b</span> to slide it sideways; drag the weights to steepen it.</figcaption></figure>
+    </div>
+    <div class="ctrl" style="margin-top:10px"><label class="raw">cut the surface at v/c =</label>
+      <input id="a_cut" type="range" min="0.30" max="1.05" step="0.01" value="0.75" class="sm"><span class="val">v/c = <span id="a_cutv">0.75</span></span></div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="a_acc">—</div><div class="l">train accuracy</div></div>
+      <div class="stat"><div class="n b" id="a_tacc">—</div><div class="l">held-out accuracy</div></div>
+      <div class="stat"><div class="n t" id="a_ll">—</div><div class="l">log-loss</div></div>
+      <div class="stat"><div class="n sm" id="a_bnd">—</div><div class="l raw">the 50/50 line, in engineering units</div></div>
+    </div>
+  </div>
+
+  <h3>What each part is actually responsible for</h3>
+  <div class="card tight">
+    <table class="map">
+      <tr><th class="raw" style="width:14%">Part</th><th class="raw" style="width:29%">What it does geometrically</th><th class="raw">What it means for this detector</th></tr>
+      <tr><td>Weight w₁, w₂</td><td>Sets the <b>tilt</b> of the decision line and how <b>fast</b> the answer
+        changes as you move. The vector (w₁,w₂) points straight uphill, perpendicular to the line.</td>
+        <td>How strongly each measurement counts, and in which direction. Raise <span class="mono">w₁</span>
+          and density starts dominating; make it negative and more density means <em>less</em> congestion,
+          which is exactly the kind of sign error a fit will catch for you.</td></tr>
+      <tr><td>Bias b</td><td><b>Slides</b> the line without rotating it. Without a bias the line is nailed
+        to the origin — it must pass through k = 0, v/c = 0.30.</td>
+        <td>The threshold. It is the answer to "how loaded does this segment have to be before I call it
+          congested?" — and it is the single parameter people most often forget a model needs.</td></tr>
+      <tr><td>Activation σ</td><td>Bends the straight-line score into the 0–1 range with a <b>smooth</b>
+        S. Far from the line it saturates; near the line it is steep.</td>
+        <td>Turns a score into a probability you can threshold, price, or feed to a downstream decision —
+          and, critically, gives a <em>gradient</em>, which the hard step function does not.</td></tr>
+      <tr><td>Connection</td><td>Simply the fact that x<sub>i</sub> has a w<sub>i</sub> at all.</td>
+        <td>"Is this detector wired into this decision?" A weight of exactly zero is a missing wire. In
+          bigger networks the wiring pattern <em>is</em> the architecture.</td></tr>
+    </table>
+  </div>
+
+  <div class="callout warn"><b>Try the activation menu.</b> Switch to <span class="mono">step</span>: the
+    picture barely changes, but the surface is now flat everywhere — every derivative is zero, so no
+    gradient method can tell you which way to move. That is precisely why the 1958 perceptron needed its
+    own bespoke update rule and why it could not be stacked. Switch to <span class="mono">linear</span>:
+    the model happily predicts probabilities of −1.4 and +2.3. The squash is not decoration.</div>
+
+  <div class="callout"><b>Press "Refit with the bias frozen at 0."</b> Same data, same two weights, one
+    parameter removed. Accuracy falls from <b>94.0%</b> to <b>71.8%</b> and the log-loss rises from
+    <b>0.116</b> to <b>0.528</b>. The bias is not a nuisance term; it is where the threshold lives.</div>
+
+  <div class="callout sig"><b>A weight is not "importance."</b> The fit lands on w = (26.95, 8.47), b = −16.91.
+    Translated back into engineering units that boundary is 0.299·k + 11.29·(v/c) = 20.30, so the model has
+    recovered a demand-to-density trade-off ratio of <b>37.7</b> where the truth used to generate the data is
+    <b>33.3</b> — close, and the comparison is only meaningful because both inputs were rescaled to 0–1 first.
+    Feed a network raw k in the hundreds alongside v/c near 1.0 and the weight magnitudes tell you about
+    your units, not your physics.</div>
+
+  <div class="callout good"><b>Watch the fit past step 50.</b> Accuracy reaches 94.0% at about step 50 and
+    then never moves again — but the weights keep growing, from a magnitude of about 7.4 to about 28. Gradient descent has
+    stopped changing the <em>decision</em> and is now only sharpening the <em>confidence</em>, because
+    log-loss always pays a little more for being more certain about points it already gets right. That gap
+    between "accuracy stopped improving" and "the loss is still falling" is the reason we watch both.</div>
+</div></section>
+
+<!-- ==================== PAGE 2 ==================== -->
+<section class="page" id="p2"><div class="wrap">
+  <h2 class="sec">Same detector, harder question — and the line runs out</h2>
+  <p class="lead">Keep the station. Change the question from "is it congested right now" to
+     <b>"will flow break down in the next 15 minutes."</b> Breakdown is not monotone in density. Below the
+     critical range there is nothing to break down; above it the facility is already in queue discharge, so
+     the event has come and gone. The risk lives in a <b>band</b> of density, and only when demand is high
+     enough to push through it. That single change — from a threshold to a band — is enough to end what one
+     neuron can do, and it is the reason the rest of this page exists.</p>
+
+  <div class="card">
+    <div class="canvasrow">
+      <figure><canvas id="b_truth" data-w="460" data-h="360"></canvas>
+        <figcaption>The process that generated the labels: P(breakdown) as a product of three soft gates —
+          density above ≈22, density below ≈60, and v/c above ≈0.62. We know it here only because we built it.</figcaption></figure>
+      <figure><canvas id="b_neuron" data-w="460" data-h="360"></canvas>
+        <figcaption>One neuron, fitted to those labels by gradient descent for 6,000 steps. It is doing the
+          best a straight line can do, which is to give up.</figcaption></figure>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="b_acc">—</div><div class="l">neuron accuracy</div></div>
+      <div class="stat"><div class="n w" id="b_bal">—</div><div class="l">balanced accuracy</div></div>
+      <div class="stat"><div class="n t" id="b_ll">—</div><div class="l">log-loss</div></div>
+      <div class="stat"><div class="n w" id="b_flag">—</div><div class="l raw">intervals it flags as "breakdown"</div></div>
+      <div class="stat"><div class="n b" id="b_base">—</div><div class="l raw">accuracy of always saying "no"</div></div>
+    </div>
+  </div>
+
+  <div class="callout warn"><b>Read those five boxes together before you read anything else.</b> The neuron is
+    <b>78.75%</b> accurate. Always answering "no breakdown" is <b>79.25%</b> accurate. The neuron raises the
+    alarm on <b>4 of 400</b> intervals. It is <em>less</em> accurate than a constant and it is operationally
+    useless, and if the only number on your slide is accuracy, you will not know either of those things. Only
+    20.75% of intervals contain a breakdown; on a rare-event problem, accuracy is a measure of the base rate,
+    not of the model. Balanced accuracy of <b>0.50</b> is the honest reading: the model has no skill.</div>
+
+  <h3>"Fine — I'll stack more layers"</h3>
+  <p class="lead">The instinct is right and the first attempt fails in a specific, checkable way. Stack as many
+     layers as you like, but leave out the activation function, and every layer is a matrix multiply followed
+     by an add. Composing those gives you… a matrix multiply followed by an add. Below, a fresh stack of random
+     layers is built each time you move the slider, then compared point-by-point against the single straight
+     line that reproduces it exactly.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label>hidden layers</label>
+        <input id="c_depth" type="range" min="1" max="12" step="1" value="8" class="sm"><span class="val"><span id="c_depthv">8</span> layers</span></div>
+      <div class="ctrl"><label>units per layer</label>
+        <input id="c_width" type="range" min="2" max="24" step="1" value="5" class="sm"><span class="val"><span id="c_widthv">5</span> units</span></div>
+      <div class="ctrl"><label>activation</label>
+        <select id="c_act"><option value="identity" selected>identity (none)</option><option value="tanh">tanh</option></select></div>
+      <div class="ctrl"><label>random seed</label>
+        <input id="c_seed" type="range" min="1" max="150" step="1" value="99" class="sm"><span class="val">seed <span id="c_seedv">99</span></span></div>
+    </div>
+    <div class="eq" id="c_eq">building…</div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="c_params">—</div><div class="l">parameters in the stack</div></div>
+      <div class="stat"><div class="n" id="c_eff">—</div><div class="l raw">parameters that actually matter</div></div>
+      <div class="stat"><div class="n sm" id="c_dev">—</div><div class="l raw">max |stack − that one line| over 2,000 random inputs</div></div>
+    </div>
+    <div class="callout"><b>With the activation set to identity:</b> an 8-layer, 5-unit-wide stack holds
+      <b>231 parameters</b>, and every one of them is spent computing a function that
+      <b>3 numbers</b> reproduce to within <b>1.3 × 10<sup>−15</sup></b> — floating-point noise. Switch the
+      menu to <span class="mono">tanh</span> and the deviation jumps by fourteen orders of magnitude, to
+      about 0.13. Depth without nonlinearity is not a deep model; it is an expensive line.</div>
+  </div>
+
+  <div class="callout sig"><b>So the activation function has two jobs, not one.</b> On tab 1 it turned a score
+    into a probability. Here it does something structurally different: it is the only reason stacking layers
+    creates a function that a single layer could not have expressed. Remove it and depth collapses. That is
+    why "which activation" is a real engineering question and "should there be one" is not.</div>
+</div></section>
+
+<!-- ==================== PAGE 3 ==================== -->
+<section class="page" id="p3"><div class="wrap">
+  <h2 class="sec">Connections: one neuron becomes a layer</h2>
+  <p class="lead">A layer is not a new idea. It is <b>H copies of the neuron from tab 1</b>, each with its own
+     weights and its own bias, all reading the same two inputs — and then one more neuron on top that reads
+     <em>their</em> outputs instead of the raw detector. The connections are the arrows. Written down, the
+     whole layer is one matrix.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label>hidden units H</label>
+        <input id="d_H" type="range" min="1" max="8" step="1" value="3" class="sm"><span class="val">H = <span id="d_Hv">3</span></span></div>
+      <div class="ctrl"><label class="raw">click a hidden unit in the diagram to isolate it</label>
+        <span class="val" id="d_sel">showing: the whole network</span></div>
+    </div>
+    <div class="netbox" id="d_net"></div>
+    <div class="eq"><span class="dim">hidden layer — H rows, one per unit; each row is a neuron exactly like tab 1</span>
+   <span class="g">z</span><sup>(1)</sup> = <b>W</b><sup>(1)</sup> x + <b>b</b><sup>(1)</sup>      <b>W</b><sup>(1)</sup> is H×2,  <b>b</b><sup>(1)</sup> is H×1
+   <span class="g">a</span><sup>(1)</sup> = σ(<span class="g">z</span><sup>(1)</sup>)          <span class="dim">applied element by element</span>
+
+<span class="dim">output layer — one neuron reading the H hidden activations</span>
+   <span class="bl">z</span><sup>(2)</sup> = <b>w</b><sup>(2)</sup>·<span class="g">a</span><sup>(1)</sup> + <span class="bl">b</span><sup>(2)</sup>
+   ŷ  = σ(<span class="bl">z</span><sup>(2)</sup>)</div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="d_p1">—</div><div class="l raw">W⁽¹⁾ weights</div></div>
+      <div class="stat"><div class="n" id="d_p2">—</div><div class="l raw">b⁽¹⁾ biases</div></div>
+      <div class="stat"><div class="n" id="d_p3">—</div><div class="l raw">w⁽²⁾ weights</div></div>
+      <div class="stat"><div class="n" id="d_p4">1</div><div class="l raw">b⁽²⁾ bias</div></div>
+      <div class="stat"><div class="n t" id="d_ptot">—</div><div class="l raw">total = 4H + 1</div></div>
+    </div>
+    <p class="small" style="margin-top:10px">Every arrow in the diagram is one number. That is the entire
+      content of the phrase "the network has 4H + 1 parameters" — and the entire content of the phrase
+      "a 7-billion-parameter model," which is the same picture with a larger H and more layers.</p>
+  </div>
+
+  <h3>What one hidden unit contributes</h3>
+  <p class="lead">Click any hidden unit above. Each one draws its own soft half-plane over the detector
+     space — a tilted, blurred edge, positioned by its bias and oriented by its weights. It is a
+     <b>feature detector</b>: "is density above roughly 34?", "is demand high?" The output neuron then takes
+     a weighted vote of those answers. The network's expressiveness comes entirely from combining edges.</p>
+
+  <div class="card">
+    <div class="canvasrow">
+      <figure><canvas id="d_unit" data-w="460" data-h="360"></canvas>
+        <figcaption>One hidden unit's own view of the world — a tilted, blurred edge. With no unit selected,
+          all H edges are drawn together.</figcaption></figure>
+      <figure><canvas id="d_all" data-w="460" data-h="360"></canvas>
+        <figcaption>The output neuron's weighted vote over those edges, scored against 400 held-out
+          intervals.</figcaption></figure>
+    </div>
+    <p class="small" style="margin-top:10px">These weights come from 2,500 steps of gradient descent at each
+      H, run in your browser when you move the slider — so what you are looking at is a real fit, not a
+      hand-drawn illustration of one.</p>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">Now build the breakdown detector yourself — by hand, no training</h4>
+    <p class="small" style="margin:0 0 10px">Three hidden units, three gates. Set unit 1 to fire when density
+      is <em>above</em> the lower edge, unit 2 to fire when density is <em>below</em> the upper edge, unit 3 to
+      fire when demand is high — then set the output layer to demand all three at once. The score updates live
+      against the same 400 held-out intervals the trained networks are scored on.</p>
+    <div class="grid3">
+      <div class="card tight" style="margin:0">
+        <h4>Unit 1 <span class="swatch" style="background:var(--s1)"></span></h4>
+        <div class="ctrl"><label class="raw">w on density</label><input id="h_w10" type="range" min="-25" max="25" step="0.5" value="4"><span class="val"><span id="h_w10v">4.0</span></span></div>
+        <div class="ctrl"><label class="raw">w on demand</label><input id="h_w11" type="range" min="-25" max="25" step="0.5" value="0"><span class="val"><span id="h_w11v">0.0</span></span></div>
+        <div class="ctrl"><label class="raw">bias</label><input id="h_b1" type="range" min="-20" max="20" step="0.25" value="-1"><span class="val"><span id="h_b1v">−1.00</span></span></div>
+      </div>
+      <div class="card tight" style="margin:0">
+        <h4>Unit 2 <span class="swatch" style="background:var(--s2)"></span></h4>
+        <div class="ctrl"><label class="raw">w on density</label><input id="h_w20" type="range" min="-25" max="25" step="0.5" value="-4"><span class="val"><span id="h_w20v">−4.0</span></span></div>
+        <div class="ctrl"><label class="raw">w on demand</label><input id="h_w21" type="range" min="-25" max="25" step="0.5" value="0"><span class="val"><span id="h_w21v">0.0</span></span></div>
+        <div class="ctrl"><label class="raw">bias</label><input id="h_b2" type="range" min="-20" max="20" step="0.25" value="3"><span class="val"><span id="h_b2v">3.00</span></span></div>
+      </div>
+      <div class="card tight" style="margin:0">
+        <h4>Unit 3 <span class="swatch" style="background:var(--s3)"></span></h4>
+        <div class="ctrl"><label class="raw">w on density</label><input id="h_w30" type="range" min="-25" max="25" step="0.5" value="0"><span class="val"><span id="h_w30v">0.0</span></span></div>
+        <div class="ctrl"><label class="raw">w on demand</label><input id="h_w31" type="range" min="-25" max="25" step="0.5" value="4"><span class="val"><span id="h_w31v">4.0</span></span></div>
+        <div class="ctrl"><label class="raw">bias</label><input id="h_b3" type="range" min="-20" max="20" step="0.25" value="-2"><span class="val"><span id="h_b3v">−2.00</span></span></div>
+      </div>
+    </div>
+    <div class="controls" style="margin-top:14px">
+      <div class="ctrl"><label class="raw">output weight on each unit</label><input id="h_v" type="range" min="0" max="20" step="0.5" value="6" class="sm"><span class="val">v = <span id="h_vv">6.0</span> (all three)</span></div>
+      <div class="ctrl"><label class="raw">output bias</label><input id="h_bo" type="range" min="-40" max="10" step="0.5" value="-9" class="sm"><span class="val">b = <span id="h_bov">−9.0</span></span></div>
+    </div>
+    <div class="btnrow">
+      <button class="ghost" id="h_and">Set output to AND (all three must fire)</button>
+      <button class="ghost" id="h_or">Set output to OR (any one fires)</button>
+      <button class="act" id="h_solve">Show me one solution</button>
+    </div>
+    <div class="canvasrow" style="margin-top:8px">
+      <figure><canvas id="h_units" data-w="460" data-h="360"></canvas>
+        <figcaption>The three half-planes, drawn as their 50% contours. Where all three overlap is where an
+          AND output can fire.</figcaption></figure>
+      <figure><canvas id="h_out" data-w="460" data-h="360"></canvas>
+        <figcaption>What your network actually outputs, over the held-out 400 intervals.</figcaption></figure>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="h_acc">—</div><div class="l">accuracy</div></div>
+      <div class="stat"><div class="n w" id="h_bal">—</div><div class="l">balanced accuracy</div></div>
+      <div class="stat"><div class="n t" id="h_ll">—</div><div class="l">log-loss</div></div>
+      <div class="stat"><div class="n b" id="h_cmp">—</div><div class="l raw">balanced acc. of a <em>trained</em> H=3 net</div></div>
+      <div class="stat"><div class="n b" id="h_cmpll">—</div><div class="l raw">its log-loss</div></div>
+    </div>
+  </div>
+
+  <div class="callout good"><b>The published solution scores 0.780 balanced accuracy on held-out data.</b>
+    Gradient descent on the same architecture reaches <b>0.797</b>. You can set a neural network's weights by
+    hand, if you happen to know the answer, and here you do — you were told the labels came from three gates.
+    Hold on to that: <em>the weights are not magic, they are just the answer written down.</em> Training is
+    what you do when nobody told you the answer.</div>
+
+  <div class="callout warn"><b>But look at the log-loss.</b> Your hand-built version: <b>0.547</b>. The trained
+    version: <b>0.334</b>. Same accuracy, far worse probabilities — because you set the gates to be nearly hard,
+    so the model announces 0.99 and 0.01 where the honest answer is 0.7. On a screen that only shows accuracy
+    these two models look identical. If anything downstream consumes the <em>probability</em> — a ramp meter, a
+    dispatch threshold, an expected-delay calculation — they are not remotely the same model.</div>
+
+  <div class="callout sig"><b>One more thing worth knowing before tab 5.</b> We built the truth from three gates
+    and gave the network exactly three units, and it did <em>not</em> recover our three gates. Trained from a
+    random start it finds one rising density edge crossing at k ≈ 34, one falling density edge crossing at
+    k ≈ 57, and a third unit that sits saturated across the whole domain acting as an offset; demand enters
+    through a mild positive tilt shared by all three, not as a gate of its own. Click the units above and
+    read their weights — the two density edges are the ones with the large ±w on density. It gets the same
+    answer by a different decomposition. Hidden units are not guaranteed to be
+    the factors you had in mind, and reading meaning into individual units is a claim that needs evidence, not
+    a free interpretation.</div>
+</div></section>
+
+<!-- ==================== PAGE 4 ==================== -->
+<section class="page" id="p4"><div class="wrap">
+  <h2 class="sec">Backpropagation: one sample, nine numbers, nothing hidden</h2>
+  <p class="lead">Here is the whole learning problem. The network below has <b>nine</b> tunable numbers. A
+     detector interval comes in, the network produces a probability, the probability is wrong by some amount,
+     and now somebody has to answer nine separate questions: <em>should this particular number go up or down,
+     and by how much?</em> Backpropagation is the answer, and it is not a learning algorithm — it is a
+     <b>derivative calculator</b>. Gradient descent is what actually does the learning; backprop just tells it
+     which way is downhill, for every parameter at once.</p>
+
+  <div class="card">
+    <div class="eq"><span class="dim">the loss for one sample — a single number that says how wrong we were</span>
+   L = −[ t·log ŷ + (1−t)·log(1−ŷ) ]
+
+<span class="dim">what we want, for all nine parameters at once</span>
+   <b>∂L/∂w</b>  <span class="dim">— the slope of the loss in the direction of each weight</span>
+
+<span class="dim">what we then do with it (this part is gradient descent, not backprop)</span>
+   w ← w − <span class="yl">η</span> · ∂L/∂w</div>
+    <p class="small" style="margin-top:12px">You could get every one of those derivatives without any theory
+      at all: nudge a weight up by ε, run the network, nudge it down by ε, run it again, take the difference.
+      Two forward passes per parameter. For these nine that is 18 passes — annoying. For a network with
+      7 billion parameters it is 14 billion passes <em>per training example</em>, which is why nobody did
+      deep learning that way. Backprop computes all of them in roughly the cost of <b>one</b> extra pass, by
+      noticing that the same intermediate quantities keep reappearing. Everything below is checked against
+      the slow way, so you can see it is the same answer.</p>
+  </div>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl" style="min-width:230px"><label>situation</label>
+        <select id="t_preset">
+          <option value="base" selected>a typical case — the network is unsure</option>
+          <option value="wrong">confidently wrong — a missed breakdown</option>
+          <option value="right">already right — barely anything to learn</option>
+          <option value="sat">saturated hidden units — the gradient dies</option>
+        </select></div>
+      <div class="ctrl"><label class="raw">the sample: density k</label>
+        <input id="t_x1" type="range" min="0" max="1" step="0.01" value="0.62" class="sm"><span class="val"><span id="t_x1v">55.8</span> veh/mi/ln</span></div>
+      <div class="ctrl"><label class="raw">the sample: demand v/c</label>
+        <input id="t_x2" type="range" min="0" max="1" step="0.01" value="0.81" class="sm"><span class="val">v/c = <span id="t_x2v">0.908</span></span></div>
+      <div class="ctrl"><label class="raw">the truth t for this interval</label>
+        <select id="t_t"><option value="1" selected>1 — it did break down</option><option value="0">0 — it did not</option></select></div>
+    </div>
+    <div class="stagebar" id="t_stages"></div>
+    <div class="btnrow">
+      <button class="ghost" id="t_prev">◂ Back</button>
+      <button class="act" id="t_next">Next step ▸</button>
+      <button class="ghost" id="t_all">Show everything</button>
+      <button class="ghost" id="t_rst">Restart</button>
+    </div>
+    <div class="netbox" id="t_net" style="margin-top:8px"></div>
+    <div class="narr" id="t_narr" style="margin-top:12px"></div>
+    <div class="eq" id="t_math" style="margin-top:12px"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h4 class="raw">The nine weights — edit any of them</h4>
+      <table class="map" id="t_wtab"></table>
+      <p class="small" style="margin-top:8px">The two inputs are the same rescaled 0–1 coordinates as
+        everywhere else on this page, so these weights are directly comparable to the ones on tab 1.</p>
+    </div>
+    <div class="card">
+      <h4 class="raw">Is backprop actually right? Check it against the slow way</h4>
+      <p class="small" style="margin:0 0 8px">Right column: nudge that one weight by ±10<sup>−5</sup>, re-run
+        the network twice, divide. No chain rule, no theory — just the definition of a derivative.</p>
+      <table class="map" id="t_gtab"></table>
+      <div class="readout" style="margin-top:10px">
+        <div class="stat"><div class="n sm" id="t_worst">—</div><div class="l raw">worst disagreement, backprop vs. finite differences</div></div>
+        <div class="stat"><div class="n b" id="t_passes">—</div><div class="l raw">forward passes the slow way would need</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">Now take the step</h4>
+    <div class="controls">
+      <div class="ctrl"><label class="raw">learning rate η</label>
+        <input id="t_lr" type="range" min="-2.3" max="1.7" step="0.05" value="0.3"><span class="val">η = <span id="t_lrv">2.00</span></span></div>
+      <div class="ctrl"><label class="raw">&nbsp;</label>
+        <div class="btnrow" style="margin:0"><button class="act" id="t_step">Apply one step</button>
+        <button class="ghost" id="t_step10">Apply 10 steps</button>
+        <button class="ghost" id="t_undo">Undo all steps</button></div></div>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="t_l0">—</div><div class="l raw">loss before</div></div>
+      <div class="stat"><div class="n t" id="t_l1">—</div><div class="l raw">loss after</div></div>
+      <div class="stat"><div class="n b" id="t_yh">—</div><div class="l raw">ŷ after</div></div>
+      <div class="stat"><div class="n r" id="t_nsteps">0</div><div class="l raw">steps applied</div></div>
+    </div>
+    <p class="small" style="margin-top:10px">One sample, one step, η = 2: the loss on this interval falls from
+      <b>0.636</b> to <b>0.0893</b>. Push η to 10 and it drops to <b>0.0001</b> — which looks wonderful and is a
+      trap, because we have only made the network better on <em>this one interval</em>. Real training averages
+      the gradient over many samples precisely so that no single interval gets to move the weights this far.</p>
+  </div>
+
+  <h3>The four things worth taking away</h3>
+
+  <div class="callout"><b>1 · The output error term is embarrassingly simple.</b> Work through the algebra of
+    ∂L/∂z⁽²⁾ for cross-entropy loss composed with a sigmoid output and you get exactly
+    <span class="mono">ŷ − t</span>. The σ′ factor from the activation and the 1/ŷ factor from the logarithm
+    cancel each other perfectly. That cancellation is not luck; it is <em>why</em> cross-entropy is the loss we
+    pair with a sigmoid. Swap in squared error and the σ′ survives — and then a confidently wrong prediction,
+    the case that most needs a big correction, generates almost no gradient at all.</div>
+
+  <div class="callout sig"><b>2 · The backward pass reuses the forward pass's own wires.</b> To send blame from
+    the output back to hidden unit j, backprop multiplies by <span class="mono">v<sub>j</sub></span> — the very
+    same weight the forward pass used to send <em>information</em> the other way. That is the whole trick, and
+    it is why the cost of the backward pass is about the cost of the forward pass, no matter how many
+    parameters there are.</div>
+
+  <div class="callout warn"><b>3 · Select "saturated hidden units" in the menu.</b> Nothing is broken: the
+    forward pass runs, ŷ = 0.931, the loss is small and sensible. But the hidden units sit at
+    σ′(z) = 6.4 × 10<sup>−5</sup>, so every gradient reaching the first layer is multiplied by essentially
+    zero. The largest hidden-layer gradient is <b>0.14%</b> of the largest output-layer gradient: the output
+    layer will keep learning and the first layer is frozen. This is the vanishing gradient, visible in a
+    network with <em>one</em> hidden layer. Stack forty of these and the multiplication happens forty times —
+    which is the story the activation-functions companion tells in full.</div>
+
+  <div class="callout good"><b>4 · Every gradient here is a product of local quantities.</b> Look at
+    ∂L/∂w<sub>11</sub> = δ<sub>1</sub> · x₁ — the blame arriving at that unit, times the input that flowed
+    along that wire. Nothing in that expression knows about the rest of the network. That locality is what
+    makes automatic differentiation possible, and it is why you will never implement backprop by hand again
+    after this page: PyTorch's <span class="mono">loss.backward()</span> is doing exactly what you just
+    stepped through, in the same order, for a few million more wires.</div>
+</div></section>
+
+<!-- ==================== PAGE 5 ==================== -->
+<section class="page" id="p5"><div class="wrap">
+  <h2 class="sec">Watch it learn — and watch it learn too much</h2>
+  <p class="lead">Same breakdown problem, same 400 training intervals, but now the full loop: forward pass over
+     every sample, average the gradients, take one step, repeat. Nothing here is pre-baked — press <b>Run</b>
+     and the numbers are computed as you watch. A second, independent set of 400 intervals the network never
+     trains on is scored at every step, and it is the more interesting of the two curves.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label>hidden units H</label>
+        <input id="e_H" type="range" min="1" max="12" step="1" value="6" class="sm"><span class="val">H = <span id="e_Hv">6</span> <span class="small">(<span id="e_np">25</span> params)</span></span></div>
+      <div class="ctrl"><label>activation</label>
+        <select id="e_act"><option value="tanh" selected>tanh</option><option value="sigmoid">sigmoid</option><option value="relu">ReLU</option></select></div>
+      <div class="ctrl"><label class="raw">learning rate η</label>
+        <input id="e_lr" type="range" min="-2" max="1.6" step="0.05" value="0.301" class="sm"><span class="val">η = <span id="e_lrv">2.00</span></span></div>
+      <div class="ctrl"><label>starting weights</label>
+        <select id="e_init">
+          <option value="7" selected>random, seed 7</option><option value="1">random, seed 1</option>
+          <option value="13">random, seed 13</option><option value="zero">all zeros</option>
+          <option value="big">random × 20 (too large)</option></select></div>
+    </div>
+    <div class="btnrow">
+      <button class="act" id="e_run">Run</button>
+      <button class="ghost" id="e_step">+100 steps</button>
+      <button class="ghost" id="e_reset">Reset</button>
+      <span style="width:14px"></span>
+      <button class="ghost" id="e_pg">Preset: sensible settings</button>
+      <button class="ghost" id="e_pl">η far too small</button>
+      <button class="ghost" id="e_ph">η far too large</button>
+      <button class="ghost" id="e_pz">every weight starts at zero</button>
+    </div>
+    <div class="progress"><i id="e_prog"></i></div>
+    <div class="canvasrow" style="margin-top:14px">
+      <figure><canvas id="e_surf" data-w="460" data-h="360"></canvas>
+        <figcaption>What the network currently believes. Compare it with the true band on tab 2.</figcaption></figure>
+      <figure><canvas id="e_loss" data-w="460" data-h="360"></canvas>
+        <figcaption>Log-loss on the 400 intervals it trains on, and on 400 it has never seen.</figcaption></figure>
+    </div>
+    <div class="legend">
+      <span><i style="border-top-color:var(--s1)"></i>training set</span>
+      <span><i style="border-top-color:var(--s2);border-top-style:dashed"></i>held-out set</span>
+      <span><i style="border-top-color:var(--muted);border-top-style:dotted"></i>always predicting the base rate</span>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="e_stepn">0</div><div class="l">steps taken</div></div>
+      <div class="stat"><div class="n" id="e_trl">—</div><div class="l raw">train log-loss</div></div>
+      <div class="stat"><div class="n t" id="e_tel">—</div><div class="l raw">held-out log-loss</div></div>
+      <div class="stat"><div class="n" id="e_trb">—</div><div class="l raw">train balanced acc.</div></div>
+      <div class="stat"><div class="n t" id="e_teb">—</div><div class="l raw">held-out balanced acc.</div></div>
+      <div class="stat"><div class="n r" id="e_best">—</div><div class="l raw">best held-out loss, and when</div></div>
+    </div>
+  </div>
+
+  <div class="callout"><b>With the sensible settings, look at where the two curves separate.</b> Held-out
+    log-loss bottoms out at <b>0.318 around step 350</b> and then climbs steadily to <b>0.3475</b> by step 6,000
+    — while the training loss is still politely falling the whole time, 0.272 → 0.255. Nothing announces this.
+    The training curve, on its own, says the run is going well right up to the end. <b>Roughly 94% of that run
+    was spent making the model worse at the only job it has.</b> This is what "early stopping" means, and it is
+    why a held-out set is not a formality you add before publication.</div>
+
+  <div class="callout warn"><b>Press "every weight starts at zero."</b> This is the single most instructive
+    failure on the page. Every hidden unit gets an identical gradient, so every hidden unit takes an identical
+    step, so they stay identical forever — after 6,000 steps the maximum difference between any two hidden
+    units is exactly <b>0</b>, not approximately zero. All the network can still learn is its output bias,
+    which converges to σ(b) = <b>0.2075</b> — the base rate, to four decimals. You have built a 25-parameter
+    neural network that is an expensive way to compute the fraction of intervals containing a breakdown.
+    Random initialization is not a heuristic; it is what breaks the symmetry.</div>
+
+  <div class="callout sig"><b>The learning-rate presets, measured.</b> η = 0.02: after 6,000 steps the training
+    loss has only reached <b>0.338</b> and balanced accuracy <b>0.675</b> — still crawling toward a solution it
+    would eventually find, just far too slowly to be useful. η = 2: <b>0.255</b>. η = 8: <b>0.659</b>, with
+    balanced accuracy back at <b>0.50</b> — the steps overshoot the valley and the network gives up and predicts
+    the base rate. And the edge between those is not a gentle slope: η = 5 gives 0.261, η = 6 gives 0.284,
+    η = 7 gives 0.332, and η = 8 collapses. Two learning rates 15% apart, two completely different runs.
+    There is no formula for the right value. There is a sweep, and a held-out set to judge it with.</div>
+
+  <div class="callout warn"><b>Push η past about 15 and something worth knowing happens.</b> Balanced accuracy
+    stays pinned at 0.50, but the <em>number</em> stops being reproducible: at η = 20 this page reports a
+    training log-loss somewhere between about 5 and 20, and which one you get depends on your browser. The
+    arithmetic is deterministic; the trajectory is not. Once the steps are large enough to bounce out of the
+    valley, a difference in the last bit of a floating-point <span class="mono">tanh</span> grows, over 6,000
+    steps, into an entirely different run. If you have ever had a training run that would not reproduce across
+    two machines and blamed the framework, this is usually the reason — and it is a signal that the learning
+    rate is outside the regime where any of your results mean anything.</div>
+
+  <div class="callout good" style="border-left-width:5px"><b>Before you believe any result on this page — the
+    three questions.</b><br>
+    <b>What is the baseline?</b> Always answering "no breakdown" is 79.25% accurate here. Any model must beat
+    that, and on this problem accuracy alone cannot show it; balanced accuracy and log-loss can.<br>
+    <b>How was the data split, and is that honest?</b> Two independently drawn sets of 400 intervals, and the
+    held-out set never touches a gradient. Split real detector data by <em>time</em>, not at random — 5-minute
+    intervals from the same afternoon peak are not independent samples, and a random split will quietly leak
+    the answer across it.<br>
+    <b>What does it do on the ugly cases?</b> Breakdown is genuinely stochastic — the same detector state
+    sometimes breaks down and sometimes does not — so there is an irreducible floor, and here we can compute it,
+    because we built the process. A rule that knows the true probability exactly and calls it at 0.5 scores
+    held-out log-loss <b>0.308</b> and accuracy <b>0.855</b>. This network's best is <b>0.318</b>: within 0.01
+    of the process that generated the data. There is almost nothing left to win, and a model reporting much
+    better than that has been handed the answer somehow. One caution on the balanced-accuracy column: it depends
+    on where you put the threshold, so a model can score above the <b>0.783</b> the true rule gets at 0.5 just by
+    being differently calibrated — always report the threshold with the number. Then go and look at the intervals
+    nearest the band edges one at a time, before you report any mean at all.</div>
+</div></section>
+
+<!-- ==================== PAGE 6 ==================== -->
+<section class="page" id="p6"><div class="wrap">
+  <h2 class="sec">The same machinery, pointed at a different question</h2>
+  <p class="lead">Everything so far predicted a probability. Most transportation problems do not: you want an
+     acceleration, a travel time, a queue length — a number. Here is a car-following problem. The follower is
+     travelling at 20 m/s; given the <b>gap</b> to the leader and the <b>closing speed</b> Δv, predict the
+     acceleration. The data come from an IDM-style rule with 0.25 m/s² of sensor and driver noise on top.
+     <b>Exactly two things change</b> from tab 5, and backpropagation does not change at all.</p>
+
+  <div class="card tight">
+    <table class="map">
+      <tr><th class="raw" style="width:22%">Piece</th><th class="raw" style="width:29%">Classification (tabs 1–5)</th><th class="raw" style="width:29%">Regression (this tab)</th><th class="raw">Changed?</th></tr>
+      <tr><td>Hidden layers</td><td>W x + b, then tanh</td><td>W x + b, then tanh</td><td>no</td></tr>
+      <tr class="hl"><td>Output activation</td><td>σ(z) — squashed into 0–1</td><td>z — left alone</td><td><b>yes</b></td></tr>
+      <tr class="hl"><td>Loss</td><td>cross-entropy</td><td>squared error</td><td><b>yes</b></td></tr>
+      <tr><td>Output error term</td><td>δ = ŷ − t</td><td>δ = ŷ − t</td><td>no — <em>identical</em></td></tr>
+      <tr><td>Backward pass</td><td>δ<sub>j</sub> = δ · v<sub>j</sub> · σ′(z<sub>j</sub>)</td><td>δ<sub>j</sub> = δ · v<sub>j</sub> · σ′(z<sub>j</sub>)</td><td>no</td></tr>
+      <tr><td>Update rule</td><td>w ← w − η ∂L/∂w</td><td>w ← w − η ∂L/∂w</td><td>no</td></tr>
+    </table>
+    <p class="small" style="margin-top:10px">The output error term staying <span class="mono">ŷ − t</span> in
+      both columns is the same cancellation from tab 4, happening for a second reason: squared error paired
+      with a linear output has the σ′ factor equal to 1. Loss and output activation are chosen <em>as a pair</em>,
+      and when you choose them well the rest of the machinery does not notice which problem it is solving.</p>
+  </div>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label>hidden units H</label>
+        <input id="r_H" type="range" min="1" max="12" step="1" value="6" class="sm"><span class="val">H = <span id="r_Hv">6</span></span></div>
+      <div class="ctrl"><label class="raw">learning rate η</label>
+        <input id="r_lr" type="range" min="-2" max="0" step="0.05" value="-0.5" class="sm"><span class="val">η = <span id="r_lrv">0.30</span></span></div>
+      <div class="ctrl"><label class="raw">cut the surface at Δv =</label>
+        <input id="r_cut" type="range" min="-3" max="5" step="0.1" value="2" class="sm"><span class="val">Δv = <span id="r_cutv">2.0</span> m/s</span></div>
+    </div>
+    <div class="btnrow">
+      <button class="act" id="r_run">Run</button>
+      <button class="ghost" id="r_reset">Reset</button>
+      <button class="ghost" id="r_lin">Show the straight-line fit</button>
+    </div>
+    <div class="progress"><i id="r_prog"></i></div>
+    <div class="canvasrow" style="margin-top:14px">
+      <figure><canvas id="r_surf" data-w="460" data-h="360"></canvas>
+        <figcaption>Predicted acceleration over the gap–closing-speed plane: braking is orange, accelerating
+          is blue, and the white lines are the true a = 0, −1 and −3 m/s² contours to compare against.</figcaption></figure>
+      <figure><canvas id="r_slice" data-w="460" data-h="360"></canvas>
+        <figcaption>A cut at one closing speed: the truth, the straight-line fit, and the network.</figcaption></figure>
+    </div>
+    <div class="legend">
+      <span><i style="border-top-color:#aab6b2;border-top-width:5px"></i>the rule that generated the data</span>
+      <span><i style="border-top-color:var(--s3);border-top-style:dashed"></i>linear regression</span>
+      <span><i style="border-top-color:var(--s1)"></i>the network</span>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="r_stepn">0</div><div class="l">steps taken</div></div>
+      <div class="stat"><div class="n" id="r_tr">—</div><div class="l raw">train RMSE (m/s²)</div></div>
+      <div class="stat"><div class="n t" id="r_te">—</div><div class="l raw">held-out RMSE (m/s²)</div></div>
+      <div class="stat"><div class="n b" id="r_tt">—</div><div class="l raw">held-out RMSE vs. the noise-free rule</div></div>
+      <div class="stat"><div class="n r" id="r_lin_rmse">—</div><div class="l raw">linear regression, held out</div></div>
+      <div class="stat"><div class="n w" id="r_mean_rmse">—</div><div class="l raw">predicting the mean, held out</div></div>
+    </div>
+  </div>
+
+  <div class="callout"><b>The three baselines are the point of this tab.</b> Predicting the average
+    acceleration for every situation, scored on held-out data: RMSE <b>2.33 m/s²</b>. Fitting a plane — linear
+    regression on gap and closing speed: <b>1.30</b>. A six-unit network, 25 parameters: <b>0.29</b>. The
+    measurement noise we deliberately added is <b>0.250</b>, so the network sits about 16% above the best score
+    anyone or anything could achieve on this data; against the noise-free rule it is off by roughly
+    <b>0.15 m/s²</b>. Report the third number in isolation and it means nothing. Report all four and a reader
+    can see two things at once: the nonlinearity was necessary, and there is almost nothing left to win.</div>
+
+  <div class="callout sig"><b>Why the plane fails is physical, not statistical.</b> Acceleration is roughly flat
+    and mildly positive across most of the gap range and then falls off a cliff as the gap closes with a positive
+    Δv — the IDM desired-gap term enters as (s*/s)², so the response is strongly curved and the two inputs
+    interact. A plane has to average that cliff against the flat region and gets both wrong. This is what a
+    hidden layer buys you: the freedom to be flat in one region and steep in another.</div>
+
+  <div class="callout warn"><b>And the same warning as everywhere else.</b> At η = 0.3 the held-out RMSE is
+    <b>0.294</b>; nudge it to η = 0.5 and it is <b>0.387</b>; at η = 0.8 the run goes to infinity within a few
+    thousand steps. That ceiling is nearly seven times lower than the η = 2 that worked well on tab 5, because
+    the targets here span roughly −6 to +1 m/s² and squared error on large targets produces large gradients.
+    Nothing about
+    the network changed; only the scale of the numbers you fed it did. Standardizing your targets is not
+    housekeeping, it is what makes a learning rate transferable between two problems.</div>
+
+  <h3>Where to take this next</h3>
+  <div class="card tight">
+    <ul class="tight">
+      <li><b>The activation functions companion</b> picks up exactly where tab 4's saturated preset left off:
+        why σ′ ≤ 0.25 everywhere is a structural problem, why tanh is not the fix people think it is, and why
+        the softmax you use for route choice is the same object.</li>
+      <li><b>The multilayer networks companion</b> answers the question this page deliberately dodged: given
+        that hidden units are learnable feature detectors, when is learning them actually better than choosing
+        them by hand? The answer is about dimension, and it is not the answer most courses give.</li>
+      <li><b>The lab notebook</b> (<span class="mono">Labs/neural_network_basics_lab.ipynb</span>) rebuilds
+        everything on this page in numpy, including the backward pass, with no framework in sight. Do it once.
+        After that, use PyTorch and never look back.</li>
+      <li><b>For your project:</b> the questions on tab 5 — what is the baseline, how is the data split, what
+        happens on the ugly cases — are the three questions your final report must answer about whatever model
+        you build. They are also the three questions this page's own claims were checked against.</li>
+    </ul>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <b>AI for Mobility</b> · CGN 6933 · Module 1, Neural Network Basics · University of South Florida.
+  Every figure and every number on this page is computed in your browser from a fixed random seed when the
+  page loads — there are no stored results, no network calls, and no data leaves this page. Reload to
+  reproduce it exactly.
+</div></footer>
+<script>
+"use strict";
+/* ============================================================
+   0.  numerical core — identical to the node reference used to
+       verify every number quoted in the prose
+   ============================================================ */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function gaussFactory(rnd){return function(){let u=0,v=0;while(u===0)u=rnd();while(v===0)v=rnd();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}}
+const sig=z=>1/(1+Math.exp(-z));
+const KMAX=90, VC0=0.30, VC1=1.05;
+const SPD_FREE=72, SPD_K=0.42, SPD_VC=14, SPD_NOISE=3, SPD_THRESH=45;
+const BD_K_LO=22, BD_K_HI=60, BD_K_S=0.30, BD_VC_G=0.62, BD_VC_S=7;
+const toK=x=>x*KMAX, toVC=x=>VC0+x*(VC1-VC0);
+const trueSpeed=(k,vc)=>SPD_FREE-SPD_K*k-SPD_VC*vc;
+const breakdownP=(k,vc)=>sig(BD_K_S*(k-BD_K_LO))*sig(BD_K_S*(BD_K_HI-k))*sig(BD_VC_S*(vc-BD_VC_G));
+function normCdf(z){const t=1/(1+0.3275911*Math.abs(z)/Math.SQRT2);
+  const yv=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-z*z/2);
+  return 0.5*(1+(z>=0?yv:-yv));}
+function makeTaskA(n,seed){const rnd=mulberry32(seed),g=gaussFactory(rnd);const X=[],y=[],p=[];
+  for(let i=0;i<n;i++){const x1=rnd(),x2=rnd(),v=trueSpeed(toK(x1),toVC(x2));
+    X.push([x1,x2]);y.push(v+SPD_NOISE*g()<SPD_THRESH?1:0);p.push(normCdf((SPD_THRESH-v)/SPD_NOISE));}
+  return {X,y,p};}
+function makeTaskB(n,seed){const rnd=mulberry32(seed);const X=[],y=[],p=[];
+  for(let i=0;i<n;i++){const x1=rnd(),x2=rnd(),pp=breakdownP(toK(x1),toVC(x2));
+    X.push([x1,x2]);p.push(pp);y.push(rnd()<pp?1:0);}return {X,y,p};}
+const CF={v:20,v0:30,amax:1.2,b:1.5,s0:2,T:1.2,smin:6,smax:80,dvmin:-3,dvmax:5,noise:0.25};
+function idmAccel(s,dv){const sStar=CF.s0+Math.max(0,CF.v*CF.T+CF.v*dv/(2*Math.sqrt(CF.amax*CF.b)));
+  return Math.max(-6,CF.amax*(1-Math.pow(CF.v/CF.v0,4)-Math.pow(sStar/s,2)));}
+const toS=x=>CF.smin+x*(CF.smax-CF.smin), toDV=x=>CF.dvmin+x*(CF.dvmax-CF.dvmin);
+function makeTaskC(n,seed){const rnd=mulberry32(seed),g=gaussFactory(rnd);const X=[],y=[],t=[];
+  for(let i=0;i<n;i++){const x1=rnd(),x2=rnd(),a=idmAccel(toS(x1),toDV(x2));
+    X.push([x1,x2]);t.push(a);y.push(a+CF.noise*g());}return {X,y,t};}
+
+const ACT={sigmoid:{f:z=>sig(z),d:(a,z)=>a*(1-a)},
+           tanh:{f:z=>Math.tanh(z),d:(a,z)=>1-a*a},
+           relu:{f:z=>z>0?z:0,d:(a,z)=>z>0?1:0},
+           identity:{f:z=>z,d:()=>1}};
+
+function neuronOut(x,w,b,act){const z=w[0]*x[0]+w[1]*x[1]+b;
+  return act==='step'?(z>=0?1:0):act==='linear'?z:sig(z);}
+function neuronStats(X,y,w,b,act){let c=0,L=0,pos=0,tp=0,fn=0,tn=0,fp=0;
+  for(let i=0;i<X.length;i++){let o=neuronOut(X[i],w,b,act);
+    const oc=Math.min(1-1e-12,Math.max(1e-12,act==='linear'?sig(o):o));
+    L+=-(y[i]*Math.log(oc)+(1-y[i])*Math.log(1-oc));
+    const ph=o>=0.5?1:0; if(ph===y[i])c++; if(ph===1)pos++;
+    if(y[i]===1){ph===1?tp++:fn++;}else{ph===0?tn++:fp++;}}
+  const rec=tp+fn?tp/(tp+fn):0, spec=tn+fp?tn/(tn+fp):0;
+  return {acc:c/X.length,ll:L/X.length,pos,bal:(rec+spec)/2};}
+function neuronGradStep(X,y,w,b,lr,freezeBias){
+  let g0=0,g1=0,gb=0;const n=X.length;
+  for(let i=0;i<n;i++){const a=sig(w[0]*X[i][0]+w[1]*X[i][1]+b),d=a-y[i];
+    g0+=d*X[i][0];g1+=d*X[i][1];gb+=d;}
+  return [w[0]-lr*g0/n, w[1]-lr*g1/n, freezeBias?b:b-lr*gb/n];}
+
+function initMLP(H,seed,scale,mode){const rnd=mulberry32(seed),g=gaussFactory(rnd);
+  const P={W1:[],b1:[],W2:[],b2:0,H:H,mode:mode||'clf'};
+  for(let j=0;j<H;j++){P.W1.push([scale*g(),scale*g()]);P.b1.push(scale*g()*0.5);P.W2.push(scale*g());}
+  return P;}
+function zeroMLP(H,mode){const P={W1:[],b1:[],W2:[],b2:0,H:H,mode:mode||'clf'};
+  for(let j=0;j<H;j++){P.W1.push([0,0]);P.b1.push(0);P.W2.push(0);}return P;}
+function mlpForward(P,x,act){const A=ACT[act],H=P.H,z1=new Array(H),a1=new Array(H);let z2=P.b2;
+  for(let j=0;j<H;j++){z1[j]=P.W1[j][0]*x[0]+P.W1[j][1]*x[1]+P.b1[j];a1[j]=A.f(z1[j]);z2+=P.W2[j]*a1[j];}
+  return {z1,a1,z2,out:P.mode==='reg'?z2:sig(z2)};}
+function mlpLoss(P,X,y,act){let L=0;
+  for(let i=0;i<X.length;i++){const f=mlpForward(P,X[i],act);
+    L+=P.mode==='reg'?0.5*(f.out-y[i])*(f.out-y[i])
+      :-(y[i]*Math.log(f.out+1e-12)+(1-y[i])*Math.log(1-f.out+1e-12));}
+  return L/X.length;}
+function mlpStep(P,X,y,act,lr){const A=ACT[act],H=P.H,n=X.length;
+  const gW=[],gb=new Array(H).fill(0),gV=new Array(H).fill(0);let gb2=0;
+  for(let j=0;j<H;j++)gW.push([0,0]);
+  for(let i=0;i<n;i++){const x=X[i],f=mlpForward(P,x,act),d2=f.out-y[i];gb2+=d2;
+    for(let j=0;j<H;j++){gV[j]+=d2*f.a1[j];
+      const d1=d2*P.W2[j]*A.d(f.a1[j],f.z1[j]);
+      gW[j][0]+=d1*x[0];gW[j][1]+=d1*x[1];gb[j]+=d1;}}
+  for(let j=0;j<H;j++){P.W1[j][0]-=lr*gW[j][0]/n;P.W1[j][1]-=lr*gW[j][1]/n;
+    P.b1[j]-=lr*gb[j]/n;P.W2[j]-=lr*gV[j]/n;}
+  P.b2-=lr*gb2/n;}
+function clfMetrics(P,X,y,act){let c=0,tp=0,fn=0,tn=0,fp=0,L=0;
+  for(let i=0;i<X.length;i++){const o=mlpForward(P,X[i],act).out,ph=o>=0.5?1:0;
+    L+=-(y[i]*Math.log(o+1e-12)+(1-y[i])*Math.log(1-o+1e-12));if(ph===y[i])c++;
+    if(y[i]===1){ph===1?tp++:fn++;}else{ph===0?tn++:fp++;}}
+  const rec=tp+fn?tp/(tp+fn):0,spec=tn+fp?tn/(tn+fp):0;
+  return {acc:c/X.length,bal:(rec+spec)/2,ll:L/X.length};}
+function regRMSE(P,X,y,act){let s=0;
+  for(let i=0;i<X.length;i++){const d=mlpForward(P,X[i],act).out-y[i];s+=d*d;}
+  return Math.sqrt(s/X.length);}
+
+/* the traced 2-2-1 network */
+function trForward(p,x){const z1=[0,0],a1=[0,0];
+  for(let j=0;j<2;j++){z1[j]=p.w[j][0]*x[0]+p.w[j][1]*x[1]+p.bh[j];a1[j]=sig(z1[j]);}
+  const z2=p.v[0]*a1[0]+p.v[1]*a1[1]+p.bo;
+  return {z1,a1,z2,yh:sig(z2)};}
+function trLoss(p,x,t){const f=trForward(p,x);
+  return -(t*Math.log(f.yh+1e-15)+(1-t)*Math.log(1-f.yh+1e-15));}
+function trBack(p,x,t){const f=trForward(p,x),d2=f.yh-t;
+  const gv=[d2*f.a1[0],d2*f.a1[1]],gbo=d2;
+  const sp=[f.a1[0]*(1-f.a1[0]),f.a1[1]*(1-f.a1[1])];
+  const d1=[d2*p.v[0]*sp[0],d2*p.v[1]*sp[1]];
+  return {f,d2,d1,sp,gv,gbo,gw:[[d1[0]*x[0],d1[0]*x[1]],[d1[1]*x[0],d1[1]*x[1]]],gbh:[d1[0],d1[1]]};}
+function trClone(p){return {w:[p.w[0].slice(),p.w[1].slice()],bh:p.bh.slice(),v:p.v.slice(),bo:p.bo};}
+function trNumeric(p,x,t,eps){eps=eps||1e-5;
+  const bump=set=>{const a=trClone(p),b=trClone(p);set(a,eps);set(b,-eps);
+    return (trLoss(a,x,t)-trLoss(b,x,t))/(2*eps);};
+  return {gw:[[bump((q,e)=>q.w[0][0]+=e),bump((q,e)=>q.w[0][1]+=e)],
+              [bump((q,e)=>q.w[1][0]+=e),bump((q,e)=>q.w[1][1]+=e)]],
+          gbh:[bump((q,e)=>q.bh[0]+=e),bump((q,e)=>q.bh[1]+=e)],
+          gv:[bump((q,e)=>q.v[0]+=e),bump((q,e)=>q.v[1]+=e)],
+          gbo:bump((q,e)=>q.bo+=e)};}
+
+/* ============================================================
+   1.  drawing helpers  (dependency-free canvas)
+   ============================================================ */
+const INK='#1c2422', MUT='#5b6b66', LINE='#e2e8e5';
+const S1='#00785A', S2='#8E44AD', S3='#B5581E', S4='#0E6E9E';
+const DN='#0E6E9E', DP='#B5581E', DZ='#c8d0cd';
+function lerpHex(a,b,t){const p=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+  const A=p(a),B=p(b);return 'rgb('+Math.round(A[0]+(B[0]-A[0])*t)+','+Math.round(A[1]+(B[1]-A[1])*t)+','+
+    Math.round(A[2]+(B[2]-A[2])*t)+')';}
+const GREEN_RAMP=[[0,'#f7faf8'],[0.25,'#cfe5da'],[0.5,'#95cbb1'],[0.75,'#3f9a76'],[1,'#00543a']];
+function rampColor(stops,t){t=Math.max(0,Math.min(1,t));
+  for(let i=1;i<stops.length;i++) if(t<=stops[i][0]){
+    const a=stops[i-1],b=stops[i];return lerpHex(a[1],b[1],(t-a[0])/(b[0]-a[0]));}
+  return stops[stops.length-1][1];}
+function divColor(v,neg,pos){ // v in [-1,1]
+  const t=Math.max(-1,Math.min(1,v));
+  return t<0?lerpHex(DZ,neg,-t):lerpHex(DZ,pos,t);}
+
+function setup(cv){const w=+cv.dataset.w,h=+cv.dataset.h,dpr=Math.min(2,window.devicePixelRatio||1);
+  if(cv.width!==w*dpr){cv.width=w*dpr;cv.height=h*dpr;cv.style.width=w+'px';cv.style.height=h+'px';}
+  const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+  ctx.font='11px ui-monospace,Menlo,Consolas,monospace';return {ctx,w,h};}
+function axes(cv,o){const {ctx,w,h}=setup(cv);
+  const padL=o.padL==null?54:o.padL,padR=o.padR==null?16:o.padR,
+        padT=o.padT==null?18:o.padT,padB=o.padB==null?44:o.padB;
+  const X=v=>padL+(v-o.x0)/(o.x1-o.x0)*(w-padL-padR);
+  const Y=v=>h-padB-(v-o.y0)/(o.y1-o.y0)*(h-padT-padB);
+  return {ctx,w,h,X,Y,padL,padR,padT,padB,x0:o.x0,x1:o.x1,y0:o.y0,y1:o.y1,
+    iX:px=>o.x0+(px-padL)/(w-padL-padR)*(o.x1-o.x0),
+    iY:py=>o.y0+(h-padB-py)/(h-padT-padB)*(o.y1-o.y0),
+    pw:w-padL-padR, ph:h-padT-padB};}
+function frame(A,o){const c=A.ctx;o=o||{};
+  c.save();c.strokeStyle=LINE;c.lineWidth=1;c.fillStyle=MUT;
+  c.font='11px ui-monospace,Menlo,Consolas,monospace';
+  const xt=o.xticks||niceTicks(A.x0,A.x1),yt=o.yticks||niceTicks(A.y0,A.y1);
+  if(o.grid!==false){c.strokeStyle='#eef2f0';
+    xt.forEach(v=>{c.beginPath();c.moveTo(A.X(v),A.Y(A.y0));c.lineTo(A.X(v),A.Y(A.y1));c.stroke();});
+    yt.forEach(v=>{c.beginPath();c.moveTo(A.X(A.x0),A.Y(v));c.lineTo(A.X(A.x1),A.Y(v));c.stroke();});}
+  c.strokeStyle='#c9d4d0';c.beginPath();c.moveTo(A.X(A.x0),A.Y(A.y0));c.lineTo(A.X(A.x1),A.Y(A.y0));
+  c.moveTo(A.X(A.x0),A.Y(A.y0));c.lineTo(A.X(A.x0),A.Y(A.y1));c.stroke();
+  c.fillStyle=MUT;c.textAlign='center';c.textBaseline='top';
+  xt.forEach(v=>c.fillText(fmtTick(v),A.X(v),A.Y(A.y0)+6));
+  c.textAlign='right';c.textBaseline='middle';
+  yt.forEach(v=>c.fillText(fmtTick(v),A.X(A.x0)-7,A.Y(v)));
+  c.font='600 12px -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif';c.fillStyle=MUT;
+  if(o.xlabel){c.textAlign='center';c.textBaseline='bottom';c.fillText(o.xlabel,(A.X(A.x0)+A.X(A.x1))/2,A.h-4);}
+  if(o.ylabel){c.save();c.translate(11,(A.Y(A.y0)+A.Y(A.y1))/2);c.rotate(-Math.PI/2);
+    c.textAlign='center';c.textBaseline='top';c.fillText(o.ylabel,0,0);c.restore();}
+  if(o.title){c.textAlign='left';c.textBaseline='top';c.fillStyle=INK;
+    c.font='700 12.5px -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif';
+    c.fillText(o.title,A.X(A.x0),2);}
+  c.restore();}
+function niceTicks(a,b){const span=b-a,raw=span/5,mag=Math.pow(10,Math.floor(Math.log10(raw)));
+  const n=raw/mag,st=(n<1.5?1:n<3?2:n<7?5:10)*mag,out=[];
+  for(let v=Math.ceil(a/st)*st;v<=b+1e-9;v+=st)out.push(Math.abs(v)<1e-12?0:v);return out;}
+function fmtTick(v){const a=Math.abs(v);
+  return a>=1000?v.toFixed(0):a>=10?v.toFixed(0):a>=1?v.toFixed(1):a===0?'0':v.toFixed(2);}
+function heat(A,fn,stops,nx,ny){const c=A.ctx;nx=nx||90;ny=ny||72;
+  const dx=(A.x1-A.x0)/nx,dy=(A.y1-A.y0)/ny;
+  const w=Math.abs(A.X(A.x0+dx)-A.X(A.x0))+1.2,h=Math.abs(A.Y(A.y0+dy)-A.Y(A.y0))+1.2;
+  for(let i=0;i<nx;i++)for(let j=0;j<ny;j++){
+    const xv=A.x0+(i+0.5)*dx,yv=A.y0+(j+0.5)*dy;
+    c.fillStyle=rampColor(stops,fn(xv,yv));
+    c.fillRect(A.X(A.x0+i*dx),A.Y(A.y0+(j+1)*dy),w,h);}}
+function contour(A,fn,level,color,dash,lw){const c=A.ctx;const nx=120,ny=96;
+  const dx=(A.x1-A.x0)/nx,dy=(A.y1-A.y0)/ny;
+  c.save();c.strokeStyle=color;c.lineWidth=lw||2;if(dash)c.setLineDash(dash);
+  c.lineCap='round';c.beginPath();
+  const V=[];for(let i=0;i<=nx;i++){V.push([]);for(let j=0;j<=ny;j++)V[i].push(fn(A.x0+i*dx,A.y0+j*dy)-level);}
+  for(let i=0;i<nx;i++)for(let j=0;j<ny;j++){
+    const v=[V[i][j],V[i+1][j],V[i+1][j+1],V[i][j+1]];
+    const px=[A.x0+i*dx,A.y0+j*dy],qx=[A.x0+(i+1)*dx,A.y0+(j+1)*dy];
+    const pts=[];
+    const edge=(a,b,xa,ya,xb,yb)=>{if((a<0)!==(b<0)){const t=a/(a-b);pts.push([xa+(xb-xa)*t,ya+(yb-ya)*t]);}};
+    edge(v[0],v[1],px[0],px[1],qx[0],px[1]);
+    edge(v[1],v[2],qx[0],px[1],qx[0],qx[1]);
+    edge(v[2],v[3],qx[0],qx[1],px[0],qx[1]);
+    edge(v[3],v[0],px[0],qx[1],px[0],px[1]);
+    if(pts.length>=2){c.moveTo(A.X(pts[0][0]),A.Y(pts[0][1]));c.lineTo(A.X(pts[1][0]),A.Y(pts[1][1]));
+      if(pts.length===4){c.moveTo(A.X(pts[2][0]),A.Y(pts[2][1]));c.lineTo(A.X(pts[3][0]),A.Y(pts[3][1]));}}}
+  c.stroke();c.restore();}
+function scatter(A,X,y,mapx,mapy){const c=A.ctx;c.save();
+  for(let i=0;i<X.length;i++){const px=A.X(mapx(X[i][0])),py=A.Y(mapy(X[i][1]));
+    if(y[i]===1){c.beginPath();c.arc(px,py,3.7,0,6.2832);c.fillStyle='#12211c';c.fill();
+      c.lineWidth=1.5;c.strokeStyle='#fff';c.stroke();}
+    else{c.beginPath();c.arc(px,py,3.0,0,6.2832);c.fillStyle='rgba(255,255,255,.88)';c.fill();
+      c.lineWidth=1.1;c.strokeStyle='#7c8c87';c.stroke();}}
+  c.restore();}
+function curve(A,pts,color,lw,dash){const c=A.ctx;if(!pts.length)return;c.save();
+  c.strokeStyle=color;c.lineWidth=lw||2;c.lineJoin='round';c.lineCap='round';
+  if(dash)c.setLineDash(dash);c.beginPath();
+  let started=false;
+  pts.forEach(p=>{const py=A.Y(Math.max(A.y0,Math.min(A.y1,p[1])));
+    if(!started){c.moveTo(A.X(p[0]),py);started=true;}else c.lineTo(A.X(p[0]),py);});
+  c.stroke();c.restore();}
+function tag(A,x,y,txt,color,align){const c=A.ctx;c.save();
+  c.font='700 11.5px -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif';
+  c.textAlign=align||'left';c.textBaseline='middle';
+  const wd=c.measureText(txt).width;const px=A.X(x),py=A.Y(y);
+  const bx=align==='right'?px-wd-8:align==='center'?px-wd/2-4:px+2;
+  c.fillStyle='rgba(255,255,255,.86)';c.fillRect(bx,py-8,wd+7,16);
+  c.fillStyle=color;c.fillText(txt,align==='right'?px-4:align==='center'?px:px+5,py);c.restore();}
+function colorbar(A,stops,x,y,w,h,lo,hi,label){const c=A.ctx;c.save();
+  for(let i=0;i<w;i++){c.fillStyle=rampColor(stops,i/(w-1));c.fillRect(x+i,y,1.3,h);}
+  c.strokeStyle='#c9d4d0';c.lineWidth=1;c.strokeRect(x,y,w,h);
+  c.font='10.5px ui-monospace,Menlo,Consolas,monospace';c.fillStyle=MUT;
+  c.textBaseline='top';c.textAlign='left';c.fillText(lo,x,y+h+3);
+  c.textAlign='right';c.fillText(hi,x+w,y+h+3);
+  if(label){c.textAlign='center';c.textBaseline='bottom';c.fillText(label,x+w/2,y-2);}c.restore();}
+const F=(v,n)=>Number(v).toFixed(n==null?4:n);
+const $=id=>document.getElementById(id);
+/* log-scale sliders snap to round learning rates, so what the page reports
+   is the value it actually used and quoting it in prose stays honest */
+const LR_MANT=[1,1.5,2,2.5,3,4,5,6,8,10];
+function niceLR(v){const p=Math.pow(10,v),ex=Math.floor(Math.log10(p)),m=p/Math.pow(10,ex);
+  let best=LR_MANT[0];
+  LR_MANT.forEach(c=>{if(Math.abs(Math.log(c)-Math.log(m))<Math.abs(Math.log(best)-Math.log(m)))best=c;});
+  return +(best*Math.pow(10,ex)).toPrecision(3);}
+
+/* ============================================================
+   2.  shared data — drawn once, from fixed seeds
+   ============================================================ */
+const A_TR=makeTaskA(400,11), A_TE=makeTaskA(400,12);
+const B_TR=makeTaskB(400,21), B_TE=makeTaskB(400,22);
+const C_TR=makeTaskC(400,31), C_TE=makeTaskC(400,32);
+const B_BASE=B_TR.y.reduce((a,b)=>a+b,0)/400;
+const B_BASELL=(()=>{let L=0;B_TR.y.forEach(t=>L+=-(t*Math.log(B_BASE)+(1-t)*Math.log(1-B_BASE)));return L/400;})();
+
+/* tabs */
+document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section.page').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');$(b.dataset.tab).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+  if(REDRAW[b.dataset.tab])REDRAW[b.dataset.tab]();}));
+const REDRAW={};
+
+/* ============================================================
+   TAB 1 — one neuron
+   ============================================================ */
+(function(){
+  const st={w:[6,2],b:-4,act:'sigmoid',cut:0.75,anim:null};
+  const ids=['a_w1','a_w2','a_b','a_cut'];
+  function sync(){
+    $('a_w1').value=st.w[0];$('a_w2').value=st.w[1];$('a_b').value=st.b;$('a_cut').value=st.cut;
+    $('a_w1v').textContent=F(st.w[0],1);$('a_w2v').textContent=F(st.w[1],1);
+    $('a_bv').textContent=(st.b<0?'−':'')+F(Math.abs(st.b),2);
+    $('a_cutv').textContent=F(st.cut,2);}
+  function draw(){
+    const f=(k,vc)=>neuronOut([k/KMAX,(vc-VC0)/(VC1-VC0)],st.w,st.b,st.act);
+    const A=axes($('a_surf'),{x0:0,x1:KMAX,y0:VC0,y1:VC1,padL:56,padT:26,padB:46});
+    heat(A,(k,vc)=>Math.max(0,Math.min(1,f(k,vc))),GREEN_RAMP);
+    contour(A,f,0.5,'#ffffff',null,2.6);
+    contour(A,f,0.5,'rgba(0,0,0,.35)',[5,4],1.2);
+    scatter(A,A_TR.X,A_TR.y,x=>x*KMAX,x=>VC0+x*(VC1-VC0));
+    frame(A,{xlabel:'density k  (veh/mi/lane)',ylabel:'demand  v/c',grid:false,
+             title:'output P(congested) over the detector plane'});
+    A.ctx.save();A.ctx.strokeStyle='#12211c';A.ctx.setLineDash([4,3]);A.ctx.lineWidth=1.4;
+    A.ctx.beginPath();A.ctx.moveTo(A.X(0),A.Y(st.cut));A.ctx.lineTo(A.X(KMAX),A.Y(st.cut));A.ctx.stroke();A.ctx.restore();
+    tag(A,KMAX-1,st.cut,'← this cut',INK,'right');
+    colorbar(A,GREEN_RAMP,A.X(A.x1)-130,A.padT-14,120,9,'0','1',null);
+
+    const lin=st.act==='linear';
+    const zb0=-(st.w[1]*(st.cut-VC0)/(VC1-VC0)+st.b)/(st.w[0]||1e-9)*KMAX;
+    const B=axes($('a_slice'),{x0:0,x1:KMAX,y0:lin?-1.6:-0.06,y1:lin?2.6:1.06,padL:52,padT:26,padB:46});
+    frame(B,{xlabel:'density k  (veh/mi/lane)',ylabel:'neuron output',
+             title:'a vertical cut at v/c = '+F(st.cut,2)+
+               (zb0>0&&zb0<KMAX?'   ·   z = 0 at k = '+F(zb0,1):'')});
+    if(!lin){B.ctx.save();B.ctx.strokeStyle='#dfe6e3';B.ctx.setLineDash([4,4]);B.ctx.beginPath();
+      B.ctx.moveTo(B.X(0),B.Y(0.5));B.ctx.lineTo(B.X(KMAX),B.Y(0.5));B.ctx.stroke();B.ctx.restore();}
+    const rug=[];A_TR.X.forEach((x,i)=>{if(Math.abs(toVC(x[1])-st.cut)<0.075)rug.push([toK(x[0]),A_TR.y[i]]);});
+    B.ctx.save();rug.forEach(r=>{B.ctx.beginPath();
+      B.ctx.arc(B.X(r[0]),B.Y(r[1]===1?(lin?1:0.985):(lin?0:0.015)),3.2,0,6.2832);
+      B.ctx.fillStyle=r[1]===1?'#12211c':'rgba(255,255,255,.9)';B.ctx.fill();
+      B.ctx.lineWidth=1.1;B.ctx.strokeStyle=r[1]===1?'#fff':'#7c8c87';B.ctx.stroke();});B.ctx.restore();
+    const pts=[];for(let i=0;i<=240;i++){const k=i/240*KMAX;pts.push([k,f(k,st.cut)]);}
+    curve(B,pts,S1,2.6);
+    const zb=-(st.w[1]*(st.cut-VC0)/(VC1-VC0)+st.b)/(st.w[0]||1e-9)*KMAX;
+    if(zb>0&&zb<KMAX){B.ctx.save();B.ctx.strokeStyle=S3;B.ctx.lineWidth=1.6;B.ctx.setLineDash([5,4]);
+      B.ctx.beginPath();B.ctx.moveTo(B.X(zb),B.Y(lin?-1.6:-0.06));B.ctx.lineTo(B.X(zb),B.Y(lin?2.6:1.06));
+      B.ctx.stroke();B.ctx.restore();}
+
+    const s=neuronStats(A_TR.X,A_TR.y,st.w,st.b,st.act);
+    const t=neuronStats(A_TE.X,A_TE.y,st.w,st.b,st.act);
+    $('a_acc').textContent=F(s.acc,4);$('a_tacc').textContent=F(t.acc,4);$('a_ll').textContent=F(s.ll,4);
+    const ck=st.w[0]/KMAX, cv=st.w[1]/(VC1-VC0), c0=st.b-st.w[1]*VC0/(VC1-VC0);
+    $('a_bnd').textContent=F(ck,3)+'·k '+(cv<0?'−':'+')+' '+F(Math.abs(cv),2)+'·(v/c) = '+
+      (-c0<0?'−':'')+F(Math.abs(c0),2);
+  }
+  ids.forEach(id=>$(id).addEventListener('input',()=>{
+    st.w[0]=+$('a_w1').value;st.w[1]=+$('a_w2').value;st.b=+$('a_b').value;st.cut=+$('a_cut').value;
+    sync();draw();}));
+  $('a_act').addEventListener('change',()=>{st.act=$('a_act').value;draw();});
+  function animate(freeze){
+    if(st.anim)cancelAnimationFrame(st.anim);
+    st.w=[0,0];st.b=0;let done=0;const total=4000;
+    $('a_act').value='sigmoid';st.act='sigmoid';
+    $('a_status').textContent=freeze?'fitting with the bias held at zero…':'fitting…';
+    const tick=()=>{
+      for(let i=0;i<80&&done<total;i++,done++){
+        const r=neuronGradStep(A_TR.X,A_TR.y,st.w,st.b,4,freeze);st.w=[r[0],r[1]];st.b=r[2];}
+      st.w[0]=Math.max(-30,Math.min(30,st.w[0]));st.w[1]=Math.max(-30,Math.min(30,st.w[1]));
+      st.b=Math.max(-25,Math.min(15,st.b));
+      sync();draw();
+      if(done<total)st.anim=requestAnimationFrame(tick);
+      else{st.anim=null;$('a_status').textContent='done — '+total+' full-batch steps at η = 4'+
+        (freeze?' , bias frozen at 0':'');}};
+    tick();}
+  $('a_fit').addEventListener('click',()=>animate(false));
+  $('a_fitnb').addEventListener('click',()=>animate(true));
+  $('a_reset').addEventListener('click',()=>{if(st.anim)cancelAnimationFrame(st.anim);st.anim=null;
+    st.w=[0,0];st.b=0;$('a_status').textContent='';sync();draw();});
+  sync();draw();REDRAW.p1=draw;
+})();
+
+/* ============================================================
+   TAB 2 — what one neuron cannot do
+   ============================================================ */
+(function(){
+  let w=[0,0],b=0;
+  for(let s=0;s<6000;s++){const r=neuronGradStep(B_TR.X,B_TR.y,w,b,4,false);w=[r[0],r[1]];b=r[2];}
+  function draw(){
+    const T=axes($('b_truth'),{x0:0,x1:KMAX,y0:VC0,y1:VC1,padL:56,padT:26,padB:46});
+    heat(T,(k,vc)=>breakdownP(k,vc),GREEN_RAMP);
+    contour(T,breakdownP,0.5,'#ffffff',null,2.6);
+    scatter(T,B_TR.X,B_TR.y,x=>x*KMAX,x=>VC0+x*(VC1-VC0));
+    frame(T,{xlabel:'density k  (veh/mi/lane)',ylabel:'demand  v/c',grid:false,
+             title:'the truth: P(breakdown in the next 15 min)'});
+    colorbar(T,GREEN_RAMP,T.X(T.x1)-130,T.padT-14,120,9,'0','1',null);
+    const f=(k,vc)=>sig(w[0]*(k/KMAX)+w[1]*((vc-VC0)/(VC1-VC0))+b);
+    const N=axes($('b_neuron'),{x0:0,x1:KMAX,y0:VC0,y1:VC1,padL:56,padT:26,padB:46});
+    heat(N,f,GREEN_RAMP);
+    contour(N,f,0.5,'#ffffff',null,2.6);
+    scatter(N,B_TR.X,B_TR.y,x=>x*KMAX,x=>VC0+x*(VC1-VC0));
+    frame(N,{xlabel:'density k  (veh/mi/lane)',ylabel:'demand  v/c',grid:false,
+             title:'the best one neuron can do'});
+    const s=neuronStats(B_TR.X,B_TR.y,w,b,'sigmoid');
+    $('b_acc').textContent=F(s.acc,4);$('b_bal').textContent=F(s.bal,4);
+    $('b_ll').textContent=F(s.ll,4);$('b_flag').textContent=s.pos+' / 400';
+    $('b_base').textContent=F(1-B_BASE,4);}
+  /* linear collapse */
+  function collapse(){
+    const depth=+$('c_depth').value,W=+$('c_width').value,act=$('c_act').value,seed=+$('c_seed').value;
+    $('c_depthv').textContent=depth;$('c_widthv').textContent=W;$('c_seedv').textContent=seed;
+    const rnd=mulberry32(seed),g=gaussFactory(rnd);
+    const dims=[2];for(let l=0;l<depth;l++)dims.push(W);dims.push(1);
+    const M=[],bs=[];let np=0;
+    for(let l=0;l<dims.length-1;l++){const A=[];
+      for(let o=0;o<dims[l+1];o++){const r=[];for(let i=0;i<dims[l];i++)r.push(g()/Math.sqrt(dims[l]));A.push(r);}
+      M.push(A);bs.push(Array.from({length:dims[l+1]},()=>g()*0.3));np+=dims[l]*dims[l+1]+dims[l+1];}
+    const A_=ACT[act];
+    const fwd=x=>{let a=x.slice();
+      for(let l=0;l<M.length;l++){const o=[];
+        for(let j=0;j<M[l].length;j++){let s=bs[l][j];for(let i=0;i<a.length;i++)s+=M[l][j][i]*a[i];
+          o.push(l===M.length-1?s:A_.f(s));}a=o;}return a[0];};
+    const f00=fwd([0,0]),c1=fwd([1,0])-f00,c2=fwd([0,1])-f00;
+    let dev=0;const r2=mulberry32(4242);
+    for(let t=0;t<2000;t++){const x=[6*r2()-3,6*r2()-3];
+      dev=Math.max(dev,Math.abs(fwd(x)-(c1*x[0]+c2*x[1]+f00)));}
+    $('c_params').textContent=np;$('c_eff').textContent=act==='identity'?'3':'—';
+    $('c_dev').textContent=dev.toExponential(2);
+    $('c_eq').innerHTML='<span class="dim">the stack, probed at three points, gives this single straight line</span>\n'+
+      '   f(x) = <span class="g">'+F(c1,4)+'</span>·x₁ '+(c2<0?'− ':'+ ')+'<span class="g">'+F(Math.abs(c2),4)+
+      '</span>·x₂ '+(f00<0?'− ':'+ ')+'<span class="bl">'+F(Math.abs(f00),4)+'</span>\n\n'+
+      '<span class="dim">largest gap between the '+depth+'-layer stack and that line, over 2,000 random inputs</span>\n'+
+      '   max |stack − line| = <span class="'+(act==='identity'?'g':'rd')+'">'+dev.toExponential(3)+'</span>'+
+      (act==='identity'?'   <span class="dim">← floating-point noise: they are the same function</span>'
+                       :'   <span class="dim">← not a line any more</span>');}
+  ['c_depth','c_width','c_seed'].forEach(id=>$(id).addEventListener('input',collapse));
+  $('c_act').addEventListener('change',collapse);
+  draw();collapse();REDRAW.p2=()=>{draw();collapse();};
+})();
+
+/* ============================================================
+   TAB 3 — connections, layers, and building it by hand
+   ============================================================ */
+(function(){
+  const cache={};
+  function trained(H){
+    if(cache[H])return cache[H];
+    const P=initMLP(H,7,1.0,'clf');
+    for(let s=0;s<2500;s++)mlpStep(P,B_TR.X,B_TR.y,'tanh',2.0);
+    cache[H]=P;return P;}
+  let sel=-1;
+  function netSVG(H,P){
+    const w=940,rowH=Math.max(46,Math.min(70,300/H)),h=Math.max(250,60+H*rowH);
+    const xi=120,xh=452,xo=800,r=24;
+    const iy=[h*0.38,h*0.62], oy=h/2;
+    const hy=[];for(let j=0;j<H;j++)hy.push(h/2+(j-(H-1)/2)*rowH);
+    let s='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="network diagram">';
+    const wire=(x1,y1,x2,y2,val,idx)=>{
+      const a=Math.min(1,Math.abs(val)/2.6);
+      const col=val>=0?S1:S3;
+      s+='<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+col+
+         '" stroke-opacity="'+(0.18+0.62*a).toFixed(2)+'" stroke-width="'+(0.9+3.4*a).toFixed(2)+'"/>';};
+    for(let j=0;j<H;j++){
+      wire(xi+r,iy[0],xh-r,hy[j],P.W1[j][0]);
+      wire(xi+r,iy[1],xh-r,hy[j],P.W1[j][1]);
+      wire(xh+r,hy[j],xo-r,oy,P.W2[j]);}
+    const node=(x,y,label,sub,fill,stroke,rr,click)=>{
+      s+='<g'+(click!=null?' style="cursor:pointer" data-unit="'+click+'"':'')+'>'+
+        '<circle cx="'+x+'" cy="'+y+'" r="'+(rr||r)+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+
+        (stroke==='#CFC493'?4:2)+'"/>'+
+        '<text x="'+x+'" y="'+(y+(sub?-2:4))+'" text-anchor="middle" font-size="13" font-weight="700" fill="'+
+        (fill==='#fff'?INK:'#fff')+'" font-family="ui-monospace,Menlo,monospace">'+label+'</text>'+
+        (sub?'<text x="'+x+'" y="'+(y+12)+'" text-anchor="middle" font-size="9.5" fill="'+
+          (fill==='#fff'?MUT:'rgba(255,255,255,.85)')+'">'+sub+'</text>':'')+'</g>';};
+    node(xi,iy[0],'x₁','density','#fff','#9fb0aa');
+    node(xi,iy[1],'x₂','demand','#fff','#9fb0aa');
+    for(let j=0;j<H;j++) node(xh,hy[j],'h'+(j+1),null,'#006747',sel===j?'#CFC493':'#00402c',
+      sel===j?r+3:r,j);
+    node(xo,oy,'ŷ','P(bd)','#0f1c18','#0f1c18');
+    s+='<text x="'+xi+'" y="22" text-anchor="middle" font-size="11.5" font-weight="700" fill="'+MUT+
+       '">inputs</text><text x="'+xh+'" y="22" text-anchor="middle" font-size="11.5" font-weight="700" fill="'+MUT+
+       '">hidden layer — H = '+H+'</text><text x="'+xo+'" y="22" text-anchor="middle" font-size="11.5" font-weight="700" fill="'+MUT+
+       '">output</text>';
+    s+='<text x="'+(w-6)+'" y="'+(h-8)+'" text-anchor="end" font-size="10.5" fill="'+MUT+
+       '">wire thickness = |weight| · green = positive · orange = negative · biases not drawn</text>';
+    return s+'</svg>';}
+  function drawUnits(H,P){
+    const U=axes($('d_unit'),{x0:0,x1:KMAX,y0:VC0,y1:VC1,padL:56,padT:26,padB:46});
+    if(sel<0){
+      heat(U,(k,vc)=>{let acc=0;for(let j=0;j<H;j++){
+        const a=Math.tanh(P.W1[j][0]*(k/KMAX)+P.W1[j][1]*((vc-VC0)/(VC1-VC0))+P.b1[j]);
+        acc+=Math.abs(a);}return acc/H;},GREEN_RAMP);
+      frame(U,{xlabel:'density k  (veh/mi/lane)',ylabel:'demand  v/c',grid:false,
+        title:'all '+H+' hidden units — click one in the diagram'});
+      for(let j=0;j<H;j++) contour(U,(k,vc)=>Math.tanh(P.W1[j][0]*(k/KMAX)+P.W1[j][1]*((vc-VC0)/(VC1-VC0))+P.b1[j]),
+        0,'rgba(255,255,255,.9)',null,2);
+    } else {
+      const f=(k,vc)=>0.5*(1+Math.tanh(P.W1[sel][0]*(k/KMAX)+P.W1[sel][1]*((vc-VC0)/(VC1-VC0))+P.b1[sel]));
+      heat(U,f,GREEN_RAMP);contour(U,f,0.5,'#ffffff',null,2.6);
+      frame(U,{xlabel:'density k  (veh/mi/lane)',ylabel:'demand  v/c',grid:false,
+        title:'hidden unit h'+(sel+1)+' on its own — one soft edge'});
+      U.ctx.save();U.ctx.font='700 11.5px ui-monospace,Menlo,monospace';
+      const lbl='w = ('+F(P.W1[sel][0],2)+', '+F(P.W1[sel][1],2)+')   b = '+F(P.b1[sel],2)+
+        '   → out × '+F(P.W2[sel],2);
+      const lw=U.ctx.measureText(lbl).width;
+      U.ctx.fillStyle='rgba(255,255,255,.92)';U.ctx.fillRect(U.X(0)+2,U.Y(VC1)+26,lw+10,17);
+      U.ctx.fillStyle=INK;U.ctx.textAlign='left';U.ctx.textBaseline='bottom';
+      U.ctx.fillText(lbl, U.X(0)+7, U.Y(VC1)+40);U.ctx.restore();}
+    const O=axes($('d_all'),{x0:0,x1:KMAX,y0:VC0,y1:VC1,padL:56,padT:26,padB:46});
+    const g=(k,vc)=>mlpForward(P,[k/KMAX,(vc-VC0)/(VC1-VC0)],'tanh').out;
+    heat(O,g,GREEN_RAMP);contour(O,g,0.5,'#ffffff',null,2.6);
+    scatter(O,B_TE.X,B_TE.y,x=>x*KMAX,x=>VC0+x*(VC1-VC0));
+    frame(O,{xlabel:'density k  (veh/mi/lane)',ylabel:'demand  v/c',grid:false,
+      title:'the whole network — a weighted vote of those edges'});}
+  function render(){
+    const H=+$('d_H').value;$('d_Hv').textContent=H;
+    if(sel>=H)sel=-1;
+    const P=trained(H);
+    $('d_net').innerHTML=netSVG(H,P);
+    $('d_net').querySelectorAll('[data-unit]').forEach(el=>el.addEventListener('click',()=>{
+      const j=+el.dataset.unit;sel=(sel===j?-1:j);render();}));
+    $('d_sel').textContent=sel<0?'showing: the whole network':'showing: hidden unit h'+(sel+1)+' — click again to clear';
+    $('d_p1').textContent=2*H;$('d_p2').textContent=H;$('d_p3').textContent=H;
+    $('d_ptot').textContent=4*H+1;
+    drawUnits(H,P);}
+  $('d_H').addEventListener('input',()=>{sel=-1;render();});
+
+  /* --- build it by hand --- */
+  const HB={w:[[4,0],[-4,0],[0,4]],b:[-1,3,-2],v:6,bo:-9};
+  const SOL={w:[[20,0],[-20,0],[0,20]],b:[-20*22/90,20*60/90,-20*(0.62-0.30)/0.75],v:10,bo:-25};
+  function hbSync(){
+    const m=[['h_w10',HB.w[0][0]],['h_w11',HB.w[0][1]],['h_b1',HB.b[0]],
+             ['h_w20',HB.w[1][0]],['h_w21',HB.w[1][1]],['h_b2',HB.b[1]],
+             ['h_w30',HB.w[2][0]],['h_w31',HB.w[2][1]],['h_b3',HB.b[2]],
+             ['h_v',HB.v],['h_bo',HB.bo]];
+    m.forEach(([id,v])=>{$(id).value=v;
+      $(id+'v').textContent=(v<0?'−':'')+F(Math.abs(v),id.indexOf('b')===2||id==='h_bo'?1:1);});}
+  function hbRead(){
+    HB.w[0]=[+$('h_w10').value,+$('h_w11').value];HB.b[0]=+$('h_b1').value;
+    HB.w[1]=[+$('h_w20').value,+$('h_w21').value];HB.b[1]=+$('h_b2').value;
+    HB.w[2]=[+$('h_w30').value,+$('h_w31').value];HB.b[2]=+$('h_b3').value;
+    HB.v=+$('h_v').value;HB.bo=+$('h_bo').value;}
+  function hbP(){return {H:3,mode:'clf',W1:[HB.w[0].slice(),HB.w[1].slice(),HB.w[2].slice()],
+    b1:HB.b.slice(),W2:[HB.v,HB.v,HB.v],b2:HB.bo};}
+  function hbDraw(){
+    const P=hbP();
+    const U=axes($('h_units'),{x0:0,x1:KMAX,y0:VC0,y1:VC1,padL:56,padT:26,padB:46});
+    heat(U,()=>0.04,GREEN_RAMP);
+    frame(U,{xlabel:'density k  (veh/mi/lane)',ylabel:'demand  v/c',grid:false,
+      title:'your three gates, at their 50% contours'});
+    const cols=[S1,S2,S3];
+    for(let j=0;j<3;j++) contour(U,(k,vc)=>sig(P.W1[j][0]*(k/KMAX)+P.W1[j][1]*((vc-VC0)/(VC1-VC0))+P.b1[j]),
+      0.5,cols[j],null,2.6);
+    U.ctx.save();U.ctx.font='700 11px -apple-system,BlinkMacSystemFont,sans-serif';
+    cols.forEach((c,j)=>{U.ctx.fillStyle=c;U.ctx.fillText('unit '+(j+1),U.X(3)+j*62,U.Y(VC1)+16);});U.ctx.restore();
+    const g=(k,vc)=>mlpForward(P,[k/KMAX,(vc-VC0)/(VC1-VC0)],'sigmoid').out;
+    const O=axes($('h_out'),{x0:0,x1:KMAX,y0:VC0,y1:VC1,padL:56,padT:26,padB:46});
+    heat(O,g,GREEN_RAMP);contour(O,g,0.5,'#ffffff',null,2.6);
+    scatter(O,B_TE.X,B_TE.y,x=>x*KMAX,x=>VC0+x*(VC1-VC0));
+    frame(O,{xlabel:'density k  (veh/mi/lane)',ylabel:'demand  v/c',grid:false,
+      title:'your network, scored on 400 held-out intervals'});
+    const m=clfMetrics(P,B_TE.X,B_TE.y,'sigmoid');
+    $('h_acc').textContent=F(m.acc,4);$('h_bal').textContent=F(m.bal,4);$('h_ll').textContent=F(m.ll,4);
+    const T3=clfMetrics(trained(3),B_TE.X,B_TE.y,'tanh');
+    $('h_cmp').textContent=F(T3.bal,4);$('h_cmpll').textContent=F(T3.ll,4);}
+  ['h_w10','h_w11','h_b1','h_w20','h_w21','h_b2','h_w30','h_w31','h_b3','h_v','h_bo']
+    .forEach(id=>$(id).addEventListener('input',()=>{hbRead();hbSync();hbDraw();}));
+  $('h_and').addEventListener('click',()=>{HB.v=10;HB.bo=-25;hbSync();hbDraw();});
+  $('h_or').addEventListener('click',()=>{HB.v=10;HB.bo=-5;hbSync();hbDraw();});
+  $('h_solve').addEventListener('click',()=>{HB.w=[SOL.w[0].slice(),SOL.w[1].slice(),SOL.w[2].slice()];
+    HB.b=SOL.b.map(v=>Math.round(v*4)/4);HB.v=SOL.v;HB.bo=SOL.bo;hbSync();hbDraw();});
+  render();hbSync();hbDraw();
+  REDRAW.p3=()=>{render();hbDraw();};
+})();
+
+/* ============================================================
+   TAB 4 — the backpropagation trace
+   ============================================================ */
+(function(){
+  const PRE={
+    base:{w:[[2.4,-1.8],[-1.1,3.0]],bh:[-0.6,-1.2],v:[2.2,-1.7],bo:0.4,x:[0.62,0.81],t:1},
+    wrong:{w:[[2.4,-1.8],[-1.1,3.0]],bh:[-0.6,-1.2],v:[-2.6,-2.2],bo:-1.2,x:[0.62,0.81],t:1},
+    right:{w:[[2.4,-1.8],[-1.1,3.0]],bh:[-0.6,-1.2],v:[3.4,2.6],bo:-0.4,x:[0.62,0.81],t:1},
+    sat:{w:[[9.0,7.5],[-8.5,-6.0]],bh:[-2.0,3.0],v:[2.2,-1.7],bo:0.4,x:[0.62,0.81],t:1}};
+  const STAGES=['the sample','z into the hidden units','squash → a','z into the output',
+    'ŷ and the loss','δ at the output','gradients: output layer','δ sent back to the hidden units',
+    'gradients: hidden layer','one step downhill'];
+  let P=trClone(PRE.base), P0=trClone(PRE.base), x=PRE.base.x.slice(), t=1, stage=0, nsteps=0;
+  const e=(v,n)=>{const a=Math.abs(v);return a!==0&&a<1e-3?v.toExponential(2):F(v,n==null?4:n);};
+
+  function wtab(){
+    const rows=[['w₁₁','x₁ → h₁','w00',P.w[0][0]],['w₁₂','x₂ → h₁','w01',P.w[0][1]],
+      ['b₁','bias of h₁','bh0',P.bh[0]],['w₂₁','x₁ → h₂','w10',P.w[1][0]],
+      ['w₂₂','x₂ → h₂','w11',P.w[1][1]],['b₂','bias of h₂','bh1',P.bh[1]],
+      ['v₁','h₁ → ŷ','v0',P.v[0]],['v₂','h₂ → ŷ','v1',P.v[1]],['b_out','bias of ŷ','bo',P.bo]];
+    let s='<tr><th class="raw">name</th><th class="raw">wire</th><th class="raw num">value</th></tr>';
+    rows.forEach(r=>{s+='<tr><td>'+r[0]+'</td><td style="color:var(--muted);font-weight:500">'+r[1]+
+      '</td><td class="num"><input type="number" step="0.1" data-k="'+r[2]+'" value="'+F(r[3],4)+
+      '" style="width:104px;font:inherit;font-family:ui-monospace,monospace;font-size:12.8px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;text-align:right"></td></tr>';});
+    $('t_wtab').innerHTML=s;
+    $('t_wtab').querySelectorAll('input').forEach(inp=>inp.addEventListener('change',()=>{
+      const v=parseFloat(inp.value);if(!isFinite(v))return;const k=inp.dataset.k;
+      if(k==='w00')P.w[0][0]=v;else if(k==='w01')P.w[0][1]=v;else if(k==='w10')P.w[1][0]=v;
+      else if(k==='w11')P.w[1][1]=v;else if(k==='bh0')P.bh[0]=v;else if(k==='bh1')P.bh[1]=v;
+      else if(k==='v0')P.v[0]=v;else if(k==='v1')P.v[1]=v;else P.bo=v;
+      P0=trClone(P);nsteps=0;render();}));}
+
+  function netSVG(bk){
+    const w=940,h=346,r=30,xi=118,xh=440,xo=768,LX=880;
+    const iy=[118,248],hy=[92,268],oy=178;
+    const S=[];
+    const push=s=>S.push(s);
+    const wireLbl=(x1,y1,x2,y2,tt,txt,col,dy)=>{
+      const px=x1+(x2-x1)*tt, py=y1+(y2-y1)*tt;
+      push('<text x="'+px.toFixed(1)+'" y="'+(py+(dy||0)).toFixed(1)+'" text-anchor="middle" font-size="11" '+
+        'font-family="ui-monospace,Menlo,monospace" font-weight="700" fill="'+col+'" '+
+        'paint-order="stroke" stroke="#fbfdfc" stroke-width="3.5">'+txt+'</text>');};
+    const wire=(x1,y1,x2,y2,val)=>{const a=Math.min(1,Math.abs(val)/3.2);
+      push('<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(val>=0?S1:S3)+
+        '" stroke-opacity="'+(0.22+0.6*a).toFixed(2)+'" stroke-width="'+(1+3.2*a).toFixed(2)+'"/>');};
+    push('<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="two-two-one network with live values">');
+    for(let j=0;j<2;j++){wire(xi+r,iy[0],xh-r,hy[j],P.w[j][0]);wire(xi+r,iy[1],xh-r,hy[j],P.w[j][1]);
+      wire(xh+r,hy[j],xo-r,oy,P.v[j]);}
+    const gw=stage>=8, gv=stage>=6, SUB=['₁','₂'];
+    /* the four input-to-hidden wires cross in the middle, so their labels sit in a
+       block beside the unit they feed rather than on the wire itself */
+    const BX=176;
+    const txt=(tx,ty,st,col)=>push('<text x="'+tx+'" y="'+ty+'" font-size="11" '+
+      'font-family="ui-monospace,Menlo,monospace" font-weight="700" fill="'+col+'">'+st+'</text>');
+    for(let j=0;j<2;j++){
+      const by=hy[j];
+      push('<rect x="'+(BX-9)+'" y="'+(by-23)+'" rx="7" width="'+(gw?236:112)+'" height="37" fill="rgba(251,253,252,.93)"/>');
+      for(let i=0;i<2;i++){
+        const ty=by-5+i*17;
+        txt(BX,ty,'x'+SUB[i]+'→',MUT);
+        txt(BX+24,ty,'w'+SUB[j]+SUB[i]+' = '+F(P.w[j][i],2),INK);
+        if(gw) txt(BX+112,ty,'∂L/∂w = '+e(bk.gw[j][i],3),bk.gw[j][i]>=0?DP:DN);}}
+    for(let j=0;j<2;j++){
+      wireLbl(xh+r,hy[j],xo-r,oy,0.5,'v'+SUB[j]+' = '+F(P.v[j],2),INK,-8);
+      if(gv)wireLbl(xh+r,hy[j],xo-r,oy,0.5,'∂L/∂v = '+e(bk.gv[j],3),bk.gv[j]>=0?DP:DN,9);}
+    const node=(cx,cy,fill,stroke,l1,l2,l3)=>{
+      push('<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2"/>');
+      const tc=fill==='#fff'?INK:'#fff', sc=fill==='#fff'?MUT:'rgba(255,255,255,.88)';
+      push('<text x="'+cx+'" y="'+(cy-(l2?4:0)+4)+'" text-anchor="middle" font-size="13" font-weight="700" fill="'+
+        tc+'" font-family="ui-monospace,Menlo,monospace">'+l1+'</text>');
+      if(l2)push('<text x="'+cx+'" y="'+(cy+14)+'" text-anchor="middle" font-size="10" fill="'+sc+'">'+l2+'</text>');
+      if(l3)push('<text x="'+cx+'" y="'+(cy+r+15)+'" text-anchor="middle" font-size="10.5" fill="'+MUT+
+        '" font-family="ui-monospace,Menlo,monospace">'+l3+'</text>');};
+    node(xi,iy[0],'#fff','#9fb0aa','x₁',F(x[0],2),F(toK(x[0]),1)+' veh/mi/ln');
+    node(xi,iy[1],'#fff','#9fb0aa','x₂',F(x[1],2),'v/c = '+F(toVC(x[1]),3));
+    for(let j=0;j<2;j++){
+      const on=stage>=2;
+      node(xh,hy[j],on?'#006747':'#fff',on?'#00402c':'#9fb0aa','h'+(j+1),
+        on?'a = '+F(bk.f.a1[j],3):null, stage>=1?'z = '+F(bk.f.z1[j],4):null);
+      /* bias tag */
+      push('<rect x="'+(xh-30)+'" y="'+(hy[j]-r-24)+'" rx="6" width="60" height="17" fill="#eef2f0" stroke="'+LINE+'"/>');
+      push('<text x="'+xh+'" y="'+(hy[j]-r-11)+'" text-anchor="middle" font-size="10" font-family="ui-monospace,Menlo,monospace" fill="'+
+        MUT+'">b = '+F(P.bh[j],2)+'</text>');
+      if(stage>=7)push('<text x="'+(xh)+'" y="'+(hy[j]+r+30)+'" text-anchor="middle" font-size="11" font-weight="700" fill="'+
+        (bk.d1[j]>=0?DP:DN)+'" font-family="ui-monospace,Menlo,monospace">δ'+(j+1)+' = '+e(bk.d1[j],4)+'</text>');}
+    node(xo,oy,stage>=4?'#0f1c18':'#fff',stage>=4?'#0f1c18':'#9fb0aa','ŷ',
+      stage>=4?F(bk.f.yh,3):null, stage>=3?'z = '+F(bk.f.z2,4):null);
+    push('<rect x="'+(xo-30)+'" y="'+(oy-r-24)+'" rx="6" width="60" height="17" fill="#eef2f0" stroke="'+LINE+'"/>');
+    push('<text x="'+xo+'" y="'+(oy-r-11)+'" text-anchor="middle" font-size="10" font-family="ui-monospace,Menlo,monospace" fill="'+
+      MUT+'">b = '+F(P.bo,2)+'</text>');
+    if(stage>=5)push('<text x="'+xo+'" y="'+(oy+r+30)+'" text-anchor="middle" font-size="11.5" font-weight="700" fill="'+
+      (bk.d2>=0?DP:DN)+'" font-family="ui-monospace,Menlo,monospace">δ = ŷ − t = '+F(bk.d2,4)+'</text>');
+    /* loss box */
+    if(stage>=4){
+      push('<rect x="'+(LX-46)+'" y="'+(oy-24)+'" rx="9" width="92" height="48" fill="#fff" stroke="'+
+        (bk.f.yh>0.5===(t===1)?S1:S3)+'" stroke-width="2"/>');
+      push('<text x="'+LX+'" y="'+(oy-6)+'" text-anchor="middle" font-size="10.5" fill="'+MUT+'">loss L</text>');
+      push('<text x="'+LX+'" y="'+(oy+13)+'" text-anchor="middle" font-size="14" font-weight="700" fill="'+INK+
+        '" font-family="ui-monospace,Menlo,monospace">'+F(trLoss(P,x,t),4)+'</text>');
+      push('<text x="'+LX+'" y="'+(oy+40)+'" text-anchor="middle" font-size="10.5" fill="'+MUT+'">t = '+t+'</text>');}
+    push('<text x="'+xi+'" y="22" text-anchor="middle" font-size="11.5" font-weight="700" fill="'+MUT+'">inputs</text>');
+    push('<text x="'+xh+'" y="22" text-anchor="middle" font-size="11.5" font-weight="700" fill="'+MUT+'">hidden layer</text>');
+    push('<text x="'+xo+'" y="22" text-anchor="middle" font-size="11.5" font-weight="700" fill="'+MUT+'">output</text>');
+    if(stage>=5)push('<text x="6" y="'+(h-8)+'" font-size="10.5" fill="'+MUT+
+      '">gradient colour: <tspan fill="'+DP+'" font-weight="700">orange = raise this weight to raise the loss</tspan>'+
+      ' · <tspan fill="'+DN+'" font-weight="700">blue = lower it to raise the loss</tspan>'+
+      ' · gradient descent moves the opposite way</text>');
+    push('</svg>');
+    return S.join('');}
+
+  function narrate(bk){
+    const a=bk.f.a1, z=bk.f.z1, sp=bk.sp;
+    const N=[
+      ['One detector interval arrives.','A 5-minute interval at k = '+F(toK(x[0]),1)+
+        ' veh/mi/ln and v/c = '+F(toVC(x[1]),3)+', which the network sees as x = ('+F(x[0],2)+', '+F(x[1],2)+
+        '). It really did break down, so the truth is t = '+t+'. Nine numbers now have to turn that pair into a probability.',
+       '<span class="dim">the sample, in the units the network sees</span>\n'+
+       '   x₁ = <b>'+F(x[0],2)+'</b>      x₂ = <b>'+F(x[1],2)+'</b>      t = <b>'+t+'</b>'],
+      ['Each hidden unit takes its own weighted sum.','Two independent copies of the tab-1 neuron, reading the same two inputs with different weights. Nothing is shared between them.',
+       '<span class="dim">hidden unit 1</span>\n   z₁ = '+F(P.w[0][0],2)+'·'+F(x[0],2)+' + ('+F(P.w[0][1],2)+')·'+F(x[1],2)+
+       ' + ('+F(P.bh[0],2)+') = <b>'+F(z[0],4)+'</b>\n<span class="dim">hidden unit 2</span>\n   z₂ = '+
+       F(P.w[1][0],2)+'·'+F(x[0],2)+' + ('+F(P.w[1][1],2)+')·'+F(x[1],2)+' + ('+F(P.bh[1],2)+') = <b>'+F(z[1],4)+'</b>'],
+      ['Squash each one.','Now the nonlinearity. Without this step the two layers below would collapse into one — that is the demonstration on tab 2.',
+       '   a₁ = σ('+F(z[0],4)+') = <b>'+F(a[0],4)+'</b>\n   a₂ = σ('+F(z[1],4)+') = <b>'+F(a[1],4)+'</b>\n\n'+
+       '<span class="dim">keep these two slopes — the backward pass will need them</span>\n'+
+       '   σ′(z₁) = a₁(1−a₁) = <span class="yl">'+e(sp[0],4)+'</span>      σ′(z₂) = a₂(1−a₂) = <span class="yl">'+e(sp[1],4)+'</span>'],
+      ['The output neuron reads the hidden units, not the detector.','It never sees k or v/c. Its inputs are the two answers the hidden layer produced.',
+       '   z⁽²⁾ = '+F(P.v[0],2)+'·'+F(a[0],4)+' + ('+F(P.v[1],2)+')·'+F(a[1],4)+' + ('+F(P.bo,2)+') = <b>'+F(bk.f.z2,4)+'</b>'],
+      ['Squash again, then score it.','This is the prediction, and this is how wrong it was. Everything after this point exists only to reduce that one number.',
+       '   ŷ = σ('+F(bk.f.z2,4)+') = <b>'+F(bk.f.yh,4)+'</b>\n\n   L = −[ t·log ŷ + (1−t)·log(1−ŷ) ] = <b>'+
+       F(trLoss(P,x,t),4)+'</b>'],
+      ['How wrong, at the output — and it is just the difference.','Cross-entropy composed with a sigmoid: the σ′ from the activation and the 1/ŷ from the logarithm cancel exactly. This cancellation is why these two are always paired.',
+       '   δ<sup>out</sup> = ∂L/∂z⁽²⁾ = ŷ − t = '+F(bk.f.yh,4)+' − '+t+' = <span class="yl">'+F(bk.d2,4)+'</span>\n\n'+
+       '<span class="dim">negative means: raise z⁽²⁾ — the network was not confident enough</span>'],
+      ['Gradients for the output layer.','Each weight’s gradient is the blame arriving at its destination times the signal that flowed along it. That pattern will repeat for every wire in every network you ever build.',
+       '   ∂L/∂v₁ = δ<sup>out</sup> · a₁ = '+F(bk.d2,4)+' · '+F(a[0],4)+' = <b>'+e(bk.gv[0],5)+'</b>\n'+
+       '   ∂L/∂v₂ = δ<sup>out</sup> · a₂ = '+F(bk.d2,4)+' · '+F(a[1],4)+' = <b>'+e(bk.gv[1],5)+'</b>\n'+
+       '   ∂L/∂b_out = δ<sup>out</sup> = <b>'+e(bk.gbo,5)+'</b>   <span class="dim">the bias’s input is always 1</span>'],
+      ['Send the blame backward along the same wires.','Here is the actual back-propagation. The blame at hidden unit j is the output blame, routed through vⱼ — the same weight the forward pass used, in the other direction — and then throttled by that unit’s own slope σ′(zⱼ).',
+       '   δ₁ = δ<sup>out</sup> · v₁ · σ′(z₁) = '+F(bk.d2,4)+' · '+F(P.v[0],2)+' · '+e(sp[0],4)+' = <span class="yl">'+e(bk.d1[0],5)+'</span>\n'+
+       '   δ₂ = δ<sup>out</sup> · v₂ · σ′(z₂) = '+F(bk.d2,4)+' · '+F(P.v[1],2)+' · '+e(sp[1],4)+' = <span class="yl">'+e(bk.d1[1],5)+'</span>\n\n'+
+       '<span class="dim">if σ′ is tiny, everything upstream of it gets almost nothing — try the “saturated” preset</span>'],
+      ['Gradients for the hidden layer — same pattern, one layer down.','Blame at the destination times the signal on the wire. That is the entire rule, applied again. In a 40-layer network it is applied 40 times and nothing else changes.',
+       '   ∂L/∂w₁₁ = δ₁ · x₁ = '+e(bk.d1[0],4)+' · '+F(x[0],2)+' = <b>'+e(bk.gw[0][0],5)+'</b>\n'+
+       '   ∂L/∂w₁₂ = δ₁ · x₂ = '+e(bk.d1[0],4)+' · '+F(x[1],2)+' = <b>'+e(bk.gw[0][1],5)+'</b>\n'+
+       '   ∂L/∂w₂₁ = δ₂ · x₁ = '+e(bk.d1[1],4)+' · '+F(x[0],2)+' = <b>'+e(bk.gw[1][0],5)+'</b>\n'+
+       '   ∂L/∂w₂₂ = δ₂ · x₂ = '+e(bk.d1[1],4)+' · '+F(x[1],2)+' = <b>'+e(bk.gw[1][1],5)+'</b>\n'+
+       '   ∂L/∂b₁ = δ₁ = <b>'+e(bk.gbh[0],5)+'</b>      ∂L/∂b₂ = δ₂ = <b>'+e(bk.gbh[1],5)+'</b>'],
+      ['All nine gradients are in hand. Now gradient descent takes over.','Backpropagation is finished — it produced nine numbers and nothing else. Choosing how far to move along them is a separate decision, and it is the one that goes wrong most often. Use the panel below.',
+       '   w ← w − <span class="yl">η</span> · ∂L/∂w    <span class="dim">for all nine, simultaneously</span>\n\n'+
+       '<span class="dim">simultaneously matters: the gradient describes the loss surface at the point you are standing on,\n'+
+       'so if you move one weight first the others’ gradients are already stale</span>']];
+    return N[stage];}
+
+  function gtab(bk,nm){
+    const rows=[['∂L/∂v₁',bk.gv[0],nm.gv[0]],['∂L/∂v₂',bk.gv[1],nm.gv[1]],['∂L/∂b_out',bk.gbo,nm.gbo],
+      ['∂L/∂w₁₁',bk.gw[0][0],nm.gw[0][0]],['∂L/∂w₁₂',bk.gw[0][1],nm.gw[0][1]],['∂L/∂b₁',bk.gbh[0],nm.gbh[0]],
+      ['∂L/∂w₂₁',bk.gw[1][0],nm.gw[1][0]],['∂L/∂w₂₂',bk.gw[1][1],nm.gw[1][1]],['∂L/∂b₂',bk.gbh[1],nm.gbh[1]]];
+    let worst=0,s='<tr><th class="raw">gradient</th><th class="raw num">backprop</th>'+
+      '<th class="raw num">finite differences</th><th class="raw num">gap</th></tr>';
+    rows.forEach(r=>{const d=Math.abs(r[1]-r[2]);worst=Math.max(worst,d);
+      s+='<tr><td style="font-family:ui-monospace,monospace;font-size:12.5px">'+r[0]+'</td><td class="num">'+
+        r[1].toExponential(6)+'</td><td class="num">'+r[2].toExponential(6)+'</td><td class="num" style="color:'+
+        (d<1e-6?S1:S3)+'">'+d.toExponential(1)+'</td></tr>';});
+    $('t_gtab').innerHTML=s;
+    $('t_worst').textContent=worst.toExponential(2);
+    $('t_passes').textContent='18';}
+
+  function render(){
+    const bk=trBack(P,x,t);
+    $('t_net').innerHTML=netSVG(bk);
+    const n=narrate(bk);
+    $('t_narr').innerHTML='<b>'+STAGES[stage].charAt(0).toUpperCase()+STAGES[stage].slice(1)+' — '+n[0]+'</b><br>'+n[1];
+    $('t_math').innerHTML=n[2];
+    $('t_stages').innerHTML=STAGES.map((s,i)=>'<span class="'+(i===stage?'now':i<stage?'done':'')+
+      '">'+(i+1)+' · '+s+'</span>').join('');
+    gtab(bk,trNumeric(P,x,t));
+    $('t_l0').textContent=F(trLoss(P0,x,t),4);
+    $('t_l1').textContent=F(trLoss(P,x,t),4);
+    $('t_yh').textContent=F(bk.f.yh,4);
+    $('t_nsteps').textContent=nsteps;
+    $('t_prev').disabled=stage===0;$('t_next').disabled=stage===STAGES.length-1;
+    wtab();}
+
+  function setPreset(k){
+    const p=PRE[k];P=trClone(p);P0=trClone(p);x=p.x.slice();t=p.t;nsteps=0;stage=0;
+    $('t_x1').value=x[0];$('t_x2').value=x[1];$('t_t').value=String(t);
+    $('t_x1v').textContent=F(toK(x[0]),1);$('t_x2v').textContent=F(toVC(x[1]),3);
+    render();}
+  $('t_preset').addEventListener('change',()=>setPreset($('t_preset').value));
+  ['t_x1','t_x2'].forEach(id=>$(id).addEventListener('input',()=>{
+    x=[+$('t_x1').value,+$('t_x2').value];
+    $('t_x1v').textContent=F(toK(x[0]),1);$('t_x2v').textContent=F(toVC(x[1]),3);render();}));
+  $('t_t').addEventListener('change',()=>{t=+$('t_t').value;render();});
+  $('t_next').addEventListener('click',()=>{if(stage<STAGES.length-1)stage++;render();});
+  $('t_prev').addEventListener('click',()=>{if(stage>0)stage--;render();});
+  $('t_all').addEventListener('click',()=>{stage=STAGES.length-1;render();});
+  $('t_rst').addEventListener('click',()=>{stage=0;render();});
+  $('t_lr').addEventListener('input',()=>$('t_lrv').textContent=F(niceLR(+$('t_lr').value),2));
+  function applySteps(n){
+    const lr=niceLR(+$('t_lr').value);
+    for(let s=0;s<n;s++){const bk=trBack(P,x,t);
+      P.v[0]-=lr*bk.gv[0];P.v[1]-=lr*bk.gv[1];P.bo-=lr*bk.gbo;
+      for(let j=0;j<2;j++){P.w[j][0]-=lr*bk.gw[j][0];P.w[j][1]-=lr*bk.gw[j][1];P.bh[j]-=lr*bk.gbh[j];}
+      nsteps++;}
+    stage=Math.max(stage,9);render();}
+  $('t_step').addEventListener('click',()=>applySteps(1));
+  $('t_step10').addEventListener('click',()=>applySteps(10));
+  $('t_undo').addEventListener('click',()=>{P=trClone(P0);nsteps=0;render();});
+  $('t_lrv').textContent=F(niceLR(+$('t_lr').value),2);
+  setPreset('base');
+  REDRAW.p4=render;
+})();
+
+/* ============================================================
+   TAB 5 — watch it learn
+   ============================================================ */
+(function(){
+  const MAX=6000;
+  let P=null,hist=[],step=0,best={ll:1e9,step:0},raf=null,dead=false;
+  const cfg=()=>({H:+$('e_H').value,act:$('e_act').value,
+    lr:niceLR(+$('e_lr').value),init:$('e_init').value});
+  function reset(){
+    if(raf)cancelAnimationFrame(raf);raf=null;dead=false;
+    const c=cfg();
+    P = c.init==='zero' ? zeroMLP(c.H,'clf')
+      : c.init==='big'  ? initMLP(c.H,7,20,'clf')
+      : initMLP(c.H,+c.init,1.0,'clf');
+    hist=[];step=0;best={ll:1e9,step:0};record();draw();
+    $('e_run').textContent='Run';$('e_prog').style.width='0%';}
+  function record(){
+    const c=cfg();
+    const a=clfMetrics(P,B_TR.X,B_TR.y,c.act), b=clfMetrics(P,B_TE.X,B_TE.y,c.act);
+    if(!isFinite(a.ll)||a.ll>1e6)dead=true;
+    hist.push([step,a.ll,b.ll]);
+    if(b.ll<best.ll){best={ll:b.ll,step:step};}
+    $('e_stepn').textContent=step;
+    $('e_trl').textContent=isFinite(a.ll)?F(a.ll,4):'diverged';
+    $('e_tel').textContent=isFinite(b.ll)?F(b.ll,4):'diverged';
+    $('e_trb').textContent=F(a.bal,4);$('e_teb').textContent=F(b.bal,4);
+    $('e_best').textContent=F(best.ll,4)+' @ '+best.step;}
+  function draw(){
+    const c=cfg();
+    const g=(k,vc)=>mlpForward(P,[k/KMAX,(vc-VC0)/(VC1-VC0)],c.act).out;
+    const A=axes($('e_surf'),{x0:0,x1:KMAX,y0:VC0,y1:VC1,padL:56,padT:26,padB:46});
+    heat(A,(k,vc)=>{const v=g(k,vc);return isFinite(v)?Math.max(0,Math.min(1,v)):0;},GREEN_RAMP);
+    contour(A,g,0.5,'#ffffff',null,2.6);
+    scatter(A,B_TE.X,B_TE.y,x=>x*KMAX,x=>VC0+x*(VC1-VC0));
+    frame(A,{xlabel:'density k  (veh/mi/lane)',ylabel:'demand  v/c',grid:false,
+      title:'what the network believes after '+step+' steps'});
+    colorbar(A,GREEN_RAMP,A.X(A.x1)-130,A.padT-14,120,9,'0','1',null);
+
+    let lo=1e9,hi=-1e9;hist.forEach(h=>{[h[1],h[2]].forEach(v=>{if(isFinite(v)){lo=Math.min(lo,v);hi=Math.max(hi,v);}});});
+    if(!isFinite(lo)){lo=0;hi=1;}
+    const y1=Math.min(2.0,Math.max(hi*1.06,B_BASELL*1.1)), y0=Math.max(0,lo*0.86);
+    const L=axes($('e_loss'),{x0:0,x1:Math.max(200,step),y0:y0,y1:y1,padL:58,padT:26,padB:46});
+    frame(L,{xlabel:'gradient-descent steps',ylabel:'log-loss  (lower is better)',
+      title:'training vs. held-out loss'});
+    L.ctx.save();L.ctx.strokeStyle=MUT;L.ctx.setLineDash([2,4]);L.ctx.lineWidth=1.4;
+    L.ctx.beginPath();L.ctx.moveTo(L.X(0),L.Y(B_BASELL));L.ctx.lineTo(L.X(L.x1),L.Y(B_BASELL));
+    L.ctx.stroke();L.ctx.restore();
+    if(B_BASELL<y1&&B_BASELL>y0) tag(L,L.x1,B_BASELL,'always predict the base rate',MUT,'right');
+    curve(L,hist.map(h=>[h[0],h[1]]),S1,2.4);
+    curve(L,hist.map(h=>[h[0],h[2]]),S2,2.4,[6,4]);
+    if(hist.length>3){
+      const last=hist[hist.length-1];
+      if(last[1]<=y1&&last[1]>=y0) tag(L,last[0],last[1],'train',S1,'right');
+      if(last[2]<=y1&&last[2]>=y0) tag(L,last[0],last[2],'held out',S2,'right');
+      if(best.step>0&&best.ll<=y1&&best.ll>=y0){
+        L.ctx.save();L.ctx.beginPath();L.ctx.arc(L.X(best.step),L.Y(best.ll),4.6,0,6.2832);
+        L.ctx.fillStyle='#fff';L.ctx.fill();L.ctx.lineWidth=2.2;L.ctx.strokeStyle=S2;L.ctx.stroke();
+        L.ctx.restore();
+        tag(L,best.step,best.ll,'best held-out: step '+best.step,S2,'left');}}
+    if(hi>y1){L.ctx.save();L.ctx.fillStyle=S3;L.ctx.font='700 11px -apple-system,sans-serif';
+      L.ctx.textAlign='left';L.ctx.fillText('↑ off scale — max '+F(hi,1),L.X(0)+6,L.Y(y1)+14);L.ctx.restore();}}
+  function frameStep(){
+    const c=cfg();
+    for(let i=0;i<50&&step<MAX;i++){
+      mlpStep(P,B_TR.X,B_TR.y,c.act,c.lr);step++;
+      const iv=step<200?4:step<1000?20:60;
+      if(step%iv===0)record();}
+    $('e_prog').style.width=(100*step/MAX).toFixed(1)+'%';
+    record();draw();
+    if(step<MAX&&!dead)raf=requestAnimationFrame(frameStep);
+    else{raf=null;$('e_run').textContent=dead?'Diverged — reset':'Done — '+step+' steps';}}
+  $('e_run').addEventListener('click',()=>{
+    if(raf){cancelAnimationFrame(raf);raf=null;$('e_run').textContent='Resume';return;}
+    if(step>=MAX)return;$('e_run').textContent='Pause';frameStep();});
+  $('e_step').addEventListener('click',()=>{const c=cfg();
+    for(let i=0;i<100&&step<MAX;i++){mlpStep(P,B_TR.X,B_TR.y,c.act,c.lr);step++;}
+    $('e_prog').style.width=(100*step/MAX).toFixed(1)+'%';record();draw();});
+  $('e_reset').addEventListener('click',reset);
+  ['e_H','e_act','e_lr','e_init'].forEach(id=>$(id).addEventListener('input',()=>{
+    $('e_Hv').textContent=$('e_H').value;$('e_np').textContent=4*(+$('e_H').value)+1;
+    $('e_lrv').textContent=F(niceLR(+$('e_lr').value),2);reset();}));
+  function preset(H,act,lr,init){
+    $('e_H').value=H;$('e_act').value=act;$('e_lr').value=Math.log10(lr).toFixed(3);$('e_init').value=init;
+    $('e_Hv').textContent=H;$('e_np').textContent=4*H+1;$('e_lrv').textContent=F(lr,2);
+    reset();$('e_run').textContent='Pause';frameStep();}
+  $('e_pg').addEventListener('click',()=>preset(6,'tanh',2,'7'));
+  $('e_pl').addEventListener('click',()=>preset(6,'tanh',0.02,'7'));
+  $('e_ph').addEventListener('click',()=>preset(6,'tanh',8,'7'));
+  $('e_pz').addEventListener('click',()=>preset(6,'tanh',2,'zero'));
+  $('e_lrv').textContent=F(niceLR(+$('e_lr').value),2);
+  reset();REDRAW.p5=draw;
+})();
+
+/* ============================================================
+   TAB 6 — regression: the same machinery
+   ============================================================ */
+(function(){
+  const ACC_RAMP=[[0,'#7a3a0c'],[0.25,'#c97a3c'],[0.5,'#eceeed'],[0.75,'#4a97bd'],[1,'#0E6E9E']];
+  const accU=a=>a<0?0.5+0.5*Math.max(-1,a/6):0.5+0.5*Math.min(1,a/1.2);
+  const MAX=20000;
+  let P=null,step=0,raf=null,dead=false,showLin=false;
+  /* OLS baseline, computed once */
+  const BE=(function(){const n=400,M=[[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+    for(let i=0;i<n;i++){const r=[C_TR.X[i][0],C_TR.X[i][1],1];
+      for(let a=0;a<3;a++){for(let b=0;b<3;b++)M[a][b]+=r[a]*r[b];M[a][3]+=r[a]*C_TR.y[i];}}
+    for(let c=0;c<3;c++){let p=c;for(let r=c+1;r<3;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;
+      const tmp=M[c];M[c]=M[p];M[p]=tmp;
+      for(let r=0;r<3;r++){if(r===c)continue;const f=M[r][c]/M[c][c];for(let k=c;k<4;k++)M[r][k]-=f*M[c][k];}}
+    return [M[0][3]/M[0][0],M[1][3]/M[1][1],M[2][3]/M[2][2]];})();
+  const linPred=(x1,x2)=>BE[0]*x1+BE[1]*x2+BE[2];
+  function reset(){
+    if(raf)cancelAnimationFrame(raf);raf=null;dead=false;
+    P=initMLP(+$('r_H').value,5,1.0,'reg');step=0;$('r_prog').style.width='0%';
+    $('r_run').textContent='Run';update();}
+  function update(){
+    const cut=+$('r_cut').value;
+    const net=(s,dv)=>mlpForward(P,[(s-CF.smin)/(CF.smax-CF.smin),(dv-CF.dvmin)/(CF.dvmax-CF.dvmin)],'tanh').out;
+    const lin=(s,dv)=>linPred((s-CF.smin)/(CF.smax-CF.smin),(dv-CF.dvmin)/(CF.dvmax-CF.dvmin));
+    const f=showLin?lin:net;
+    const A=axes($('r_surf'),{x0:CF.smin,x1:CF.smax,y0:CF.dvmin,y1:CF.dvmax,padL:58,padT:26,padB:46});
+    heat(A,(s,dv)=>{const v=f(s,dv);return isFinite(v)?accU(v):0.5;},ACC_RAMP);
+    contour(A,(s,dv)=>idmAccel(s,dv),0,'#ffffff',null,2.4);
+    contour(A,(s,dv)=>idmAccel(s,dv),-1,'rgba(255,255,255,.75)',[6,4],1.8);
+    contour(A,(s,dv)=>idmAccel(s,dv),-3,'rgba(255,255,255,.55)',[3,4],1.6);
+    frame(A,{xlabel:'gap s  (m)',ylabel:'closing speed Δv  (m/s)',grid:false,
+      title:showLin?'the straight-line fit':'the network'});
+    colorbar(A,ACC_RAMP,A.X(CF.smax)-130,A.padT-14,120,9,'−6','+1.2','a (m/s²)');
+    A.ctx.save();A.ctx.strokeStyle='#12211c';A.ctx.setLineDash([4,3]);A.ctx.lineWidth=1.4;
+    A.ctx.beginPath();A.ctx.moveTo(A.X(CF.smin),A.Y(cut));A.ctx.lineTo(A.X(CF.smax),A.Y(cut));
+    A.ctx.stroke();A.ctx.restore();
+
+    const B=axes($('r_slice'),{x0:CF.smin,x1:CF.smax,y0:-6.4,y1:1.6,padL:56,padT:26,padB:46});
+    frame(B,{xlabel:'gap s  (m)',ylabel:'acceleration a  (m/s²)',
+      title:'a cut at Δv = '+F(cut,1)+' m/s'});
+    B.ctx.save();
+    C_TR.X.forEach((x,i)=>{const dv=toDV(x[1]);if(Math.abs(dv-cut)>0.45)return;
+      B.ctx.beginPath();B.ctx.arc(B.X(toS(x[0])),B.Y(Math.max(-6.4,Math.min(1.6,C_TR.y[i]))),3,0,6.2832);
+      B.ctx.fillStyle='rgba(255,255,255,.9)';B.ctx.fill();
+      B.ctx.lineWidth=1.1;B.ctx.strokeStyle='#8b9a95';B.ctx.stroke();});B.ctx.restore();
+    const tp=[],lp=[],np=[];
+    for(let i=0;i<=200;i++){const s=CF.smin+i/200*(CF.smax-CF.smin);
+      tp.push([s,idmAccel(s,cut)]);lp.push([s,lin(s,cut)]);np.push([s,net(s,cut)]);}
+    curve(B,tp,'#aab6b2',5.0);curve(B,lp,S3,2.2,[7,4]);curve(B,np,S1,2.4);
+
+    const rmT=regRMSE(P,C_TR.X,C_TR.y,'tanh'), rmE=regRMSE(P,C_TE.X,C_TE.y,'tanh');
+    let s2=0;for(let i=0;i<400;i++){const d=mlpForward(P,C_TE.X[i],'tanh').out-C_TE.t[i];s2+=d*d;}
+    if($('r_lin_rmse').textContent==='—'){
+      let sl=0; for(let i=0;i<400;i++){const d=linPred(C_TE.X[i][0],C_TE.X[i][1])-C_TE.y[i];sl+=d*d;}
+      $('r_lin_rmse').textContent=F(Math.sqrt(sl/400),3);
+      const mu=C_TR.y.reduce((a,b)=>a+b,0)/400;
+      let sm=0; for(let i=0;i<400;i++){const d=mu-C_TE.y[i];sm+=d*d;}
+      $('r_mean_rmse').textContent=F(Math.sqrt(sm/400),3);}
+    $('r_stepn').textContent=step;
+    $('r_tr').textContent=isFinite(rmT)?F(rmT,4):'diverged';
+    $('r_te').textContent=isFinite(rmE)?F(rmE,4):'diverged';
+    $('r_tt').textContent=isFinite(s2)?F(Math.sqrt(s2/400),4):'diverged';
+    if(!isFinite(rmT))dead=true;}
+  function frameStep(){
+    const lr=niceLR(+$('r_lr').value);
+    for(let i=0;i<600&&step<MAX;i++){mlpStep(P,C_TR.X,C_TR.y,'tanh',lr);step++;}
+    if(!isFinite(mlpLoss(P,C_TR.X,C_TR.y,'tanh')))dead=true;
+    $('r_prog').style.width=(100*step/MAX).toFixed(1)+'%';update();
+    if(step<MAX&&!dead)raf=requestAnimationFrame(frameStep);
+    else{raf=null;$('r_run').textContent=dead?'Diverged — reset':'Done — '+step+' steps';}}
+  $('r_run').addEventListener('click',()=>{
+    if(raf){cancelAnimationFrame(raf);raf=null;$('r_run').textContent='Resume';return;}
+    if(step>=MAX)return;$('r_run').textContent='Pause';frameStep();});
+  $('r_reset').addEventListener('click',reset);
+  $('r_lin').addEventListener('click',()=>{showLin=!showLin;
+    $('r_lin').textContent=showLin?'Show the network again':'Show the straight-line fit';
+    $('r_lin').classList.toggle('on',showLin);update();});
+  $('r_H').addEventListener('input',()=>{$('r_Hv').textContent=$('r_H').value;reset();});
+  $('r_lr').addEventListener('input',()=>{$('r_lrv').textContent=F(niceLR(+$('r_lr').value),2);});
+  $('r_cut').addEventListener('input',()=>{$('r_cutv').textContent=F(+$('r_cut').value,1);update();});
+  $('r_lrv').textContent=F(niceLR(+$('r_lr').value),2);
+  reset();REDRAW.p6=update;
+})();
+</script>
+</body>
+</html>

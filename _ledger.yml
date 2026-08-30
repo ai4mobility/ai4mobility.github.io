@@ -97,6 +97,21 @@ items:
     dest: site/module1/notes.md#the-logit-you-already-use
     mounted: site/_static/companions/Sigmoid_Tanh_Companion.html
 
+  - id: m1-nn-backprop
+    file: Neural_Networks_and_Backprop_Companion.html
+    kind: companion
+    module: 1
+    session: 2026-09-03
+    status: integrated
+    dest: site/module1/notes.md#how-a-network-learns
+    mounted: site/_static/companions/Neural_Networks_and_Backprop_Companion.html
+    notes: >-
+      Weights / bias / activation / connections, then backpropagation traced number
+      by number on a 2-2-1 net. Six tabs. Two transportation anchors: a detector
+      classifying congestion and then breakdown risk (a band, not a threshold), plus
+      a car-following regression on the last tab. Every figure computed live from a
+      fixed seed; analytic gradients checked against finite differences in the page.
+
   - id: m1-multilayer
     file: Multilayer_Networks_Companion.html
     kind: companion
