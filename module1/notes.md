@@ -910,11 +910,15 @@ What matters is not that they run — it is what each one proves.
   *Proves:* your environment works, and the supervised-learning pipeline
   (data → model → loss → optimization → evaluation) is a thing you can execute
   end to end.
-- **{doc}`lab2_word_embeddings` — From Word2Vec to Road2Vec.** Train word
-  embeddings on a small corpus, reproduce the analogy structure, then apply the
-  *identical* algorithm to random walks on the real road network around USF
-  Tampa. *Proves:* representation learning is not about language. Functional
-  class falls out of context statistics without ever being labeled.
+- **{doc}`lab2_word_embeddings` — From Word2Vec to Road2Vec.** Write skip-gram
+  with negative sampling from scratch, train it on a small corpus and see the
+  analogy structure appear, then hand the *same trainer* random walks on the real
+  road network around USF Tampa. *Proves:* representation learning is not about
+  language — functional class does fall out of context statistics without ever
+  being labeled. *And then:* the same lab shows that plain latitude and longitude
+  recover it just as well, because a uniform random walk mostly encodes where a
+  place is, not what it does. Evaluating a representation against a free baseline
+  is the habit the lab is really teaching.
 - **{doc}`lab3_image_embeddings` — Image embeddings with a deep CNN.** Load a
   pretrained ResNet-50, visualize what each layer responds to, extract
   2048-dimensional embeddings, and check that semantically similar images

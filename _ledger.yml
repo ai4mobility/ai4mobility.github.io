@@ -136,7 +136,9 @@ items:
     session: 2026-09-10
     status: integrated
     dest: site/module1/notes.md#labs
-    notes: Word2Vec to Road2Vec; USF Tampa road network.
+    notes: Word2Vec to Road2Vec; USF Tampa road network. Rewritten Aug 2026 as a
+      self-contained numpy+matplotlib notebook (SGNS from scratch, baked OSM snapshot,
+      no downloads); adds the lat/lon baseline evaluation.
 
   - id: m1-lab3
     file: site/module1/lab3_image_embeddings.ipynb
@@ -445,3 +447,44 @@ items:
     kind: internal
     status: superseded
     notes: Predates site/resources.md, which is the live version.
+
+  - id: m1-embeddings-intro-slides
+    file: Embeddings_Intro_Slides.md
+    kind: deck
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    dest: site/module1/notes.md#an-embedding-is-a-geometry
+    notes: >
+      Six-slide opening segment for the Sept 10 embeddings lecture, sitting
+      after the existing "How human/AI perceives the world?" slide. Carries the
+      encoding-vs-embedding pivot, the terminology table, and the four-rung
+      representation ladder — none of which are in notes §1.3 yet. Fold the
+      terminology table and the ladder into §1.3 on the weekly pass.
+      Numbers reproduced by embeddings_intro_numbers.py.
+
+  - id: m1-embeddings-intro-numbers
+    file: embeddings_intro_numbers.py
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    notes: >
+      Reproducer for every figure on Embeddings_Intro_Slides.md — ASCII and
+      one-hot distances, raw-pixel distances on synthetic signs with the
+      brightness/shift sensitivity tables, and the dimensionality figures.
+
+  - id: m1-embeddings-terminology-table
+    file: Embedding_Terminology_Table.png
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    dest: site/module1/notes.md#an-embedding-is-a-geometry
+    notes: >
+      Slide 4 of the Sept 10 opener, rendered as a USF green/gold graphic
+      (3320x1580) for direct paste into the deck. Source markup in
+      Embedding_Terminology_Table.html; re-render with headless Chromium at
+      deviceScaleFactor 2. Representation is a banner row rather than a peer
+      row; the distance column is colour-coded gray/gold/green; the
+      identity-vs-similarity takeaway sits on the slide as a green band.
