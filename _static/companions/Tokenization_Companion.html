@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tokens — Visual Companion | AI for Mobility</title>
+<style>
+  :root{
+    --usf-green:#006747;--usf-green-d:#00543a;--usf-gold:#CFC493;--gold-deep:#b9a96a;
+    --ink:#1c2422;--muted:#5b6b66;--paper:#f6f8f7;--card:#fff;--line:#e2e8e5;
+    --s1:#00785A;--s2:#8E44AD;--s3:#B5581E;--s4:#0E6E9E;
+    --warn:#c0392b;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 6px 22px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--paper);line-height:1.58}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding:32px 0 26px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--usf-gold);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:28px;font-weight:780}
+  header.hero p{margin:0;max-width:880px;color:#e7efeb;font-size:15px}
+  nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:4px;flex-wrap:wrap;padding-top:7px;padding-bottom:7px}
+  nav.tabs button{border:none;background:transparent;font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 13px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  section.page{display:none;padding:24px 0 10px}
+  section.page.active{display:block}
+  h2.sec{font-size:23px;margin:4px 0 2px;color:var(--usf-green-d)}
+  h3{font-size:16px;margin:20px 0 6px;color:var(--ink)}
+  h4{font-size:13.5px;margin:14px 0 4px;color:var(--usf-green-d);text-transform:uppercase;letter-spacing:.05em}
+  h4.raw{text-transform:none;letter-spacing:.01em;font-size:15px}
+  .lead{color:var(--muted);max-width:880px;margin:0 0 16px;font-size:15px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+  .card.tight{padding:15px 18px}
+  .eq{background:#0f1c18;color:#eafff5;border-radius:10px;padding:14px 18px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14.5px;line-height:1.95;white-space:pre-wrap}
+  .eq b{color:var(--usf-gold)}.eq .g{color:#7fd8b0}.eq .bl{color:#6fc3e0}.eq .rd{color:#ff9b8f}.eq .dim{color:#7f948d}.eq .yl{color:#ffd98a}
+  .callout{border-left:4px solid var(--usf-gold);background:#fffdf3;padding:11px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:13.8px}
+  .callout.good{border-left-color:#1e9e57;background:#f3fbf6}
+  .callout.sig{border-left-color:var(--s4);background:#f1f8fb}
+  .callout.warn{border-left-color:var(--warn);background:#fdf4f2}
+  .callout b{color:var(--usf-green-d)}
+  .callout.warn b{color:var(--warn)}
+  .small{font-size:12px;color:var(--muted)}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin:6px 0 14px}
+  .ctrl{display:flex;flex-direction:column;gap:5px;min-width:140px}
+  .ctrl label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .ctrl label.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  .ctrl input[type=range]{width:210px;accent-color:var(--usf-green)}
+  .ctrl select{font:inherit;font-size:13.5px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .ctrl .val{font-family:ui-monospace,monospace;font-size:13px;color:var(--usf-green-d);font-weight:700}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 4px}
+  button.act{border:1px solid var(--usf-green);background:var(--usf-green);color:#fff;font-weight:700;font-size:13.5px;padding:9px 15px;border-radius:9px;cursor:pointer}
+  button.act:hover{background:var(--usf-green-d)}
+  button.act:disabled{opacity:.45;cursor:not-allowed}
+  button.ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:13px;padding:7px 12px;border-radius:9px;cursor:pointer}
+  button.ghost:hover{background:var(--paper)}
+  button.ghost.on{border-color:var(--usf-green);background:#eef7f3;color:var(--usf-green-d)}
+  textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;width:100%;border:1px solid var(--line);
+    border-radius:10px;padding:11px 13px;background:#fff;color:var(--ink);resize:vertical;line-height:1.6}
+  textarea:focus{outline:2px solid #cfe8dc;border-color:var(--usf-green)}
+  .readout{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+  .stat{background:#fbfdfc;border:1px solid var(--line);border-radius:11px;padding:9px 13px;min-width:104px;text-align:center}
+  .stat .n{font-size:18px;font-weight:780;font-family:ui-monospace,monospace;color:var(--usf-green-d)}
+  .stat .n.t{color:var(--s2)}.stat .n.w{color:var(--warn)}.stat .n.r{color:var(--s3)}.stat .n.b{color:var(--s4)}
+  .stat .n.sm{font-size:15px}
+  .stat .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+  .stat .l.raw{text-transform:none;letter-spacing:.02em;font-size:11px}
+  canvas{border-radius:10px;border:1px solid var(--line);background:#fff;display:block;max-width:100%}
+  figure{margin:0}
+  figcaption{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;max-width:900px}
+  table.map{width:100%;border-collapse:collapse;font-size:13.4px;margin-top:8px}
+  table.map th,table.map td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.map th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--line)}
+  table.map th.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  table.map td:first-child{font-weight:700;color:var(--usf-green-d)}
+  table.map td.num,table.map th.num{text-align:right;font-family:ui-monospace,monospace;font-size:12.8px}
+  table.map tr.hl td{background:#f3fbf6}
+  .tblwrap{overflow-x:auto}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr}}
+  ul.tight{margin:8px 0 0;padding-left:20px}ul.tight li{margin-bottom:5px;font-size:13.8px}
+  ol.tight{margin:8px 0 0;padding-left:20px}ol.tight li{margin-bottom:5px;font-size:13.8px}
+  footer{padding:26px 0;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);margin-top:18px}
+  details.deep{border:1px solid var(--line);border-radius:11px;background:#fbfdfc;padding:10px 15px;margin:14px 0}
+  details.deep summary{cursor:pointer;font-weight:700;font-size:13.5px;color:var(--usf-green-d)}
+  details.deep .small{margin-top:8px}
+  .netbox{background:#fbfdfc;border:1px solid var(--line);border-radius:12px;padding:8px}
+  .netbox svg{display:block;width:100%;height:auto}
+
+  /* ---- token chips ---- */
+  .chips{display:flex;flex-wrap:wrap;gap:3px;line-height:1.5;margin-top:6px}
+  .chip{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;padding:3px 5px;border-radius:5px;
+    white-space:pre;border:1px solid rgba(0,0,0,.06);cursor:default}
+  .chip .id{display:block;font-size:9.5px;text-align:center;color:#3c4a45;opacity:.72;letter-spacing:-.02em}
+  .chip.nl{font-style:italic}
+  .idsline{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted);word-break:break-all;margin-top:8px;
+    max-height:96px;overflow:auto;background:#fbfdfc;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+  .pretok{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+  .pretok span{font-family:ui-monospace,monospace;font-size:12.5px;padding:2px 6px;border-radius:5px;
+    background:#eef2f0;border:1px dashed #b9c6c1;white-space:pre}
+  .presets{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+  .presets button{font-size:12.5px;padding:5px 10px;border-radius:16px;border:1px solid var(--line);
+    background:#fff;cursor:pointer;color:var(--ink)}
+  .presets button:hover{border-color:var(--usf-green);background:#eef7f3}
+  .loadbar{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+  .mergelist{max-height:250px;overflow:auto;border:1px solid var(--line);border-radius:9px;background:#fbfdfc;padding:6px 4px}
+  .mergerow{display:flex;gap:8px;align-items:baseline;font-family:ui-monospace,monospace;font-size:12.5px;padding:3px 8px;border-radius:6px}
+  .mergerow:nth-child(odd){background:#f3f7f5}
+  .mergerow .k{color:var(--muted);width:26px;text-align:right}
+  .mergerow .m{color:var(--usf-green-d);font-weight:700}
+  .mergerow .c{color:var(--s3);margin-left:auto}
+  .mergerow.fresh{background:#dff0e8}
+  .wordsplit{font-family:ui-monospace,monospace;font-size:13px}
+  .wordsplit b{color:var(--usf-green-d)}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#eef7f3;color:var(--usf-green-d);margin-left:6px}
+  .badge.w{background:#fdf1ee;color:var(--warn)}
+  .badge.g{background:#f6f2e2;color:#6a5c22}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · Module 2 · Transformers &amp; LLMs · Sept 17 · University of South Florida</div>
+  <h1>Tokens: the unit a language model actually reads</h1>
+  <p>Before a transformer can do anything with the Signal Timing Manual, a crash narrative, or a
+     trajectory, something has to decide <b>what one symbol is</b>. That decision is tokenization, and it
+     is made once, before training, by an algorithm that has never heard of transportation. This page
+     shows you the real thing: the tokenizer that today's frontier models use is running in your browser,
+     on whatever text you type. Every count on this page was produced by that tokenizer or by
+     <span class="mono">tiktoken</span> on a real document — nothing here is illustrative.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap">
+  <button class="active" data-p="p1">1 · Why a token exists</button>
+  <button data-p="p2">2 · Not words</button>
+  <button data-p="p3">3 · Live tokenizer</button>
+  <button data-p="p4">4 · Where the vocabulary came from</button>
+  <button data-p="p5">5 · Tokens in transportation</button>
+  <button data-p="p6">6 · Fit card &amp; judgment</button>
+</div></nav>
+
+<!-- ==================== PAGE 1 ==================== -->
+<section class="page active" id="p1"><div class="wrap">
+  <h2 class="sec">The mobility problem</h2>
+  <p class="lead">You want a model to answer questions about the FHWA <i>Traffic Signal Timing Manual</i>
+     (FHWA-HOP-08-024) — 274 pages, 711,331 characters. A transformer cannot read characters and it cannot
+     read words. It reads a sequence of <b>integers</b>. Someone has to decide which integers, and that
+     decision is frozen into the model forever.</p>
+
+  <div class="card">
+    <h4 class="raw">The picture: what happens to a sentence before the model sees it</h4>
+    <div class="netbox">
+      <svg viewBox="0 0 980 330" role="img" aria-label="Pipeline from raw text through pre-token split, UTF-8 bytes, BPE merges, token IDs, to embedding rows">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#5b6b66"></path>
+          </marker>
+        </defs>
+        <text x="8" y="20" font-size="12.5" font-weight="700" fill="#5b6b66">STAGE 1 — raw text (what you type)</text>
+        <rect x="8" y="28" width="964" height="34" rx="7" fill="#fff" stroke="#e2e8e5"></rect>
+        <text x="20" y="50" font-size="15" font-family="ui-monospace,Menlo,monospace" fill="#1c2422">The LKA system disengaged on I-275 northbound.</text>
+
+        <line x1="490" y1="64" x2="490" y2="82" stroke="#5b6b66" stroke-width="1.4" marker-end="url(#ar)"></line>
+
+        <text x="8" y="98" font-size="12.5" font-weight="700" fill="#5b6b66">STAGE 2 — pre-token split (a fixed regular expression; the space joins the word on its right)</text>
+        <g font-size="13" font-family="ui-monospace,Menlo,monospace" fill="#1c2422">
+          <rect x="8" y="106" width="42" height="26" rx="5" fill="#eef2f0" stroke="#b9c6c1" stroke-dasharray="3 2"></rect><text x="16" y="124">The</text>
+          <rect x="56" y="106" width="42" height="26" rx="5" fill="#eef2f0" stroke="#b9c6c1" stroke-dasharray="3 2"></rect><text x="64" y="124">·LKA</text>
+          <rect x="104" y="106" width="70" height="26" rx="5" fill="#eef2f0" stroke="#b9c6c1" stroke-dasharray="3 2"></rect><text x="112" y="124">·system</text>
+          <rect x="180" y="106" width="102" height="26" rx="5" fill="#eef2f0" stroke="#b9c6c1" stroke-dasharray="3 2"></rect><text x="188" y="124">·disengaged</text>
+          <rect x="288" y="106" width="34" height="26" rx="5" fill="#eef2f0" stroke="#b9c6c1" stroke-dasharray="3 2"></rect><text x="296" y="124">·on</text>
+          <rect x="328" y="106" width="26" height="26" rx="5" fill="#eef2f0" stroke="#b9c6c1" stroke-dasharray="3 2"></rect><text x="336" y="124">·I</text>
+          <rect x="360" y="106" width="20" height="26" rx="5" fill="#eef2f0" stroke="#b9c6c1" stroke-dasharray="3 2"></rect><text x="367" y="124">-</text>
+          <rect x="386" y="106" width="36" height="26" rx="5" fill="#eef2f0" stroke="#b9c6c1" stroke-dasharray="3 2"></rect><text x="393" y="124">275</text>
+          <rect x="428" y="106" width="98" height="26" rx="5" fill="#eef2f0" stroke="#b9c6c1" stroke-dasharray="3 2"></rect><text x="436" y="124">·northbound</text>
+          <rect x="532" y="106" width="20" height="26" rx="5" fill="#eef2f0" stroke="#b9c6c1" stroke-dasharray="3 2"></rect><text x="539" y="124">.</text>
+        </g>
+        <text x="576" y="124" font-size="12" fill="#5b6b66">numbers are cut into runs of 1–3 digits here, never joined to a space</text>
+
+        <line x1="490" y1="138" x2="490" y2="156" stroke="#5b6b66" stroke-width="1.4" marker-end="url(#ar)"></line>
+
+        <text x="8" y="172" font-size="12.5" font-weight="700" fill="#5b6b66">STAGE 3 — each chunk becomes UTF-8 bytes, then merges are applied in a fixed learned order (BPE)</text>
+        <g font-size="12.5" font-family="ui-monospace,Menlo,monospace">
+          <rect x="8" y="180" width="272" height="30" rx="6" fill="#fbfdfc" stroke="#e2e8e5"></rect>
+          <text x="18" y="200" fill="#5b6b66">·d ·i ·s ·e ·n ·g ·a ·g ·e ·d</text>
+          <text x="292" y="200" font-size="17" fill="#006747">→</text>
+          <rect x="316" y="180" width="200" height="30" rx="6" fill="#f3fbf6" stroke="#cfe8dc"></rect>
+          <text x="326" y="200" fill="#00543a" font-weight="700">·diseng</text>
+          <text x="404" y="200" fill="#5b6b66">+</text>
+          <text x="420" y="200" fill="#00543a" font-weight="700">aged</text>
+          <text x="530" y="200" font-size="12" font-family="-apple-system,sans-serif" fill="#5b6b66">
+            a word an engineer thinks of as one thing becomes two symbols</text>
+        </g>
+
+        <line x1="490" y1="216" x2="490" y2="234" stroke="#5b6b66" stroke-width="1.4" marker-end="url(#ar)"></line>
+
+        <text x="8" y="250" font-size="12.5" font-weight="700" fill="#5b6b66">STAGE 4 — token IDs: this is the entire input to the model</text>
+        <rect x="8" y="258" width="964" height="30" rx="7" fill="#00543a"></rect>
+        <text x="20" y="278" font-size="13.5" font-family="ui-monospace,Menlo,monospace" fill="#eafff5">976 · 451 · 33279 · 2420 · 185311 · 4743 · 402 · 357 · 12 · 25046 · 16173 · 18791 · 13</text>
+
+        <line x1="490" y1="292" x2="490" y2="306" stroke="#5b6b66" stroke-width="1.4" marker-end="url(#ar)"></line>
+        <text x="8" y="322" font-size="12.5" font-weight="700" fill="#5b6b66">STAGE 5 — each ID indexes one row of the embedding matrix E — the vectors you met on Sept 10</text>
+      </svg>
+    </div>
+    <figcaption><b>Seven words in, thirteen integers out.</b> The tokenizer is a fixed, deterministic
+      program that runs before the network — it has no parameters that training can change, and the model
+      never sees anything upstream of Stage 4.</figcaption>
+  </div>
+
+  <h3>The bridge: you already do this — you call it discretization</h3>
+  <div class="card tight">
+    <p style="margin:0 0 10px;font-size:14px">Choosing a token is the same decision you make when you
+      choose a cell length <span class="mono">Δx</span> in the cell transmission model, a 5-minute
+      versus 15-minute aggregation bin for detector counts, a link versus a lane as the unit of a network
+      model, or an HCM level-of-service letter instead of a delay in seconds. In every case:</p>
+    <ul class="tight">
+      <li><b>Everything below the unit becomes invisible.</b> A 30-second shockwave does not exist in
+        15-minute bins. A 4&nbsp;mph deceleration does not exist in 10&nbsp;mph speed bins. The characters
+        inside a token do not exist to a language model.</li>
+      <li><b>Everything above the unit must be built out of units.</b> A queue longer than one CTM cell is
+        represented as several cells; a word longer than one token is represented as several tokens.</li>
+      <li><b>Finer units cost sequence length; coarser units cost fidelity.</b> That trade is the whole
+        design problem, and it is the same trade in both fields.</li>
+    </ul>
+    <div class="callout"><b>The one sentence to carry:</b> a token is the smallest symbol the model can
+      see or emit. It is a modelling choice, not a property of language — and in transportation it is a
+      choice you will have to make yourself, because nobody has made it for trajectories, signal logs,
+      or detector streams the way OpenAI made it for text.</div>
+  </div>
+
+  <h3>The key equation, and its reading</h3>
+  <div class="card">
+    <div class="eq"><span class="dim">tokenizer:</span>   text  <span class="g">→</span>  <b>(i<sub>1</sub>, i<sub>2</sub>, …, i<sub>T</sub>)</b>,   i<sub>t</sub> ∈ {0, 1, …, V−1}
+<span class="dim">embedding:</span>  <b>x</b><sub>t</sub> <span class="g">=</span> <b>E</b>[i<sub>t</sub>, :]        <b>E</b> ∈ ℝ<sup>V×d</sup></div>
+    <table class="map" style="margin-top:12px">
+      <tr><th class="raw" style="width:80px">Symbol</th><th class="raw">Meaning, in transportation terms</th></tr>
+      <tr><td>i<sub>t</sub></td><td>The token ID at position <i>t</i> — an integer, like a detector station ID or a link ID. It carries no meaning by itself.</td></tr>
+      <tr><td>T</td><td>Sequence length: how many symbols the document became. This is what you pay for — attention cost grows with T².</td></tr>
+      <tr><td>V</td><td>Vocabulary size: how many distinct symbols exist. Fixed forever when the model is built. <span class="mono">o200k_base</span> = 200,019.</td></tr>
+      <tr><td>d</td><td>Embedding dimension — the same <i>d</i> from Sept 10 (Word2Vec 300, GPT-2 768).</td></tr>
+      <tr><td><b>E</b></td><td>The embedding table: one learned row per vocabulary entry. GPT-2's is 50,257 × 768 = <b>38,597,376</b> parameters, spent before any reasoning happens.</td></tr>
+    </table>
+    <p style="font-size:14px;margin:12px 0 0"><b>In words:</b> tokenization turns a document into a list of
+      row numbers; the embedding table turns each row number into a vector. Everything the model will ever
+      know about a piece of text has to survive that lookup.</p>
+    <details class="deep">
+      <summary>Going deeper — why V is a budget, not a free parameter (optional)</summary>
+      <div class="small" style="font-size:13px;line-height:1.7">
+        V appears twice and pulls in opposite directions. At the input it costs <i>V·d</i> parameters in
+        <b>E</b>; at the output the model must produce a probability over all V tokens, which is a softmax
+        of the same width — another <i>V·d</i> matrix and an <i>O(V·d)</i> multiply at <i>every</i>
+        generated step. Doubling V therefore buys shorter sequences (attention cost falls roughly with T²)
+        at the price of a bigger, slower, and more thinly-trained vocabulary — rare entries get few
+        gradient updates. Going from <span class="mono">r50k_base</span> (V = 50,257) to
+        <span class="mono">o200k_base</span> (V = 200,019) shortened the Signal Timing Manual by 7.6%
+        (157,196 → 145,220 tokens) for a 4× larger table. The BPE merge rule itself is a greedy
+        compression algorithm: Gage (1994), applied to text by Sennrich, Haddow &amp; Birch (2016),
+        applied at the byte level by Radford et al. (2019).
+      </div>
+    </details>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 2 ==================== -->
+<section class="page" id="p2"><div class="wrap">
+  <h2 class="sec">Why tokens are not words</h2>
+  <p class="lead">Six ways the unit differs from the thing you call a word. Every split below was produced
+     by <span class="mono">o200k_base</span> — the tokenizer of the current OpenAI frontier models — and
+     you can reproduce all of them on tab 3. The middle dot <span class="mono">·</span> is a real space
+     inside the token.</p>
+
+  <div class="card">
+    <h4 class="raw">1 · The count does not match</h4>
+    <div class="readout">
+      <div class="stat"><div class="n">7</div><div class="l raw">words</div></div>
+      <div class="stat"><div class="n t">13</div><div class="l raw">tokens</div></div>
+      <div class="stat"><div class="n sm">1.86×</div><div class="l raw">on this sentence</div></div>
+      <div class="stat"><div class="n sm b">1.401×</div><div class="l raw">over all 274 pages</div></div>
+    </div>
+    <div class="chips" id="demo1"></div>
+    <p class="small" style="margin-top:10px">Across the whole Signal Timing Manual — 103,673 whitespace-separated
+      words — the ratio settles at 1.401 tokens per word, or 4.90 characters per token. That number is
+      the one to remember when someone asks "will this document fit?"</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h4 class="raw">2 · The space belongs to the token</h4>
+      <div class="chips" id="demo2a"></div>
+      <p class="small" style="margin-top:8px">The same five letters cost <b>one</b> token mid-sentence and
+        <b>two</b> at the start of a line, because <span class="mono">·lidar</span> earned its own
+        vocabulary entry and <span class="mono">lidar</span> did not. A leading space is not whitespace to
+        be stripped — it is part of the symbol.</p>
+    </div>
+    <div class="card">
+      <h4 class="raw">3 · Case is a different symbol</h4>
+      <div class="chips" id="demo2b"></div>
+      <p class="small" style="margin-top:8px">Your report writes LiDAR, the vendor spec writes LIDAR, the
+        paper writes lidar. To the model these are three unrelated symbol sequences costing 2, 3, and 1
+        token. Nothing in the architecture knows they are the same instrument — that has to be learned,
+        from data, at some cost.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">4 · Numbers are cut by a digit rule, not by place value</h4>
+    <div class="tblwrap"><table class="map">
+      <tr><th class="raw" style="width:130px">You wrote</th><th class="raw">The model sees</th><th class="num">Tokens</th><th class="raw">Why it matters</th></tr>
+      <tr><td class="mono">275</td><td class="mono">275</td><td class="num">1</td><td>Runs of 1–3 digits can be one symbol.</td></tr>
+      <tr><td class="mono">2750</td><td class="mono">275 | 0</td><td class="num">2</td><td>Add one digit and the split moves — the "275" here is <i>the same symbol</i> as the interstate.</td></tr>
+      <tr class="hl"><td class="mono">11,247</td><td class="mono">11 | , | 247</td><td class="num">3</td><td>The thousands comma severs place value. "11" and "247" arrive as separate facts.</td></tr>
+      <tr><td class="mono">1,000,000</td><td class="mono">1 | , | 000 | , | 000</td><td class="num">5</td><td>Arithmetic has to be reassembled from fragments — which is why LLMs fail at long-number math.</td></tr>
+      <tr><td class="mono">I-275</td><td class="mono">I | - | 275</td><td class="num">3</td><td>A route designation is never a single symbol.</td></tr>
+      <tr><td class="mono">17:42</td><td class="mono">17 | : | 42</td><td class="num">3</td><td>Timestamps too.</td></tr>
+    </table></div>
+    <div class="callout warn"><b>The practical consequence:</b> a 20-character row of detector data,
+      <span class="mono">07:00,1842,34.6,18.2</span>, costs <b>14 tokens</b> — 1.44 characters per token.
+      A paragraph of prose costs 5.66 characters per token. <b>Numeric data is about four times more
+      expensive per character than English</b>. Pasting a day of 5-minute detector counts into a chat
+      window is not a cheap way to analyze it.</div>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">5 · Your jargon is fragmented; ordinary English is not</h4>
+    <p style="font-size:14px;margin:2px 0 8px">The vocabulary is a frequency snapshot of a general web
+      corpus. Words common on the internet get one symbol; words common in a signal timing office do not.</p>
+    <div class="grid2">
+      <div>
+        <h4>One token</h4>
+        <div class="chips" id="demo5a"></div>
+      </div>
+      <div>
+        <h4>Two or more</h4>
+        <div class="chips" id="demo5b"></div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:14px"><b>Measured on the manual.</b> Of its 5,131 distinct
+      alphabetic word types, 4,038 (<b>78.7%</b>) are a single token; those cover <b>96.0%</b> of all word
+      <i>occurrences</i>. The 21.3% that fragment are not random — they are
+      <span class="mono">ring-and-barrier</span>, <span class="mono">protected-permissive</span>,
+      <span class="mono">semi-actuated</span>, <span class="mono">lead-lag</span>,
+      <span class="mono">volume-to-capacity</span>, <span class="mono">time-of-day</span>. The tokenizer
+      shatters precisely the terms that carry the domain.</div>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">6 · There is no such thing as an unknown word — and that is the real break from Word2Vec</h4>
+    <p style="font-size:14px;margin:2px 0 10px">Word2Vec (Sept 10, Lab 2) had a fixed list of word types
+      and an <span class="mono">UNK</span> bucket for everything else — a new vendor name, a misspelling in
+      a crash narrative, a road you had not seen. Byte-level BPE has single-byte entries for every possible
+      byte, so <i>every</i> string encodes. Nothing is ever rejected.</p>
+    <div class="grid2">
+      <div class="callout good" style="margin:0"><b>What you gain.</b> No out-of-vocabulary failures.
+        <span class="mono">V2X</span>, <span class="mono">TSM&amp;O</span>, a garbled OCR line, a Spanish
+        street name, a Python snippet — all encode without special handling.</div>
+      <div class="callout warn" style="margin:0"><b>What you pay.</b> Failure becomes silent and gradual
+        instead of loud. An unfamiliar term is not rejected; it is shredded into pieces and costs more
+        tokens, and you only notice in the bill and the accuracy.</div>
+    </div>
+    <div class="callout sig" style="margin-top:14px"><b>And the classic failure this explains:</b> ask a
+      model how many characters are in <span class="mono">I-275</span> and it is working from three
+      symbols — <span class="mono">I</span>, <span class="mono">-</span>, <span class="mono">275</span> —
+      not five characters. Character-level tasks (counting letters, reversing a string, checking a
+      station-ID checksum, spotting a typo in a route number) are hard for reasons that have nothing to do
+      with intelligence and everything to do with the unit.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 3 ==================== -->
+<section class="page" id="p3"><div class="wrap">
+  <h2 class="sec">The real tokenizer, running here</h2>
+  <p class="lead">This is not a simulation. The merge tables below are the published
+     <span class="mono">o200k_base</span> and <span class="mono">r50k_base</span> vocabularies, and the
+     encoder is the same byte-level BPE algorithm, verified piece-for-piece against OpenAI's
+     <span class="mono">tiktoken</span> on 3,084 test strings including 60 passages of the Signal Timing
+     Manual. Type anything; the IDs you see are the IDs the model would receive.</p>
+
+  <div class="card">
+    <div class="loadbar" id="loadbar">Loading vocabularies…</div>
+    <div class="presets" id="presets"></div>
+    <textarea id="inp" rows="4" spellcheck="false">The LKA system disengaged on I-275 northbound.</textarea>
+    <div class="btnrow">
+      <button class="ghost on" id="btnPre">Show pre-token split</button>
+      <button class="ghost" id="btnIds">Show ID list</button>
+      <button class="ghost" id="btnClear">Clear</button>
+      <span class="small" id="asciiWarn" style="color:var(--warn);font-weight:700"></span>
+    </div>
+
+    <div id="tokPanels"></div>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">Two generations of the same idea</h4>
+    <div class="readout" id="cmpStats"></div>
+    <p class="small" style="margin-top:8px"><b>r50k_base</b> (V = 50,257) is GPT-2's tokenizer, 2019 — the
+      one in this course's <span class="mono">gpt2_tokens_and_embeddings.py</span> demo.
+      <b>o200k_base</b> (V = 200,019) is the current OpenAI generation. Four times the vocabulary buys
+      about 7.6% fewer tokens on the Signal Timing Manual (157,196 → 145,220). Try
+      <span class="mono">k = 45 veh/mi/ln, v = 32 mph, q = 1440 veh/h/ln</span>: the newer tokenizer is
+      <i>worse</i> there (25 tokens vs 22), because its pre-token rule refuses to attach a space to a
+      digit run. Bigger and newer is not uniformly better on engineering text — measure it on
+      <i>your</i> corpus.</p>
+  </div>
+
+  <div class="callout"><b>One honest limitation of this page.</b> To keep the file small it ships the
+    ASCII portion of each merge table — 128,803 of the 199,998 <span class="mono">o200k_base</span> merges
+    and 49,353 of the 50,256 <span class="mono">r50k_base</span> merges. For ASCII input the result is
+    <i>exactly</i> what the real tokenizer produces, because merges involving non-ASCII bytes can never
+    apply to ASCII bytes. Paste an em-dash, a curly quote, an accented name or a CJK character and the
+    page will tell you it cannot answer — the real tokenizer can, and would encode them as multi-byte
+    sequences.</div>
+</div></section>
+
+<!-- ==================== PAGE 4 ==================== -->
+<section class="page" id="p4"><div class="wrap">
+  <h2 class="sec">Where the vocabulary came from</h2>
+  <p class="lead">Nobody wrote those 200,019 entries by hand. They were <i>learned</i>, by an algorithm
+     with one rule, run over a very large corpus. The rule is simple enough to run here on 280 words of
+     the Signal Timing Manual and watch it build a signal-timing vocabulary from scratch.</p>
+
+  <div class="card">
+    <h4 class="raw">Byte-Pair Encoding, the whole algorithm</h4>
+    <div class="eq"><span class="dim">start:</span>  every word is a sequence of single characters, the first carrying its leading space
+<span class="dim">repeat:</span> find the <b>most frequent adjacent pair</b> in the corpus  →  <b>merge it everywhere</b>  →  record it
+<span class="dim">stop:</span>   after V merges</div>
+    <p style="font-size:14px;margin:12px 0 0"><b>In words:</b> whatever two symbols sit next to each other
+      most often become one symbol. Repeat 200,000 times. Frequency is the <i>only</i> criterion — not
+      meaning, not morphology, not whether an engineer would call the result a word.</p>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">Run it yourself, on real FHWA text</h4>
+    <p class="small" style="margin:0 0 8px">Corpus: 280 words (122 distinct) from the Signal Timing Manual's
+      coordination and force-off sections. Edit it if you like — the merges recompute from scratch.</p>
+    <textarea id="bpeCorpus" rows="5" spellcheck="false"></textarea>
+    <div class="btnrow">
+      <button class="act" id="bpeStep">Merge once</button>
+      <button class="act" id="bpeRun10">Run 10 merges</button>
+      <button class="ghost" id="bpeRun60">Run to 60</button>
+      <button class="ghost" id="bpeReset">Reset</button>
+      <span class="small" id="bpeCount"></span>
+    </div>
+    <div class="grid2" style="margin-top:6px">
+      <div>
+        <h4>Merges learned, in order</h4>
+        <div class="mergelist" id="bpeMerges"></div>
+      </div>
+      <div>
+        <h4>How these words stand right now</h4>
+        <div class="card tight" style="margin:0;box-shadow:none" id="bpeWords"></div>
+        <div class="callout" style="margin-top:12px" id="bpeNote"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout sig"><b>The lesson, and it is the important one on this page.</b> After 60 merges on
+    280 words of signal-timing text, <span class="mono">·coordinated</span>,
+    <span class="mono">·phases</span>, <span class="mono">·bandwidth</span> and
+    <span class="mono">·time</span> are each a single token, while <span class="mono">·offsets</span> is
+    still four pieces and <span class="mono">·actuated</span> is five — words every signal engineer uses
+    daily, which simply appeared fewer times in this excerpt. <b>A vocabulary is a frequency photograph
+    of one corpus.</b> The real
+    tokenizers were photographed on the open internet, which is why
+    <span class="mono">·intersection</span> is one token and <span class="mono">·signalized</span> is two.</div>
+
+  <details class="deep">
+    <summary>Going deeper — what the real training run changes, and what it does not (optional)</summary>
+    <div class="small" style="font-size:13px;line-height:1.7">
+      Three differences from the toy above, none of which change the logic. <b>(a) Bytes, not characters:</b>
+      production BPE starts from the 256 possible bytes, so the vocabulary can represent any string and
+      an <span class="mono">UNK</span> token is never needed. <b>(b) A pre-token regex first:</b> merges
+      are only allowed <i>within</i> chunks produced by a fixed regular expression, which is what forbids
+      a merge across a space or across a digit boundary — and why
+      <span class="mono">o200k_base</span> cuts every number into runs of at most three digits.
+      <b>(c) Scale:</b> hundreds of billions of characters instead of 280 words, so the frequency estimate
+      is stable. What does <i>not</i> change: the tokenizer is fit once, before the network exists, has
+      no learnable parameters, and is never updated by training. If your domain was rare in that corpus,
+      you inherit the penalty for the life of the model. The fix is not to retrain the tokenizer — it is
+      to <b>measure your corpus's tokens-per-word</b> and budget for it, or to choose a model whose
+      tokenizer was fit on text like yours. Gage (1994); Sennrich, Haddow &amp; Birch (2016); Radford
+      et al. (2019).
+    </div>
+  </details>
+</div></section>
+
+<!-- ==================== PAGE 5 ==================== -->
+<section class="page" id="p5"><div class="wrap">
+  <h2 class="sec">What a token is when the data is not text</h2>
+  <p class="lead">Transformers do not require language. They require a sequence of symbols from a finite
+     vocabulary. So the transportation question is not "how do I tokenize my text" — it is
+     <b>"what is one symbol in my data, and who decided?"</b> Real mobility systems answer it very
+     differently, and the answers are published.</p>
+
+  <div class="card">
+    <h4 class="raw">Five real answers to "what is one token?"</h4>
+    <div class="tblwrap"><table class="map">
+      <tr>
+        <th class="raw" style="width:170px">System</th><th class="raw">One token is…</th>
+        <th class="num">Vocabulary V</th><th class="raw">Sequence cost</th>
+      </tr>
+      <tr class="hl">
+        <td>GPT-4o generation<br><span class="small mono">o200k_base</span></td>
+        <td>A byte string: a word, a word-piece, a space+word, a run of 1–3 digits, punctuation.</td>
+        <td class="num">200,019</td>
+        <td>~530 tokens per manual page; 1.401 tokens per English word.</td>
+      </tr>
+      <tr>
+        <td>GPT-2<br><span class="small mono">r50k_base</span></td>
+        <td>The same idea, four times smaller.</td>
+        <td class="num">50,257</td>
+        <td>157,196 tokens for the same 274-page manual (+8.2%).</td>
+      </tr>
+      <tr>
+        <td>Word2Vec / Road2Vec<br><span class="small">course Lab 2</span></td>
+        <td>A whole word, or a whole road link. No sub-units, and an <span class="mono">UNK</span> for anything new.</td>
+        <td class="num">36,741<br><span class="small">(text8)</span></td>
+        <td>1 token per word — but every unseen term is lost.</td>
+      </tr>
+      <tr>
+        <td>MotionLM<br><span class="small">Waymo, ICCV 2023</span></td>
+        <td>A quantized motion increment: the (Δx, Δy) a vehicle moves in the next half-second, on a 13×13 grid.</td>
+        <td class="num">169</td>
+        <td>2 tokens per agent per second; an 8-second forecast is 16 tokens per agent.</td>
+      </tr>
+      <tr>
+        <td>GAIA-1<br><span class="small">Wayve, driving world model</span></td>
+        <td>A code for one 16×16 patch of a camera frame, from a learned VQ codebook.</td>
+        <td class="num">8,192</td>
+        <td>576 tokens per frame at 288×512, 6.25 Hz → <b>3,600 tokens per second of video</b>.</td>
+      </tr>
+    </table></div>
+    <figcaption style="margin-top:10px"><b>Vocabulary size spans three orders of magnitude</b> — 169 to
+      200,019 — and it is set by how finely the designer chose to slice the underlying continuous
+      quantity, not by how "complex" the domain is. Motion needs 169 symbols because a half-second
+      displacement really is a small, bounded thing.</figcaption>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">The same budget, three ways to spend it</h4>
+    <div class="netbox">
+      <svg viewBox="0 0 940 190" role="img" aria-label="Bar comparison of what 145,220 tokens buys: 274 manual pages, 40 seconds of driving video, 72,610 agent-seconds of motion forecast">
+        <text x="8" y="20" font-size="13" font-weight="700" fill="#00543a">What does a 145,220-token context hold?</text>
+        <g font-size="12.5" fill="#1c2422">
+          <text x="8" y="52">Signal Timing Manual</text>
+          <rect x="200" y="38" width="640" height="20" rx="4" fill="#006747"></rect>
+          <text x="852" y="53" font-weight="700" fill="#00543a">274 pages</text>
+          <text x="200" y="74" font-size="11.5" fill="#5b6b66">274 pages · 103,673 words · 4.90 characters per token</text>
+
+          <text x="8" y="108">GAIA-1 driving video</text>
+          <rect x="200" y="94" width="640" height="20" rx="4" fill="#B5581E"></rect>
+          <text x="852" y="109" font-weight="700" fill="#B5581E">40.3 s</text>
+          <text x="200" y="130" font-size="11.5" fill="#5b6b66">576 tokens/frame × 6.25 Hz = 3,600 tokens per second of driving</text>
+
+          <text x="8" y="164">MotionLM forecast</text>
+          <rect x="200" y="150" width="640" height="20" rx="4" fill="#0E6E9E"></rect>
+          <text x="852" y="165" font-weight="700" fill="#0E6E9E">72,610 agent-s</text>
+          <text x="200" y="186" font-size="11.5" fill="#5b6b66">2 tokens per agent per second at a 169-symbol vocabulary</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Bars are equal because the token budget is equal — the units underneath are not.</b>
+      Forty seconds of camera video costs what an entire federal manual costs. That single comparison
+      explains most of why video world models are expensive and why text-first agency tools are cheap.</figcaption>
+  </div>
+
+  <h3>Design one yourself: tokenizing a car-following event</h3>
+  <div class="card">
+    <p style="font-size:14px;margin:0 0 10px">Below is a 60-second leader–follower event, simulated with
+      the Intelligent Driver Model at fixed parameters (deterministic — no random seed, no fitted data).
+      The leader brakes from 29 to 15 m/s and recovers. You choose the token: how often to sample
+      (<b>Δt</b>) and how finely to bin speed (<b>Δv</b>). The three costs update live.</p>
+    <div class="controls">
+      <div class="ctrl">
+        <label class="raw">Δt — one token every</label>
+        <input type="range" id="sDt" min="0" max="6" step="1" value="3">
+        <span class="val" id="vDt"></span>
+      </div>
+      <div class="ctrl">
+        <label class="raw">Δv — speed bin width</label>
+        <input type="range" id="sDv" min="0" max="5" step="1" value="3">
+        <span class="val" id="vDv"></span>
+      </div>
+      <div class="ctrl">
+        <label class="raw">Preset</label>
+        <select id="tokPreset">
+          <option value="3,3">Sensible: 1 s, 5 mph</option>
+          <option value="0,0">Fine: 0.1 s, 1 mph</option>
+          <option value="6,4">Coarse: 10 s, 10 mph</option>
+          <option value="3,5">Blind: 1 s, 20 mph</option>
+        </select>
+      </div>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="stLen">–</div><div class="l raw">tokens in the event</div></div>
+      <div class="stat"><div class="n t" id="stVocab">–</div><div class="l raw">vocabulary size</div></div>
+      <div class="stat"><div class="n b" id="stUsed">–</div><div class="l raw">symbols actually used</div></div>
+      <div class="stat"><div class="n r" id="stRmse">–</div><div class="l raw">reconstruction RMSE (mph)</div></div>
+    </div>
+    <figure style="margin-top:12px">
+      <canvas id="cvTraj" width="900" height="300"></canvas>
+      <figcaption><b>Solid green</b> — the follower's true speed at 0.1 s. <b>Orange steps</b> — everything
+        the model would see: the bin centre held until the next token. The gap between them is information
+        the tokenizer destroyed, and no amount of model capacity gets it back.</figcaption>
+    </figure>
+    <div style="margin-top:12px">
+      <h4>The token sequence</h4>
+      <div class="idsline" id="trajSeq"></div>
+    </div>
+    <div class="callout" id="trajNote"></div>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">Applications — and the classical method each one has to beat</h4>
+    <div class="tblwrap"><table class="map">
+      <tr><th class="raw" style="width:150px">Task</th><th class="raw">Where tokenization decides the outcome</th>
+        <th class="raw" style="width:180px">Data you need</th><th class="raw" style="width:180px">Classical baseline</th></tr>
+      <tr>
+        <td>Agency document search<br><span class="badge">retrieval</span><span class="badge">extraction</span></td>
+        <td>Indexing the 274-page Signal Timing Manual costs 145,220 tokens once. Chunk boundaries are
+          drawn in tokens, so a table split mid-row is a retrieval failure you created at tokenization time.</td>
+        <td>The manual and your agency's own standards, as text (OCR quality matters — it is tokenized too).</td>
+        <td>Full-text keyword search. Honest and often good enough; it fails on synonymy, not on cost.</td>
+      </tr>
+      <tr>
+        <td>Crash &amp; complaint narrative coding<br><span class="badge">classification</span></td>
+        <td>Narratives are full of terms the general vocabulary fragments — <span class="mono">·spill|back</span>,
+          <span class="mono">·plato|on</span>, ADAS feature names, misspellings. Fragmentation is exactly
+          where a bag-of-words baseline and an LLM diverge.</td>
+        <td>NHTSA complaint narratives, FARS/state crash narratives, agency incident logs.</td>
+        <td>Keyword dictionary + logistic regression on bag-of-words. Cheap, auditable, and a real contender.</td>
+      </tr>
+      <tr>
+        <td>Trajectory prediction<br><span class="badge">prediction</span></td>
+        <td>MotionLM's whole design is a tokenization choice: quantize (Δx, Δy) to 13×13 at 2 Hz and the
+          forecasting problem becomes language modelling. Change the bin and you change what manoeuvres exist.</td>
+        <td>Waymo Open Motion Dataset, highD, NGSIM, or your own tracked trajectories.</td>
+        <td>Constant-velocity / Kalman filter, and continuous-output regression heads.</td>
+      </tr>
+      <tr>
+        <td>Traffic state sequence models<br><span class="badge">prediction</span></td>
+        <td>Detector streams have no natural token. You pick Δt and the state quantization, exactly as in
+          the panel above — and you pay 1.44 characters per token if you hand the numbers over as text.</td>
+        <td>Loop/radar detector archives, probe speeds (5-min bins are already a tokenization).</td>
+        <td>ARIMA, Kalman filtering, or the CTM itself — all of which take the continuous value directly.</td>
+      </tr>
+    </table></div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 6 ==================== -->
+<section class="page" id="p6"><div class="wrap">
+  <h2 class="sec">Fit card, failure modes, and what to check</h2>
+
+  <div class="card">
+    <h4 class="raw">Fit card — Sub-word tokenization (byte-level BPE)</h4>
+    <table class="map">
+      <tr><td style="width:210px">Idea in one sentence</td><td>Learn a fixed vocabulary of frequent byte
+        strings from a corpus, then represent any input as a sequence of integers indexing that vocabulary.</td></tr>
+      <tr><td>Why it works (the logic)</td><td>Frequent things get short codes and rare things get built
+        from pieces, so a fixed-size vocabulary covers an unbounded language with no unknown-word case.</td></tr>
+      <tr><td>Fits these tasks</td><td>Any transformer over text or over any signal you are willing to
+        discretize — extraction, classification, generation, retrieval, prediction.</td></tr>
+      <tr><td>Needs this data</td><td>To <i>use</i>: nothing, the vocabulary ships with the model. To
+        <i>judge</i>: a sample of your own corpus, to measure tokens per word and per record. Anyone
+        with a document archive has this.</td></tr>
+      <tr><td>Breaks when</td><td>The corpus is numeric (1.44 chars/token), heavy in domain jargon, non-English,
+        or OCR'd badly; and on any task that needs to see inside a token — counting characters, checksums,
+        spelling.</td></tr>
+      <tr><td>Keep the classical method when</td><td>The values are already numeric and structured. A
+        detector archive belongs in a dataframe and a Kalman filter, not in a context window — you would
+        be paying 14 tokens to transmit 20 characters that <span class="mono">float64</span> stores in 8 bytes.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">Where it breaks, in transportation terms</h4>
+    <ul class="tight">
+      <li><b>Distribution shift, in the vocabulary.</b> A tokenizer fit on the open web meets a corpus of
+        FDOT plan sheets. Nothing errors; your token bill rises and long documents stop fitting.</li>
+      <li><b>Silent cost blowups.</b> The manual is 145,220 tokens; the same page count of scanned tables
+        with OCR noise can be far more. Measure before you promise a client a price.</li>
+      <li><b>Chunk boundaries are drawn in tokens.</b> A RAG index that splits every 512 tokens will cut a
+        timing table in half. The retrieval failure looks like a model failure.</li>
+      <li><b>Character-level tasks.</b> Route-number typos, station-ID checksums, counting occurrences of a
+        letter — all sit below the unit and fail for structural reasons.</li>
+      <li><b>Numeric reasoning.</b> <span class="mono">11 | , | 247</span> is three unrelated symbols.
+        Do not ask an LLM to do the arithmetic you would put in a spreadsheet.</li>
+      <li><b>For your own tokens:</b> a quantization you chose is a modelling assumption you are obliged
+        to defend. If a 4 mph deceleration cannot be represented, your model cannot predict rear-end
+        conflicts, no matter how it scores.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:5px solid var(--usf-green)">
+    <h4 class="raw">Evaluation close — the three questions, every time</h4>
+    <ul class="tight">
+      <li><b>What is the baseline?</b> For the tokenizer comparison on this page, the baseline is
+        <span class="mono">r50k_base</span> (2019). o200k is 7.6% cheaper on the manual's prose and
+        <i>more</i> expensive on the units line — so "newer tokenizer" is not by itself an improvement
+        claim. For a trajectory tokenization, the baseline is the continuous model: a Kalman filter that
+        never quantizes at all.</li>
+      <li><b>How was the data split, and why is that honest?</b> There is no fitting on this page, so
+        there is no split to defend — the counts are a census of one public document
+        (FHWA-HOP-08-024, 274 pages) with the text extracted by <span class="mono">pdftotext</span>, and
+        the browser tokenizer was checked against <span class="mono">tiktoken</span> on 3,084 strings
+        including 60 passages of that manual. The honesty risk here is the extraction, not the split:
+        different PDF extractors give different character counts, so the tokens-per-word ratio is the
+        transferable number, not the absolute total.</li>
+      <li><b>What does it do on the ugly cases?</b> Numeric tables (1.44 chars/token), hyphenated domain
+        compounds (<span class="mono">Ring|-and|-bar|rier</span>), all-caps acronyms
+        (<span class="mono">L|ID|AR</span>), and anything non-ASCII, which this page refuses outright
+        rather than guessing.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4 class="raw">Check yourself</h4>
+    <ol class="tight">
+      <li>A consultant proposes putting your agency's full signal timing standards into an LLM's context
+        for every question. Using the numbers on this page, estimate the token cost for a 274-page
+        document — then say what you would do instead, and what you would lose by doing it.</li>
+      <li>You have three years of 5-minute detector data — roughly 315,000 rows per station — and you want
+        a model to predict breakdown. One team proposes serializing the rows as CSV text into an LLM.
+        Give two quantitative reasons this is the wrong shape for the problem, and name the classical
+        method you would run first.</li>
+      <li>You are designing a token for lane-change manoeuvres from trajectory data. Name the two knobs
+        you must set, state what becomes invisible at a coarse setting, and say what evidence would
+        convince you that your choice is fine enough for a safety application.</li>
+      <li>A vendor claims their model "understands transportation terminology." Using tab 3, find three
+        terms from your own subfield that fragment into three or more tokens. What would you ask the
+        vendor to measure before you believe the claim?</li>
+    </ol>
+  </div>
+
+  <div class="callout"><b>Where this goes next.</b> Every token ID on tab 3 becomes a row of the embedding
+    matrix — the geometry from Sept 10. Attention (this session) then lets each of those vectors look at
+    the others. The vision-language models later in this module do exactly what GAIA-1 does above: they
+    turn image patches into tokens so that the same machinery applies. Tokenization is the join between
+    everything you have learned so far and everything in Module 2.</div>
+</div></section>
+
+<footer><div class="wrap">
+  <b>AI for Mobility</b> · CGN 6933 · University of South Florida · Module 2, Sept 17.
+  Tokenizer vocabularies: <span class="mono">o200k_base</span> and <span class="mono">r50k_base</span>
+  (ASCII portions), encoded in the browser and verified against OpenAI's <span class="mono">tiktoken</span>.
+  Document counts: FHWA <i>Traffic Signal Timing Manual</i>, FHWA-HOP-08-024, 274 pp.
+  Cited systems: Gage (1994); Sennrich, Haddow &amp; Birch (2016); Radford et al. (2019);
+  Seff et al., <i>MotionLM</i>, ICCV 2023; Hu et al., <i>GAIA-1</i>, 2023.
+  Car-following panel: Intelligent Driver Model, fixed parameters, simulated in your browser.
+</div></footer>
+
+<script src="tokenizer_vocab.js"></script>
+<script>
+/* ============================================================
+   Real byte-level BPE tokenizers (o200k_base, r50k_base).
+   Vocabularies come from tokenizer_vocab.js (ASCII portions).
+   ============================================================ */
+(function (root) {
+  var ENC = new TextEncoder();
+  var DEC = new TextDecoder("utf-8", { fatal: false });
+
+  function parseBlob(blob) {
+    var RANK = new Map(), ID = new Map(), lines = blob.split("\n"), prev = -1;
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i], tab = line.indexOf("\t"), tok = line, num = null;
+      if (tab >= 0) { tok = line.slice(0, tab); num = parseInt(line.slice(tab + 1), 16); }
+      var out = "", j = 0;
+      while (j < tok.length) {
+        var c = tok.charAt(j);
+        if (c === "\\") {
+          var n = tok.charAt(j + 1);
+          out += n === "t" ? "\t" : n === "n" ? "\n" : n === "r" ? "\r" : n;
+          j += 2;
+        } else { out += c; j++; }
+      }
+      var id = (i === 0) ? num : prev + (num === null ? 1 : num);
+      prev = id;
+      RANK.set(out, i); ID.set(out, id);
+    }
+    return { rank: RANK, id: ID };
+  }
+
+  function bytesToText(latin1) {
+    var u8 = new Uint8Array(latin1.length);
+    for (var i = 0; i < latin1.length; i++) u8[i] = latin1.charCodeAt(i);
+    return DEC.decode(u8);
+  }
+
+  function Tokenizer(spec) { this.spec = spec; this.tab = null; }
+  Tokenizer.prototype.ready = function () {
+    if (this.tab) return true;
+    var blob = root[this.spec.blob];
+    if (!blob) return false;
+    this.tab = parseBlob(blob);
+    return true;
+  };
+  Tokenizer.prototype.entries = function () { return this.ready() ? this.tab.rank.size : 0; };
+  Tokenizer.prototype._bpe = function (piece) {
+    var RANK = this.tab.rank;
+    if (piece.length === 1) return [piece];
+    var parts = new Array(piece.length), i;
+    for (i = 0; i < piece.length; i++) parts[i] = piece.charAt(i);
+    for (;;) {
+      var best = Infinity, bi = -1;
+      for (var k = 0; k < parts.length - 1; k++) {
+        var r = RANK.get(parts[k] + parts[k + 1]);
+        if (r !== undefined && r < best) { best = r; bi = k; }
+      }
+      if (bi < 0) break;
+      parts.splice(bi, 2, parts[bi] + parts[bi + 1]);
+    }
+    return parts;
+  };
+  /* -> [{chunk, tokens:[{bytes,text,id}]}] */
+  Tokenizer.prototype.encodeGrouped = function (text) {
+    if (!this.ready()) return [];
+    var pat = new RegExp(this.spec.pat.source, this.spec.pat.flags), out = [], m;
+    while ((m = pat.exec(text)) !== null) {
+      if (m[0] === "") { pat.lastIndex++; continue; }
+      var u8 = ENC.encode(m[0]), s = "", b;
+      for (b = 0; b < u8.length; b++) s += String.fromCharCode(u8[b]);
+      var pieces = this.tab.rank.has(s) ? [s] : this._bpe(s);
+      var toks = [];
+      for (var p = 0; p < pieces.length; p++) {
+        var id = this.tab.id.get(pieces[p]);
+        toks.push({ bytes: pieces[p], text: bytesToText(pieces[p]), id: id === undefined ? null : id });
+      }
+      out.push({ chunk: m[0], tokens: toks });
+    }
+    return out;
+  };
+  Tokenizer.prototype.encode = function (text) {
+    var g = this.encodeGrouped(text), out = [];
+    for (var i = 0; i < g.length; i++) for (var j = 0; j < g[i].tokens.length; j++) out.push(g[i].tokens[j]);
+    return out;
+  };
+
+  var O200K_PAT = /[^\r\n\p{L}\p{N}]?[\p{Lu}\p{Lt}\p{Lm}\p{Lo}\p{M}]*[\p{Ll}\p{Lm}\p{Lo}\p{M}]+(?:'[sS]|'[tT]|'[rR][eE]|'[vV][eE]|'[mM]|'[lL][lL]|'[dD])?|[^\r\n\p{L}\p{N}]?[\p{Lu}\p{Lt}\p{Lm}\p{Lo}\p{M}]+[\p{Ll}\p{Lm}\p{Lo}\p{M}]*(?:'[sS]|'[tT]|'[rR][eE]|'[vV][eE]|'[mM]|'[lL][lL]|'[dD])?|\p{N}{1,3}| ?[^\s\p{L}\p{N}]+[\r\n\/]*|\s*[\r\n]+|\s+(?!\S)|\s+/gu;
+  var R50K_PAT = /'(?:[sdmt]|ll|ve|re)| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+$|\s+(?!\S)|\s/gu;
+
+  root.TOKENIZERS = {
+    o200k: new Tokenizer({ blob: "O200K_ASCII", pat: O200K_PAT, label: "o200k_base",
+      note: "GPT-4o generation", nVocab: 200019, merges: 199998 }),
+    r50k: new Tokenizer({ blob: "R50K_ASCII", pat: R50K_PAT, label: "r50k_base",
+      note: "GPT-2, 2019", nVocab: 50257, merges: 50256 })
+  };
+})(window);
+
+/* ============================================================ tabs */
+(function () {
+  var btns = document.querySelectorAll("nav.tabs button");
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].addEventListener("click", function () {
+      document.querySelectorAll("nav.tabs button").forEach(function (b) { b.classList.remove("active"); });
+      document.querySelectorAll("section.page").forEach(function (s) { s.classList.remove("active"); });
+      this.classList.add("active");
+      document.getElementById(this.dataset.p).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "instant" });
+    });
+  }
+})();
+
+/* ============================================================ chip rendering */
+var CHIP_BG = ["#dff0e8", "#f6f2e2", "#e6f0f7", "#f7e8e2", "#eae6f3", "#e3f1ee"];
+function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function showWs(s) {
+  return s.replace(/ /g, "·").replace(/\n/g, "⏎").replace(/\t/g, "→");
+}
+function chipHTML(tok, k, withId) {
+  var label = showWs(tok.text);
+  if (label === "") label = "∅";
+  return '<span class="chip" style="background:' + CHIP_BG[k % CHIP_BG.length] + '" title="id ' +
+    tok.id + '">' + esc(label) + (withId ? '<span class="id">' + tok.id + "</span>" : "") + "</span>";
+}
+function renderChips(el, text, withId, enc) {
+  var T = (enc || TOKENIZERS.o200k);
+  if (!T.ready()) { el.innerHTML = '<span class="small">vocabulary not loaded</span>'; return 0; }
+  var toks = T.encode(text), h = "";
+  for (var i = 0; i < toks.length; i++) h += chipHTML(toks[i], i, withId !== false);
+  el.innerHTML = h;
+  return toks.length;
+}
+
+/* ============================================================ page 2 static demos */
+function buildPage2() {
+  renderChips(document.getElementById("demo1"), "The LKA system disengaged on I-275 northbound.");
+  var a = document.getElementById("demo2a"), b = document.getElementById("demo2b");
+  function labelled(target, items) {
+    var h = "";
+    for (var i = 0; i < items.length; i++) {
+      var toks = TOKENIZERS.o200k.encode(items[i]);
+      h += '<div style="display:flex;align-items:center;gap:8px;width:100%;margin-bottom:4px">' +
+        '<span class="mono" style="width:118px;color:#5b6b66;font-size:12.5px">"' +
+        esc(showWs(items[i])) + '"</span><span style="display:flex;gap:3px;flex-wrap:wrap">';
+      for (var j = 0; j < toks.length; j++) h += chipHTML(toks[j], j, true);
+      h += '</span><span class="badge' + (toks.length > 1 ? " w" : "") + '">' + toks.length +
+        (toks.length === 1 ? " token" : " tokens") + "</span></div>";
+    }
+    target.innerHTML = h;
+  }
+  labelled(a, ["lidar", " lidar", "  lidar", "a lidar unit"]);
+  labelled(b, [" lidar", "LiDAR", "LIDAR", " LiDAR"]);
+
+  function chipRow(target, items) {
+    var h = "";
+    for (var i = 0; i < items.length; i++) {
+      var toks = TOKENIZERS.o200k.encode(items[i]);
+      h += '<div style="display:flex;align-items:center;gap:6px;width:100%;margin-bottom:3px">' +
+        '<span style="display:flex;gap:3px">';
+      for (var j = 0; j < toks.length; j++) h += chipHTML(toks[j], j, true);
+      h += "</span></div>";
+    }
+    target.innerHTML = h;
+  }
+  chipRow(document.getElementById("demo5a"),
+    [" vehicle", " intersection", " lidar", " radar", " queue", " offset", " coordinated", " saturation"]);
+  chipRow(document.getElementById("demo5b"),
+    [" signalized", " actuated", " phasing", " headway", " spillback", " platoon", " permissive", " telematics"]);
+}
+
+/* ============================================================ page 3 live tokenizer */
+var PRESETS = [
+  ["Incident report", "The LKA system disengaged on I-275 northbound."],
+  ["Signal timing", "Ring-and-barrier operation with protected-permissive left turns."],
+  ["Traffic state", "k = 45 veh/mi/ln, v = 32 mph, q = 1440 veh/h/ln"],
+  ["Detector CSV", "hour,volume,speed,occupancy\n07:00,1842,34.6,18.2\n07:05,1901,31.2,21.7"],
+  ["Big numbers", "AADT = 11,247 veh/day; segment length 1,000,000 ft; V/C = 0.85"],
+  ["Route names", "US 301 at SR-60, east of I-4 and I-275"],
+  ["Acronym soup", "TSM&O, V2X, ACC/LKA, ADAS, TIM, ATMS, FDOT District 7"],
+  ["Crash narrative", "Vehicle #1 struck vehicle #2 in the rear at approx. 35 mph during queue spillback."]
+];
+
+function buildPage3() {
+  var host = document.getElementById("presets"), h = "";
+  for (var i = 0; i < PRESETS.length; i++) h += "<button data-k='" + i + "'>" + PRESETS[i][0] + "</button>";
+  host.innerHTML = h;
+  host.addEventListener("click", function (e) {
+    if (e.target.tagName !== "BUTTON") return;
+    document.getElementById("inp").value = PRESETS[+e.target.dataset.k][1];
+    updateLive();
+  });
+  document.getElementById("inp").addEventListener("input", updateLive);
+  document.getElementById("btnPre").addEventListener("click", function () {
+    this.classList.toggle("on"); updateLive();
+  });
+  document.getElementById("btnIds").addEventListener("click", function () {
+    this.classList.toggle("on"); updateLive();
+  });
+  document.getElementById("btnClear").addEventListener("click", function () {
+    document.getElementById("inp").value = ""; updateLive();
+  });
+  updateLive();
+}
+
+function updateLive() {
+  var text = document.getElementById("inp").value;
+  var showPre = document.getElementById("btnPre").classList.contains("on");
+  var showIds = document.getElementById("btnIds").classList.contains("on");
+  var warn = document.getElementById("asciiWarn");
+  var nonAscii = /[^\t\n\r\x20-\x7E]/.test(text);
+  warn.textContent = nonAscii ?
+    "Non-ASCII character found — this page ships only the ASCII merges, so it cannot answer for this input." : "";
+
+  var order = ["o200k", "r50k"], html = "";
+  var counts = {};
+  for (var k = 0; k < order.length; k++) {
+    var T = TOKENIZERS[order[k]];
+    var grouped = nonAscii ? [] : T.encodeGrouped(text);
+    var n = 0, chips = "", pre = "";
+    for (var g = 0; g < grouped.length; g++) {
+      pre += "<span>" + esc(showWs(grouped[g].chunk)) + "</span>";
+      for (var j = 0; j < grouped[g].tokens.length; j++) { chips += chipHTML(grouped[g].tokens[j], n, true); n++; }
+    }
+    counts[order[k]] = nonAscii ? null : n;
+    html += '<div style="margin-top:16px">' +
+      '<h4 class="raw" style="margin-bottom:2px">' + T.spec.label +
+      ' <span class="small" style="font-weight:400">— ' + T.spec.note +
+      ", V = " + T.spec.nVocab.toLocaleString() + '</span>' +
+      '<span class="badge' + (nonAscii ? " w" : "") + '">' + (nonAscii ? "n/a" : n + " tokens") + "</span></h4>";
+    if (showPre && !nonAscii) html += '<div class="pretok">' + pre + "</div>";
+    html += '<div class="chips">' + (nonAscii ? '<span class="small">—</span>' : chips) + "</div>";
+    if (showIds && !nonAscii) {
+      var ids = T.encode(text).map(function (t) { return t.id; });
+      html += '<div class="idsline">[' + ids.join(", ") + "]</div>";
+    }
+    html += "</div>";
+  }
+  document.getElementById("tokPanels").innerHTML = html;
+
+  var chars = text.length;
+  var words = (text.match(/\S+/g) || []).length;
+  var no = counts.o200k, nr = counts.r50k;
+  function stat(v, cls, label) {
+    return '<div class="stat"><div class="n ' + (cls || "") + '">' + v +
+      '</div><div class="l raw">' + label + "</div></div>";
+  }
+  document.getElementById("cmpStats").innerHTML =
+    stat(chars, "", "characters") +
+    stat(words, "", "words") +
+    stat(no === null ? "–" : no, "t", "o200k tokens") +
+    stat(nr === null ? "–" : nr, "b", "r50k tokens") +
+    stat(no && words ? (no / words).toFixed(2) : "–", "", "o200k tokens / word") +
+    stat(no ? (chars / no).toFixed(2) : "–", "r", "characters / token");
+}
+
+/* ============================================================ page 4 BPE trainer */
+var BPE_CORPUS =
+"Bandwidth is highly dependent on the demands on the non-coordinated phases (actuated\n" +
+"intersections) and the offsets along the arterial. Bandwidth importance also varies based on traveler\n" +
+"origin and destinations along a coordinated corridor. The more vehicles traveling the length of a\n" +
+"coordinated corridor, without making turning movements, the more important bandwidth becomes as\n" +
+"a measurement tool, and vice versa. In addition, bandwidth, travel time, and stops are related to one\n" +
+"another; a large bandwidth will result in shorter travel times and less stops to vehicles traveling the\n" +
+"begin time as a result of unused time from non-coordinated phases.\n" +
+"A point within a cycle where a phase must end regardless of continued demand. These\n" +
+"points in a coordinated cycle ensure that the coordinated phases are provided a minimum\n" +
+"amount of green time. A force-off mode where force-off points cannot move. Under this mode,\n" +
+"non-coordinated phases can use unused time of previous phases. A force-off mode where\n" +
+"force-off points can move depending on the demand of previous phases. Under this mode,\n" +
+"non-coordinated phase times are limited to their defined split amount of time and all unused\n" +
+"time is dedicated to the coordinated phase. The time relationship between coordinated phases\n" +
+"defined reference point and a defined master reference (master clock or sync pulse).";
+
+var MARK = "·";
+var bpeState = null;
+
+function bpeInit(text) {
+  var words = (text.toLowerCase().match(/[a-z][a-z\-']*|\d+|[^\sa-z\d]/g)) || [];
+  var freq = new Map();
+  for (var i = 0; i < words.length; i++) freq.set(words[i], (freq.get(words[i]) || 0) + 1);
+  var corpus = [];
+  freq.forEach(function (c, w) {
+    corpus.push({ w: w, c: c, sym: w.split("").map(function (ch, i) { return i === 0 ? MARK + ch : ch; }) });
+  });
+  bpeState = { corpus: corpus, merges: [], nWords: words.length, nTypes: freq.size };
+}
+function bpeStep() {
+  var pairs = new Map(), e, i;
+  for (var q = 0; q < bpeState.corpus.length; q++) {
+    e = bpeState.corpus[q];
+    for (i = 0; i < e.sym.length - 1; i++) {
+      var key = e.sym[i] + " " + e.sym[i + 1];
+      pairs.set(key, (pairs.get(key) || 0) + e.c);
+    }
+  }
+  if (!pairs.size) return false;
+  var bk = null, bc = -1;
+  pairs.forEach(function (c, k) { if (c > bc) { bc = c; bk = k; } });
+  if (bc < 2) return false;
+  var ab = bk.split(" "), A = ab[0], B = ab[1];
+  for (var p = 0; p < bpeState.corpus.length; p++) {
+    e = bpeState.corpus[p];
+    var out = [];
+    for (i = 0; i < e.sym.length; i++) {
+      if (i < e.sym.length - 1 && e.sym[i] === A && e.sym[i + 1] === B) { out.push(A + B); i++; }
+      else out.push(e.sym[i]);
+    }
+    e.sym = out;
+  }
+  bpeState.merges.push({ a: A, b: B, m: A + B, c: bc });
+  return true;
+}
+var BPE_WATCH = ["coordinated", "phases", "bandwidth", "time", "offsets", "actuated"];
+function bpeRender(fresh) {
+  var h = "";
+  for (var i = 0; i < bpeState.merges.length; i++) {
+    var m = bpeState.merges[i];
+    h += '<div class="mergerow' + (fresh && i === bpeState.merges.length - 1 ? " fresh" : "") + '">' +
+      '<span class="k">' + (i + 1) + '.</span><span>"' + esc(m.a) + '" + "' + esc(m.b) +
+      '"</span><span>→</span><span class="m">"' + esc(m.m) + '"</span>' +
+      '<span class="c">' + m.c + "×</span></div>";
+  }
+  var box = document.getElementById("bpeMerges");
+  box.innerHTML = h || '<div class="small" style="padding:8px">No merges yet — press "Merge once".</div>';
+  box.scrollTop = box.scrollHeight;
+
+  var w = "";
+  for (var k = 0; k < BPE_WATCH.length; k++) {
+    var e = null;
+    for (var q = 0; q < bpeState.corpus.length; q++) if (bpeState.corpus[q].w === BPE_WATCH[k]) { e = bpeState.corpus[q]; break; }
+    if (!e) continue;
+    w += '<div class="wordsplit" style="margin-bottom:5px">' + esc(BPE_WATCH[k]) +
+      ' &nbsp;→&nbsp; <b>' + esc(e.sym.join(" | ")) + "</b>" +
+      '<span class="badge' + (e.sym.length === 1 ? "" : " g") + '">' + e.sym.length +
+      (e.sym.length === 1 ? " token" : " pieces") + "</span></div>";
+  }
+  document.getElementById("bpeWords").innerHTML = w;
+  document.getElementById("bpeCount").textContent =
+    bpeState.merges.length + " merges · " + bpeState.nWords + " words, " + bpeState.nTypes + " types";
+
+  var single = 0;
+  for (var z = 0; z < bpeState.corpus.length; z++) if (bpeState.corpus[z].sym.length === 1) single++;
+  document.getElementById("bpeNote").innerHTML = bpeState.merges.length === 0
+    ? "<b>Start here.</b> Every word is a pile of single characters. Nothing means anything yet."
+    : "<b>" + single + " of " + bpeState.nTypes + " word types</b> are now a single token, after " +
+      bpeState.merges.length + " merges. Watch which ones win: frequency in <i>this</i> corpus is the only reason.";
+}
+function buildPage4() {
+  var ta = document.getElementById("bpeCorpus");
+  ta.value = BPE_CORPUS;
+  function reset() { bpeInit(ta.value); bpeRender(false); }
+  reset();
+  ta.addEventListener("input", reset);
+  document.getElementById("bpeReset").addEventListener("click", reset);
+  document.getElementById("bpeStep").addEventListener("click", function () { bpeStep(); bpeRender(true); });
+  document.getElementById("bpeRun10").addEventListener("click", function () {
+    for (var i = 0; i < 10; i++) if (!bpeStep()) break; bpeRender(true);
+  });
+  document.getElementById("bpeRun60").addEventListener("click", function () {
+    var guard = 0;
+    while (bpeState.merges.length < 60 && guard++ < 400) if (!bpeStep()) break;
+    bpeRender(true);
+  });
+}
+
+/* ============================================================ page 5 trajectory tokenizer */
+var MPS2MPH = 2.2369362920544;
+var SIM = (function () {
+  var dt = 0.1, T = 60, n = Math.round(T / dt) + 1;
+  var v0 = 31.3, Th = 1.5, a = 1.0, b = 1.5, s0 = 2.0, del = 4;
+  function vlead(t) {
+    if (t < 15) return 29.0;
+    if (t < 22) return 29.0 - (29.0 - 15.0) * (t - 15) / 7;
+    if (t < 32) return 15.0;
+    if (t < 44) return 15.0 + (28.0 - 15.0) * (t - 32) / 12;
+    return 28.0;
+  }
+  var xl = 60, xf = 0, vf = 29.0, vl = 29.0, out = { t: [], vf: [], dt: dt };
+  for (var i = 0; i < n; i++) {
+    var t = i * dt;
+    vl = vlead(t);
+    var s = Math.max(xl - xf - 5.0, 0.1), dv = vf - vl;
+    var sstar = s0 + Math.max(0, vf * Th + vf * dv / (2 * Math.sqrt(a * b)));
+    var acc = a * (1 - Math.pow(vf / v0, del) - Math.pow(sstar / s, 2));
+    out.t.push(t); out.vf.push(vf);
+    vf = Math.max(0, vf + acc * dt); xf += vf * dt; xl += vl * dt;
+  }
+  return out;
+})();
+var DT_OPTS = [0.1, 0.2, 0.5, 1, 2, 5, 10];
+var DV_OPTS = [1, 2, 3, 5, 10, 20];
+
+function tokenizeTraj(dtTok, dvMph) {
+  var step = Math.max(1, Math.round(dtTok / SIM.dt));
+  var v = SIM.vf.map(function (x) { return x * MPS2MPH; });
+  var lo = 0, hi = 80, nbins = Math.ceil((hi - lo) / dvMph), seq = [], i, k;
+  for (i = 0; i < v.length; i += step) {
+    seq.push(Math.min(nbins - 1, Math.max(0, Math.floor((v[i] - lo) / dvMph))));
+  }
+  var rec = new Array(v.length);
+  for (k = 0; k < seq.length; k++) {
+    var c = lo + (seq[k] + 0.5) * dvMph;
+    for (i = k * step; i < Math.min((k + 1) * step, v.length); i++) rec[i] = c;
+  }
+  for (i = 0; i < v.length; i++) if (rec[i] === undefined) rec[i] = lo + (seq[seq.length - 1] + 0.5) * dvMph;
+  var se = 0;
+  for (i = 0; i < v.length; i++) se += (v[i] - rec[i]) * (v[i] - rec[i]);
+  var used = {};
+  for (k = 0; k < seq.length; k++) used[seq[k]] = 1;
+  return { seq: seq, rec: rec, v: v, len: seq.length, vocab: nbins,
+    used: Object.keys(used).length, rmse: Math.sqrt(se / v.length) };
+}
+
+function drawTraj(r) {
+  var cv = document.getElementById("cvTraj"), ctx = cv.getContext("2d");
+  var W = 900, H = 300, L = 54, R = 14, Tp = 14, B = 34;
+  var dpr = Math.min(window.devicePixelRatio || 1, 3);
+  if (cv.width !== Math.round(W * dpr)) {
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    cv.style.width = "100%"; cv.style.maxWidth = W + "px";
+  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  var vmin = 25, vmax = 70;
+  function X(t) { return L + (t / 60) * (W - L - R); }
+  function Y(v) { return Tp + (1 - (v - vmin) / (vmax - vmin)) * (H - Tp - B); }
+  ctx.strokeStyle = "#eef2f0"; ctx.lineWidth = 1;
+  ctx.fillStyle = "#5b6b66"; ctx.font = "11px ui-monospace,Menlo,monospace";
+  for (var v = 30; v <= 70; v += 10) {
+    ctx.beginPath(); ctx.moveTo(L, Y(v)); ctx.lineTo(W - R, Y(v)); ctx.stroke();
+    ctx.textAlign = "right"; ctx.fillText(v, L - 7, Y(v) + 4);
+  }
+  ctx.textAlign = "center";
+  for (var t = 0; t <= 60; t += 10) {
+    ctx.beginPath(); ctx.moveTo(X(t), Tp); ctx.lineTo(X(t), H - B); ctx.strokeStyle = "#f2f5f4"; ctx.stroke();
+    ctx.fillText(t + " s", X(t), H - B + 18);
+  }
+  ctx.fillStyle = "#5b6b66"; ctx.font = "11.5px -apple-system,sans-serif";
+  ctx.save(); ctx.translate(14, H / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText("follower speed (mph)", 0, 0); ctx.restore();
+
+  ctx.strokeStyle = "#B5581E"; ctx.lineWidth = 2; ctx.beginPath();
+  for (var i = 0; i < r.rec.length; i++) {
+    var x = X(SIM.t[i]), y = Y(r.rec[i]);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.strokeStyle = "#006747"; ctx.lineWidth = 2.2; ctx.beginPath();
+  for (i = 0; i < r.v.length; i++) {
+    x = X(SIM.t[i]); y = Y(r.v[i]);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.font = "12px -apple-system,sans-serif"; ctx.textAlign = "left";
+  ctx.fillStyle = "#006747"; ctx.fillRect(W - 210, 16, 16, 3);
+  ctx.fillText("true speed (0.1 s)", W - 188, 22);
+  ctx.fillStyle = "#B5581E"; ctx.fillRect(W - 210, 32, 16, 3);
+  ctx.fillText("what the tokens encode", W - 188, 38);
+}
+
+function updateTraj() {
+  var dt = DT_OPTS[+document.getElementById("sDt").value];
+  var dv = DV_OPTS[+document.getElementById("sDv").value];
+  document.getElementById("vDt").textContent = dt + " s";
+  document.getElementById("vDv").textContent = dv + " mph";
+  var r = tokenizeTraj(dt, dv);
+  document.getElementById("stLen").textContent = r.len;
+  document.getElementById("stVocab").textContent = r.vocab;
+  document.getElementById("stUsed").textContent = r.used;
+  document.getElementById("stRmse").textContent = r.rmse.toFixed(2);
+  document.getElementById("trajSeq").textContent = r.seq.join(" ");
+  drawTraj(r);
+  var note;
+  if (r.rmse < 0.5) note = "<b>Faithful and expensive.</b> " + r.len + " tokens for one minute of one vehicle. " +
+    "At this rate a single hour of one trajectory costs " + (r.len * 60).toLocaleString() +
+    " tokens — more than a fifth of the Signal Timing Manual.";
+  else if (r.rmse < 2) note = "<b>A workable choice.</b> " + r.len + " tokens, " + r.used +
+    " distinct symbols used out of " + r.vocab + " available, and the reconstruction tracks the " +
+    "deceleration. Most of the vocabulary is wasted on speeds this vehicle never reaches.";
+  else note = "<b>Information destroyed.</b> At " + dv + " mph bins the reconstruction is off by " +
+    r.rmse.toFixed(2) + " mph on average. A 4-mph deceleration — the kind that precedes a rear-end " +
+    "conflict — does not exist in this representation, so no model built on these tokens can predict one.";
+  document.getElementById("trajNote").innerHTML = note;
+}
+
+function buildPage5() {
+  document.getElementById("sDt").addEventListener("input", updateTraj);
+  document.getElementById("sDv").addEventListener("input", updateTraj);
+  document.getElementById("tokPreset").addEventListener("change", function () {
+    var p = this.value.split(",");
+    document.getElementById("sDt").value = p[0];
+    document.getElementById("sDv").value = p[1];
+    updateTraj();
+  });
+  updateTraj();
+}
+
+/* ============================================================ boot */
+window.addEventListener("DOMContentLoaded", function () {
+  buildPage4();
+  buildPage5();
+  var bar = document.getElementById("loadbar");
+  var ok = TOKENIZERS.o200k.ready() && TOKENIZERS.r50k.ready();
+  if (!ok) {
+    bar.innerHTML = '<b style="color:var(--warn)">tokenizer_vocab.js did not load.</b> ' +
+      "This page needs that file in the same folder. Everything else on the page still works.";
+    document.getElementById("tokPanels").innerHTML = "";
+    return;
+  }
+  bar.innerHTML = "Loaded <b>" + TOKENIZERS.o200k.entries().toLocaleString() + "</b> o200k_base merges and <b>" +
+    TOKENIZERS.r50k.entries().toLocaleString() + "</b> r50k_base merges (the ASCII portions of the real tables).";
+  buildPage2();
+  buildPage3();
+});
+</script>
+</body>
+</html>

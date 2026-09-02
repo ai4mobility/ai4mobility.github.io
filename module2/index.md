@@ -51,6 +51,25 @@ By the end of this module you will be able to:
 - Hallucination, grounding, and why fluent output is not evidence of correctness
 - Latency, cost, and deployment constraints for transformer inference
 
+## Interactive companion
+
+The first topic on that list — what a token is, and what it costs — decides whether
+everything after it is affordable. Work through this companion before class. The
+tokenizer inside it is the real thing: the published `o200k_base` (current OpenAI
+generation) and `r50k_base` (GPT-2) merge tables, byte-level BPE, verified
+piece-for-piece against OpenAI's `tiktoken`. Type your own jargon into tab 3 and see
+exactly what the model receives — then find three terms from your subfield that
+fragment into three or more tokens.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — Tokens: the unit a language model actually reads</span>
+    <a href="../_static/companions/Tokenization_Companion.html" target="_blank" rel="noopener">Open full screen ↗</a>
+  </div>
+  <iframe src="../_static/companions/Tokenization_Companion.html"
+          title="Tokens: the unit a language model actually reads" loading="lazy"></iframe>
+</div>
+
 ## Video lectures
 
 *To be populated.* See the course [YouTube channel](https://www.youtube.com/@hao6247).

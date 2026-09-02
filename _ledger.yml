@@ -488,3 +488,173 @@ items:
       deviceScaleFactor 2. Representation is a banner row rather than a peer
       row; the distance column is colour-coded gray/gold/green; the
       identity-vs-similarity takeaway sits on the slide as a green band.
+
+  - id: m1-word2vec-training-figures
+    file: Word2Vec_Sliding_Window.svg
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    dest: site/module1/notes.md#word2vec
+    notes: >
+      Eight slide-ready figures (SVG + PNG at 3200x1800) on how word2vec is
+      trained, sitting after the embeddings opener and before Lab 2:
+      Word2Vec_Sliding_Window, Word2Vec_SkipGram_1/2/3 (build reveals),
+      Word2Vec_CBOW_1/2/3 (build reveals), Word2Vec_SkipGram_vs_CBOW
+      (comparison + negative-sampling bridge to the lab). All drawn on Lab 2's
+      demo sentence "the bus travels along the busway" (V=81, d=32, window 2);
+      trained-output bars computed by word2vec_figure_numbers.py. Say-lines,
+      two-tier math, fit card and check-yourself in Word2Vec_Training_Slides.md.
+
+  - id: m1-word2vec-training-flowchart
+    file: Word2Vec_SkipGram_Training_Flowchart.svg
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    dest: site/module1/notes.md#word2vec
+    notes: >
+      Slide-ready flowchart (SVG + PNG 3200x1800, plus _1/_2 build reveals)
+      of the "Pseudocode: Training Skip-gram Word2Vec" slide: the five
+      pseudocode headings as five numbered blocks, one real row (bus, travels, 1)
+      and one fake row (bus, salad, 0) traced through look-up -> dot -> sigmoid
+      (binary-logit tag) -> error -> SGD update with computed numbers, on Lab 2's
+      corpus and SGNS settings (V=81, d=32, window 2, K=5, lr 0.02, 10 epochs).
+      Numbers from word2vec_pseudocode_numbers.py (per-row SGD exactly as on the
+      slide, seed 1); make_word2vec_flowchart.py regenerates the SVGs. Say-lines
+      and provenance under "Slide 4b" in Word2Vec_Training_Slides.md.
+
+  - id: m1-word2vec-figure-numbers
+    file: word2vec_figure_numbers.py
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    notes: >
+      Reproducer for every number on the word2vec training figures: rebuilds
+      Lab 2's corpus verbatim (asserts 8000/56184/81), then trains FULL-softmax
+      skip-gram and CBOW (the textbook mechanism the figures draw; the lab
+      itself trains SGNS). Verified to reproduce exactly on the class machine.
+
+  - id: m1-word2vec-identifiability
+    file: Word2Vec_Same_Model_Different_Geometry.svg
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    dest: site/module1/notes.md#word2vec
+    notes: >
+      Backup slide 5 for the word2vec set, answering "we train W_in and W_out
+      together, so how do we know W_in is the right solution?". Shows two
+      gauge-equivalent factorizations feeding ONE shared prediction panel
+      (identical to 6e-15) over two different geometries (angles to "bus" drawn
+      to scale). Tier-1 hook is the discrete-choice scale/level identification
+      problem: cosine is to an embedding what value of time is to a logit model.
+      Numbers from word2vec_identifiability.py, which also covers the
+      "Going deeper - is the embedding unique?" box in the slide notes.
+
+  - id: m8-representation-coupling-panel
+    file: Representation_Quality_Companion.html
+    kind: internal
+    module: 8
+    session: 2026-09-10
+    status: drafted
+    notes: >
+      Method 5 panel ("Coupling") added to the Lab 8 companion Sept 1 2026:
+      the representation is not unique, so which grader you pick decides what
+      you measure. Interactive shear slider (synthetic 2-D, 42 corridor
+      snapshots) with live readouts - cosine and Euclidean 1-NN move, the
+      linear probe stays pinned at 0.667. Then the real word2vec invariance
+      table, the merged nine-row grading table with an "unchanged by" column,
+      Lab 8's own bottleneck-vs-inflow contrast (capacity buys accessibility,
+      never information), the label-budget table, the freeze-and-swap grid,
+      the two required controls, the incident-narrative worked example, a
+      linear-probing fit card and three check-yourself questions. Numbers from
+      representation_coupling.py and word2vec_identifiability.py (class root).
+      This is the panel that links the Sept 10 word2vec material to Lab 8.
+
+  - id: m1-word2vec-original-notebook
+    file: Labs/word2vec_original_training.ipynb
+    kind: lab
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    notes: >
+      "How word2vec is actually trained" -- faithful numpy re-implementation of
+      Mikolov's word2vec.c (skip-gram + negative sampling) run on two REAL
+      vocabularies: text8 (5.1M tokens, V=36,741) and NHTSA ODI complaint
+      narratives 2020-2024 (4.5M tokens, V=10,343). Structured as the six boxes of
+      the C source: min_count, subsampling (code formula, not the paper's), random
+      shrinking window, unigram^0.75 table, the SGNS update, linear alpha decay.
+      PPMI+SVD baseline on BOTH halves, two evaluation closes, fit card, your-turn
+      set. Executed with outputs; full run ~22 min, PRESET="fast" ~4 min. Deeper
+      companion to m1-lab2, which stays the short lab. NOT on the site (Hao's call,
+      Aug 31 2026).
+
+  - id: m1-word2vec-original-builders
+    file: Labs/build_word2vec_original_lab.py
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    notes: >
+      Regenerators for m1-word2vec-original-notebook. This script rebuilds the
+      .ipynb (unexecuted); Labs/make_transport_corpus.py rebuilds
+      Labs/data/nhtsa_adas_complaints.txt.gz from the NHTSA ODI flat file
+      COMPLAINTS_RECEIVED_2020-2024.zip. text8 is downloaded and cached by the
+      notebook itself into Labs/data/text8_slice.txt (30 MB) and is not shipped.
+
+  - id: m2-tokenization-companion
+    file: Tokenization_Companion.html
+    kind: companion
+    module: 2
+    session: 2026-09-17
+    status: integrated
+    dest: module2/index.md
+    notes: >
+      "Tokens: the unit a language model actually reads." Six tabs. Ships a REAL
+      tokenizer: the ASCII portions of o200k_base (128,803 of 199,998 merges) and
+      r50k_base (49,353 of 50,256), byte-level BPE re-implemented in JS and verified
+      piece-for-piece against tiktoken on 3,084 strings incl. 60 passages of the FHWA
+      Signal Timing Manual. Needs tokenizer_vocab.js in the SAME FOLDER -- copy both
+      files when mounting to site/_static/companions/. Tab 4 trains BPE live on 280
+      words of the manual (after 60 merges: coordinated/phases/bandwidth/time are one
+      token, offsets is 4 pieces, actuated is 5). Tab 5 has the transportation-token
+      catalog (MotionLM V=169 at 2 Hz; GAIA-1 K=8,192, 576 tok/frame, 3,600 tok/s of
+      video) and an IDM car-following panel where students pick dt and dv and watch
+      sequence length trade against reconstruction RMSE. Non-ASCII input is refused,
+      not guessed.
+      MOUNTED Sept 2 2026: both files copied to site/_static/companions/ and iframed
+      from module2/index.md under a new "## Interactive companion" heading, placed
+      after Topics. module2/notes.md does not exist yet -- when the weekly pass creates
+      it, move the embed there and set dest back.
+
+  - id: m2-tokenizer-vocab
+    file: tokenizer_vocab.js
+    kind: internal
+    module: 2
+    session: 2026-09-17
+    status: drafted
+    notes: >
+      1.4 MB vocabulary sidecar for m2-tokenization-companion: delta-encoded ASCII
+      portions of o200k_base and r50k_base. Not a document -- it must travel with the
+      HTML file everywhere it goes. Regenerate with
+      `python tokenization_numbers.py --vocab`.
+      MOUNTED Sept 2 2026 to site/_static/companions/ alongside the HTML. +1.4 MB of
+      repo weight, accepted by Hao. Sphinx copies _static verbatim, so the relative
+      <script src="tokenizer_vocab.js"> resolves in the built site -- verified in a
+      scratch build.
+
+  - id: m2-tokenization-numbers
+    file: tokenization_numbers.py
+    kind: internal
+    module: 2
+    session: 2026-09-17
+    status: drafted
+    notes: >
+      Reproducer for every number on m2-tokenization-companion, and the generator for
+      tokenizer_vocab.js. Needs tiktoken + pdftotext, and reads
+      literature/mobility-manuals/fhwa_hop_08_024_signal-timing-manual.pdf for the
+      document counts (274 pp, 711,331 chars, 103,673 words, 145,220 o200k tokens =
+      1.401 tok/word, 530 tok/page; 78.7% of 5,131 word types are single tokens,
+      covering 96.0% of occurrences). Skips that section if the PDF is absent.
