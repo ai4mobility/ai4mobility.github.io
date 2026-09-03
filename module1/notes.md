@@ -719,6 +719,133 @@ corridor on the same day are not independent observations.
 the number of dead units, not the best of three restarts.
 :::
 
+(convolution-kernels)=
+### Convolution: the same neuron, wired to reuse its weights
+
+Everything above took a short vector as input — a density, a $v/c$ ratio, a gap,
+a speed. A single 1920 × 1080 camera frame is **6,220,800** numbers. Wiring one
+neuron to all of them, the way every layer so far has been wired, would cost
+6.2 million weights for one unit, and the unit would have to learn "bumper at
+this pixel" separately from "bumper at the pixel next to it."
+
+You already avoid that problem once a week without calling it anything. A
+five-minute moving average of detector speeds is the weight vector
+$[0.2, 0.2, 0.2, 0.2, 0.2]$ slid along a time series: five numbers, reused at
+every time step. That is a convolution. In two dimensions the same move is a
+small template slid over every position of a grid:
+
+$$
+y[i,j] \;=\; \sum_{a=-1}^{1}\ \sum_{b=-1}^{1}\ k[a,b]\ \cdot\ x[i+a,\,j+b]
+$$
+
+where $x$ is the image as brightness, $k$ is the **kernel** — nine numbers, also
+called the filter or the template — and $y[i,j]$ is one output pixel: what the
+template found at that position. The output is a **feature map**, and it is the
+same size as the input less a border, because the window needs a neighbour on
+every side. (Strictly this is cross-correlation rather than the flipped
+convolution of a signals course. Deep learning calls it convolution, and the
+sign convention makes no difference to a template that gets learned.)
+
+What the nine numbers say is what the template wants: positive weights mean "I
+want brightness here," negative weights mean "and darkness there." A negative
+left column against a positive right column computes *light on the right minus
+light on the left*, which is zero on a flat wall and large on a sign pole, a
+mast arm or the side of a truck. Rotate it and you get the horizontal-edge
+detector that finds bumpers, the stop bar and the shadow line under a vehicle.
+Put a single 1 off centre and the template does not detect anything at all — it
+**moves** the image by one pixel, exactly, with maximum difference $0.0$ against
+a plain array shift. Hold onto that one: a translation in a time–space diagram
+is what Newell's car-following model does, and Module 7 takes it up again.
+
+**Why this wiring instead of a dense layer.** On a 384 × 241 frame — the size
+used in the companion below — a 3 × 3 kernel is **9** weights covering
+**91,298** output positions. A dense layer producing the same output would need
+**8,449,082,112** weights, a factor of roughly **939 million**. The second half
+of the argument matters more in the field: shift the frame by one pixel, the way
+a camera on a mast arm does in wind, and **61.8%** of the flattened pixel vector
+changes. The dense layer sees a different input. The feature map just slides —
+correlation **1.000000** after realigning by that same pixel. The kernel does not
+care where the bumper is, which is why it needs one copy of the bumper template
+instead of one per location.
+
+**A layer is a bank of these, and then depth.** Apply four kernels to the same
+frame in parallel and the image is replaced by a stack of four answers, for
+$4 \times 9 = 36$ weights. ReLU then keeps one polarity of each answer — on a
+daylight frame it zeroes about **45%** of the vertical-edge map and about **52%**
+of the horizontal-edge map, but **0.0%** of a blurring kernel's output, which has
+no negative side to throw away and is a hint that blurring is not detection.
+Pooling halves the grid. A second-layer filter then sees the *stack*, not the
+pixels, and its weights say which combination to look for: one that averages the
+vertical and horizontal channels together fires where both edge types coincide,
+which is what a bumper, a licence plate, a sign face and a wheel arch all have.
+One value after that second layer depends on an **8 × 8** patch of the original
+frame. Stack it a dozen more times and the receptive field covers a whole
+vehicle, and the thing being detected is a vehicle. That is the entire
+architecture; everything else is bookkeeping.
+
+**What a trained network actually put in those nine numbers.** The first layer of
+a trained ResNet-18 holds 64 filters of 7 × 7 × 3, **9,408** weights. Split each
+one into the part all three colour channels agree on — a pure shape detector,
+which is what a hand-typed kernel is — and the part they disagree on, **41 of the
+56 live filters** are shape-dominant. Gradient descent, given nothing but
+photographs and a loss, arrived at oriented edge detectors. The other **15** are
+colour-opponent detectors that fire on a colour boundary where brightness is
+flat: useful for photographs of objects, and not obviously what a night-time
+roadside camera needs.
+
+The remaining **8 of the 64 are dead**. Their largest weight is $5.7 \times
+10^{-6}$ or less, against a median largest weight of **0.432** across the live
+ones — five orders of magnitude down. They are not weak detectors; they output
+zero on every input. **12.5%** of the first layer of one of the most-downloaded
+checkpoints in computer vision does nothing at all, and no accuracy number
+reports it. This is the dead-unit failure mode from the training section above,
+shipped.
+
+**Where the wiring stops being the right answer.** The whole construction assumes
+the pattern is *local* and means the same thing everywhere. A shockwave can start
+anywhere on a corridor, so a kernel fits. A bottleneck at a fixed milepost is a
+property of that location, and a translation-invariant filter is built to ignore
+precisely that — ask "would this pattern mean the same thing fifty pixels to the
+left?" before reaching for a convolution. And a kernel measures contrast, not
+importance: on equal-sized crops the vertical-edge kernel's mean response is
+**45.85** on a night frame against **18.56** on a daylight one, 2.5 times larger,
+because headlights and their wet reflections are enormous edges. The pedestrian
+is the low-contrast shape between them.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — Convolution kernels: how a network learns to see shape</span>
+    <a href="../_static/companions/Convolution_Kernels_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Convolution_Kernels_Companion.html"
+          title="Convolution kernels: how a network learns to see shape" loading="lazy"></iframe>
+</div>
+
+Type the nine numbers yourself on the first tab, click any output pixel to see
+the nine multiplications behind it, then stack the kernels into a layer and
+finally page through the 64 real filters — the dead ones included — on the third.
+
+:::{admonition} Before you trust this result
+:class: important
+**What is the baseline?** For "did anything move" on a fixed camera, the baseline
+is frame differencing against a median background: no training, no GPU, no
+labels. For counting and speed at a point, it is the loop or radar detector you
+already have, which needs a calibration rather than a training set. A CNN earns
+its keep when the question needs the *appearance* of the object, not its
+presence.
+
+**How was the data split, and why is that honest?** Frames from one clip are not
+independent observations — consecutive frames five per second apart are nearly
+the same picture. Split by clip, by site and by lighting condition, and say which
+sites the model never saw. Two of the four frames in the companion are not US
+roads, and the page says so rather than letting them stand as evidence.
+
+**What does it do on the ugly cases?** Report the response on night, rain and
+glare separately, not pooled. Count the dead filters. And check that a large
+response means the right thing — the night frame above scores higher on edge
+energy than the daylight one, and it is the harder scene.
+:::
+
 ---
 
 ## 1.3 Representation learning and embeddings

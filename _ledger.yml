@@ -112,6 +112,43 @@ items:
       a car-following regression on the last tab. Every figure computed live from a
       fixed seed; analytic gradients checked against finite differences in the page.
 
+  - id: m1-conv-kernels
+    file: Convolution_Kernels_Companion.html
+    kind: companion
+    module: 1
+    session: 2026-09-03
+    status: published
+    dest: site/module1/notes.md#convolution-kernels
+    mounted: site/_static/companions/Convolution_Kernels_Companion.html
+    notes: >-
+      "Convolution kernels: how a network learns to see shape." Four tabs. The student
+      types the nine numbers of a 3x3 kernel and sweeps it over four real frames (two
+      Florida arterial dashcam frames plus the night-crossing and work-zone stills from
+      the CLIP lab, whose non-US provenance the page states); clicking any output pixel
+      prints the nine multiplications and their sum. Tab 2 stacks the kernels into a
+      bank with ReLU and pooling toggles and two hand-set layer-2 filters. Tab 3 ships
+      the REAL 64 first-layer filters of torchvision resnet18 (IMAGENET1K_V1), clickable
+      and run live on the frame. Two findings that were measured, not assumed: 8 of the
+      64 filters are DEAD (largest weight 5.7e-6 vs a median 0.432), and the vertical-edge
+      kernel responds 2.5x more strongly on the night frame than on the daylight one --
+      a kernel measures contrast, not importance. Extends m1-cnn-detection-slides
+      (static figures + lab); distinct from m7-newell-lwr-cnn (time-space diagrams).
+
+  - id: m1-conv-kernels-repro
+    file: conv_companion_numbers.py
+    kind: internal
+    module: 1
+    session: 2026-09-03
+    status: integrated
+    notes: >-
+      Reproducer behind m1-conv-kernels: writes conv_companion_numbers.json and
+      learned_filters.json from the same resized frames the page bundles. Build chain in
+      cnn_kernels_companion/ -- assemble.py splices the house style out of
+      Neural_Networks_and_Backprop_Companion.html, inlines the frames and filters, and
+      FAILS the build if any of the 20 numbers asserted in the prose disagrees with the
+      JSON; verify.py drives every tab, preset, toggle and filter click in headless
+      Chromium and re-measures them live. Needs torch (CPU wheel).
+
   - id: m1-multilayer
     file: Multilayer_Networks_Companion.html
     kind: companion
