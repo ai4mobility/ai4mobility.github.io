@@ -64,6 +64,35 @@ By the end of this module you will be able to:
 - Sim-to-real transfer and its failure modes
 - Evacuation and hurricane mobility modeling
 
+## Interactive companion
+
+Before the neural car-following and surrogate-model topics below, work through this page. It makes the
+case for learned traffic dynamics in the most concrete way available: Newell's car-following model and
+the cell transmission model are shown to *already be* convolutions, a real 1,217-weight network is trained
+to reproduce the CTM update, and then it is broken in three named ways. Everything on the page — the
+platoon, the kernel fit, the CTM, and the network's forward pass — is computed live in your browser.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — Newell's shift and the LWR shockwave as convolutions</span>
+    <a href="../_static/companions/Newell_LWR_CNN_Companion.html" target="_blank" rel="noopener">Open full screen ↗</a>
+  </div>
+  <iframe src="../_static/companions/Newell_LWR_CNN_Companion.html"
+          title="Newell's shift and the LWR shockwave as convolutions" loading="lazy"></iframe>
+</div>
+
+The three results worth carrying into the rest of the module:
+
+- **A learned operator is not a forecast.** With boundary demand and exit capacity supplied each step the
+  rollout holds 0.85 veh/mi/ln of error over 12 minutes. Freeze the boundary and the error jumps from
+  0.35 to 35.6 veh/mi/ln the moment the incident clears — the network propagates the queue at the right
+  speed but cannot know the blockage ended. Ask that question of every predictive traffic product.
+- **The physics is in the weights, not in the inputs.** The block recovers both characteristic speeds from
+  data (+74.7 and −15.4 mi/hr against the model's +75 and −15), and it loses them the moment it is moved
+  to a corridor with a different backward wave speed — a factor of 13 in RMSE for a 3 mi/hr change.
+- **Convolution assumes the road is the same everywhere.** That holds for a shockwave and fails for a
+  bottleneck at a fixed milepost, which is why geometry belongs in the input as extra channels.
+
 ## Video lectures
 
 *To be populated.* See the course [YouTube channel](https://www.youtube.com/@hao6247).
@@ -77,6 +106,10 @@ By the end of this module you will be able to:
 - Saroj, A. J., Roy, S., Guin, A., & Hunter, M. (2021). Development of a connected corridor real-time data-driven traffic digital twin simulation model. *Journal of Transportation Engineering, Part A*.
 
 ## Labs
+
+- **Learning the CTM update (companion, above).** Fit a convolution kernel to a Newell platoon and read
+  the reaction time off its peak; then train a residual conv block on CTM fields and measure the wave
+  speeds it learned. Runs entirely in the browser — nothing to install.
 
 - **RL signal control in SUMO.** Train a Q-learning controller on a single intersection, then
   compare it against a fixed-time baseline *and* a properly tuned actuated baseline. The second

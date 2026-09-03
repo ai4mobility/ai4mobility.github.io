@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Newell's Shift and the LWR Shockwave as Convolutions — Module 7 Companion | AI for Mobility</title>
+<style>
+  :root{
+    --usf-green:#006747;--usf-green-d:#00543a;--usf-gold:#CFC493;--gold-deep:#b9a96a;
+    --ink:#1c2422;--muted:#5b6b66;--paper:#f6f8f7;--card:#fff;--line:#e2e8e5;
+    /* categorical series — validated (light surface): PASS on all six checks */
+    --s1:#00785A;--s2:#8E44AD;--s3:#B5581E;--s4:#0E6E9E;
+    /* diverging pair for gradient sign, neutral gray midpoint */
+    --dn:#0E6E9E;--dp:#B5581E;--dz:#c8d0cd;
+    --warn:#c0392b;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 6px 22px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--paper);line-height:1.58}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding:32px 0 26px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--usf-gold);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:28px;font-weight:780}
+  header.hero p{margin:0;max-width:880px;color:#e7efeb;font-size:15px}
+  nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:4px;flex-wrap:wrap;padding-top:7px;padding-bottom:7px}
+  nav.tabs button{border:none;background:transparent;font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 13px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  section.page{display:none;padding:24px 0 10px}
+  section.page.active{display:block}
+  h2.sec{font-size:23px;margin:4px 0 2px;color:var(--usf-green-d)}
+  h3{font-size:16px;margin:20px 0 6px;color:var(--ink)}
+  h4{font-size:13.5px;margin:14px 0 4px;color:var(--usf-green-d);text-transform:uppercase;letter-spacing:.05em}
+  h4.raw{text-transform:none;letter-spacing:.01em;font-size:15px}
+  .lead{color:var(--muted);max-width:880px;margin:0 0 16px;font-size:15px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+  .card.tight{padding:15px 18px}
+  .eq{background:#0f1c18;color:#eafff5;border-radius:10px;padding:14px 18px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14.5px;line-height:1.95;white-space:pre-wrap}
+  .eq b{color:var(--usf-gold)}.eq .g{color:#7fd8b0}.eq .bl{color:#6fc3e0}.eq .rd{color:#ff9b8f}.eq .dim{color:#7f948d}.eq .yl{color:#ffd98a}
+  .callout{border-left:4px solid var(--usf-gold);background:#fffdf3;padding:11px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:13.8px}
+  .callout.good{border-left-color:#1e9e57;background:#f3fbf6}
+  .callout.sig{border-left-color:var(--s4);background:#f1f8fb}
+  .callout.warn{border-left-color:var(--warn);background:#fdf4f2}
+  .callout b{color:var(--usf-green-d)}
+  .callout.warn b{color:var(--warn)}
+  .small{font-size:12px;color:var(--muted)}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin:6px 0 14px}
+  .ctrl{display:flex;flex-direction:column;gap:5px;min-width:140px}
+  .ctrl label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .ctrl label.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  .ctrl input[type=range]{width:210px;accent-color:var(--usf-green)}
+  .ctrl input[type=range].sm{width:150px}
+  .ctrl select,.ctrl input[type=number]{font:inherit;font-size:13.5px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .ctrl input[type=number]{width:96px;font-family:ui-monospace,monospace}
+  .ctrl .val{font-family:ui-monospace,monospace;font-size:13px;color:var(--usf-green-d);font-weight:700}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 4px}
+  button.act{border:1px solid var(--usf-green);background:var(--usf-green);color:#fff;font-weight:700;font-size:13.5px;padding:9px 15px;border-radius:9px;cursor:pointer}
+  button.act:hover{background:var(--usf-green-d)}
+  button.act:disabled{opacity:.45;cursor:not-allowed}
+  button.ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:13.5px;padding:9px 14px;border-radius:9px;cursor:pointer}
+  button.ghost:hover{background:var(--paper)}
+  button.ghost.on{border-color:var(--usf-green);background:#eef7f3;color:var(--usf-green-d)}
+  .readout{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+  .stat{background:#fbfdfc;border:1px solid var(--line);border-radius:11px;padding:9px 13px;min-width:104px;text-align:center}
+  .stat .n{font-size:18px;font-weight:780;font-family:ui-monospace,monospace;color:var(--usf-green-d)}
+  .stat .n.t{color:var(--s2)}.stat .n.w{color:var(--warn)}.stat .n.r{color:var(--s3)}.stat .n.b{color:var(--s4)}
+  .stat .n.sm{font-size:15px}
+  .stat .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+  .stat .l.raw{text-transform:none;letter-spacing:.02em;font-size:11px}
+  canvas{border-radius:10px;border:1px solid var(--line);background:#fff;display:block;max-width:100%}
+  .canvasrow{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+  figure{margin:0}
+  figcaption{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;text-align:center;max-width:460px}
+  table.map{width:100%;border-collapse:collapse;font-size:13.4px;margin-top:8px}
+  table.map th,table.map td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.map th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--line)}
+  table.map th.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  table.map td:first-child{font-weight:700;color:var(--usf-green-d)}
+  table.map td.num,table.map th.num{text-align:right;font-family:ui-monospace,monospace;font-size:12.8px}
+  table.map tr.hl td{background:#f3fbf6}
+  .swatch{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:baseline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);font-weight:600;margin:4px 0 10px;align-items:center}
+  .legend i{display:inline-block;width:22px;height:0;border-top-width:3px;border-top-style:solid;margin-right:6px;vertical-align:middle}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr}}
+  .narr{background:#f3fbf6;border:1px solid #cfe8dc;border-radius:10px;padding:12px 15px;font-size:13.6px;min-height:74px}
+  .narr b{color:var(--usf-green-d)}
+  .stagebar{display:flex;gap:5px;flex-wrap:wrap;margin:12px 0 10px}
+  .stagebar span{font-size:11px;font-weight:700;padding:5px 9px;border-radius:7px;background:#eef2f0;color:var(--muted);white-space:nowrap}
+  .stagebar span.done{background:#dff0e8;color:var(--usf-green-d)}
+  .stagebar span.now{background:var(--usf-green);color:#fff}
+  .netbox{background:#fbfdfc;border:1px solid var(--line);border-radius:12px;padding:6px}
+  .netbox svg{display:block;width:100%;height:auto}
+  ul.tight{margin:8px 0 0;padding-left:20px}ul.tight li{margin-bottom:5px;font-size:13.8px}
+  ol.tight{margin:8px 0 0;padding-left:20px}ol.tight li{margin-bottom:5px;font-size:13.8px}
+  footer{padding:26px 0;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);margin-top:18px}
+  .progress{height:6px;background:#eef2f0;border-radius:4px;overflow:hidden;margin:8px 0 0;max-width:340px}
+  .progress > i{display:block;height:100%;background:var(--usf-green);width:0%}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#eef7f3;color:var(--usf-green-d);margin-left:6px}
+  .pill.w{background:#fdf1ee;color:var(--warn)}
+  @media(max-width:700px){.ctrl input[type=range]{width:min(72vw,210px)}}
+
+/* ---- additions for the Module 7 companion ---- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+details.deeper{border:1px solid var(--line);border-radius:11px;background:#fbfdfc;padding:0;margin:16px 0}
+details.deeper>summary{cursor:pointer;padding:11px 16px;font-weight:700;font-size:13.5px;color:var(--usf-green-d);
+  list-style:none;border-radius:11px}
+details.deeper>summary::-webkit-details-marker{display:none}
+details.deeper>summary::before{content:"▸ ";color:var(--gold-deep)}
+details.deeper[open]>summary::before{content:"▾ "}
+details.deeper[open]>summary{border-bottom:1px solid var(--line);border-radius:11px 11px 0 0}
+details.deeper>p,details.deeper>ul{margin:12px 16px;font-size:13.6px}
+table.map td ol,table.map td ul{margin:4px 0 0 16px;padding:0}
+section.page ol li,section.page ul li{margin-bottom:9px}
+figure figcaption{max-width:560px}
+select{font:inherit;font-size:13.5px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · CGN 6933 · Module 7 — Traffic Simulation, Digital Twins, and Operations</div>
+  <h1>Learning traffic dynamics: Newell's shift and the LWR shockwave as convolutions</h1>
+  <p>Module 7 keeps asking one question: can a learned model stand in for a simulator? This page answers it
+     for the two simplest simulators we have — Newell's car-following rule and the cell transmission model —
+     by showing that each one <b>already is</b> a convolution. Everything here runs live in your browser,
+     including a real trained network with 1,217 weights.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap">
+  <button data-tab="p1" class="active">1 · The shift</button>
+  <button data-tab="p2">2 · One tap and a bias</button>
+  <button data-tab="p3">3 · From one car to the field</button>
+  <button data-tab="p4">4 · Watch the learned operator run</button>
+  <button data-tab="p5">5 · Where it breaks</button>
+  <button data-tab="p6">6 · Fit card &amp; where this lands</button>
+</div></nav>
+
+<!-- ==================== PAGE 1 ==================== -->
+<section class="page active" id="p1"><div class="wrap">
+  <h2 class="sec">A car-following model is a picture you can slide</h2>
+  <p class="lead">Newell's simplified car-following model says something almost embarrassingly simple: in
+     congestion, a follower's trajectory is its leader's trajectory, <b>moved</b> — later in time by a
+     reaction-and-response time&nbsp;τ, and back in space by a jam spacing&nbsp;δ. Not approximated. Moved.
+     Drag the two sliders and watch the ghost copy of the leader land exactly on the follower.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label class="raw">τ — shift in time (s)</label>
+        <input type="range" id="a_tau" min="0.4" max="2.4" step="0.1" value="1.2">
+        <span class="val" id="a_tauv">1.2 s</span></div>
+      <div class="ctrl"><label class="raw">δ — shift in space (ft)</label>
+        <input type="range" id="a_del" min="12" max="45" step="0.4" value="26.4">
+        <span class="val" id="a_delv">26.4 ft</span></div>
+      <div class="ctrl"><label>Followers</label>
+        <input type="range" id="a_nv" min="1" max="8" step="1" value="5">
+        <span class="val" id="a_nvv">5</span></div>
+      <div class="ctrl"><label class="raw">Show the shift</label>
+        <div class="btnrow" style="margin:0">
+          <button class="ghost on" id="a_ghost">ghost copy</button>
+          <button class="ghost on" id="a_arrows">shift arrows</button>
+        </div></div>
+    </div>
+
+    <div class="canvasrow">
+      <figure>
+        <canvas id="a_cv" data-w="640" data-h="380"></canvas>
+        <figcaption>A stop-and-go platoon in the time–space plane. The purple dashes are the leader's own
+          curve translated by (τ, −δ), drawn over the gold follower — they coincide wherever the congested
+          branch is binding, and part company only where the follower hits the free-flow cap.</figcaption>
+      </figure>
+      <div style="flex:1;min-width:250px">
+        <div class="readout" style="flex-direction:column;align-items:stretch">
+          <div class="stat"><div class="n" id="a_w">15.0</div><div class="l raw">implied wave speed δ/τ (mi/hr)</div></div>
+          <div class="stat"><div class="n t" id="a_kj">200</div><div class="l raw">implied jam density 1/δ (veh/mi/ln)</div></div>
+          <div class="stat"><div class="n b" id="a_err">0.00</div><div class="l raw">max gap, ghost vs follower (ft)</div></div>
+        </div>
+        <div class="callout"><b>The two numbers you already know.</b> A Newell driver has exactly two constants,
+          and they are not new quantities — they <i>are</i> the congested branch of the fundamental diagram:
+          <span class="mono">w = δ/τ</span> and <span class="mono">K<sub>j</sub> = 1/δ</span>. Set δ = 26.4 ft
+          and τ = 1.2 s and you get K<sub>j</sub> = 200 veh/mi/ln and w = 15 mi/hr — the exact fundamental
+          diagram the CTM on tab 3 runs on. Microscopic and macroscopic are the same two numbers.</div>
+      </div>
+    </div>
+
+    <div class="eq"><span class="dim">Newell (2002), congested branch — the whole model</span>
+   x<span class="g">ₙ</span>(t) = x<span class="g">ₙ₋₁</span>(t − <b>τ</b>) − <b>δ</b>
+
+<span class="dim">with the free-flow branch, so a car never exceeds v_f or drives through its leader</span>
+   x<span class="g">ₙ</span>(t) = min( x<span class="g">ₙ</span>(t−Δt) + <span class="bl">v_f</span>·Δt ,  x<span class="g">ₙ₋₁</span>(t − <b>τ</b>) − <b>δ</b> )</div>
+
+    <table class="map">
+      <tr><th>Symbol</th><th>Reads as</th><th>Units, typical value</th></tr>
+      <tr><td class="mono">x<sub>n</sub>(t)</td><td>position of vehicle n along the road at time t</td><td>ft; the trajectory you plot</td></tr>
+      <tr><td class="mono">τ</td><td>how long after its leader passes a point this car passes it, in a queue</td><td>s; 1.0–1.5 s</td></tr>
+      <tr><td class="mono">δ</td><td>bumper-to-bumper spacing when the queue is stopped</td><td>ft; 20–30 ft</td></tr>
+      <tr><td class="mono">v_f</td><td>free-flow speed — the ceiling when nothing is in the way</td><td>mi/hr; 75 here</td></tr>
+    </table>
+    <p class="small">In words: <b>copy the leader's trajectory, shift it right by τ and down by δ, and cap it
+      at free-flow speed.</b> That is the whole model. Two parameters per driver.</p>
+  </div>
+
+  <div class="callout sig"><b>Why this tab exists.</b> Hold on to the word <i>shift</i>. A shift applied
+    identically at every point of a picture, using the same small set of numbers everywhere, is the exact
+    thing a convolution layer does — and it is the reason the rest of this page works.</div>
+</div></section>
+
+<!-- ==================== PAGE 2 ==================== -->
+<section class="page" id="p2"><div class="wrap">
+  <h2 class="sec">Newell is one convolution tap plus a bias</h2>
+  <p class="lead">Write the follower's position as a weighted sum of the leader's recent positions — a causal
+     1-D convolution over the leader's trajectory. Newell's model is not <i>approximated</i> by that layer.
+     It is one specific setting of its weights: a single 1 at the tap that equals τ, zeros everywhere else,
+     and a bias of −δ. Fit the layer to a simulated platoon below and watch it find them.</p>
+
+  <div class="card">
+    <div class="eq"><span class="dim">a causal 1-D convolution over the leader's trajectory, K taps of Δt each</span>
+   x̂<span class="g">ₙ</span>(t) = <b>Σ</b><span class="dim">ₖ₌₀..ₖ₋₁</span> <span class="yl">w</span><span class="dim">ₖ</span>·x<span class="g">ₙ₋₁</span>(t − k·Δt) + <span class="bl">b</span>
+
+<span class="dim">Newell is the setting</span>
+   <span class="yl">w</span><span class="dim">ₖ</span> = 1 at k = <b>τ/Δt</b>,  0 elsewhere       <span class="bl">b</span> = <b>−δ</b>
+
+<span class="dim">and the free-flow cap is the activation, because</span>  min(a, b) = a − ReLU(a − b)</div>
+
+    <div class="callout"><b>Read the kernel as a clock, not as a filter.</b> The <i>position</i> of the weight
+      is the reaction time. The <i>height</i> of the weight is how much of the leader's motion is passed
+      through — 1.0 means all of it. The bias is the space you keep. A student who can read those three
+      things off a plot can read any 1-D convolution in this course.</div>
+  </div>
+
+  <div class="card">
+    <h3>Fit the layer to a platoon</h3>
+    <p class="small">The platoon below is simulated with Newell's rule, then thrown away — the fitter sees only
+      pairs of trajectories. Weights are trained by gradient descent (Adam, 3,000 steps, cosine-decayed) with the kernel
+      parameterised as a distribution over lags, which is the constraint that makes it readable; see the
+      note underneath.</p>
+    <div class="controls">
+      <div class="ctrl"><label class="raw">mean τ (s)</label>
+        <input type="range" id="b_tau" min="0.6" max="2.0" step="0.1" value="1.2">
+        <span class="val" id="b_tauv">1.2 s</span></div>
+      <div class="ctrl"><label class="raw">driver spread — sd of τ (s)</label>
+        <input type="range" id="b_sd" min="0" max="0.5" step="0.05" value="0">
+        <span class="val" id="b_sdv">0.00 s (identical drivers)</span></div>
+      <div class="ctrl"><label class="raw">δ (ft)</label>
+        <input type="range" id="b_del" min="12" max="45" step="0.4" value="26.4">
+        <span class="val" id="b_delv">26.4 ft</span></div>
+      <div class="ctrl"><label>Vehicles</label>
+        <input type="range" id="b_nv" min="1" max="30" step="1" value="12">
+        <span class="val" id="b_nvv">12</span></div>
+    </div>
+    <div class="btnrow">
+      <button class="act" id="b_fit">Fit the kernel</button>
+      <button class="ghost" id="b_reset">Reset weights</button>
+      <span class="small" id="b_status">30 taps, all initialised equal. Press fit.</span>
+    </div>
+
+    <div class="canvasrow">
+      <figure>
+        <canvas id="b_cv" data-w="620" data-h="330"></canvas>
+        <figcaption>The learned kernel (gold) against the true distribution of reaction times in the
+          platoon (dashed green). One kernel is shared by every vehicle pair — that is weight sharing.</figcaption>
+      </figure>
+      <div style="flex:1;min-width:250px">
+        <div class="readout" style="flex-direction:column;align-items:stretch">
+          <div class="stat"><div class="n" id="b_peak">—</div><div class="l raw">peak tap → lag (s)</div></div>
+          <div class="stat"><div class="n t" id="b_mean">—</div><div class="l raw">kernel mean lag vs true mean τ</div></div>
+          <div class="stat"><div class="n r" id="b_sdout">—</div><div class="l raw">kernel sd vs true sd of τ</div></div>
+          <div class="stat"><div class="n b" id="b_bias">—</div><div class="l raw">learned bias vs −δ (ft)</div></div>
+          <div class="stat"><div class="n w sm" id="b_rmse">—</div><div class="l raw">fit RMSE (ft)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout good"><b>Offline check, run once and recorded.</b> With identical drivers
+      (τ = 1.2 s, δ = 7 m, Δt = 0.1 s) an exact least-squares fit of the same 30-tap layer returns
+      <span class="mono">w₁₂ = 1.0000</span>, every other tap summing to <span class="mono">1.9 × 10⁻¹¹</span>,
+      and bias <span class="mono">−7.000 m</span>. With 30 heterogeneous drivers sharing one kernel, the
+      trained layer recovers a mean lag of <span class="mono">1.169 s</span> against a true
+      <span class="mono">1.170 s</span>, an sd of <span class="mono">0.299</span> against
+      <span class="mono">0.295</span>, and a bias of <span class="mono">−7.191 m</span> against a true mean
+      δ of <span class="mono">7.190 m</span>. The reproducer is <span class="mono">exp1_newell_conv.py</span>.</div>
+
+    <div class="callout warn"><b>The trap, and it is worth your time.</b> Fit those 30 taps by unconstrained
+      least squares and you get nonsense — taps of −0.78, +1.66, −1.03 sitting next to each other, and
+      ±1.4 at the far end. Nothing is wrong with the optimiser. A vehicle's position at adjacent lags is
+      almost the same number, so the columns of the design matrix are nearly collinear. Constraining the
+      kernel to be a distribution over lags — non-negative, summing to one — makes it readable, and then
+      the honest accounting is this: across all 36 combinations of the sliders above, the fitted kernel
+      recovers the <b>mean lag to within 0.003 s and the bias to within 0.1 ft</b>, while its
+      <b>spread is not trustworthy</b> — it reports 0.07–0.11 s of width even when every driver is
+      identical, and lands anywhere from 0.07 to 0.33 s when the true spread is 0.26 s. The mean and the
+      intercept are identified by this data; the shape of the distribution is not. That is a calibration
+      result about car-following data, and it applies to any model you fit to trajectories — neural or not.</div>
+
+    <details class="deeper"><summary>Going deeper — why the sum of the taps must be 1, and what the bias absorbs</summary>
+      <p>Put a leader travelling at a constant speed v into the layer: x<sub>n−1</sub>(t − kΔt) = x<sub>n−1</sub>(t) − v·kΔt.
+      The output is (Σ<sub>k</sub> w<sub>k</sub>)·x<sub>n−1</sub>(t) − v·Δt·Σ<sub>k</sub> k·w<sub>k</sub> + b. For the follower
+      to travel at the same speed rather than drift away, the first coefficient must be exactly 1. So
+      <b>Σ w<sub>k</sub> = 1</b> is not a regulariser you chose, it is the steady-state condition of a car-following
+      model, and enforcing it costs nothing. The second term is then v·τ̄ where τ̄ = Σ k·w<sub>k</sub>·Δt is the
+      kernel's mean lag, so the equilibrium spacing is <b>v·τ̄ + δ</b> — the linear spacing–speed relation
+      whose inverse is the congested branch of a triangular fundamental diagram. The bias absorbs δ alone
+      because it is the only term that does not scale with speed.</p>
+      <p class="small">Newell, G. F. (2002). A simplified car-following theory: a lower order model.
+      <i>Transportation Research Part B, 36</i>(3), 195–205.</p>
+    </details>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 3 ==================== -->
+<section class="page" id="p3"><div class="wrap">
+  <h2 class="sec">The same argument, one dimension up: the CTM step is a residual conv block</h2>
+  <p class="lead">Go from trajectories to the density field and the shift argument survives intact. The cell
+     transmission model updates every cell from itself and its two neighbours, with the same rule everywhere.
+     Local, plus position-independent, is precisely the pair of assumptions a convolution layer encodes.</p>
+
+  <div class="card">
+    <div class="eq"><span class="dim">CTM (Daganzo 1994) — one Godunov step on a triangular fundamental diagram</span>
+   sending    S<span class="dim">ᵢ</span> = min( <span class="bl">u</span>·k<span class="dim">ᵢ</span> , Q<span class="dim">max</span> )
+   receiving  R<span class="dim">ᵢ</span> = min( Q<span class="dim">max</span> , <span class="yl">w</span>·(K<span class="dim">j</span> − k<span class="dim">ᵢ</span>) )
+   interface  y<span class="dim">ᵢ</span> = min( S<span class="dim">ᵢ₋₁</span> , R<span class="dim">ᵢ</span> ) = min( <span class="bl">u</span>·k<span class="dim">ᵢ₋₁</span> , Q<span class="dim">max</span> , <span class="yl">w</span>·(K<span class="dim">j</span> − k<span class="dim">ᵢ</span>) )
+   update     k<span class="dim">ᵢ</span>(n+1) = <span class="rd">k<span class="dim">ᵢ</span>(n)</span> + (Δt/Δx)·( y<span class="dim">ᵢ</span> − y<span class="dim">ᵢ₊₁</span> )
+
+<span class="dim">every quantity on the right comes from cells i−1, i, i+1 → a 3-tap convolution in space</span>
+<span class="dim">a min of three affine functions is two nested ReLUs → the nonlinearity</span>
+<span class="dim">the </span><span class="rd">k(n) carried through</span><span class="dim"> → the skip connection</span></div>
+
+    <div class="grid2">
+      <div>
+        <h4 class="raw">The block that represents it exactly</h4>
+        <div class="eq" style="font-size:13.5px">   k(n) ──┬─ conv3 (1→32) ─ ReLU ─ conv1 ─ ReLU ─ conv1 ─┐
+          │                                        <b>+</b> ─→ k(n+1)
+          └────────────────────────────────────────┘</div>
+        <p class="small">This is not an analogy. min(a,b) = a − ReLU(a−b), applied twice, turns the three-way
+          min into two ReLU layers; the 3-tap convolution supplies k<sub>i−1</sub>, k<sub>i</sub>, k<sub>i+1</sub>;
+          and the skip connection carries the conservation law. Any exact CTM step can be written in this
+          block, and the block trained below finds it from data.</p>
+        <div class="callout"><b>The skip connection is mass conservation.</b> Predicting the <i>change</i> in
+          density rather than the density itself is not an optimisation trick here — it is the statement that
+          vehicles are neither created nor destroyed inside a cell, and everything the network has to learn is
+          the flux across two boundaries.</div>
+      </div>
+      <div>
+        <h4 class="raw">In the time–space image, the rule is a shift</h4>
+        <canvas id="c_cv" data-w="440" data-h="320"></canvas>
+        <p class="small">Where the value at a cell comes from one step earlier. In free flow it is copied from
+          <b>upstream</b> at u = 75 mi/hr, which at this discretisation is exactly one cell per step. In
+          congestion it is copied from <b>downstream</b> at w = 15 mi/hr — 0.2 cells per step, one cell every
+          five. Which of the two applies is decided by the state itself, and that decision is the min.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Run the CTM</h3>
+    <p class="small">Course parameters, the same simulation used in the Module 1 lab and in the trained network
+      on the next tab: u = 75 mi/hr, Δt = 4.8 s, Δx = 0.10 mi (so that u·Δt = Δx exactly, the CFL condition),
+      40 cells = 4 miles, 150 steps = 12 minutes, uniform free-flow start. A bottleneck at the downstream end
+      drops exit capacity for a while, and a queue grows back up the road.</p>
+    <div class="controls">
+      <div class="ctrl"><label class="raw">w — backward wave speed (mi/hr)</label>
+        <input type="range" id="c_w" min="10" max="20" step="0.5" value="15">
+        <span class="val" id="c_wv">15.0</span></div>
+      <div class="ctrl"><label class="raw">K<sub>j</sub> — jam density (veh/mi/ln)</label>
+        <input type="range" id="c_kj" min="140" max="260" step="10" value="200">
+        <span class="val" id="c_kjv">200</span></div>
+      <div class="ctrl"><label class="raw">demand q_in (× capacity)</label>
+        <input type="range" id="c_q" min="0.5" max="0.98" step="0.01" value="0.85">
+        <span class="val" id="c_qv">0.85</span></div>
+      <div class="ctrl"><label class="raw">bottleneck severity (× capacity)</label>
+        <input type="range" id="c_mu" min="0.1" max="0.9" step="0.05" value="0.35">
+        <span class="val" id="c_muv">0.35</span></div>
+      <div class="ctrl"><label class="raw">bottleneck duration (steps)</label>
+        <input type="range" id="c_dur" min="10" max="90" step="5" value="45">
+        <span class="val" id="c_durv">45 (3.6 min)</span></div>
+    </div>
+    <div class="canvasrow">
+      <figure>
+        <canvas id="c_hm" data-w="560" data-h="330"></canvas>
+        <figcaption>Density field k(x,t). The dashed purple line is the Rankine–Hugoniot shock speed
+          predicted from the fundamental diagram alone — no simulation needed.</figcaption>
+      </figure>
+      <div style="flex:1;min-width:230px">
+        <div class="readout" style="flex-direction:column;align-items:stretch">
+          <div class="stat"><div class="n" id="c_rh">−11.03</div><div class="l raw">Rankine–Hugoniot shock speed (mi/hr)</div></div>
+          <div class="stat"><div class="n t" id="c_meas">−11.45</div><div class="l raw">measured queue-tail speed (mi/hr)</div></div>
+          <div class="stat"><div class="n b" id="c_cap">2500</div><div class="l raw">capacity Q_max (veh/hr/ln)</div></div>
+          <div class="stat"><div class="n r" id="c_kc">33.3</div><div class="l raw">critical density K_c (veh/mi/ln)</div></div>
+        </div>
+        <div class="callout sig"><b>The shock speed is arithmetic, not simulation.</b>
+          s = (q<sub>2</sub> − q<sub>1</sub>)/(k<sub>2</sub> − k<sub>1</sub>) — the slope of the chord between the two
+          states on the fundamental diagram. Any model that claims to predict queue growth has to reproduce
+          this number, and it is the first thing to check on a learned one.</div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 4 ==================== -->
+<section class="page" id="p4"><div class="wrap">
+  <h2 class="sec">A real trained network, running here</h2>
+  <p class="lead">The block from tab 3 was trained on 400 randomly generated CTM runs — random initial
+     densities, random demand, random bottleneck timing and severity — and never saw the scenario below.
+     Its <b>1,217 weights are embedded in this page</b> and the rollout you are about to run is genuine
+     inference, one step at a time, in your browser. Nothing here is a recorded animation.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label class="raw">boundary cells</label>
+        <select id="d_bc">
+          <option value="given">given each step (demand and exit capacity known)</option>
+          <option value="blind">frozen from step 75 (nothing known after 6.0 min)</option>
+        </select></div>
+      <div class="ctrl"><label class="raw">bottleneck severity (× capacity)</label>
+        <input type="range" id="d_mu" min="0.1" max="0.9" step="0.05" value="0.35">
+        <span class="val" id="d_muv">0.35</span></div>
+      <div class="ctrl"><label class="raw">demand q_in (× capacity)</label>
+        <input type="range" id="d_q" min="0.5" max="0.98" step="0.01" value="0.85">
+        <span class="val" id="d_qv">0.85</span></div>
+    </div>
+    <div class="btnrow">
+      <button class="act" id="d_run">Run the rollout</button>
+      <button class="ghost" id="d_bump">Measure the wave speeds</button>
+      <span class="small" id="d_status">1,217 weights loaded · trained at w = 15 mi/hr, K_j = 200</span>
+    </div>
+
+    <div class="canvasrow">
+      <figure><canvas id="d_true" data-w="300" data-h="300"></canvas>
+        <figcaption style="max-width:300px">CTM truth</figcaption></figure>
+      <figure><canvas id="d_hat" data-w="300" data-h="300"></canvas>
+        <figcaption style="max-width:300px">Learned rollout, 150 applications of one 1,217-weight block</figcaption></figure>
+      <figure><canvas id="d_err" data-w="300" data-h="300"></canvas>
+        <figcaption style="max-width:300px">|error|, same colour scale</figcaption></figure>
+    </div>
+
+    <div class="readout">
+      <div class="stat"><div class="n" id="d_rmse">—</div><div class="l raw">RMSE while the exit is blocked (veh/mi/ln)</div></div>
+      <div class="stat"><div class="n w" id="d_rmse2">—</div><div class="l raw">RMSE after it clears at 7.6 min</div></div>
+      <div class="stat"><div class="n t" id="d_shock">—</div><div class="l raw">queue-tail speed, learned (mi/hr)</div></div>
+      <div class="stat"><div class="n b" id="d_shockt">—</div><div class="l raw">queue-tail speed, truth (mi/hr)</div></div>
+      <div class="stat"><div class="n r" id="d_free">—</div><div class="l raw">learned free-flow wave (mi/hr)</div></div>
+      <div class="stat"><div class="n" id="d_cong">—</div><div class="l raw">learned congested wave (mi/hr)</div></div>
+    </div>
+
+    <div class="callout good"><b>What "measure the wave speeds" does.</b> It puts a small density bump on an
+      otherwise uniform road, rolls the network forward twice — once with the bump and once without — and
+      tracks the centroid of the difference. That difference is the perturbation, isolated. On a free-flow
+      background the trained block moves it at <span class="mono">+74.7 mi/hr</span> against the model's
+      <span class="mono">+75.0</span>; on a congested background, at <span class="mono">−15.4</span> against
+      <span class="mono">−15.0</span>. Nobody told it either number. It read both off the data, and they are
+      the two characteristic speeds of the fundamental diagram.</div>
+
+    <div class="callout warn"><b>Do the honest version of this measurement.</b> Tracking the bump's centroid
+      against the <i>nominal</i> background instead of against a second rollout gave +127 mi/hr in congestion —
+      not because the network was wrong, but because 0.4 veh/mi of harmless background drift spread over 80
+      cells outweighs a 15 veh·cell bump. A difference of two rollouts cancels the drift exactly. Most
+      "the model learned the physics" claims are one careless baseline away from this.</div>
+  </div>
+
+  <div class="card">
+    <h3>Switch the boundary to "frozen" and watch what happens</h3>
+    <p>With the boundary cells supplied each step, the rollout holds <b>0.20 veh/mi</b> while the exit is
+       blocked and <b>1.38</b> after it clears — 0.85 over the whole run — and its queue tail tracks the same
+       cells as the truth, at −11.45 mi/hr. Now set the boundary to frozen. The error stays at
+       <b>0.35 veh/mi</b> right up to 7.6 minutes, the moment the exit clears in the truth, and then jumps to
+       <b>35.6</b>. The network keeps propagating the queue upstream at very nearly the right speed
+       (−12.11 against −11.45). It simply has no way to know the incident ended, because nothing in the
+       interior of a corridor carries that information.</p>
+    <div class="callout"><b>This is the single most useful thing on this page.</b> A learned traffic model is
+      an <i>operator</i>: give it a state and boundary conditions and it will step them forward faithfully.
+      It is not a forecast. Any corridor forecast you build is only as good as the demand and capacity
+      forecast you feed it, and a model that looks superb on historical replay — where the boundaries are
+      known — can be useless in real time, where they are not. Ask any vendor of a predictive traffic
+      product which of the two they benchmarked.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 5 ==================== -->
+<section class="page" id="p5"><div class="wrap">
+  <h2 class="sec">Where it breaks</h2>
+  <p class="lead">Three failure modes, in the order you will meet them on a real project. None of them is a
+     bug; each one is a property of the assumption that makes convolution work in the first place.</p>
+
+  <div class="card">
+    <h3>1 · Change the road and the weights are wrong</h3>
+    <p>The block was trained at w = 15 mi/hr. The wave speed is not an input to it — it is baked into the
+      weights, the same way a calibrated Wiedemann parameter set is baked into a VISSIM model. Move the
+      trained network to a corridor with different driver behaviour and it degrades hard, while the CTM
+      simply takes the new parameter.</p>
+    <div class="canvasrow">
+      <figure><canvas id="e_cv" data-w="560" data-h="300"></canvas>
+        <figcaption>Error of the same trained block, applied without retraining to corridors whose backward
+          wave speed differs from the one it was trained on. Computed offline; the reproducer is
+          <span class="mono">export_and_shift.py</span>.</figcaption></figure>
+      <div style="flex:1;min-width:250px">
+        <table class="map">
+          <tr><th>w (mi/hr)</th><th>RMSE</th><th>tail speed, truth → learned</th></tr>
+          <tr><td class="mono">10.0</td><td class="mono">14.63</td><td class="mono">−7.82 → −4.84</td></tr>
+          <tr><td class="mono">12.5</td><td class="mono">11.40</td><td class="mono">−9.79 → −7.77</td></tr>
+          <tr><td class="mono"><b>15.0</b></td><td class="mono"><b>0.85</b></td><td class="mono"><b>−11.45 → −11.45</b></td></tr>
+          <tr><td class="mono">17.5</td><td class="mono">7.80</td><td class="mono">−13.35 → −13.98</td></tr>
+          <tr><td class="mono">20.0</td><td class="mono">8.87</td><td class="mono">−15.12 → −15.12</td></tr>
+        </table>
+        <p class="small">Units veh/mi/ln. A 3 mi/hr change in wave speed costs a factor of 13 in RMSE. Note
+          also that at w = 20 the tail speed is recovered but the field is not: <b>a single headline metric
+          can look fine while the estimate is bad</b>, which is why two of these columns exist.</p>
+      </div>
+    </div>
+    <div class="callout"><b>Which is the better deal?</b> The CTM has three parameters you can measure from a
+      week of detector data. The network has 1,217 you must retrain per corridor. The network buys you the
+      ability to learn dynamics you cannot write down — lane changing, bounded acceleration, capacity drop,
+      driver heterogeneity — and it buys you speed at inference. If the dynamics you need are already in the
+      CTM, the CTM wins on every axis that matters.</div>
+  </div>
+
+  <div class="card">
+    <h3>2 · Translation invariance is exactly what a bottleneck violates</h3>
+    <p>A convolution applies the same weights at every location. That is why it needs so few parameters, and
+      it is true of car-following and of the LWR update on a <i>homogeneous</i> segment. It is false the
+      moment the road stops being the same everywhere: a lane drop, a merge, an upgrade, a work zone, a
+      signal. The pattern "a shockwave" is position-independent; the pattern "a bottleneck at milepost 12.3"
+      is not.</p>
+    <div class="callout sig"><b>The fix is a channel, not a bigger network.</b> Feed geometry in as extra input
+      channels aligned to the same grid — lanes, capacity, grade, ramp presence, signal state — so the
+      convolution keeps sharing weights over space while the <i>input</i> tells it where the road changes.
+      This is exactly how a CNN handles a colour image: same kernel, three channels. A network that must
+      memorise where the bottlenecks are has lost the property you chose it for.</div>
+  </div>
+
+  <div class="card">
+    <h3>3 · The receptive field has to cover the domain of dependence</h3>
+    <p>Information in LWR travels along characteristics: downstream at u in free flow, upstream at w in
+      congestion. So the state at a point 12 minutes from now depends on a <b>wedge</b> of the current field —
+      at this discretisation, 150 cells (15 miles) of road upstream and 30 cells (3 miles) downstream. If your
+      network's receptive field is smaller than that wedge, no amount of training fixes it; the information
+      is not in the input.</p>
+    <div class="grid2">
+      <div><div class="eq" style="font-size:13.5px"><span class="dim">a stack of 3-tap convolutions reaches 1 cell per layer</span>
+  reach after L layers = L cells
+  need 150 cells upstream  →  <b>150 layers</b>
+
+<span class="dim">the recurrent form gets it for free</span>
+  one 3-tap block, applied 150 times
+  = reach 150, and <b>1,217 weights total</b></div></div>
+      <div>
+        <p class="small">This is the argument for rolling one small block forward in time rather than building
+          one deep feed-forward CNN that maps the present to the future in a single shot. It is also the
+          argument for <b>anisotropic</b> kernels: the wedge is not square, so a square 3×3 stack spends most
+          of its parameters on space–time locations that carry no information. Thodi et al. restrict the
+          kernel's support to two bands, one along each characteristic, and the parameter count then grows
+          linearly rather than quadratically with kernel width.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Before you trust this result</h3>
+    <table class="map">
+      <tr><th style="width:26%">Question</th><th>Answer for the result on tab 4</th></tr>
+      <tr><td><b>What is the baseline?</b></td><td>The CTM itself, with three parameters, which is exact by
+        construction. The network's job was never to beat it — it was to show that the operator is learnable
+        from data. Against a "persistence" baseline (hold the field fixed) the rollout is far better; against
+        the CTM it is worse, and the honest headline is <i>0.85 veh/mi of error where the correct answer is 0</i>.</td></tr>
+      <tr><td><b>How was the data split, and why is that honest?</b></td><td>Trained on 400 randomly generated
+        scenarios; tested on one scenario built by hand — uniform free-flow start, a 35% capacity drop at a
+        fixed time — that is not in the training distribution's typical range. The split is by <i>scenario</i>,
+        not by time step, because splitting a single simulation into train and test time steps would leak the
+        answer: neighbouring steps of one run are nearly the same field.</td></tr>
+      <tr><td><b>What does it do on the ugly cases?</b></td><td>It fails in three named ways, all on this tab:
+        a different wave speed costs a factor of 13; a fixed bottleneck violates its core assumption; and a
+        frozen boundary makes the 12-minute error jump from 0.36 to 36 veh/mi. The data are synthetic
+        throughout — no measurement noise, no lane changing, no capacity drop, no heterogeneous drivers. On
+        real detector data all four would be present, and none of them is in this evaluation.</td></tr>
+    </table>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 6 ==================== -->
+<section class="page" id="p6"><div class="wrap">
+  <h2 class="sec">Fit card, applications, and the literature this connects to</h2>
+
+  <div class="card">
+    <h3 style="margin-top:0">Fit card — convolutional surrogate for traffic dynamics</h3>
+    <table class="map">
+      <tr><td style="width:24%"><b>Idea in one sentence</b></td><td>Because a car-following rule and the LWR
+        update apply the same local rule at every point of the time–space plane, both are convolutions, and a
+        small residual conv block can learn the update operator from simulated or measured fields.</td></tr>
+      <tr><td><b>Why it works (the logic)</b></td><td>Locality (the next state depends on a small
+        neighbourhood) plus position independence (the same rule everywhere) are exactly the two inductive
+        biases a convolution encodes; the skip connection encodes conservation, and the ReLUs encode the
+        min() that switches between free-flow and congested regimes.</td></tr>
+      <tr><td><b>Fits these tasks</b></td><td>Traffic state estimation and reconstruction from sparse probes
+        and detectors; fast surrogates for a calibrated microsimulator inside an optimisation or digital-twin
+        loop; short-horizon corridor prediction when boundary demand is known. <i>Leverage labels:</i>
+        prediction, extraction.</td></tr>
+      <tr><td><b>Needs this data</b></td><td>Space–time fields on a regular grid — detector speeds/flows at
+        fixed stations, probe trajectories rasterised, or simulator output. Enough scenarios to cover the
+        regimes you will meet (not enough time steps of one scenario). No labels beyond the field itself.
+        Agencies already own the ingredients: ATSPM and ATMS logs, RITIS/probe speeds, permanent count
+        stations.</td></tr>
+      <tr><td><b>Breaks when</b></td><td>The corridor's fundamental diagram differs from the training one
+        (factor of 13 in RMSE for a 3 mi/hr change in w); geometry varies along the road, breaking translation
+        invariance; the receptive field is smaller than the domain of dependence; and — always — when
+        boundary demand and capacity are not known over the forecast horizon.</td></tr>
+      <tr><td><b>Keep the classical method when</b></td><td>The dynamics you need are already inside the CTM or
+        IDM. Three measurable parameters beat 1,217 fitted ones on interpretability, on transferability to a
+        new corridor, on data hunger, and on your ability to defend the result to a review panel. Reach for
+        the learned version when you need dynamics you cannot write down, or inference fast enough to sit
+        inside a loop.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Where this actually lands</h3>
+    <table class="map">
+      <tr><th style="width:22%">Domain</th><th>Task</th><th>Classical baseline it must beat</th></tr>
+      <tr><td><b>Traffic flow</b></td><td>Reconstruct a full speed field from a handful of detectors plus 3–5%
+        probe penetration, at 10 m × 1 s resolution.</td><td>The adaptive smoothing method — which is itself
+        two hand-designed anisotropic kernels.</td></tr>
+      <tr><td><b>Simulation &amp; digital twins</b></td><td>Replace a per-iteration microsimulation run inside a
+        calibration or signal-optimisation loop with a learned emulator.</td><td>The simulator itself, plus
+        the honest question of whether the loop needs the emulator's speed at all.</td></tr>
+      <tr><td><b>Agency operations</b></td><td>Short-horizon queue prediction for ramp metering and for TIM
+        decision support — where does the back of queue reach in 10 minutes?</td><td>Shockwave arithmetic on
+        the fundamental diagram, which is free, and which the learned model must at minimum reproduce.</td></tr>
+      <tr><td><b>ADAS &amp; vehicle intelligence</b></td><td>Learned car-following and lane-changing models for
+        surrounding traffic in a driving simulator or a planner's world model.</td><td>Calibrated IDM/MOBIL —
+        and remember that Newell has two parameters and is a straight line on a plot.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>The literature this connects to</h3>
+    <p class="small">Everything above is a rediscovery, in modern vocabulary, of a line of work that predates
+      deep learning in transportation. Read at least the first of these.</p>
+    <ul>
+      <li><b>Treiber, M., &amp; Helbing, D. (2002).</b> Reconstructing the spatio-temporal traffic dynamics
+        from stationary detector data. The <b>adaptive smoothing method</b>: two exponential kernels,
+        φ(x,t) = exp(−|x|/σ − |t − x/c|/τ), one tilted along c<sub>free</sub> = 80 km/h and one along
+        c<sub>cong</sub> = −15 km/h, blended by w = ½[1 + tanh((V<sub>c</sub> − V*)/ΔV)] with
+        V<sub>c</sub> = 60 km/h. Read it as a hand-designed two-filter CNN with a gate, because that is what
+        it is. See also Treiber, Kesting &amp; Wilson (2011), <i>CACAIE 26</i>(6), 408–419.</li>
+      <li><b>Thodi, B. T., Khan, Z. S., Jabari, S. E., &amp; Menéndez, M. (2022).</b> Incorporating kinematic
+        wave theory into a deep learning method for high-resolution traffic speed estimation.
+        <i>IEEE T-ITS 23</i>(10). <b>Anisotropic traffic kernels</b> whose support is restricted to a free-flow
+        band and a congested band, on a 10 m × 1 s grid at 5% probe penetration, trained in VISSIM and
+        transferred to NGSIM and HighD. Parameter count linear, not quadratic, in kernel width.</li>
+      <li><b>Yang, C., Ramana, A. S. V., &amp; Jabari, S. E. (2023).</b> Generalized adaptive smoothing based
+        neural network architecture for traffic state estimation. ASM rewritten explicitly as a three-layer
+        network whose six parameters are the ASM's own.</li>
+      <li><b>Rempe, F., Franeck, P., &amp; Bogenberger, K. (2022).</b> On the estimation of traffic speeds with
+        deep convolutional neural networks given probe data. <i>Transportation Research Part C, 134</i>.</li>
+      <li><b>Newell, G. F. (2002)</b> and <b>Daganzo, C. F. (1994)</b> for the two models this page starts from.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Check yourself</h3>
+    <ol>
+      <li>A vendor demonstrates a corridor prediction model with 4% MAPE on a month of historical data and
+        offers it for real-time queue prediction on I-275. Name the one question that decides whether the
+        4% transfers, and say what you would ask them to re-run.</li>
+      <li>You have three years of 5-minute detector data on a 12-mile freeway with two lane drops, and you want
+        a fast surrogate for queue prediction. Would you train a convolutional model on the whole corridor,
+        train one per homogeneous section, or add channels — and what would you measure to justify the choice?</li>
+      <li>Your trained model reproduces the Rankine–Hugoniot shock speed to 0.3 mi/hr but its field RMSE is
+        9 veh/mi. What is it probably getting right, what is it getting wrong, and which of the two would a
+        traffic manager notice first?</li>
+      <li>Newell has two parameters per driver; the block on tab 4 has 1,217. Describe a mobility question
+        where the extra 1,215 are earning their keep, and one where they are pure liability.</li>
+    </ol>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <b>AI for Mobility</b> · CGN 6933 · University of South Florida — Module 7, traffic simulation and digital twins.
+  Self-contained page: the CTM, the kernel fit, and the trained network all run in your browser, and nothing
+  is sent anywhere. Reproducers for every recorded number are in <span class="mono">cnn_newell_lwr/</span>.
+</div></footer>
+
+<script>
+const NET_WEIGHTS = {"c":32,"w1":[[-0.09868431091308594,0.34353768825531006,-0.5007748007774353],[-0.5948063135147095,-0.1181132048368454,0.024730591103434563],[-0.011439144611358643,0.45777493715286255,-0.05123639851808548],[0.1527741253376007,-0.1744827926158905,-0.11348707973957062],[-0.469351202249527,-0.6309522390365601,-0.18246926367282867],[-0.0716034546494484,0.2896454334259033,0.3075462579727173],[-0.3914094567298889,-0.25141456723213196,0.2097034901380539],[0.8203890919685364,-0.3977881371974945,0.43543052673339844],[-0.09305925667285919,0.06109179928898811,0.5227769017219543],[-0.5355907082557678,-0.3634638786315918,-0.14616501331329346],[-0.22505110502243042,0.4988310933113098,-0.3742266893386841],[-0.26577329635620117,-0.4033602476119995,-0.5407237410545349],[-0.2174370288848877,0.671969473361969,0.2575245797634125],[0.2959488332271576,0.006312227807939053,-0.3027680814266205],[0.09767881780862808,-0.539068877696991,-0.4171738028526306],[-0.3686695098876953,0.439558207988739,0.32699719071388245],[-0.2560519874095917,-0.020832175388932228,0.3692505359649658],[0.5465884804725647,0.1490325778722763,0.10807932913303375],[0.4071212112903595,-0.35335010290145874,0.11069053411483765],[-0.4476228356361389,-0.4001534581184387,-0.29824966192245483],[0.5240018963813782,0.38668525218963623,-0.0998988077044487],[0.10277532041072845,0.44226184487342834,-0.11569886654615402],[0.10604042559862137,0.15695565938949585,0.36589404940605164],[0.6395933032035828,-0.7329702973365784,-0.22144761681556702],[0.24414050579071045,0.5589088201522827,0.44913336634635925],[0.5172979235649109,0.05046352371573448,-0.48702746629714966],[0.05311189219355583,-0.3611934185028076,-0.5380639433860779],[0.6195699572563171,0.46534463763237,-0.5490344166755676],[0.10806383192539215,-0.09726043045520782,-0.09500942379236221],[-0.2642860412597656,0.222023606300354,-0.3419665992259979],[0.44249555468559265,0.3430716097354889,0.38667720556259155],[0.2158776968717575,-0.5714238882064819,-0.3745253086090088]],"b1":[0.24999895691871643,0.11351945996284485,-0.45038169622421265,-0.3324495255947113,0.5607883334159851,0.3956456184387207,-0.2517392337322235,0.03281400352716446,-0.5499827861785889,-0.010377373546361923,-0.43477874994277954,-0.4453429877758026,-0.1180480420589447,0.0766923800110817,-0.2364424169063568,0.34081345796585083,-0.3513402044773102,0.5288068652153015,0.39703699946403503,-0.4868696331977844,-0.1291860044002533,0.02263142354786396,0.06552424281835556,0.11866490542888641,0.2188926488161087,-0.006959530059248209,-0.2817057967185974,0.27542370557785034,-0.5538225769996643,-0.3421993553638458,-0.11757564544677734,-0.281235009431839],"w2":[[-0.061842385679483414,-0.14489001035690308,-0.03760308027267456,0.03778715804219246,-0.11516396701335907,-0.009072067216038704,0.1265457421541214,-0.01817268878221512,0.004913015756756067,-0.015250330790877342,0.03577630966901779,0.11240159720182419,0.16745105385780334,0.11226308345794678,0.16783417761325836,-0.01278478279709816,-0.15880230069160461,-0.08380580693483353,0.12036817520856857,-0.0011459516827017069,-0.08786620944738388,-0.1354660540819168,-0.16543683409690857,-0.14920097589492798,-0.035856809467077255,0.0969453975558281,0.09557273983955383,-0.17048907279968262,0.11027012765407562,-0.1383294314146042,-0.0373724102973938,-0.07167810946702957],[-0.018118927255272865,0.02477499656379223,-0.15863054990768433,-0.15263569355010986,-0.01287249755114317,0.008393287658691406,-0.08030521124601364,-0.006444185506552458,-0.15910933911800385,-0.011930171400308609,0.15546086430549622,-0.07210579514503479,0.09846880286931992,0.07322292029857635,-0.1595340520143509,0.1244274452328682,-0.020399052649736404,-0.07668422907590866,0.1387094259262085,-0.14285239577293396,0.4809558689594269,-0.027659576386213303,0.1280118227005005,0.03283129259943962,0.08860279619693756,0.06814432889223099,-0.042510323226451874,-0.029458867385983467,-0.14567838609218597,0.09578541666269302,0.10413984209299088,0.12095500528812408],[-0.11706066876649857,0.07031726837158203,-0.12461592257022858,-0.09731277078390121,-0.09210310131311417,0.060744985938072205,-0.10534355789422989,-0.08629821985960007,0.007436663843691349,0.1139543280005455,-0.13362905383110046,-0.12135936319828033,-0.17570114135742188,0.13087011873722076,-0.06354503333568573,0.15498720109462738,0.06392378360033035,0.018830765038728714,-0.007155148312449455,-0.03494549170136452,0.4910479187965393,-0.044203419238328934,-0.005914411041885614,0.01335521973669529,-0.14202283322811127,-0.08914577215909958,0.14274589717388153,-0.14382827281951904,-0.012693661265075207,0.17487435042858124,0.017091087996959686,0.005005085840821266],[-0.16480286419391632,0.1214781403541565,-0.12591463327407837,-0.050180584192276,-0.025740619748830795,-0.036253537982702255,0.0019336341647431254,0.1336333304643631,0.02206859551370144,0.15833760797977448,0.10813650488853455,-0.1117606908082962,0.07061151415109634,-0.13992951810359955,-0.07492240518331528,0.04282563924789429,0.05837026610970497,0.12131793797016144,-0.06793241202831268,0.00028299499535933137,0.031169285997748375,-0.18287453055381775,0.11745656281709671,-0.16268831491470337,-0.00815638154745102,-0.04539003223180771,-0.09310350567102432,0.010416379198431969,0.1461799591779709,-0.051675282418727875,-0.11587466299533844,-0.06537888199090958],[-0.23189982771873474,-0.08276079595088959,-0.0848994329571724,-0.11797020584344864,0.08929577469825745,0.10197441279888153,0.09361628443002701,0.29322361946105957,0.06412099301815033,-0.059036292135715485,-0.04939991980791092,0.052225127816200256,0.3861260414123535,0.15601453185081482,-0.08364107459783554,-0.13338953256607056,-0.16713689267635345,0.07841557264328003,0.009092590771615505,-0.15760982036590576,-0.1621662825345993,-0.1700373739004135,-0.030152546241879463,0.47369080781936646,-0.004669814370572567,-0.092935711145401,-0.14289243519306183,0.16993026435375214,0.028786085546016693,0.1466582864522934,0.002698485041037202,0.052070531994104385],[-0.02250293642282486,0.06104665249586105,-0.1076648160815239,0.05978604033589363,0.0733053982257843,0.003293686080724001,-0.03975746035575867,-0.20599526166915894,0.12224899977445602,-0.13159683346748352,0.07241930812597275,-0.059441786259412766,-0.16490331292152405,0.04185309261083603,-0.0918278843164444,0.055197443813085556,0.03471555933356285,-0.12904676795005798,0.02660430781543255,0.07529435306787491,0.5559167861938477,-0.012951496057212353,-0.14344508945941925,-0.04529926925897598,0.0650850161910057,-0.058915767818689346,0.06710109114646912,0.1258370727300644,-0.09230422973632812,0.0017433410976082087,0.02362791635096073,0.013855376280844212],[0.014708934351801872,0.0894758477807045,-0.13897259533405304,0.01389257051050663,0.12376970797777176,0.15160402655601501,0.10390066355466843,-0.06892279535531998,0.08255722373723984,-0.08599825948476791,-0.14649279415607452,-0.15201400220394135,0.0904063805937767,0.1093425452709198,-0.12219401448965073,0.06858497112989426,0.13349603116512299,0.1636415272951126,0.13748425245285034,0.13695842027664185,0.3115544021129608,-0.07134197652339935,0.13256429135799408,0.07431194931268692,-0.11736498028039932,0.15814968943595886,0.0854111760854721,0.08687711507081985,-0.11079944670200348,0.050717197358608246,-0.11164139211177826,0.13812562823295593],[-0.041314609348773956,-0.0018676703330129385,0.031399402767419815,0.07521285861730576,-0.07873819768428802,0.0765150710940361,-0.1234733834862709,0.0924747884273529,-0.11960567533969879,-0.1743968427181244,-0.14196154475212097,0.13955990970134735,0.1700429469347,0.16134263575077057,0.14161956310272217,-0.17378853261470795,-0.1206379160284996,-0.03311145305633545,-0.11692024022340775,0.12275311350822449,-0.5647533535957336,-0.08508878201246262,-0.17889158427715302,-0.0889577567577362,0.1390046775341034,0.14021138846874237,0.12654341757297516,0.13417866826057434,0.15718744695186615,-0.04526596888899803,0.11401727795600891,0.15749573707580566],[0.0692184716463089,0.10004988312721252,0.09168751537799835,0.10989293456077576,-0.05673909932374954,0.12065654247999191,0.020312799140810966,0.06132793799042702,-0.09965076297521591,-0.09919232875108719,-0.1360262781381607,0.11867555230855942,0.31294316053390503,-0.06681051105260849,-0.10229820013046265,0.17075307667255402,0.11304673552513123,0.046410683542490005,-0.04982215538620949,0.16246624290943146,-0.2578858733177185,-0.09073668718338013,0.22019745409488678,0.09042052924633026,-0.019332144409418106,-0.0010338356951251626,-0.10044257342815399,-0.011325671337544918,0.15010130405426025,0.007304259575903416,-0.019761541858315468,-0.05908459052443504],[-0.047985177487134933,-0.03410531207919121,0.0169176384806633,0.16348831355571747,0.009464685805141926,-0.10914900153875351,0.00906056072562933,0.08476215600967407,0.08768834918737411,-0.16156302392482758,-0.03163285180926323,-0.1313706338405609,-0.0754280611872673,0.06369147449731827,-0.12553447484970093,0.06571264564990997,0.15004418790340424,0.011594492010772228,-0.11781948804855347,-0.06333643198013306,0.03860168531537056,-0.1347600519657135,0.08782448619604111,-0.16049018502235413,-0.1699342578649521,-0.1717669516801834,-0.035861510783433914,0.11887046694755554,-0.16731542348861694,0.14693450927734375,-0.07071471959352493,0.05177508294582367],[-0.020035812631249428,0.04057951271533966,0.14660604298114777,0.09518425166606903,0.3028375506401062,0.06026170775294304,-0.11668480932712555,0.3408302068710327,0.00950076337903738,0.08383041620254517,-0.1417447030544281,-0.050845663994550705,-0.4529832601547241,0.04890422895550728,0.03813623636960983,-0.20702844858169556,0.05635008215904236,0.09612907469272614,0.10110839456319809,-0.11827833950519562,-1.0220789909362793,-0.4460236132144928,-0.02699907496571541,0.6018845438957214,-0.003202395513653755,0.05167091265320778,0.06198081746697426,-0.20729579031467438,-0.15098519623279572,0.08248540759086609,-0.7868621945381165,0.08504649996757507],[-0.1079682782292366,-0.024331314489245415,-0.1456090211868286,0.09224927425384521,-0.0022840623278170824,0.14275158941745758,0.10940217226743698,0.021251631900668144,0.00568445073440671,-0.05465546250343323,-0.03843684867024422,0.023493727669119835,0.023167453706264496,-0.1142423003911972,0.14836476743221283,-0.005632059182971716,-0.14812925457954407,-0.09314856678247452,0.15378330647945404,0.1616670936346054,0.30217528343200684,0.13463477790355682,0.09078706055879593,0.087272047996521,0.15380185842514038,-0.0893857553601265,0.05582179129123688,0.08045925199985504,-0.05223634093999863,0.05915887653827667,-0.08854543417692184,0.10929419100284576],[-0.0604739785194397,-0.0781114399433136,0.044503360986709595,0.06270156800746918,-0.09774436056613922,0.004587843082845211,0.10244841128587723,0.0007226353045552969,0.05379914492368698,-0.04263623431324959,0.061960164457559586,-0.12805600464344025,-0.115559883415699,-0.10067643970251083,0.16245970129966736,-0.05883128568530083,-0.0004826656950172037,-0.09653285890817642,0.16567538678646088,0.17265251278877258,-0.133322611451149,-0.15468594431877136,-0.14491870999336243,-0.011120066978037357,-0.05595012009143829,-0.12602579593658447,-0.0634048730134964,0.022346217185258865,-0.09236418455839157,0.03917062655091286,-0.0286233052611351,-0.08565950393676758],[0.009738913737237453,0.12978728115558624,-0.11951505392789841,0.008208519779145718,-0.07952012121677399,0.15863724052906036,-0.16771923005580902,-0.18443669378757477,0.17419308423995972,-0.11184483766555786,0.03389221802353859,-0.015256905928254128,-0.05228889361023903,-0.054204318672418594,0.1123310849070549,-0.0064032175578176975,-0.1721123605966568,-0.11919208616018295,-0.07498876750469208,0.08895692974328995,-0.1159253865480423,0.15180090069770813,-0.05430607497692108,-0.04627605155110359,0.12364267557859421,0.07410653680562973,0.14992791414260864,0.08747127652168274,-0.05362590029835701,-0.11728645861148834,-0.02808927558362484,0.14630703628063202],[-0.07086386531591415,-0.20706234872341156,0.07246579229831696,0.17208705842494965,-0.05506427213549614,-0.14356274902820587,-0.16034701466560364,0.14769300818443298,-0.013385480269789696,-0.0892699733376503,0.035732202231884,0.06713251024484634,0.22657229006290436,0.12826421856880188,-0.026460591703653336,-0.1589190810918808,-0.15973950922489166,0.17045213282108307,0.08996853977441788,0.07705826312303543,-0.6205165982246399,0.15556924045085907,0.17580603063106537,0.17604514956474304,-0.14431798458099365,-0.07564573734998703,-0.12158060818910599,0.16395708918571472,-0.07595741003751755,-0.08070819824934006,0.13922983407974243,-0.08177554607391357],[-0.09827439486980438,-0.022754434496164322,-0.016991691663861275,-0.1377052366733551,0.13288632035255432,-0.09021402895450592,0.06270532310009003,0.15462425351142883,0.08915139734745026,0.02502802014350891,0.1504116952419281,0.023763425648212433,-0.08178690820932388,0.15977919101715088,0.0418395958840847,-0.18475495278835297,-0.05032683536410332,-0.13283506035804749,0.1430944949388504,-0.0291939415037632,-0.16113635897636414,-0.015473930165171623,0.10416311770677567,0.03765600547194481,0.045891884714365005,0.010254411958158016,0.06590566039085388,-0.05363176390528679,-0.07032180577516556,-0.16523467004299164,-0.13135085999965668,0.07661546766757965],[-0.10581151396036148,-0.043794915080070496,0.056425608694553375,0.012516476213932037,-0.12782719731330872,0.1664837747812271,-0.1027955487370491,0.12716589868068695,-0.14062732458114624,-0.04252336546778679,0.09616100788116455,-0.07222753763198853,0.22063012421131134,-0.1412915736436844,-0.148452028632164,-0.08233994990587234,0.028576025739312172,0.15939299762248993,-0.08864039182662964,0.06322033703327179,-0.5269802808761597,-0.026358356699347496,0.12898696959018707,-0.17589882016181946,0.01942160166800022,0.1356961727142334,-0.024291273206472397,0.13425520062446594,-0.05443958565592766,0.14229854941368103,-0.1358310729265213,-0.025477705523371696],[-0.029085956513881683,0.07814721018075943,0.069354347884655,0.13573212921619415,-0.04226594790816307,-0.01624787598848343,0.12105866521596909,-0.06039693206548691,0.15496839582920074,-0.11770007014274597,-0.01912897825241089,-0.009494842030107975,0.06449729949235916,0.11843523383140564,-0.028019772842526436,-0.15614701807498932,0.08759147673845291,0.04434588924050331,0.06276603043079376,-0.10904782265424728,0.10910116881132126,0.1603558361530304,0.003501803847029805,-0.17489606142044067,0.11425317078828812,-0.12807506322860718,0.040636029094457626,0.019556958228349686,-0.08273795247077942,0.06155285984277725,-0.17012645304203033,0.04026256874203682],[-0.07975038141012192,-0.3802942931652069,0.022738583385944366,0.15060392022132874,-0.16006919741630554,0.11270959675312042,-0.022456619888544083,-0.0646711066365242,-0.15393708646297455,-0.1621958613395691,0.17264200747013092,-0.04408802464604378,0.10543373227119446,0.0389326773583889,0.12016081064939499,0.1495448797941208,0.1433689296245575,-0.12432564049959183,-0.042787209153175354,-0.10460542142391205,-0.01828864775598049,0.12093489617109299,0.17368988692760468,-0.24022597074508667,0.12681014835834503,-0.11966150254011154,-0.03443155065178871,0.17983733117580414,-0.03998163715004921,0.016096534207463264,-0.04302046820521355,0.1504795402288437],[-0.0050931405276060104,-0.0637890100479126,0.051762040704488754,-0.12569129467010498,-0.12361957132816315,0.0181918703019619,0.14015626907348633,-0.12862908840179443,0.08320293575525284,0.15190796554088593,0.11724907159805298,-0.09273016452789307,-0.08551836013793945,-0.04561181366443634,-0.14215019345283508,0.01466202549636364,0.13301298022270203,0.1519341915845871,0.014175345189869404,0.04015005752444267,0.3936253786087036,0.14419816434383392,-0.07075135409832001,-0.1406920701265335,0.032048650085926056,0.11203885078430176,-0.15938037633895874,0.1685156524181366,0.06359206885099411,-0.12385200709104538,-0.0764675959944725,0.15336790680885315],[-0.13562920689582825,-0.051667798310518265,0.057979270815849304,-0.15487141907215118,0.09690866619348526,0.09202069044113159,0.10963787883520126,-0.11270347237586975,0.17606976628303528,-0.10478641837835312,0.17648333311080933,-0.16965089738368988,-0.15750272572040558,0.10857558995485306,0.018475450575351715,0.01019812561571598,-0.09789157658815384,-0.07415348291397095,-0.051687292754650116,-0.17220798134803772,0.009186853654682636,0.0312645323574543,-0.00014966345042921603,0.057086557149887085,0.16773474216461182,0.04700210317969322,-0.06471306830644608,-0.07275186479091644,-0.11310271173715591,-0.12254492938518524,-0.028469858691096306,-0.03126571327447891],[0.09796576201915741,0.0026663036551326513,0.1409270316362381,-0.12404070049524307,0.022184263914823532,0.16904178261756897,0.17578411102294922,-0.17080990970134735,0.031489048153162,0.02088133990764618,-0.08288204669952393,-0.06107543781399727,-0.022935567423701286,-0.10672806948423386,0.02916738949716091,0.09326151758432388,-0.0696624144911766,0.15312829613685608,-0.009216436184942722,0.08020582795143127,0.6410170197486877,-0.04512502998113632,0.10076885670423508,-0.05593724176287651,-0.018985072150826454,-0.01212749257683754,-0.0010982415406033397,-0.05535575747489929,0.041434142738580704,0.006661014165729284,0.07500902563333511,-0.03578054532408714],[0.0003014993853867054,-0.08860162645578384,-0.14804230630397797,0.07153573632240295,0.0019889643881469965,-0.09021278470754623,-0.059769075363874435,0.026998238638043404,-0.03196421265602112,0.11551930755376816,0.010013184510171413,0.06677503883838654,0.057118628174066544,-0.057191092520952225,0.07648506760597229,0.11085093766450882,0.008134974166750908,0.015476752072572708,-0.012715072371065617,0.12239442765712738,-0.07463429123163223,-0.1122773289680481,0.05733349546790123,-0.16976016759872437,-0.016445999965071678,-0.09363516420125961,0.11667855083942413,-0.1818830966949463,0.10718546062707901,0.17489521205425262,0.01667935587465763,-0.01177804172039032],[0.17629487812519073,-0.08803592622280121,-0.014165745116770267,-0.07741139084100723,-0.03513164818286896,0.03332297131419182,0.023610537871718407,-0.04919598624110222,-0.17674851417541504,0.009051688946783543,-0.005236472003161907,0.026593713089823723,0.10768010467290878,0.17007309198379517,-0.1048785075545311,-0.0155798876658082,-0.07082975655794144,-0.16825562715530396,-0.13176031410694122,0.16591572761535645,0.11536449939012527,0.08689434081315994,0.0869806781411171,-0.1497783362865448,0.009947970509529114,0.1598196029663086,-0.09865657985210419,0.15449084341526031,0.04646371677517891,0.12437009811401367,-0.10052387416362762,0.0814971923828125],[-0.1476067155599594,0.055897120386362076,0.0589640736579895,0.053014349192380905,0.15806102752685547,0.1744539737701416,0.16082383692264557,0.03845057263970375,0.12428498268127441,-0.022809453308582306,-0.13718700408935547,-0.06562430411577225,-0.09554509818553925,-0.08947273343801498,0.09036309272050858,0.06944837421178818,0.028523258864879608,0.03894299268722534,0.14739066362380981,0.06438761204481125,0.2599332928657532,-0.1277996450662613,0.07405318319797516,0.007535080425441265,0.08384303748607635,-0.1701846867799759,-0.16314178705215454,0.10893078148365021,0.11307445168495178,-0.15993182361125946,0.02535334788262844,-0.13803505897521973],[0.13387435674667358,0.05547083541750908,0.17479448020458221,-0.1743004024028778,-0.17017871141433716,0.11951908469200134,0.15694643557071686,0.10830753296613693,0.11752641946077347,-0.14889393746852875,0.12795338034629822,-0.16690319776535034,0.03949220851063728,-0.11579488217830658,-0.0702148973941803,0.03130164369940758,-0.06950506567955017,-0.027970124036073685,-0.16755326092243195,-0.16667801141738892,0.06847676634788513,-0.07482576370239258,-0.10754910111427307,-0.06975294649600983,-0.14452706277370453,-0.14131532609462738,0.1057782843708992,0.08984535932540894,0.023547274991869926,-0.09656596928834915,0.058813776820898056,0.007941730320453644],[-0.09498807787895203,0.6330910325050354,0.16096293926239014,-0.17387866973876953,-0.07063399255275726,0.044895194470882416,0.13311679661273956,-0.14966268837451935,0.03891511261463165,0.12427141517400742,0.05450314283370972,0.03825637698173523,0.2953462600708008,0.1848181039094925,-0.09942398965358734,0.06798937916755676,0.09031032770872116,0.1415272355079651,-0.21631643176078796,0.09572552144527435,-0.1550069898366928,-0.15582653880119324,0.06884026527404785,-0.1226038858294487,0.04475260153412819,-0.12187069654464722,-0.13302959501743317,-0.05304399132728577,-0.05938383564352989,0.10339045524597168,0.03218776732683182,0.13798455893993378],[0.03312847763299942,-0.056844551116228104,0.11973679065704346,0.009659972973167896,0.03317951411008835,-0.05685538053512573,0.0006344154244288802,-0.03398941084742546,-0.015029081143438816,-0.13786448538303375,-0.0010871568229049444,-0.14673247933387756,-0.03803011402487755,0.10245025902986526,-0.12292172759771347,-0.11915664374828339,-0.04316471517086029,-0.04846050962805748,0.029926074668765068,0.029347693547606468,0.08964284509420395,-0.12177802622318268,-0.012475340627133846,0.09886965900659561,0.15290680527687073,-0.012895059771835804,-0.10228656232357025,0.05081668496131897,0.10067031532526016,-0.11044122278690338,-0.10258235037326813,0.07813498377799988],[-0.05019277706742287,-0.18746152520179749,-0.10192679613828659,0.07168875634670258,-0.07480089366436005,0.10908814519643784,0.13974902033805847,0.15803399682044983,-0.013978570699691772,-0.056113723665475845,-0.008938862010836601,0.03217705339193344,-0.11164393275976181,-0.05804964527487755,-0.14704301953315735,0.08578640967607498,-0.11257781088352203,0.1533149927854538,-0.042222365736961365,-0.10127099603414536,-0.8285498023033142,-0.022655652835965157,0.11706546694040298,0.0977313220500946,-0.18367323279380798,0.08622858673334122,-0.03328949958086014,-0.10448792576789856,0.11226272583007812,0.12892860174179077,-0.10588525235652924,-0.01598474010825157],[0.1537967473268509,0.11224229633808136,0.1489289402961731,-0.06058114022016525,-0.09181411564350128,0.15189595520496368,0.07368457317352295,0.10951043665409088,-0.07383902370929718,-0.11350245028734207,-0.020720507949590683,-0.1664493829011917,0.007178599014878273,0.14043401181697845,0.04243645817041397,-0.013361714780330658,0.08764700591564178,-0.11424461752176285,0.16699036955833435,-0.17577677965164185,0.25283554196357727,-0.036348480731248856,0.14046916365623474,0.007626374717801809,0.0662861242890358,-0.11336172372102737,0.06446794420480728,-0.015627296641469002,0.07085626572370529,0.12484722584486008,0.04215364530682564,-0.015037363395094872],[0.031054235994815826,0.07037371397018433,-0.06394049525260925,0.11487622559070587,-0.022029321640729904,0.12364048510789871,-0.07009760290384293,-0.4832737445831299,0.003762196283787489,-0.16222186386585236,-0.0017651099478825927,-0.01781833916902542,0.15943272411823273,-0.06824145466089249,0.1393667310476303,0.17222636938095093,-0.11981168389320374,0.06808558106422424,-0.16119031608104706,-0.1504937708377838,-2.0553252696990967,0.00930863618850708,-0.0880228653550148,-0.24858491122722626,-0.07137737423181534,0.033744700253009796,-0.16362476348876953,-0.19290299713611603,0.022428108379244804,-0.12735065817832947,-0.33051031827926636,-0.06810962408781052],[-0.028461197391152382,-0.16063790023326874,-0.11803869903087616,0.0115908682346344,-0.16669541597366333,-0.024846747517585754,-0.1141451895236969,-0.12254820019006729,0.06947872042655945,-0.13606318831443787,-0.13396742939949036,0.10081247985363007,0.03305128589272499,0.1609928011894226,-0.047251611948013306,-0.08538580685853958,-0.016360057517886162,0.0008943771827034652,0.13481773436069489,-0.17608371376991272,-0.012586629018187523,0.07819755375385284,-0.0973479226231575,-0.08982744812965393,0.08543048053979874,-0.16938480734825134,0.04188825562596321,-0.13685812056064606,0.08786895126104355,-0.15115122497081757,0.10868314653635025,-0.16734258830547333]],"b2":[-0.14859260618686676,0.00985912885516882,0.14166200160980225,-0.16151711344718933,-0.04775753989815712,0.16369016468524933,-0.03640562295913696,0.06310640275478363,-0.14263422787189484,-0.055592894554138184,-0.06323681026697159,0.1568632274866104,0.06230064854025841,-0.14375609159469604,0.03003067336976528,-0.017215196043252945,-0.07783026248216629,-0.10884132236242294,-0.06945065408945084,0.14786270260810852,-0.1267227828502655,-0.11369536072015762,-0.07397986203432083,0.0012149569811299443,0.0501176118850708,0.005304728634655476,-0.040465716272592545,-0.10718858242034912,-0.04452626779675484,-0.07013916224241257,0.15640439093112946,-0.17207612097263336],"w3":[[-0.11275859922170639,-0.13441023230552673,-0.04189988970756531,0.12426713109016418,0.5513902902603149,-0.1767304539680481,-0.010372818447649479,0.1066586971282959,0.11431312561035156,0.14479847252368927,0.30860385298728943,-0.11982215195894241,0.10674899816513062,-0.04717268794775009,0.1194610446691513,-0.03753344714641571,0.08830290287733078,0.14617587625980377,0.3270326852798462,-0.16842642426490784,-0.11693429946899414,-0.08283782750368118,-0.09484834969043732,0.14438296854496002,-0.018748389557003975,-0.11726315319538116,-0.35297462344169617,-0.09764518588781357,0.08963983505964279,-0.12738996744155884,-0.365022212266922,-0.17425960302352905]],"b3":[0.06746198982000351],"Kj":200.0,"u":75.0,"w":15.0,"dt":4.8,"dx":0.09999999999999999,"L":40,"T":150,"n_params":1217};
+/* ============================ helpers ============================ */
+const el = id => document.getElementById(id);
+const sig = z => 1/(1+Math.exp(-z));
+const sigp = z => { const s = sig(z); return s*(1-s); };
+const th  = Math.tanh;
+const thp = z => { const t = Math.tanh(z); return 1 - t*t; };
+const clampn = (v,a,b) => Math.max(a, Math.min(b, v));
+const esci = v => v.toExponential(1);
+
+function mkAxes(cv, xmin, xmax, ymin, ymax, pad){
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const W = +cv.dataset.w, H = +cv.dataset.h;
+  cv.style.width = W+'px'; cv.style.height = H+'px';
+  cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+  const g = cv.getContext('2d');
+  g.setTransform(dpr,0,0,dpr,0,0);
+  const L = pad.l, R = W-pad.r, T = pad.t, B = H-pad.b;
+  return {g,W,H,L,R,T,B,xmin,xmax,ymin,ymax,
+    X: x => L + (x-xmin)/(xmax-xmin)*(R-L),
+    Y: y => B - (y-ymin)/(ymax-ymin)*(B-T)};
+}
+function clear(a){ a.g.clearRect(0,0,a.W,a.H); a.g.fillStyle='#fff'; a.g.fillRect(0,0,a.W,a.H); }
+function frame(a,o){
+  o = o||{}; const g = a.g; g.save();
+  g.strokeStyle = '#eef2f0'; g.lineWidth = 1;
+  (o.yticks||[]).forEach(t => { const y = a.Y(t); g.beginPath(); g.moveTo(a.L,y); g.lineTo(a.R,y); g.stroke(); });
+  (o.xticks||[]).forEach(t => { const x = a.X(t); g.beginPath(); g.moveTo(x,a.T); g.lineTo(x,a.B); g.stroke(); });
+  if(o.zeroy && a.ymin < 0 && a.ymax > 0){ g.strokeStyle='#c9d4d0'; g.lineWidth=1.2;
+    const y=a.Y(0); g.beginPath(); g.moveTo(a.L,y); g.lineTo(a.R,y); g.stroke(); }
+  g.strokeStyle = '#c9d4d0'; g.lineWidth = 1.2;
+  g.beginPath(); g.moveTo(a.L,a.T); g.lineTo(a.L,a.B); g.lineTo(a.R,a.B); g.stroke();
+  g.fillStyle = '#5b6b66'; g.font = '11px ui-monospace,Menlo,Consolas,monospace';
+  g.textAlign = 'center'; g.textBaseline = 'top';
+  (o.xticks||[]).forEach(t => g.fillText(o.xfmt ? o.xfmt(t) : String(t), a.X(t), a.B+5));
+  g.textAlign = 'right'; g.textBaseline = 'middle';
+  (o.yticks||[]).forEach(t => g.fillText(o.yfmt ? o.yfmt(t) : String(t), a.L-6, a.Y(t)));
+  g.font = '600 11.5px -apple-system,system-ui,sans-serif';
+  if(o.xlabel){ g.textAlign='center'; g.textBaseline='bottom'; g.fillText(o.xlabel,(a.L+a.R)/2, a.H-1); }
+  if(o.ylabel){ g.save(); g.translate(12,(a.T+a.B)/2); g.rotate(-Math.PI/2);
+    g.textAlign='center'; g.textBaseline='top'; g.fillText(o.ylabel,0,0); g.restore(); }
+  g.restore();
+}
+function clipArea(a){ const g=a.g; g.save(); g.beginPath();
+  g.rect(a.L-1, a.T-4, a.R-a.L+2, a.B-a.T+8); g.clip(); }
+function curve(a, fn, color, lw, dash){
+  const g = a.g; clipArea(a);
+  g.strokeStyle = color; g.lineWidth = lw||2.4; g.lineJoin='round';
+  if(dash) g.setLineDash(dash);
+  g.beginPath(); let on = false; const N = 500;
+  for(let i=0;i<=N;i++){
+    const x = a.xmin + (a.xmax-a.xmin)*i/N, y = fn(x);
+    if(!isFinite(y)){ on = false; continue; }
+    const py = clampn(a.Y(y), a.T-30, a.B+30);
+    if(!on){ g.moveTo(a.X(x), py); on = true; } else g.lineTo(a.X(x), py);
+  }
+  g.stroke(); g.restore();
+}
+function seg(a,x1,y1,x2,y2,color,lw,dash){
+  const g=a.g; clipArea(a); g.strokeStyle=color; g.lineWidth=lw||1.6;
+  if(dash) g.setLineDash(dash);
+  g.beginPath(); g.moveTo(a.X(x1),a.Y(y1)); g.lineTo(a.X(x2),a.Y(y2)); g.stroke(); g.restore();
+}
+function vmark(a,x,color){ const g=a.g; g.save(); g.strokeStyle=color; g.lineWidth=1.4; g.setLineDash([4,4]);
+  g.beginPath(); g.moveTo(a.X(x),a.T); g.lineTo(a.X(x),a.B); g.stroke(); g.restore(); }
+function hmark(a,y,color){ const g=a.g; g.save(); g.strokeStyle=color; g.lineWidth=1.4; g.setLineDash([4,4]);
+  g.beginPath(); g.moveTo(a.L,a.Y(y)); g.lineTo(a.R,a.Y(y)); g.stroke(); g.restore(); }
+function dot(a,x,y,color,r){ const g=a.g; clipArea(a); g.fillStyle=color; g.strokeStyle='#fff'; g.lineWidth=2;
+  g.beginPath(); g.arc(a.X(x),a.Y(y),r||5.5,0,Math.PI*2); g.fill(); g.stroke(); g.restore(); }
+function tag(a,x,y,text,color,dx,dy){ const g=a.g; g.save();
+  g.font='700 11.5px ui-monospace,Menlo,Consolas,monospace'; g.fillStyle=color;
+  g.textAlign='left'; g.textBaseline='middle'; g.fillText(text, a.X(x)+(dx||8), a.Y(y)+(dy||0)); g.restore(); }
+
+
+/* ============================ page-local helpers ============================ */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function bars(a, vals, x0, dx, color, w){
+  const g=a.g; clipArea(a); g.fillStyle=color;
+  for(let i=0;i<vals.length;i++){
+    const xc=x0+i*dx, y=vals[i]; if(!isFinite(y)) continue;
+    const px=a.X(xc), py=a.Y(Math.max(y,0)), pb=a.Y(0), ww=Math.max(1.5,(w||dx*0.36)*(a.R-a.L)/(a.xmax-a.xmin));
+    g.fillRect(px-ww/2, Math.min(py,pb), ww, Math.abs(pb-py));
+  }
+  g.restore();
+}
+function stepline(a, vals, x0, dx, color, lw, dash){
+  const g=a.g; clipArea(a); g.strokeStyle=color; g.lineWidth=lw||1.5; if(dash) g.setLineDash(dash);
+  g.beginPath();
+  for(let i=0;i<vals.length;i++){
+    const xl=a.X(x0+(i-0.5)*dx), xr=a.X(x0+(i+0.5)*dx), y=a.Y(vals[i]);
+    if(i===0) g.moveTo(xl,y); else g.lineTo(xl,y);
+    g.lineTo(xr,y);
+  }
+  g.stroke(); g.restore();
+}
+/* USF sequential ramp for density fields: pale sand -> gold -> mid green -> deep green */
+const RAMP=[[244,241,230],[207,196,147],[46,125,92],[0,103,71],[0,62,42]];
+function ramp(t){
+  t=Math.max(0,Math.min(1,t)); const s=t*(RAMP.length-1), i=Math.min(RAMP.length-2,Math.floor(s)), f=s-i;
+  const a=RAMP[i], b=RAMP[i+1];
+  return `rgb(${Math.round(a[0]+(b[0]-a[0])*f)},${Math.round(a[1]+(b[1]-a[1])*f)},${Math.round(a[2]+(b[2]-a[2])*f)})`;
+}
+/* field: array[T][L]; draws time on x, space on y (downstream up) */
+function heat(cv, field, vmax, opt){
+  opt=opt||{};
+  const dpr=Math.min(2,window.devicePixelRatio||1), W=+cv.dataset.w, H=+cv.dataset.h;
+  cv.style.width=W+'px'; cv.style.height=H+'px'; cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+  const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
+  g.clearRect(0,0,W,H); g.fillStyle='#fff'; g.fillRect(0,0,W,H);
+  const L=52, R=W-10, T=opt.title?24:8, B=H-30;
+  const nT=field.length, nL=field[0].length, cw=(R-L)/nT, ch=(B-T)/nL;
+  for(let n=0;n<nT;n++) for(let i=0;i<nL;i++){
+    const v=field[n][i];
+    if(v===null||!isFinite(v)){ g.fillStyle='#fff'; }
+    else g.fillStyle=ramp(v/vmax);
+    g.fillRect(L+n*cw-0.4, B-(i+1)*ch-0.4, cw+0.8, ch+0.8);
+  }
+  g.strokeStyle='#c9d4d0'; g.lineWidth=1; g.strokeRect(L,T,R-L,B-T);
+  g.fillStyle='#5b6b66'; g.font='10.5px ui-monospace,Menlo,Consolas,monospace';
+  g.textAlign='center'; g.textBaseline='top';
+  const tmax=opt.tmax||12;
+  for(const t of (opt.xticks||[0,3,6,9,12])) g.fillText(String(t), L+(t/tmax)*(R-L), B+4);
+  g.textAlign='right'; g.textBaseline='middle';
+  const xmax=opt.xmaxmi||4;
+  for(const d of (opt.yticks||[0,1,2,3,4])) g.fillText(d.toFixed(0), L-5, B-(d/xmax)*(B-T));
+  g.font='600 10.5px -apple-system,system-ui,sans-serif'; g.textAlign='center'; g.textBaseline='bottom';
+  g.fillText(opt.xlabel||'time (min)', (L+R)/2, H-1);
+  g.save(); g.translate(11,(T+B)/2); g.rotate(-Math.PI/2); g.textBaseline='top';
+  g.fillText(opt.ylabel||'distance downstream (mi)',0,0); g.restore();
+  if(opt.title){ g.font='700 12px -apple-system,system-ui,sans-serif'; g.fillStyle='#00543a';
+    g.textAlign='left'; g.textBaseline='top'; g.fillText(opt.title, L, 4); }
+  return {g,L,R,T,B,tmax,xmax};
+}
+function heatLine(h, pts, color, dash, label){
+  const g=h.g; g.save(); g.beginPath(); g.rect(h.L,h.T,h.R-h.L,h.B-h.T); g.clip();
+  const P=pts.map(p=>[h.L+(p[0]/h.tmax)*(h.R-h.L), h.B-(p[1]/h.xmax)*(h.B-h.T)]);
+  const path=()=>{ g.beginPath(); P.forEach((p,i)=>{ if(i===0) g.moveTo(p[0],p[1]); else g.lineTo(p[0],p[1]); }); };
+  g.setLineDash([]); g.strokeStyle='rgba(255,255,255,.9)'; g.lineWidth=4.2; path(); g.stroke();
+  g.strokeStyle=color; g.lineWidth=2; if(dash) g.setLineDash(dash); path(); g.stroke();
+  g.restore();
+  if(label){ g.save(); g.font='700 10.5px ui-monospace,Menlo,Consolas,monospace';
+    g.textAlign='right'; g.textBaseline='top';
+    const x=P[0][0]-7, y=P[0][1]+3;
+    g.strokeStyle='rgba(255,255,255,.92)'; g.lineWidth=3.6; g.lineJoin='round'; g.strokeText(label,x,y);
+    g.fillStyle=color; g.fillText(label,x,y); g.restore(); }
+}
+
+/* ============================ tabs ============================ */
+const REDRAW={};
+document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section.page').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); el(b.dataset.tab).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+  if(REDRAW[b.dataset.tab]) REDRAW[b.dataset.tab]();
+}));
+
+/* ============================ shared micro-simulation ============================ */
+const DT=0.1;                     // s
+const VF_FPS=75*5280/3600;        // 110 ft/s
+function leaderTrack(nSteps, seed){
+  const rnd=mulberry32(seed); const v=new Float64Array(nSteps), x=new Float64Array(nSteps);
+  let target=45, aMax=11;         // ft/s^2 — hard braking; the acceleration is what identifies τ
+  v[0]=45;
+  for(let i=1;i<nSteps;i++){
+    if(rnd()<0.05) target=rnd()*70;                    // 0 .. 70 ft/s
+    v[i]=v[i-1]+clampn(target-v[i-1],-aMax*DT,aMax*DT);
+    if(v[i]<0) v[i]=0;
+  }
+  for(let i=1;i<nSteps;i++) x[i]=x[i-1]+v[i-1]*DT;
+  return {v,x};
+}
+function follower(xLead, tauSteps, delta){
+  const n=xLead.length, xf=new Float64Array(n).fill(NaN);
+  for(let t=tauSteps;t<n;t++){
+    const cong=xLead[t-tauSteps]-delta;
+    xf[t]=(t===tauSteps||!isFinite(xf[t-1]))?cong:Math.min(xf[t-1]+VF_FPS*DT,cong);
+  }
+  return xf;
+}
+
+/* ============================ TAB 1 — the shift ============================ */
+(function(){
+  const N=1200, base=leaderTrack(N,7);
+  function draw(){
+    const tau=+el('a_tau').value, del=+el('a_del').value, nv=+el('a_nv').value;
+    el('a_tauv').textContent=tau.toFixed(1)+' s';
+    el('a_delv').textContent=del.toFixed(1)+' ft';
+    el('a_nvv').textContent=nv;
+    el('a_w').textContent=(del/tau/5280*3600).toFixed(1);
+    el('a_kj').textContent=Math.round(5280/del);
+    const ts=Math.round(tau/DT);
+    const trajs=[base.x]; let prev=base.x;
+    for(let j=0;j<nv;j++){ const f=follower(prev,ts,del); trajs.push(f); prev=f; }
+    // window: 40 s around the strongest slowdown
+    let ic=200, worst=0;
+    for(let i=60;i<N-260;i++){ const d=base.v[i+150]-base.v[i]; if(d<worst){worst=d;ic=i;} }
+    const i0=Math.max(0,ic-120), i1=Math.min(N,i0+400);
+    let lo=1e9, hi=-1e9;
+    for(let i=i0;i<i1;i++){ for(const tr of trajs){ const y=tr[i]-base.x[i0]; if(isFinite(y)){ if(y<lo)lo=y; if(y>hi)hi=y; } } }
+    const pad=(hi-lo)*0.08;
+    const a=mkAxes(el('a_cv'), i0*DT, (i1-1)*DT, lo-pad, hi+pad, {l:52,r:12,t:10,b:34});
+    clear(a);
+    const xt=[], t0=Math.ceil(i0*DT/10)*10; for(let t=t0;t<=(i1-1)*DT;t+=10) xt.push(t);
+    const yt=[]; for(let y=Math.ceil((lo-pad)/200)*200;y<=hi+pad;y+=200) yt.push(y);
+    frame(a,{xticks:xt,yticks:yt,xlabel:'time (s)',ylabel:'position (ft)',yfmt:v=>String(Math.round(v))});
+    // trailing followers
+    for(let j=2;j<trajs.length;j++){
+      const g=a.g; clipArea(a); g.strokeStyle='#CFC493'; g.lineWidth=1.2; g.beginPath();
+      let on=false; for(let i=i0;i<i1;i++){ const y=trajs[j][i]-base.x[i0];
+        if(!isFinite(y)){on=false;continue;} const px=a.X(i*DT), py=a.Y(y);
+        if(!on){g.moveTo(px,py);on=true;} else g.lineTo(px,py); }
+      g.stroke(); g.restore();
+    }
+    const drawT=(arr,color,lw,dash)=>{ const g=a.g; clipArea(a); g.strokeStyle=color; g.lineWidth=lw;
+      if(dash)g.setLineDash(dash); g.beginPath(); let on=false;
+      for(let i=i0;i<i1;i++){ const y=arr[i]-base.x[i0]; if(!isFinite(y)){on=false;continue;}
+        const px=a.X(i*DT), py=a.Y(y); if(!on){g.moveTo(px,py);on=true;} else g.lineTo(px,py); }
+      g.stroke(); g.restore(); };
+    drawT(base.x,'#003E2A',2.6);
+    // ghost = leader shifted by (tau, -delta); drawn OVER the follower, since they coincide
+    const ghost=new Float64Array(N).fill(NaN);
+    for(let i=ts;i<N;i++) ghost[i]=base.x[i-ts]-del;
+    drawT(trajs[1],'#B79F4D',3.4);
+    if(el('a_ghost').classList.contains('on')) drawT(ghost,'#8E44AD',2.2,[7,6]);
+    // max gap ghost vs follower over the window
+    let mg=0; for(let i=i0;i<i1;i++){ const d=Math.abs(ghost[i]-trajs[1][i]); if(isFinite(d)&&d>mg) mg=d; }
+    el('a_err').textContent=mg.toFixed(2);
+    if(el('a_arrows').classList.contains('on')){
+      // anchor on the steepest part of the leader's curve, where the shift is most visible
+      let im=i0+90, vb=-1;
+      for(let i=i0+40;i<i1-Math.round(tau/DT)-40;i++) if(base.v[i]>vb){ vb=base.v[i]; im=i; }
+      const tm=im*DT, xl=base.x[im]-base.x[i0];
+      const g=a.g; g.save(); g.strokeStyle='#1c2422'; g.lineWidth=1.6; g.fillStyle='#1c2422';
+      const ax1=a.X(tm), ay1=a.Y(xl), ax2=a.X(tm+tau), ay2=a.Y(xl-del);
+      g.beginPath(); g.moveTo(ax1,ay1); g.lineTo(ax2,ay1); g.stroke();
+      g.beginPath(); g.moveTo(ax2-6,ay1-4); g.lineTo(ax2,ay1); g.lineTo(ax2-6,ay1+4); g.fill();
+      g.beginPath(); g.moveTo(ax2,ay1); g.lineTo(ax2,ay2); g.stroke();
+      g.beginPath(); g.moveTo(ax2-4,ay2-6); g.lineTo(ax2,ay2); g.lineTo(ax2+4,ay2-6); g.fill();
+      g.beginPath(); g.arc(ax1,ay1,4,0,7); g.fill();
+      g.font='700 11.5px ui-monospace,Menlo,Consolas,monospace';
+      g.lineJoin='round'; g.lineWidth=3.6; g.strokeStyle='rgba(255,255,255,.95)';
+      const lbl=(s,x,y,al,bl)=>{ g.textAlign=al; g.textBaseline=bl; g.strokeText(s,x,y); g.fillText(s,x,y); };
+      lbl('τ = '+tau.toFixed(1)+' s',(ax1+ax2)/2,ay1-9,'center','bottom');
+      lbl('δ = '+del.toFixed(1)+' ft',ax2+9,ay2+3,'left','top');
+      g.restore();
+    }
+    const g=a.g; g.save(); g.font='700 11.5px -apple-system,system-ui,sans-serif'; g.textAlign='left';
+    g.fillStyle='#003E2A'; g.fillText('leader',a.L+8,a.T+14);
+    g.fillStyle='#B79F4D'; g.fillText('follower',a.L+8,a.T+30);
+    if(el('a_ghost').classList.contains('on')){ g.fillStyle='#8E44AD'; g.fillText('leader shifted by (τ, −δ)',a.L+8,a.T+46); }
+    g.restore();
+  }
+  ['a_tau','a_del','a_nv'].forEach(id=>el(id).addEventListener('input',draw));
+  ['a_ghost','a_arrows'].forEach(id=>el(id).addEventListener('click',()=>{el(id).classList.toggle('on');draw();}));
+  REDRAW.p1=draw; draw();
+})();
+
+/* ============================ TAB 2 — one tap and a bias ============================ */
+(function(){
+  const K=30, NS=2600;
+  let W=new Float64Array(K).fill(1/K), theta=new Float64Array(K), bias=0, anim=null;
+  let rows=null, targ=null, truth=null, fitted=false;
+  function build(){
+    const tauM=+el('b_tau').value, sd=+el('b_sd').value, del=+el('b_del').value, nv=+el('b_nv').value;
+    const rnd=mulberry32(21); const base=leaderTrack(NS,7);
+    const taus=[], dels=[];
+    for(let j=0;j<nv;j++){
+      // Box-Muller from the seeded stream
+      const u1=Math.max(1e-9,rnd()), u2=rnd();
+      const z=Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2);
+      taus.push(clampn(Math.round((tauM+sd*z)/DT)*DT,0.3,K*DT-0.2));
+      const u3=Math.max(1e-9,rnd()), u4=rnd();
+      const z2=Math.sqrt(-2*Math.log(u3))*Math.cos(2*Math.PI*u4);
+      dels.push(Math.max(8,del+(sd>0?3*z2:0)));
+    }
+    const R=[], Y=[]; let prev=base.x;
+    for(let j=0;j<nv;j++){
+      const f=follower(prev,Math.round(taus[j]/DT),dels[j]);
+      for(let t=K+20;t<NS;t++){
+        if(!isFinite(f[t])) continue;
+        let ok=true; for(let k=0;k<K;k++) if(!isFinite(prev[t-k])){ok=false;break;}
+        if(!ok) continue;
+        const r=new Float64Array(K); for(let k=0;k<K;k++) r[k]=prev[t-k]-prev[t];
+        R.push(r); Y.push(f[t]-prev[t]);
+      }
+      prev=f;
+    }
+    // subsample for speed, evenly
+    const want=1400, stride=Math.max(1,Math.floor(R.length/want));
+    rows=[]; targ=[];
+    for(let i=0;i<R.length;i+=stride){ rows.push(R[i]); targ.push(Y[i]); }
+    const hist=new Float64Array(K);
+    taus.forEach(t=>{ const k=Math.round(t/DT); if(k<K) hist[k]+=1/nv; });
+    const mT=taus.reduce((a,b)=>a+b,0)/nv;
+    const sT=Math.sqrt(taus.reduce((a,b)=>a+(b-mT)*(b-mT),0)/nv);
+    const mD=dels.reduce((a,b)=>a+b,0)/nv;
+    truth={hist,mT,sT,mD};
+    el('b_tauv').textContent=tauM.toFixed(1)+' s';
+    el('b_sdv').textContent=sd.toFixed(2)+' s'+(sd===0?' (identical drivers)':'');
+    el('b_delv').textContent=del.toFixed(1)+' ft';
+    el('b_nvv').textContent=nv;
+  }
+  function softmax(th){ let m=-1e18; for(const v of th) if(v>m)m=v;
+    let s=0; const o=new Float64Array(th.length);
+    for(let i=0;i<th.length;i++){ o[i]=Math.exp(th[i]-m); s+=o[i]; }
+    for(let i=0;i<th.length;i++) o[i]/=s; return o; }
+  function loss(){ let se=0;
+    for(let i=0;i<rows.length;i++){ let p=bias; for(let k=0;k<K;k++) p+=W[k]*rows[i][k];
+      const e=p-targ[i]; se+=e*e; }
+    return Math.sqrt(se/rows.length); }
+  function reset(){ theta=new Float64Array(K); W=softmax(theta); bias=0; fitted=false;
+    el('b_status').textContent='30 taps, all initialised equal. Press fit.'; draw(); }
+  function fit(){
+    if(anim) cancelAnimationFrame(anim);
+    theta=new Float64Array(K); W=softmax(theta); bias=0;
+    const mT=new Float64Array(K), vT=new Float64Array(K); let mB=0,vB=0,step=0;
+    const lr=0.45, lrb=50, b1=0.9, b2=0.999, eps=1e-8, TOT=3000;
+    el('b_fit').disabled=true;
+    const chunk=()=>{
+      for(let it=0;it<60 && step<TOT;it++){
+        step++;
+        const cd=0.5*(1+Math.cos(Math.PI*step/TOT));
+        const gW=new Float64Array(K); let gB=0;
+        for(let i=0;i<rows.length;i++){
+          let p=bias; for(let k=0;k<K;k++) p+=W[k]*rows[i][k];
+          const e=2*(p-targ[i])/rows.length;
+          for(let k=0;k<K;k++) gW[k]+=e*rows[i][k];
+          gB+=e;
+        }
+        // chain through softmax: dL/dtheta_j = W_j (gW_j - sum_k W_k gW_k)
+        let dot=0; for(let k=0;k<K;k++) dot+=W[k]*gW[k];
+        for(let j=0;j<K;j++){
+          const g=W[j]*(gW[j]-dot);
+          mT[j]=b1*mT[j]+(1-b1)*g; vT[j]=b2*vT[j]+(1-b2)*g*g;
+          theta[j]-=lr*cd*(mT[j]/(1-Math.pow(b1,step)))/(Math.sqrt(vT[j]/(1-Math.pow(b2,step)))+eps);
+        }
+        mB=b1*mB+(1-b1)*gB; vB=b2*vB+(1-b2)*gB*gB;
+        bias-=lrb*cd*(mB/(1-Math.pow(b1,step)))/(Math.sqrt(vB/(1-Math.pow(b2,step)))+eps);
+        W=softmax(theta);
+      }
+      fitted=true; draw();
+      el('b_status').textContent='Adam step '+step+' of '+TOT+' · '+rows.length+' training rows · RMSE '+loss().toFixed(2)+' ft';
+      if(step<TOT) anim=requestAnimationFrame(chunk); else { el('b_fit').disabled=false; anim=null; }
+    };
+    chunk();
+  }
+  function draw(){
+    const a=mkAxes(el('b_cv'),-0.05,K*DT+0.05,0,1.05,{l:58,r:14,t:12,b:36});
+    clear(a);
+    const xt=[0,0.5,1.0,1.5,2.0,2.5,3.0], yt=[0,0.25,0.5,0.75,1.0];
+    frame(a,{xticks:xt,yticks:yt,xlabel:'lag k·Δt behind the leader (s)',ylabel:'kernel weight w_k',
+             xfmt:v=>v.toFixed(1),yfmt:v=>v.toFixed(2)});
+    if(truth) stepline(a,Array.from(truth.hist),0,DT,'#2E7D5C',1.6,[6,4]);
+    bars(a,Array.from(W),0,DT,'#B79F4D',DT*0.7);
+    const g=a.g; g.save(); g.font='700 11.5px -apple-system,system-ui,sans-serif'; g.textAlign='left';
+    g.fillStyle='#B79F4D'; g.fillText('learned kernel',a.L+10,a.T+14);
+    g.fillStyle='#2E7D5C'; g.fillText('true distribution of τ in the platoon',a.L+10,a.T+30); g.restore();
+    if(!truth) return;
+    let peak=0; for(let k=1;k<K;k++) if(W[k]>W[peak]) peak=k;
+    let mean=0; for(let k=0;k<K;k++) mean+=k*DT*W[k];
+    let sd=0; for(let k=0;k<K;k++) sd+=W[k]*(k*DT-mean)*(k*DT-mean); sd=Math.sqrt(sd);
+    el('b_peak').textContent=fitted?(peak*DT).toFixed(1):'—';
+    el('b_mean').textContent=fitted?(mean.toFixed(2)+' / '+truth.mT.toFixed(2)):'—';
+    el('b_sdout').textContent=fitted?(sd.toFixed(2)+' / '+truth.sT.toFixed(2)):'—';
+    el('b_bias').textContent=fitted?(bias.toFixed(1)+' / '+(-truth.mD).toFixed(1)):'—';
+    el('b_rmse').textContent=fitted?loss().toFixed(2):'—';
+  }
+  ['b_tau','b_sd','b_del','b_nv'].forEach(id=>el(id).addEventListener('input',()=>{build();reset();}));
+  el('b_fit').addEventListener('click',fit);
+  el('b_reset').addEventListener('click',reset);
+  REDRAW.p2=()=>{draw();};
+  build(); reset();
+})();
+
+/* ============================ CTM ============================ */
+const U=75.0, DTS=4.8/3600, DXM=75.0*4.8/3600, LC=40, TS=150, ALPHA=DTS/DXM;
+function ctm(p){
+  const w=p.w, Kj=p.Kj, Kc=w*Kj/(U+w), Qmax=U*Kc;
+  const qin=p.q*Qmax, kin=qin/U, dur=p.dur||45, n0=50;
+  const K=[]; let k=new Float64Array(LC).fill(kin);
+  for(let n=0;n<TS;n++){
+    const S=new Float64Array(LC), R=new Float64Array(LC);
+    for(let i=0;i<LC;i++){ S[i]=Math.min(U*k[i],Qmax); R[i]=Math.min(Qmax,w*(Kj-k[i])); }
+    const y=new Float64Array(LC+1);
+    y[0]=Math.min(qin,R[0]);
+    for(let i=1;i<LC;i++) y[i]=Math.min(S[i-1],R[i]);
+    y[LC]=Math.min(S[LC-1],(n>=n0&&n<n0+dur)?p.mu*Qmax:Qmax);
+    K.push(Array.from(k));
+    const kn=new Float64Array(LC);
+    for(let i=0;i<LC;i++) kn[i]=k[i]+ALPHA*(y[i]-y[i+1]);
+    k=kn;
+  }
+  const kq=Kj-p.mu*Qmax/w, rh=(p.mu*Qmax-qin)/(kq-kin);
+  return {K,Kc,Qmax,kin,kq,rh,n0,dur};
+}
+function tailSpeed(K,kin,kq,n0,n1){
+  const thr=0.5*(kin+kq); const ns=[], xs=[];
+  for(let n=n0;n<n1;n++){
+    let idx=-1; for(let i=0;i<K[n].length;i++) if(K[n][i]>thr){ idx=i; break; }
+    if(idx>=0){ ns.push(n*DTS); xs.push(idx*DXM); }
+  }
+  if(ns.length<3) return NaN;
+  const m=ns.length, sx=ns.reduce((a,b)=>a+b,0), sy=xs.reduce((a,b)=>a+b,0);
+  let sxx=0, sxy=0; for(let i=0;i<m;i++){ sxx+=ns[i]*ns[i]; sxy+=ns[i]*xs[i]; }
+  return (m*sxy-sx*sy)/(m*sxx-sx*sx);
+}
+
+/* ============================ TAB 3 ============================ */
+(function(){
+  function chars(){
+    const cv=el('c_cv'), dpr=Math.min(2,window.devicePixelRatio||1), W=+cv.dataset.w, H=+cv.dataset.h;
+    cv.style.width=W+'px'; cv.style.height=H+'px'; cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+    const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
+    g.clearRect(0,0,W,H); g.fillStyle='#fff'; g.fillRect(0,0,W,H);
+    const nx=7, ny=7, cw=(W-70)/nx, chh=(H-56)/ny, ox=52, oy=14;
+    const CX=(i)=>ox+i*cw, CY=(j)=>oy+j*chh;
+    g.strokeStyle='#e6ebe8'; g.lineWidth=1;
+    for(let i=0;i<nx;i++) for(let j=0;j<ny;j++) g.strokeRect(CX(i),CY(j),cw,chh);
+    // target cell (x,t) at column 6, row 3
+    g.fillStyle='#CFC493'; g.fillRect(CX(6),CY(3),cw,chh);
+    g.strokeStyle='#003E2A'; g.lineWidth=1.6; g.strokeRect(CX(6),CY(3),cw,chh);
+    g.fillStyle='#003E2A'; g.font='700 10.5px ui-monospace,monospace';
+    g.textAlign='center'; g.textBaseline='middle'; g.fillText('(x,t)',CX(6)+cw/2,CY(3)+chh/2);
+    // free flow source: one step earlier, one cell upstream (down in space)
+    g.fillStyle='#2E7D5C'; g.fillRect(CX(5),CY(4),cw,chh);
+    // congested source: one step earlier, downstream — 0.2 cell/step, so 5 steps back = 1 cell
+    for(let s=1;s<=5;s++){
+      g.globalAlpha=0.25+0.15*s; g.fillStyle='#B79F4D';
+      g.fillRect(CX(6-s),CY(3-Math.round(0.2*s*5)/5*1),cw,chh);
+    }
+    g.globalAlpha=1;
+    const arrow=(x1,y1,x2,y2,color)=>{ g.strokeStyle=color; g.fillStyle=color; g.lineWidth=1.8;
+      g.beginPath(); g.moveTo(x1,y1); g.lineTo(x2,y2); g.stroke();
+      const an=Math.atan2(y2-y1,x2-x1);
+      g.beginPath(); g.moveTo(x2,y2);
+      g.lineTo(x2-8*Math.cos(an-0.4),y2-8*Math.sin(an-0.4));
+      g.lineTo(x2-8*Math.cos(an+0.4),y2-8*Math.sin(an+0.4)); g.fill(); };
+    arrow(CX(5)+cw*0.75,CY(4)+chh*0.3,CX(6)+cw*0.25,CY(3)+chh*0.72,'#006747');
+    arrow(CX(1)+cw*0.8,CY(2)+chh*0.6,CX(6)+cw*0.2,CY(3)+chh*0.3,'#6e5a1c');
+    g.font='700 10.5px -apple-system,system-ui,sans-serif'; g.textAlign='left'; g.textBaseline='top';
+    g.fillStyle='#006747'; g.fillText('free flow: from upstream, u = 1 cell/step',ox+2,CY(5)+chh*0.35);
+    g.fillStyle='#6e5a1c'; g.textBaseline='bottom'; g.fillText('congestion: from downstream, w = 0.2 cell/step',ox+2,CY(1)+chh*0.4);
+    g.fillStyle='#5b6b66'; g.font='600 10.5px -apple-system,system-ui,sans-serif';
+    g.textAlign='center'; g.textBaseline='bottom'; g.fillText('time →   (steps of 4.8 s)',W/2,H-2);
+    g.save(); g.translate(11,H/2); g.rotate(-Math.PI/2); g.textAlign='center'; g.textBaseline='top';
+    g.fillText('space →  downstream (cells of 0.1 mi)',0,0); g.restore();
+  }
+  function draw(){
+    const w=+el('c_w').value, Kj=+el('c_kj').value, q=+el('c_q').value, mu=+el('c_mu').value, dur=+el('c_dur').value;
+    el('c_wv').textContent=w.toFixed(1); el('c_kjv').textContent=Kj;
+    el('c_qv').textContent=q.toFixed(2); el('c_muv').textContent=mu.toFixed(2);
+    el('c_durv').textContent=dur+' ('+(dur*4.8/60).toFixed(1)+' min)';
+    const r=ctm({w,Kj,q,mu,dur});
+    const h=heat(el('c_hm'),r.K,Kj,{});
+    const t0=r.n0*DTS*60, t1=(r.n0+dur)*DTS*60;
+    heatLine(h,[[t0,LC*DXM],[t1,LC*DXM+r.rh*(t1-t0)/60]],'#8E44AD',[6,5],
+             'R–H '+r.rh.toFixed(1)+' mi/hr');
+    el('c_rh').textContent=r.rh.toFixed(2);
+    const meas=tailSpeed(r.K,r.kin,r.kq,r.n0+6,r.n0+dur);
+    el('c_meas').textContent=isFinite(meas)?meas.toFixed(2):'no queue';
+    el('c_cap').textContent=Math.round(r.Qmax);
+    el('c_kc').textContent=r.Kc.toFixed(1);
+  }
+  ['c_w','c_kj','c_q','c_mu','c_dur'].forEach(id=>el(id).addEventListener('input',draw));
+  REDRAW.p3=()=>{chars();draw();};
+  chars(); draw();
+})();
+
+/* ============================ TAB 4 — the trained network ============================ */
+(function(){
+  const NW=NET_WEIGHTS, C=NW.c, Kjn=NW.Kj;
+  const w1=NW.w1, b1=NW.b1, w2=NW.w2, b2=NW.b2, w3=NW.w3[0], b3=NW.b3[0];
+  /* one residual conv step: input length n (padded), output length n-2, densities in veh/mi */
+  function netStep(k){
+    const n=k.length, out=new Float64Array(n-2), h=new Float64Array(C), h2=new Float64Array(C);
+    for(let i=0;i<n-2;i++){
+      const x0=k[i]/Kjn, x1=k[i+1]/Kjn, x2=k[i+2]/Kjn;
+      for(let c=0;c<C;c++){ const v=w1[c][0]*x0+w1[c][1]*x1+w1[c][2]*x2+b1[c]; h[c]=v>0?v:0; }
+      for(let c=0;c<C;c++){ let v=b2[c]; const row=w2[c]; for(let d=0;d<C;d++) v+=row[d]*h[d]; h2[c]=v>0?v:0; }
+      let o=b3; for(let d=0;d<C;d++) o+=w3[d]*h2[d];
+      out[i]=clampn((x1+o)*Kjn,0,Kjn);
+    }
+    return out;
+  }
+  function rollout(truth, mode, nB){
+    const K=[]; let k=Array.from(truth[0]); K.push(Array.from(k));
+    for(let n=1;n<TS;n++){
+      if(mode==='blind' && n<=nB){ k=Array.from(truth[n]); K.push(Array.from(k)); continue; }
+      let inp;
+      if(mode==='given') inp=[k[0]].concat(k).concat([k[LC-1]]);
+      else inp=[k[0]].concat(k).concat([k[LC-1]]);
+      const o=netStep(inp);
+      const kn=Array.from(o);
+      if(mode==='given'){ kn[0]=truth[n][0]; kn[LC-1]=truth[n][LC-1]; }
+      k=kn; K.push(Array.from(k));
+    }
+    return K;
+  }
+  function bumpSpeed(kb){
+    const n=120, amp=5, steps=20;
+    const roll=(k0)=>{ let k=Array.from(k0); const out=[Array.from(k)];
+      for(let s=0;s<steps;s++){ k=Array.from(netStep([k[0]].concat(k).concat([k[n-1]]))); out.push(Array.from(k)); }
+      return out; };
+    const base=new Array(n).fill(kb), bmp=base.slice();
+    for(let i=55;i<58;i++) bmp[i]+=amp;
+    const R0=roll(base), R1=roll(bmp);
+    const ts=[], cs=[];
+    for(let s=0;s<=steps;s++){
+      let num=0, den=0;
+      for(let i=0;i<n;i++){ const d=R1[s][i]-R0[s][i]; num+=i*d; den+=d; }
+      if(Math.abs(den)<1e-9) continue;
+      ts.push(s*DTS); cs.push(num/den*DXM);
+    }
+    const m=ts.length, sx=ts.reduce((a,b)=>a+b,0), sy=cs.reduce((a,b)=>a+b,0);
+    let sxx=0,sxy=0; for(let i=0;i<m;i++){ sxx+=ts[i]*ts[i]; sxy+=ts[i]*cs[i]; }
+    return (m*sxy-sx*sy)/(m*sxx-sx*sx);
+  }
+  function run(){
+    const mu=+el('d_mu').value, q=+el('d_q').value, mode=el('d_bc').value, nB=75;
+    el('d_muv').textContent=mu.toFixed(2); el('d_qv').textContent=q.toFixed(2);
+    const r=ctm({w:NW.w,Kj:Kjn,q,mu,dur:45});
+    const Kh=rollout(r.K,mode,nB);
+    const err=[], shown=[];
+    const NCLR=r.n0+r.dur;                       // the step the bottleneck lifts
+    let se1=0,c1=0, se2=0,c2=0;
+    for(let n=0;n<TS;n++){
+      const e=[], s=[];
+      for(let i=0;i<LC;i++){
+        const d=Math.abs(Kh[n][i]-r.K[n][i]);
+        if(mode==='blind'&&n<nB){ e.push(null); s.push(null); }
+        else { e.push(d); s.push(Kh[n][i]);
+               if(n<NCLR){ se1+=d*d; c1++; } else { se2+=d*d; c2++; } }
+      }
+      err.push(e); shown.push(s);
+    }
+    const h1=heat(el('d_true'),r.K,Kjn,{title:'CTM truth'});
+    const t0=r.n0*DTS*60, t1=(r.n0+45)*DTS*60;
+    heatLine(h1,[[t0,LC*DXM],[t1,LC*DXM+r.rh*(t1-t0)/60]],'#8E44AD',[6,5],'R–H');
+    const h2c=heat(el('d_hat'),shown,Kjn,{title:'learned rollout'});
+    heatLine(h2c,[[t0,LC*DXM],[t1,LC*DXM+r.rh*(t1-t0)/60]],'#8E44AD',[6,5],'R–H');
+    heat(el('d_err'),err,Kjn,{title:'|error|'});
+    el('d_rmse').textContent=c1?Math.sqrt(se1/c1).toFixed(2):'—';
+    el('d_rmse2').textContent=c2?Math.sqrt(se2/c2).toFixed(2):'—';
+    el('d_shock').textContent=(()=>{const v=tailSpeed(Kh,r.kin,r.kq,mode==='blind'?nB+1:56,95);return isFinite(v)?v.toFixed(2):'—';})();
+    el('d_shockt').textContent=(()=>{const v=tailSpeed(r.K,r.kin,r.kq,56,95);return isFinite(v)?v.toFixed(2):'—';})();
+    el('d_status').textContent=NW.n_params.toLocaleString()+' weights · '+TS+' steps computed here · '+
+      (mode==='given'?'boundary cells supplied each step':'boundary frozen after step '+nB+' (6.0 min)');
+  }
+  el('d_run').addEventListener('click',run);
+  el('d_bc').addEventListener('change',run);
+  ['d_mu','d_q'].forEach(id=>el(id).addEventListener('input',()=>{
+    el('d_muv').textContent=(+el('d_mu').value).toFixed(2);
+    el('d_qv').textContent=(+el('d_q').value).toFixed(2);}));
+  el('d_bump').addEventListener('click',()=>{
+    const Kc=NW.w*Kjn/(U+NW.w);
+    el('d_free').textContent=bumpSpeed(0.5*Kc).toFixed(1);
+    el('d_cong').textContent=bumpSpeed(3.0*Kc).toFixed(1);
+  });
+  REDRAW.p4=()=>{ if(el('d_rmse').textContent==='—') run(); };
+})();
+
+/* ============================ TAB 5 — the shift chart ============================ */
+(function(){
+  const SH=[[10.0,14.634],[12.5,11.400],[15.0,0.850],[17.5,7.797],[20.0,8.867]];
+  function draw(){
+    const a=mkAxes(el('e_cv'),8.75,21.25,0,16,{l:56,r:14,t:14,b:38});
+    clear(a);
+    frame(a,{xticks:[10,12.5,15,17.5,20],yticks:[0,4,8,12,16],
+      xlabel:'backward wave speed w of the test corridor (mi/hr)',
+      ylabel:'rollout RMSE (veh/mi/ln)',xfmt:v=>v.toFixed(1),yfmt:v=>v.toFixed(0)});
+    const g=a.g; clipArea(a);
+    SH.forEach(([w,r])=>{
+      const trained=Math.abs(w-15)<1e-6;
+      g.fillStyle=trained?'#006747':'#B79F4D';
+      const px=a.X(w), py=a.Y(r), pb=a.Y(0), ww=34;
+      g.fillRect(px-ww/2,py,ww,pb-py);
+      g.fillStyle='#1c2422'; g.font='700 11px ui-monospace,monospace';
+      g.textAlign='center'; g.textBaseline='bottom'; g.fillText(r.toFixed(2),px,py-4);
+    });
+    g.restore();
+    g.save(); g.font='700 11.5px -apple-system,system-ui,sans-serif'; g.textAlign='center';
+    g.fillStyle='#006747'; g.fillText('trained here',a.X(15),a.T+14);
+    g.restore();
+  }
+  REDRAW.p5=draw; draw();
+})();
+
+</script>
+</body>
+</html>
