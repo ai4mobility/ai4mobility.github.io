@@ -149,7 +149,7 @@ Four hands-on Jupyter notebooks accompany this module. All are runnable in Googl
 - **{doc}`lab3_image_embeddings` — Image embeddings with a deep CNN.** Load a pretrained ResNet-50, visualize feature maps across layers (edges → textures → parts → objects), extract 2048-dimensional embeddings for a handful of test images, and verify that semantically similar images (e.g., two stop signs) cluster in the embedding space. This is transfer learning in its simplest useful form: you are reusing a representation you did not pay to train.
 - **{doc}`lab4_clip_vs_traditional_cv` — CLIP vs. traditional computer vision for mobility AI.** Compare a closed-set image classifier with a CLIP-style multimodal model on real roadway and dashcam-style scenes. Run zero-shot recognition against open-vocabulary prompts ("a flooded roadway", "a construction work zone", "a pedestrian crossing at night"), visualize image–text similarity in the shared embedding space, experiment with prompt engineering, and probe CLIP's failure cases. The lab closes with a discussion of mobility AI implications — why multimodal foundation models matter for long-tail safety scenarios that don't fit neatly into ImageNet-style label sets.
 
-Five interactive companions support the Week 2 session. They are embedded in the
+Six interactive companions support the Week 2 session. They are embedded in the
 {doc}`notes` chapter and also linked here: one walks the sigmoid, tanh and softmax activations
 from the binary-logit starting point; one works through the learned-versus-fixed basis
 comparison and the point where a multilayer network becomes the cheaper option; one takes
@@ -159,15 +159,20 @@ what early stopping, a zero initialization and a badly chosen learning rate actu
 one hands you the nine numbers of a convolution kernel to set yourself, on real
 dashcam frames, before stacking them into a layer and comparing your kernels against the 64
 first-layer filters a trained ResNet-18 actually learned — eight of which turn out to be dead;
-and the last runs an off-the-shelf detector over thirteen seconds of real FSD footage in which a
-child on a scooter approaches the car, then takes apart what the model does and does not tell you.
+one runs an off-the-shelf detector over thirteen seconds of real FSD footage in which a
+child on a scooter approaches the car, then takes apart what the model does and does not tell you;
+and the last walks the architectures themselves — LeNet, AlexNet, VGG, GoogLeNet, ResNet and
+MobileNet — drawing every layer of each to scale, pricing them against one another in parameters,
+arithmetic and latency, and closing with a chooser that turns four questions about a deployment into
+a recommendation.
 
 - [Sigmoid, tanh and softmax from the logit](../_static/companions/Sigmoid_Tanh_Companion.html)
 - [Multilayer networks and learnable basis functions](../_static/companions/Multilayer_Networks_Companion.html)
 - [What a neural network is, and how it learns](../_static/companions/Neural_Networks_and_Backprop_Companion.html)
 - [Convolution kernels: how a network learns to see shape](../_static/companions/Convolution_Kernels_Companion.html)
 - [A child on a scooter, seen by a stock CNN detector](../_static/companions/Scooter_Kid_CNN_Case.html)
+- [CNN architectures: LeNet to ResNet, and how to choose](../_static/companions/CNN_Architectures_Companion.html)
 
-The last of these uses video recorded by the instructor on a public road. It is used with the
+The scooter-kid case uses video recorded by the instructor on a public road. It is used with the
 consent of the person who recorded it, the footage is not redistributed as a file, and the frames
 are published at a resolution at which no one in them is identifiable.

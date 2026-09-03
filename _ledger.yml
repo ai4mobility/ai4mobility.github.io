@@ -149,6 +149,48 @@ items:
       JSON; verify.py drives every tab, preset, toggle and filter click in headless
       Chromium and re-measures them live. Needs torch (CPU wheel).
 
+  - id: m1-cnn-architectures
+    file: CNN_Architectures_Companion.html
+    kind: companion
+    module: 1
+    session: 2026-09-03
+    status: published
+    dest: site/module1/notes.md#cnn-architectures
+    mounted: site/_static/companions/CNN_Architectures_Companion.html
+    notes: >-
+      "CNN architectures: LeNet to ResNet, and how to choose." Six tabs: the ILSVRC arc,
+      an interactive layer-by-layer stack viewer for eight real models (height = feature-map
+      size, width = channels, recolourable by parameter share or compute share), the four
+      architectural moves with their arithmetic, a sortable cost/accuracy table plus a Pareto
+      plot, all seven pretrained nets run on the five course frames, and a four-question
+      backbone chooser. Answers the question the convolution and scooter-kid sections raise
+      but do not settle -- which backbone, and what does it cost. Closes section 1.2.
+      Key findings: ImageNet-1k has NO person/pedestrian/child/cyclist class; the benchmark
+      ranking does not survive the trip to our frames (ResNet-152 says "amphibian" on the
+      stop-bar frame, ResNet-18 says "sports car"); dense heads hold 89-96% of parameters
+      but under 9% of the compute; and the two skip-connection experiments disagree with
+      each other in a way the page states rather than hides.
+
+  - id: m1-cnn-arch-repro
+    file: cnn_architectures_companion/
+    kind: internal
+    module: 1
+    session: 2026-09-03
+    status: integrated
+    notes: >-
+      Reproducers behind m1-cnn-architectures: measure (per-layer trace, parameters,
+      multiply-adds, receptive field, single-thread latency for 8 architectures),
+      fetch_weights (checkpoints in 40 MB curl -r Range chunks, sha256-verified -- AlexNet
+      244 MB, VGG-16 553 MB and ResNet-152 242 MB all truncate on a single GET),
+      predict (top-5 on the five course frames + torchvision's published accuracies),
+      depth (the two skip-connection experiments, ~25 min single-threaded -- run it with
+      nohup, a Bash call caps at 10 min), derive (parameter/compute splits, 3x3 stacking,
+      1x1 bottleneck, base64 frame thumbnails), assemble (audits ~40 asserted claims against
+      the JSONs, checks orphan ids and unfilled prose placeholders) and verify (Playwright,
+      554 live checks). Plus five JSON outputs and a README with the rebuild order.
+      NOTE: two earlier designs of the depth experiment were CONFOUNDED and discarded --
+      see the cnn-architectures-companion memory before touching depth.py.
+
   - id: m1-scooter-kid-case
     file: Scooter_Kid_CNN_Case.html
     kind: case
