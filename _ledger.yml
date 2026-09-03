@@ -235,6 +235,69 @@ items:
       container proxy -- fetch with curl -r in 40 MB Range chunks, verify sha256, and
       drop into ~/.cache/torch/hub/checkpoints/ under the exact expected filename.
 
+  - id: m1-saliency-maps
+    file: Saliency_Maps_Companion.html
+    kind: companion
+    module: 1
+    session: 2026-09-10
+    status: published
+    dest: site/module1/notes.md#saliency-maps
+    mounted: site/_static/companions/Saliency_Maps_Companion.html
+    notes: >-
+      "Saliency maps: what is the network actually looking at?" Six tabs. Answers the
+      question the detection block raises -- a CNN gives a number and no reasons -- as the
+      transportation reading of Bishop Fig 10.15 (Grad-CAM, Selvaraju et al. ICCV 2017).
+      PART A is real: a stock torchvision resnet50 (IMAGENET1K_V2) on the SAME
+      Labs/data/cnn/frame_stopbar.png the convolution and detection slides use, 672x416
+      input -> a 13 x 21 layer4 map. Differentiating "traffic light" puts 4.66x its
+      area share of the heat on the signal-head boxes and 0.92x on the lead car;
+      differentiating "sports car" gives 0.03x and 2.59x. ROI boxes are
+      fasterrcnn_resnet50_fpn (COCO, >=0.5) used only as a ruler. The resolution result
+      is the one to carry out: one cell = 32x32 input px = 0.21 m at the lead car but
+      1.4 m up at the mast arm, so ONE SIGNAL HEAD IS 0.21 OF A CELL -- a deep-layer map
+      cannot localise a lane line, a head or a small sign.
+      PART B is SYNTHETIC and labelled so on the page: roadgen.py draws road frames from
+      a pinhole model, two corridors. In the sound-wall corridor the shadow edge sits at a
+      fixed -2.9 m from the lane centre, so it is a PERFECT proxy for the lane. Two
+      identical 208,129-parameter CNNs, same init, differ only in training corridor.
+      Model A (mixed) 0.023 m RMSE on its own split and 0.023 m on the shifted corridor;
+      Model B (sound wall) 0.037 m on its own split and 0.486 m shifted -- a factor of 13,
+      and worse than the classical two-line fit (0.227 m). B's error tracks shadow
+      displacement at -0.167 m per m, R2 0.52 over 1,597 frames. On a frame where BOTH
+      are within 1 cm, saliency already separates them: A puts 3.24x on the paint and
+      0.35x on the shadow edge, B puts 1.57x and 2.34x. Masks are ground truth, dilated
+      2 px. Sanity check (Adebayo et al. NeurIPS 2018): re-randomising the head and last
+      conv block gives mean r = -0.06 with the trained map over 200 frames -- it PASSES,
+      which is what licenses the rest of the page.
+      Standing evaluation close plus fit card, four application rows (ADAS acceptance,
+      roadside detector QA, hazard detection, agency procurement), three judgment questions.
+      Mounted Sept 3 2026 at the END of section 1.2, after the architectures subsection, so the
+      whole CNN cluster sits together; the subsection opens by saying it belongs with the Sept 10
+      detection block. Anchor (saliency-maps)=. Linked from module1/index.md ("Seven interactive
+      companions", now "Week 2 and Week 3").
+
+  - id: m1-saliency-repro
+    file: saliency_maps/
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: integrated
+    notes: >-
+      Reproducers behind m1-saliency-maps, in the class folder: partA.py (Grad-CAM +
+      gradient saliency + detector ROIs -> partA_numbers.json, partA_maps.npz),
+      partA_scale.py (metres per cell from the boxes and two assumed widths: 1.80 m car,
+      0.30 m signal head), roadgen.py (the synthetic generator), netdef.py, partB.py
+      (trains both lane models and the classical baseline, ~9 min -- run it with nohup,
+      a Bash call caps at 2 min; writes partB_eval.npz at ~31 MB which is NOT kept),
+      partB_sal.py (saliency accounting + the randomisation check), figs_A.py / figs_B.py
+      (the seven Saliency_*.png at 2x), export_payload.py (payload.js) and check.py
+      (Playwright: screenshots every tab, fails on any unresolved data-num or console
+      error). partB_models.pt is kept so the saliency scripts run without retraining.
+      partA.py reads frames from $SALIENCY_FRAMES, default ../Labs/data/cnn.
+      The page carries NO hand-typed numbers: every figure is injected at load time from
+      the three JSONs through data-num attributes, so a rerun cannot leave the prose stale.
+      README.md has the rebuild order.
+
   - id: m1-multilayer
     file: Multilayer_Networks_Companion.html
     kind: companion
