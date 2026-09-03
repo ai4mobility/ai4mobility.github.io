@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-08-24
+  updated: 2026-09-03
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -355,6 +355,39 @@ items:
     module: 6
     session: 2026-10-29
     status: debt
+
+  - id: m7-newell-lwr-cnn
+    file: Newell_LWR_CNN_Companion.html
+    kind: companion
+    module: 7
+    session: 2026-11-05
+    status: published
+    dest: site/module7/index.md#interactive-companion
+    mounted: site/_static/companions/Newell_LWR_CNN_Companion.html
+    notes: >-
+      Newell's car-following model and the CTM update shown to BE convolutions, then a
+      real 1,217-weight residual conv block — weights embedded in the page — trained on
+      CTM fields and run live in the browser. Six tabs; the platoon, the kernel fit, the
+      CTM and the network's forward pass are all computed client-side. Carries the
+      module's central honest result: with the boundary given the rollout holds
+      0.20/1.38 veh/mi, frozen it goes 0.35 -> 35.6 the moment the incident clears.
+      Source parts and every reproducer live in cnn_newell_lwr/ (edit the parts, re-run
+      assemble.py; verify.py is the Playwright check). Mounted on the INDEX page because
+      module7/notes.md does not exist yet — fold this into the chapter when m7-notes is
+      written.
+
+  - id: m7-newell-lwr-repro
+    file: cnn_newell_lwr/
+    kind: internal
+    module: 7
+    session: 2026-11-05
+    status: integrated
+    notes: >-
+      Reproducers behind m7-newell-lwr-cnn: the Newell conv fits (exp1, exp1b), the CTM
+      conv-block training and rollouts (exp2, exp2c), the weight export and wave-speed
+      distribution-shift sweep (export_and_shift), three slide-ready PNGs (make_figure),
+      and the companion's own build/verify chain. All data synthetic; course CTM
+      parameters throughout.
 
   - id: m7-notes
     file: site/module7/notes.md
