@@ -825,6 +825,119 @@ Type the nine numbers yourself on the first tab, click any output pixel to see
 the nine multiplications behind it, then stack the kernels into a layer and
 finally page through the 64 real filters — the dead ones included — on the third.
 
+(scooter-kid-case)=
+### A worked case: a child on a scooter, seen by a stock detector
+
+Everything above is machinery. Here is thirteen seconds of it doing a real job,
+on footage from this course rather than from a benchmark.
+
+The clip is the forward camera of a Tesla driving under FSD on a residential
+street in Florida — 1928 × 1208 pixels, 20 frames per second, **263 frames**,
+recorded by the instructor. A child on a kick scooter comes toward the car. The
+detector is `fasterrcnn_resnet50_fpn` with COCO weights, exactly as it downloads:
+a ResNet-50 backbone of the kind you just took apart, a feature pyramid, a
+region-proposal stage, and a head that picks one of **80** object classes. No
+fine-tuning, no transportation data, no dashcam data, nothing about children. It
+is the honest version of what an agency or a consultant reaches for first,
+because it is free and it is five lines of code.
+
+**What it got right, which is most of it.** It found the child at a box height of
+36 pixels — roughly 74 m out — and held her for **111 consecutive frames with
+zero gaps**, until she left the frame at a box height of 277 pixels. Its
+confidence went from 0.65 at first sight past 0.90 within **3** frames. It found
+both pedestrians standing on the shoulder. All **84** of its `fire hydrant`
+detections are real hydrants. Judged as an object detector on video it had never
+seen, this is a good result, and you should expect a good result: this is the
+task the model was built for.
+
+**What it did not give you is the whole lesson.** Three failures, none of them
+bugs, all of them consequences of a vocabulary chosen years ago by people
+solving a different problem.
+
+The first is that **the word "child" does not exist in this model.** The output
+is `person`, at a confidence of **1.00**. A five-year-old and a construction
+flagger are the same output. Every property that would change a driving decision
+— small, unpredictable, cannot be expected to yield, may accelerate into the lane
+without looking — is invisible, and has to be supplied by whoever uses the model.
+Notice that the score is no help here. A confident, correct, decision-irrelevant
+label is more dangerous than an uncertain one, because it passes every threshold
+check you would think to write.
+
+The second is that **the scooter came out a skateboard**, in 17 detections up to
+**0.93**, with the box correctly placed on the scooter. COCO's nearest words are
+`skateboard`, `bicycle` and `motorcycle`; there is no `scooter`. The model is not
+confused — it is answering the only question it was ever asked, which is which of
+its 80 words fits best. And this near-miss turns out to be the *only* signal in
+the model's output that separates the rider from an ordinary pedestrian, which is
+a thin thread: the two shoulder pedestrians grow *larger* in the frame than the
+child does, because the car drives past them, so "take the biggest track" picks
+the wrong person.
+
+The third matters most for agency work. A red-circle regulatory sign at the end
+of the clip is reported as `stop sign` **35** times, peaking at **0.97**. There
+is no stop sign anywhere in this clip. `stop sign` is COCO's only sign class —
+no speed limit, no yield, no warning — so anything red and sign-shaped receives
+the one available word, confidently. Run this pipeline over a fleet's video to
+build a sign inventory and you have recorded a stop sign at a location that has
+none, at 0.97, with no flag of any kind. The failure is silent, it is systematic
+rather than random, and no accuracy number computed on COCO would surface it.
+
+**And it gives you no distance.** A detector outputs a box and a word. Range,
+closing speed and lane position — the three quantities a braking decision
+actually needs — are not in the output. They can be *inferred* from the box, and
+the companion does so, but only through
+
+$$
+Z \;=\; f \cdot H / h_{\text{px}}
+$$
+
+where $h_{\text{px}}$ is the measured box height, $f$ is the focal length in
+pixels and $H$ is the object's true height. Neither $f$ nor $H$ is measured here,
+so both are stated assumptions — a 50° field of view and a 1.30 m child — and
+every distance scales linearly with the assumed height. Worse, the error is
+worst where you need it most: at the far end **one pixel of box height is 2.05 m
+of range**, and at the near end 0.035 m. That single fact is the whole argument
+for radar, lidar or a stereo pair, and the reason a camera-only stack has to
+learn a size prior for every class it cares about.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — A child on a scooter, seen by a stock CNN detector</span>
+    <a href="../_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Scooter_Kid_CNN_Case.html"
+          title="A child on a scooter, seen by a stock CNN detector" loading="lazy"></iframe>
+</div>
+
+Step through the clip on the first tab and move the score threshold while you
+watch — every detection above 0.05 was stored, so the slider filters results
+rather than re-running anything. The second tab opens the backbone on one frame
+of this footage: the same five stages, with the receptive field growing from 7
+pixels to **267** and the share of values ReLU sets to zero rising from
+**12.8%** to **78.4%**. In the first two rows you can still see the child; by
+layer 2 the picture is gone and what remains is a handful of lit cells in
+roughly the right place. Nothing in the network ever sees a child. Losing the
+picture is the point — a representation that kept every pixel would have learned
+nothing.
+
+One last thing, because it is a habit worth forming. The camera is bolted to the
+car, so the whole background slides sideways when the car turns, and phase
+correlation between consecutive frames recovers that motion. After subtracting a
+0.75 s moving average to remove the road's own curvature, the clip contains
+exactly one real steering excursion — **3.82 °/s at frame 146**, while the child
+was about 32 m ahead. The instructor's own account of driving it is that the car
+"shook its direction laterally a little bit" as it passed her, and the
+measurement is consistent with that account. It does not *prove* it. Image motion
+cannot separate a steering command from a road crown, a pothole, a gust, or a
+hand on the wheel, and the log that could settle it belongs to the manufacturer.
+Keeping those two things apart — what you measured, and what you were told — is
+most of what makes an analysis worth reading.
+
+The detection machinery itself — proposals, non-maximum suppression, the
+precision/recall trade-off, multi-camera tracking — is the Sept 10 session. This
+case is here because it is the first place the convolution you just built stops
+being an idea.
+
 :::{admonition} Before you trust this result
 :class: important
 **What is the baseline?** For "did anything move" on a fixed camera, the baseline

@@ -149,6 +149,50 @@ items:
       JSON; verify.py drives every tab, preset, toggle and filter click in headless
       Chromium and re-measures them live. Needs torch (CPU wheel).
 
+  - id: m1-scooter-kid-case
+    file: Scooter_Kid_CNN_Case.html
+    kind: case
+    module: 1
+    session: 2026-09-03
+    status: published
+    dest: site/module1/notes.md#scooter-kid-case
+    mounted: site/_static/companions/Scooter_Kid_CNN_Case.html
+    notes: >-
+      "A child on a scooter, seen by a stock CNN detector." Five tabs, built from the
+      instructor's own Tesla FSD clip (scooter-kid-mess-with-fsd.m4v, 1928x1208, 20 fps,
+      263 frames). torchvision fasterrcnn_resnet50_fpn with COCO_V1 weights, unmodified,
+      run over every frame; all detections >=0.05 stored so the page's score-threshold
+      slider filters rather than re-runs. Tracked the child 111 consecutive frames with
+      ZERO gaps, 36 -> 277 px box height. Four findings, all measured: COCO has no
+      "child" and no "scooter"; the scooter is called skateboard at 0.93; a red-circle
+      regulatory sign is called stop sign 35 times at up to 0.97 (there is no stop sign
+      in the clip); and range/speed/lane are absent from the output, inferable only
+      under stated assumptions with 2.05 m of range error per pixel of box height at the
+      far end. Tab 2 hooks the detector's OWN backbone -- receptive field 7 -> 267 px,
+      ReLU sparsity 12.8% -> 78.4% -- which is why this sits with the Sept 3 convolution
+      block rather than the Sept 10 detection block. Ego-yaw trace measured by phase
+      correlation is presented as consistent with, NOT proof of, the instructor's account
+      of the car's lateral movement. 5.5 MB (bundled frames + activation maps); accepted.
+      The 6.6 MB annotated MP4 is deliberately NOT in the repo -- the page's own frame
+      player replaces it; use the class-folder copy for playback in class.
+
+  - id: m1-scooter-kid-repro
+    file: scooter_kid_case/
+    kind: internal
+    module: 1
+    session: 2026-09-03
+    status: integrated
+    notes: >-
+      Reproducers behind m1-scooter-kid-case: run_detect (Faster R-CNN over 263 frames,
+      4.35 s/frame on CPU), track (constant-velocity + greedy IoU), kinematics (picks the
+      child's track by skateboard-box overlap, not by size -- the shoulder pedestrians
+      grow bigger), ego_motion (cv2.phaseCorrelate, high-passed), features (hooks the
+      backbone, saves stage activations and crops), make_video, prep_assets, assemble
+      (audits 27 asserted prose numbers against the JSONs) and verify (Playwright).
+      Plus the six JSON outputs. NOTE: the 167 MB detector weights truncate through the
+      container proxy -- fetch with curl -r in 40 MB Range chunks, verify sha256, and
+      drop into ~/.cache/torch/hub/checkpoints/ under the exact expected filename.
+
   - id: m1-multilayer
     file: Multilayer_Networks_Companion.html
     kind: companion
