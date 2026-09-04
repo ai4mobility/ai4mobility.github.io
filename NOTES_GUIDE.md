@@ -83,6 +83,63 @@ object every time.
 
 ---
 
+## When a chapter gets too long: split it
+
+A chapter past roughly 600 rendered lines, or carrying more than two or three
+iframed companions, stops being navigable — students scroll instead of reading.
+Module 1 hit this on 2026-09-04 at 1,588 lines and nine companions, and was
+split. Use the same shape:
+
+- `moduleN/notes.md` becomes the **landing page**: the title, the *How to read
+  this chapter* admonition, section N.0, and a **map table** (page | what it
+  covers | companions & notebooks) with one row per split page. Nothing else.
+- Each section becomes `moduleN/notesK-<slug>.md` with its own `#` H1;
+  everything inside it demotes one level (`###` becomes `##`).
+- In `_toc.yml` the split pages are `sections:` **nested under**
+  `moduleN/notes`, each with a short `title:` — the sidebar shows a collapsible
+  group and the file names never appear.
+- MyST targets (`(convolution-kernels)=` etc.) travel with their subsection to
+  the new page. They keep working; only the URL changes.
+- `moduleN/index.md` gets a *The notes chapter, page by page* table under
+  `## Contents`, and each companion bullet says which notes page embeds it.
+
+### The header card
+
+Every split page opens with one, immediately under the H1. It answers "what am
+I looking at, when is it, and what do I run" before the reader scrolls:
+
+```html
+<div class="notes-card">
+  <div class="notes-card-head">
+    <span class="notes-card-eyebrow">Module 1 &middot; Section 1.1</span>
+    <span class="notes-card-session">Session: Aug 27</span>
+  </div>
+  <p class="notes-card-lede">Two or three sentences on what this page covers.</p>
+  <div class="notes-card-cols">
+    <div>
+      <h4>Interactive companions on this page</h4>
+      <ul>
+        <li><a href="../_static/companions/File.html" target="_blank" rel="noopener">Title &#8599;</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Notebooks that go with it</h4>
+      <ul><li><a href="lab1.html">Lab 1 &mdash; title</a></li></ul>
+    </div>
+  </div>
+</div>
+```
+
+Drop the `*Session: Sept 3.*` italic line when a card states the session. End
+each page with a one-line `Next: {doc}\`...\`` pointer after a `---`.
+
+The map table on the landing page needs the modifier class
+`class="practice-table notes-map"` — the plain `.practice-table` has
+`min-width: 720px`, which overflows the 688 px content column.
+
+`.notes-card`, `.notes-card-*` and `.practice-table.notes-map` are defined at
+the end of `_static/custom.css`.
+
 ## Embedding a companion
 
 Interactive HTML companions are *not* rewritten into MyST. They are copied

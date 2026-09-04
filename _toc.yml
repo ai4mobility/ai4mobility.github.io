@@ -18,6 +18,21 @@ parts:
           # inside it. See NOTES_GUIDE.md for the template.
           - file: module1/notes
             title: Notes
+            sections:
+              - file: module1/notes1-workflow
+                title: "1.1 AI and the workflow"
+              - file: module1/notes2-networks
+                title: "1.2 From the logit to the network"
+              - file: module1/notes3-learning
+                title: "1.2 How a network learns"
+              - file: module1/notes4-cnn
+                title: "1.2 Convolution, and a network that sees"
+              - file: module1/notes5-cnn-in-practice
+                title: "1.2 Choosing a network, and interrogating it"
+              - file: module1/notes6-embeddings
+                title: "1.3 Representation learning and embeddings"
+              - file: module1/notes7-labs
+                title: "Labs, practice, and further reading"
           - file: module1/lecture1
           - file: module1/lab1
           - file: module1/lab2_word_embeddings

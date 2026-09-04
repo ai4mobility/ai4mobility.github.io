@@ -47,9 +47,87 @@ items:
     session: [2026-08-27, 2026-09-03, 2026-09-10]
     status: drafted
     notes: >
-      Pilot chapter. Establishes the template all other chapters follow.
-      Built 2026-08-24 from lecture1.md, the four Module 1 companions,
-      and the four Module 1 labs.
+      Landing page / map for the split chapter. Establishes the template all
+      other chapters follow. Built 2026-08-24 from lecture1.md, the four
+      Module 1 companions, and the four Module 1 labs; split into seven pages
+      2026-09-04 because the single 90 KB page was unnavigable. This file now
+      holds the reading guide, section 1.0, and the section-to-companion-to-
+      notebook map table.
+
+  - id: m1-notes-1-workflow
+    file: site/module1/notes1-workflow.md
+    kind: notes
+    module: 1
+    session: 2026-08-27
+    status: drafted
+    notes: >
+      Section 1.1, split out of notes.md 2026-09-04. Embeds
+      TIM_AI_Workflow_Case and AI_Workflow_Companion.
+
+  - id: m1-notes-2-networks
+    file: site/module1/notes2-networks.md
+    kind: notes
+    module: 1
+    session: 2026-09-03
+    status: drafted
+    notes: >
+      Section 1.2 part 1 of 4 (logit to network, softmax, loss, stacking,
+      the two anti-NN results, what it costs). Embeds Sigmoid_Tanh_Companion
+      and Multilayer_Networks_Companion.
+
+  - id: m1-notes-3-learning
+    file: site/module1/notes3-learning.md
+    kind: notes
+    module: 1
+    session: 2026-09-03
+    status: drafted
+    notes: >
+      Section 1.2 part 2 of 4 (the parts one at a time, backprop traced,
+      where training goes wrong). Holds the (how-a-network-learns)= target.
+      Embeds Neural_Networks_and_Backprop_Companion.
+
+  - id: m1-notes-4-cnn
+    file: site/module1/notes4-cnn.md
+    kind: notes
+    module: 1
+    session: 2026-09-03
+    status: drafted
+    notes: >
+      Section 1.2 part 3 of 4 (convolution, the scooter-kid worked case).
+      Holds the (convolution-kernels)= and (scooter-kid-case)= targets.
+      Embeds Convolution_Kernels_Companion and Scooter_Kid_CNN_Case.
+
+  - id: m1-notes-5-cnn-in-practice
+    file: site/module1/notes5-cnn-in-practice.md
+    kind: notes
+    module: 1
+    session: [2026-09-03, 2026-09-10]
+    status: drafted
+    notes: >
+      Section 1.2 part 4 of 4 (architecture choice and cost, saliency maps).
+      Holds the (cnn-architectures)= and (saliency-maps)= targets. Embeds
+      CNN_Architectures_Companion and Saliency_Maps_Companion.
+
+  - id: m1-notes-6-embeddings
+    file: site/module1/notes6-embeddings.md
+    kind: notes
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    notes: >
+      Section 1.3 (one-hot, embeddings as geometry, Word2Vec/Road2Vec,
+      transfer learning, contrastive, CLIP, checking a representation).
+      No companions; the work is in labs 2-4.
+
+  - id: m1-notes-7-labs
+    file: site/module1/notes7-labs.md
+    kind: notes
+    module: 1
+    session: [2026-08-27, 2026-09-03, 2026-09-10]
+    status: drafted
+    notes: >
+      Tail of the chapter: what each lab proves, using this on the job,
+      critical reading, exercises, where this goes next.
 
   - id: m1-lecture1
     file: site/module1/lecture1.md

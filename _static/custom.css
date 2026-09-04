@@ -1093,3 +1093,112 @@ header.navbar {
         gap: 0.35rem;
     }
 }
+
+
+/* ---------------------------------------------------------------------------
+   Notes page header card (course notes, split chapters)
+   One per notes page: session, one-paragraph lede, companions and notebooks.
+   Pattern and usage: see NOTES_GUIDE.md in the repo root.
+--------------------------------------------------------------------------- */
+
+.notes-card {
+    margin: 1.25rem 0 2rem;
+    padding: 1rem 1.15rem 0.85rem;
+    border: 1px solid rgba(0, 103, 71, 0.18);
+    border-left: 4px solid var(--usf-green);
+    border-radius: 10px;
+    background: rgba(0, 103, 71, 0.035);
+}
+
+.notes-card-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.notes-card-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--usf-green);
+}
+
+.notes-card-session {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    background: var(--usf-gold-light);
+    color: var(--usf-green-dark);
+}
+
+.notes-card-lede {
+    margin: 0 0 0.85rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #333333;
+}
+
+.notes-card-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.75rem 1.5rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid rgba(0, 103, 71, 0.14);
+}
+
+.notes-card-cols h4 {
+    margin: 0 0 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--usf-green-dark);
+}
+
+.notes-card-cols ul {
+    margin: 0;
+    padding-left: 1.05rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.notes-card-cols li {
+    margin-bottom: 0.15rem;
+}
+
+.notes-card-cols a {
+    color: var(--usf-green);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.notes-card-cols a:hover {
+    color: var(--usf-gold);
+    text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+    .notes-card-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+    }
+}
+
+/* The Module 1 notes map table: fits the content column, unlike the wider
+   practice-tables on the resources and hardware pages. */
+
+.practice-table.notes-map {
+    min-width: 0;
+}
+
+.practice-table.notes-map th,
+.practice-table.notes-map td {
+    font-size: 0.86rem;
+    line-height: 1.45;
+}
