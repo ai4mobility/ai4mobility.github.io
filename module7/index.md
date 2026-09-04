@@ -2,6 +2,11 @@
 
 *Week 11 of the {doc}`../syllabus` — Nov 5, 2026.*
 
+This module also carries the course-wide **workflow framing** — where AI enters a
+transportation task, the six leverage labels, the checkpoint rule, and the Traffic
+Incident Management worked case. It is operations material, so it is written up here
+rather than with the AI foundations in Module 1: see {doc}`notes` §7.1.
+
 ## Class meetings
 
 | Date | Session topic | Due before class |
@@ -38,15 +43,31 @@ By the end of this module you will be able to:
 - Describe what makes a digital twin different from an offline simulation, and what data,
   calibration loop, and computation it requires.
 - Use CARLA to generate sensor data for a perception or control component.
+- Write any transportation task as a workflow — trigger → ingest → transform → act →
+  checkpoint → record — label each step with one of the six kinds of leverage, and place the
+  human checkpoint immediately before the first irreversible action.
 - Identify where AI fits into day-to-day transportation systems management and operations —
   signal retiming, ramp metering, incident detection and response, performance measurement —
   and what data an agency would already have to have.
+- State the baseline for a workflow as the current process's own numbers — how long it takes
+  today, how often it is wrong, what it costs — rather than as another model.
 - Reason about simulating conditions outside the calibration range — evacuation, incident, and
   hurricane mobility scenarios.
 - Critique a claimed RL traffic-control result: is it reproducible, does it transfer, does it
   beat an actuated baseline that was actually tuned?
 
 ## Topics
+
+**The workflow framing** (written up in {doc}`notes` §7.1)
+
+- The workflow anatomy: trigger → ingest → transform → act → checkpoint → record
+- The six kinds of leverage: extraction · classification · generation · retrieval ·
+  prediction · judgment — and why judgment is not a step you can hand over
+- The checkpoint rule, and the cheap-to-verify / expensive-to-produce asymmetry that decides
+  whether automating a step is worth anything
+- Worked case: Traffic Incident Management, from detection through after-action recording
+
+**Simulation, digital twins, and operations**
 
 - Microscopic, mesoscopic, and macroscopic simulation
 - Calibration and validation of microsimulation models
@@ -64,7 +85,10 @@ By the end of this module you will be able to:
 - Sim-to-real transfer and its failure modes
 - Evacuation and hurricane mobility modeling
 
-## Interactive companion
+## Interactive companions
+
+Two more sit inside {doc}`notes` §7.1 — the anatomy of an AI workflow, and the Traffic
+Incident Management case worked end to end.
 
 Before the neural car-following and surrogate-model topics below, work through this page. It makes the
 case for learned traffic dynamics in the most concrete way available: Newell's car-following model and

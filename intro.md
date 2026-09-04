@@ -80,7 +80,8 @@ Course materials are organized into eight modules across two parts, plus a capst
 
 | Module | Topic | Weeks | Class dates |
 |---|---|---|---|
-| {doc}`module1/index` | Foundations and Representation Learning | 1–3 | Aug 27 · Sept 3 · Sept 10 |
+| {doc}`course-intro` | Course Introduction | 1 | Aug 27 |
+| {doc}`module1/index` | Foundations and Representation Learning | 2–3 | Sept 3 · Sept 10 |
 | {doc}`module2/index` | Transformers, LLMs, and Multimodal Models | 4 | Sept 17 |
 | {doc}`module3/index` | Generative AI and World Models | 5, 13 | Sept 24 · Nov 19 |
 | {doc}`module4/index` | Adapting and Orchestrating Models | 6–7 | Oct 1 · Oct 8 |

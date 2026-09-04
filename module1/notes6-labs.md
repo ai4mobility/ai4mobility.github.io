@@ -3,9 +3,9 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 1 &middot; Module 1 &middot; Practice</span>
-    <span class="notes-card-session">Sessions: Aug 27 &ndash; Sept 10</span>
+    <span class="notes-card-session">Sessions: Sept 3 &amp; Sept 10</span>
   </div>
-  <p class="notes-card-lede">The four notebooks and what each one <em>proves</em>; how to use this module in front of a vendor or a review board; the reading list; and five exercises. Everything here is practice &mdash; the explanations live in sections 1.1&ndash;1.6.</p>
+  <p class="notes-card-lede">The four notebooks and what each one <em>proves</em>; how to use this module in front of a vendor or a review board; the reading list; and four exercises. Everything here is practice &mdash; the explanations live in sections 1.1&ndash;1.5.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Notebooks that go with it</h4>
@@ -57,17 +57,13 @@ bridge into multimodal models.
 
 ## Using this on the job
 
-**When someone pitches you an AI system,** ask for the workflow diagram before
-the architecture diagram. Which step is being automated, what is the checkpoint,
-and what is the current process's baseline number. A vendor who cannot produce
-those three things has not deployed the system anywhere that measured it.
-
-**Before you fund a pilot,** apply the check from 1.1: is the output cheaper to
-verify than to produce? If verifying requires a human to redo the work, the
-pilot will show a time saving that evaporates at scale.
+The workflow-level questions — which step is being automated, where the
+checkpoint goes, what the current process costs today — are in
+{doc}`Module 7 §7.1 <../module7/notes>`, together with the workflow audit
+exercise. What follows is the foundations half.
 
 **When you have low-dimensional tabular data,** the answer is often not a
-network. The one-dimensional result in 1.2 is not an edge case; speed-density
+network. The one-dimensional result in 1.1 is not an edge case; speed-density
 curves, travel-time functions, and delay relationships are exactly the shape
 where a spline wins and can be plotted for a review board.
 
@@ -92,7 +88,7 @@ marketing claim, and it is noticed.
   436–444. — *The canonical overview. Read for the framing; note how little of
   it is about evaluation.*
 - Bishop, C. M., & Bishop, H. (2024). *Deep Learning: Foundations and Concepts*,
-  Ch. 6. — *The learned-versus-fixed basis argument in 1.2, done properly.*
+  Ch. 6. — *The learned-versus-fixed basis argument in 1.1, done properly.*
 - Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986). Learning
   representations by back-propagating errors. *Nature, 323*, 533–536.
 - Mikolov, T., Chen, K., Corrado, G., & Dean, J. (2013). Efficient estimation of
@@ -113,23 +109,17 @@ marketing claim, and it is noticed.
 
 ## Exercises
 
-1. **Workflow audit.** Take a process you have actually worked on. Write it as
-   trigger → ingest → transform → act → checkpoint → record. Label every step
-   with one of the six leverage labels, mark the steps where AI must not act
-   alone, and place the checkpoint immediately before the first irreversible
-   action. State the three baseline numbers for the current process: how long,
-   how often wrong, how much.
-2. **The dictionary.** Take a binary logit model from a paper or a project you
+1. **The dictionary.** Take a binary logit model from a paper or a project you
    know. Write out its scale parameter, its constants, and its utility
    difference in neural network vocabulary. Then say what would have to change
    for it to become a two-layer network, and whether that change would help.
-3. **Find the crossover.** For a prediction problem you care about, count $D$.
+2. **Find the crossover.** For a prediction problem you care about, count $D$.
    Work out $K^D$ against $M(D+2)+1$ for a defensible $K$ and $M$. Which side of
    the crossover are you on, and does that match what you were planning to do?
-4. **Break the softmax.** Construct a route-choice example where adding a
+3. **Break the softmax.** Construct a route-choice example where adding a
    near-duplicate alternative produces a share prediction you would not defend
    to a client. Then say what you would do about it.
-5. **Sanity-check an embedding.** After Lab 2, pick five road segments whose
+4. **Sanity-check an embedding.** After Lab 2, pick five road segments whose
    character you know. Look at their nearest neighbors in the learned space.
    Write down one thing the embedding clearly got right and one thing it got
    wrong, and propose a check that would have caught the second one before you

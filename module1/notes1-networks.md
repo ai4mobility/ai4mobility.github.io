@@ -1,8 +1,8 @@
-# 1.2 Neural networks, starting from the logit you already use
+# 1.1 Neural networks, starting from the logit you already use
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 1 &middot; Section 1.2</span>
+    <span class="notes-card-eyebrow">Module 1 &middot; Section 1.1</span>
     <span class="notes-card-session">Session: Sept 3</span>
   </div>
   <p class="notes-card-lede">The neural network built out of a model you already use. The binary logit <em>is</em> a sigmoid; softmax <em>is</em> the multinomial logit, with three consequences that follow; the loss function is not a detail; stacking layers buys a basis that moves. Ends honestly &mdash; two results that argue against reaching for a network at all, and what one actually costs.</p>
@@ -281,4 +281,4 @@ the only reason depth exists.
 
 ---
 
-Next: {doc}`notes3-learning` opens the box &mdash; what each part does, and how the parameters actually move.
+Next: {doc}`notes2-learning` opens the box &mdash; what each part does, and how the parameters actually move.

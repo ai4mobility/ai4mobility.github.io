@@ -1,11 +1,11 @@
-# 1.4 Convolution, and a network that sees
+# 1.3 Convolution, and a network that sees
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 1 &middot; Section 1.4</span>
+    <span class="notes-card-eyebrow">Module 1 &middot; Section 1.3</span>
     <span class="notes-card-session">Session: Sept 3</span>
   </div>
-  <p class="notes-card-lede">The same neuron from sections 1.2 and 1.3, wired to reuse its weights. Convolution arrived at from a moving average you already trust, then a worked case: a stock detector meeting a child on a scooter on a real Tampa street. This is the first page where the mechanism stops being an idea and starts being a thing that can be wrong.</p>
+  <p class="notes-card-lede">The same neuron from sections 1.1 and 1.2, wired to reuse its weights. Convolution arrived at from a moving average you already trust, then a worked case: a stock detector meeting a child on a scooter on a real Tampa street. This is the first page where the mechanism stops being an idea and starts being a thing that can be wrong.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Interactive companions on this page</h4>
@@ -265,4 +265,4 @@ energy than the daylight one, and it is the harder scene.
 
 ---
 
-Next: {doc}`notes5-cnn-in-practice` &mdash; which architecture to pick, what it costs, and what a heat map does not prove.
+Next: {doc}`notes4-cnn-in-practice` &mdash; which architecture to pick, what it costs, and what a heat map does not prove.

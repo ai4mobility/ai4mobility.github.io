@@ -1,8 +1,8 @@
-# 1.6 Representation learning and embeddings
+# 1.5 Representation learning and embeddings
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 1 &middot; Section 1.6</span>
+    <span class="notes-card-eyebrow">Module 1 &middot; Section 1.5</span>
     <span class="notes-card-session">Session: Sept 10</span>
   </div>
   <p class="notes-card-lede">One-hot encoding and its three failures; an embedding as a geometry; Word2Vec, and the same algorithm run on a road network; image embeddings and transfer learning; contrastive learning where labels are scarce; CLIP and the open-vocabulary long tail. Closes with the two questions that matter on the job: what is the unit being embedded, and how would you know the representation is any good.</p>
@@ -194,4 +194,4 @@ accuracy hides exactly the cases that matter in safety work.
 
 ---
 
-Next: {doc}`notes7-labs` &mdash; the notebooks, the exercises, and what to carry into Module 2.
+Next: {doc}`notes6-labs` &mdash; the notebooks, the exercises, and what to carry into Module 2.

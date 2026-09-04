@@ -1,11 +1,11 @@
-# 1.3 How a network learns
+# 1.2 How a network learns
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 1 &middot; Section 1.3</span>
+    <span class="notes-card-eyebrow">Module 1 &middot; Section 1.2</span>
     <span class="notes-card-session">Session: Sept 3</span>
   </div>
-  <p class="notes-card-lede">Inside the box, continuing section 1.2. What a weight, a bias and an activation each do, one at a time; why one boundary is not enough; backpropagation traced number by number on a congestion classifier; where training goes wrong, measured; and the same machinery pointed at a regression question.</p>
+  <p class="notes-card-lede">Inside the box, continuing section 1.1. What a weight, a bias and an activation each do, one at a time; why one boundary is not enough; backpropagation traced number by number on a congestion classifier; where training goes wrong, measured; and the same machinery pointed at a regression question.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Interactive companions on this page</h4>
@@ -262,4 +262,4 @@ the number of dead units, not the best of three restarts.
 
 ---
 
-Next: {doc}`notes4-cnn` rewires the same neuron so it can look at a camera frame.
+Next: {doc}`notes3-cnn` rewires the same neuron so it can look at a camera frame.
