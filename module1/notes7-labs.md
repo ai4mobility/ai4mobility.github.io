@@ -5,7 +5,7 @@
     <span class="notes-card-eyebrow">Module 1 &middot; Module 1 &middot; Practice</span>
     <span class="notes-card-session">Sessions: Aug 27 &ndash; Sept 10</span>
   </div>
-  <p class="notes-card-lede">The four notebooks and what each one <em>proves</em>; how to use this module in front of a vendor or a review board; the reading list; and five exercises. Everything here is practice &mdash; the explanations live in sections 1.1&ndash;1.3.</p>
+  <p class="notes-card-lede">The four notebooks and what each one <em>proves</em>; how to use this module in front of a vendor or a review board; the reading list; and five exercises. Everything here is practice &mdash; the explanations live in sections 1.1&ndash;1.6.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Notebooks that go with it</h4>

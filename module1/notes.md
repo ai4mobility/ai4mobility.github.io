@@ -14,8 +14,8 @@ which notebooks go with it.
 
 Read **{doc}`1.1 <notes1-workflow>` before the first meeting** — you will be
 choosing a project on Aug 27 and this is the vocabulary that makes that choice
-possible. Section 1.2 (four pages) and section 1.3 pair with the Sept 3 and
-Sept 10 meetings; skim before, read properly after, run the labs in between.
+possible. Sections 1.2–1.5 pair with the Sept 3 meeting and section 1.6 with
+Sept 10; skim before, read properly after, run the labs in between.
 
 The interactive companions embedded here are the same pages posted on Canvas.
 They are not decoration: several of the results argued in this chapter are only
@@ -43,22 +43,22 @@ convincing if you move the sliders yourself.
   <td><a href="../_static/companions/Sigmoid_Tanh_Companion.html" target="_blank" rel="noopener">Sigmoid, tanh, softmax &#8599;</a><br><a href="../_static/companions/Multilayer_Networks_Companion.html" target="_blank" rel="noopener">Multilayer networks &#8599;</a><br><a href="lab1.html">Lab 1</a></td>
 </tr>
 <tr>
-  <td><a href="notes3-learning.html"><strong>1.2 How a network learns</strong></a><br><em>Sept 3</em></td>
+  <td><a href="notes3-learning.html"><strong>1.3 How a network learns</strong></a><br><em>Sept 3</em></td>
   <td>Weights, biases and activations one at a time; when one boundary is not enough; backpropagation traced number by number; where training goes wrong, measured.</td>
   <td><a href="../_static/companions/Neural_Networks_and_Backprop_Companion.html" target="_blank" rel="noopener">Network basics and backprop &#8599;</a><br><a href="lab1.html">Lab 1</a></td>
 </tr>
 <tr>
-  <td><a href="notes4-cnn.html"><strong>1.2 Convolution, and a network that sees</strong></a><br><em>Sept 3</em></td>
+  <td><a href="notes4-cnn.html"><strong>1.4 Convolution, and a network that sees</strong></a><br><em>Sept 3</em></td>
   <td>Convolution from a moving average; weight sharing; a worked case &mdash; a child on a scooter, seen by a stock detector.</td>
   <td><a href="../_static/companions/Convolution_Kernels_Companion.html" target="_blank" rel="noopener">Convolution kernels &#8599;</a><br><a href="../_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">The scooter-kid case &#8599;</a><br><a href="lab3_image_embeddings.html">Lab 3</a></td>
 </tr>
 <tr>
-  <td><a href="notes5-cnn-in-practice.html"><strong>1.2 Choosing a network, and interrogating it</strong></a><br><em>Sept 3 &amp; 10</em></td>
+  <td><a href="notes5-cnn-in-practice.html"><strong>1.5 Choosing a network, and interrogating it</strong></a><br><em>Sept 3 &amp; 10</em></td>
   <td>Which architecture, and what it costs in parameters, latency and roadside power; saliency maps and the honest limits of what they prove.</td>
   <td><a href="../_static/companions/CNN_Architectures_Companion.html" target="_blank" rel="noopener">CNN architectures &#8599;</a><br><a href="../_static/companions/Saliency_Maps_Companion.html" target="_blank" rel="noopener">Saliency maps &#8599;</a><br><a href="lab3_image_embeddings.html">Lab 3</a></td>
 </tr>
 <tr>
-  <td><a href="notes6-embeddings.html"><strong>1.3 Representation learning and embeddings</strong></a><br><em>Sept 10</em></td>
+  <td><a href="notes6-embeddings.html"><strong>1.6 Representation learning and embeddings</strong></a><br><em>Sept 10</em></td>
   <td>One-hot and its three failures; embeddings as geometry; Word2Vec &rarr; Road2Vec; transfer learning; contrastive learning; CLIP; how to check a representation.</td>
   <td><em>No companion &mdash; the work is in the notebooks</em><br><a href="lab2_word_embeddings.html">Lab 2</a>, <a href="lab3_image_embeddings.html">Lab 3</a>, <a href="lab4_clip_vs_traditional_cv.html">Lab 4</a></td>
 </tr>

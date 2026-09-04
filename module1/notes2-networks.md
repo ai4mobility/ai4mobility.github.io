@@ -2,7 +2,7 @@
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 1 &middot; Section 1.2 &mdash; part 1 of 3</span>
+    <span class="notes-card-eyebrow">Module 1 &middot; Section 1.2</span>
     <span class="notes-card-session">Session: Sept 3</span>
   </div>
   <p class="notes-card-lede">The neural network built out of a model you already use. The binary logit <em>is</em> a sigmoid; softmax <em>is</em> the multinomial logit, with three consequences that follow; the loss function is not a detail; stacking layers buys a basis that moves. Ends honestly &mdash; two results that argue against reaching for a network at all, and what one actually costs.</p>

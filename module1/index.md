@@ -131,10 +131,10 @@ notebooks that go with it. The {doc}`notes` landing page carries the full map.
 | --- | --- | --- |
 | {doc}`1.1 AI and the workflow <notes1-workflow>` | Aug 27 | {doc}`Lab 1 <lab1>` |
 | {doc}`1.2 From the logit to the network <notes2-networks>` | Sept 3 | {doc}`Lab 1 <lab1>` |
-| {doc}`1.2 How a network learns <notes3-learning>` | Sept 3 | {doc}`Lab 1 <lab1>` |
-| {doc}`1.2 Convolution, and a network that sees <notes4-cnn>` | Sept 3 | {doc}`Lab 3 <lab3_image_embeddings>` |
-| {doc}`1.2 Choosing a network, and interrogating it <notes5-cnn-in-practice>` | Sept 3 & 10 | {doc}`Lab 3 <lab3_image_embeddings>` |
-| {doc}`1.3 Representation learning and embeddings <notes6-embeddings>` | Sept 10 | {doc}`Lab 2 <lab2_word_embeddings>`, {doc}`Lab 3 <lab3_image_embeddings>`, {doc}`Lab 4 <lab4_clip_vs_traditional_cv>` |
+| {doc}`1.3 How a network learns <notes3-learning>` | Sept 3 | {doc}`Lab 1 <lab1>` |
+| {doc}`1.4 Convolution, and a network that sees <notes4-cnn>` | Sept 3 | {doc}`Lab 3 <lab3_image_embeddings>` |
+| {doc}`1.5 Choosing a network, and interrogating it <notes5-cnn-in-practice>` | Sept 3 & 10 | {doc}`Lab 3 <lab3_image_embeddings>` |
+| {doc}`1.6 Representation learning and embeddings <notes6-embeddings>` | Sept 10 | {doc}`Lab 2 <lab2_word_embeddings>`, {doc}`Lab 3 <lab3_image_embeddings>`, {doc}`Lab 4 <lab4_clip_vs_traditional_cv>` |
 | {doc}`Labs, practice, and further reading <notes7-labs>` | All three | All four |
 
 ## Video lectures
@@ -187,11 +187,11 @@ reading completely different things.
 
 - <a href="../_static/companions/Sigmoid_Tanh_Companion.html" target="_blank" rel="noopener">Sigmoid, tanh and softmax from the logit</a> &mdash; embedded in <a href="notes2-networks.html">1.2 From the logit to the network</a>
 - <a href="../_static/companions/Multilayer_Networks_Companion.html" target="_blank" rel="noopener">Multilayer networks and learnable basis functions</a> &mdash; embedded in <a href="notes2-networks.html">1.2 From the logit to the network</a>
-- <a href="../_static/companions/Neural_Networks_and_Backprop_Companion.html" target="_blank" rel="noopener">What a neural network is, and how it learns</a> &mdash; embedded in <a href="notes3-learning.html">1.2 How a network learns</a>
-- <a href="../_static/companions/Convolution_Kernels_Companion.html" target="_blank" rel="noopener">Convolution kernels: how a network learns to see shape</a> &mdash; embedded in <a href="notes4-cnn.html">1.2 Convolution, and a network that sees</a>
-- <a href="../_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">A child on a scooter, seen by a stock CNN detector</a> &mdash; embedded in <a href="notes4-cnn.html">1.2 Convolution, and a network that sees</a>
-- <a href="../_static/companions/CNN_Architectures_Companion.html" target="_blank" rel="noopener">CNN architectures: LeNet to ResNet, and how to choose</a> &mdash; embedded in <a href="notes5-cnn-in-practice.html">1.2 Choosing a network, and interrogating it</a>
-- <a href="../_static/companions/Saliency_Maps_Companion.html" target="_blank" rel="noopener">Saliency maps: what is the network actually looking at?</a> &mdash; embedded in <a href="notes5-cnn-in-practice.html">1.2 Choosing a network, and interrogating it</a>
+- <a href="../_static/companions/Neural_Networks_and_Backprop_Companion.html" target="_blank" rel="noopener">What a neural network is, and how it learns</a> &mdash; embedded in <a href="notes3-learning.html">1.3 How a network learns</a>
+- <a href="../_static/companions/Convolution_Kernels_Companion.html" target="_blank" rel="noopener">Convolution kernels: how a network learns to see shape</a> &mdash; embedded in <a href="notes4-cnn.html">1.4 Convolution, and a network that sees</a>
+- <a href="../_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">A child on a scooter, seen by a stock CNN detector</a> &mdash; embedded in <a href="notes4-cnn.html">1.4 Convolution, and a network that sees</a>
+- <a href="../_static/companions/CNN_Architectures_Companion.html" target="_blank" rel="noopener">CNN architectures: LeNet to ResNet, and how to choose</a> &mdash; embedded in <a href="notes5-cnn-in-practice.html">1.5 Choosing a network, and interrogating it</a>
+- <a href="../_static/companions/Saliency_Maps_Companion.html" target="_blank" rel="noopener">Saliency maps: what is the network actually looking at?</a> &mdash; embedded in <a href="notes5-cnn-in-practice.html">1.5 Choosing a network, and interrogating it</a>
 
 The scooter-kid case uses video recorded by the instructor on a public road. It is used with the
 consent of the person who recorded it, the footage is not redistributed as a file, and the frames
