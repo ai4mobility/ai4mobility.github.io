@@ -90,18 +90,27 @@ iframed companions, stops being navigable — students scroll instead of reading
 Module 1 hit this on 2026-09-04 at 1,588 lines and nine companions, and was
 split. Use the same shape:
 
-- `moduleN/notes.md` becomes the **landing page**: the title, the *How to read
-  this chapter* admonition, section N.0, and a **map table** (page | what it
-  covers | companions & notebooks) with one row per split page. Nothing else.
 - Each section becomes `moduleN/notesK-<slug>.md` with its own `#` H1;
   everything inside it demotes one level (`###` becomes `##`).
-- In `_toc.yml` the split pages are `sections:` **nested under**
-  `moduleN/notes`, each with a short `title:` — the sidebar shows a collapsible
-  group and the file names never appear.
+- In `_toc.yml` the section pages are `sections:` **directly under**
+  `moduleN/index`, each with a short `title:` — one number per page, so the
+  sidebar reads `1.1, 1.2, 1.3 …` and the file names never appear.
+- **There is no intermediate landing page.** Module 1 briefly had one
+  (`module1/notes.md`, titled "Notes") and it was removed on 2026-09-05: it
+  made students click twice to reach a section, and "Notes → 1.3" reads as a
+  folder rather than as a chapter. `moduleN/index.md` is the landing page.
+- `moduleN/index.md` therefore carries, in this order: the class-meetings
+  table, a *Why this module comes first* / framing section, a **The module,
+  page by page** section holding the *How to read this module* admonition and
+  the **map table** (page | what it covers | companions & notebooks, one row
+  per section page, `class="practice-table notes-map"`), then the objectives,
+  topics, labs, companions, videos and readings. Each companion bullet says
+  which section page embeds it.
 - MyST targets (`(convolution-kernels)=` etc.) travel with their subsection to
   the new page. They keep working; only the URL changes.
-- `moduleN/index.md` gets a *The notes chapter, page by page* table under
-  `## Contents`, and each companion bullet says which notes page embeds it.
+- Lab notebooks are **not** listed under the module. They go under the `Labs`
+  part in `_toc.yml`, nested beneath `labs.md`, so every lab in the course has
+  one directory page. The module keeps a short `## Labs` table pointing there.
 
 ### The header card
 

@@ -194,4 +194,4 @@ accuracy hides exactly the cases that matter in safety work.
 
 ---
 
-Next: {doc}`notes6-labs` &mdash; the notebooks, the exercises, and what to carry into Module 2.
+Next: {doc}`Practice, exercises, and further reading <notes6-labs>` &mdash; what each notebook proves, the exercises, and what to carry into Module 2.

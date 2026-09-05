@@ -55,24 +55,37 @@ jupyter-book build .
 
 ## How to add content
 
-### A new lecture page
+### A new notes section page
 
-1. Create a new markdown file in the appropriate module folder, e.g. `module2/lecture1.md`.
+Modules are organized by **section**, not by lecture — `moduleN/notesK-slug.md`,
+one file per section, listed directly under the module index. There is no
+intermediate "Notes" page. See `NOTES_GUIDE.md` for the page template.
+
+1. Create the file in the module folder, e.g. `module2/notes1-attention.md`.
 2. Add it to `_toc.yml` under that module's `sections` list:
 
    ```yaml
    - file: module2/index
      sections:
-       - file: module2/lecture1
+       - file: module2/notes1-attention
+         title: "2.1 Attention, from a lane-change decision"
    ```
 
-3. Commit and push — the site rebuilds automatically.
+3. Add its row to the page-by-page map table on `module2/index.md`.
+4. Add a row to `_ledger.yml`, then commit and push — the site rebuilds automatically.
 
 ### A new lab notebook
 
 1. Drop the `.ipynb` file into a module folder (e.g. `module2/lab1.ipynb`).
-2. Add it to `_toc.yml` the same way you would a markdown page.
-3. Notebooks get an automatic "Open in Colab" rocket button thanks to the `launch_buttons` config in `_config.yml`.
+2. Add it to `_toc.yml` under the **Labs** part, nested beneath `labs`, with an
+   explicit `title:` in the `Lab N — Short Name` form. Lab notebooks are listed
+   there rather than under their module, so every lab in the course has one home.
+3. Add it to `labs.md` in two places: the at-a-glance table (change its status
+   from *In development* to *Available*) and a card in the "Available Now" grid.
+4. Add a short row to the module's own `## Labs` table so the module page still
+   names it.
+5. Notebooks get an automatic "Open in Colab" rocket button thanks to the
+   `launch_buttons` config in `_config.yml`.
 
 ### Embedding a YouTube lecture
 
@@ -98,16 +111,26 @@ If you'd like inline embedded players, install `sphinxcontrib-youtube` (`pip ins
 ├── intro.md                # Home page
 ├── prerequisites.md
 ├── syllabus.md
+├── course-intro.md         # Week 1 — course introduction
+├── labs.md                 # All Labs — course-wide lab directory
 ├── resources.md
+├── hardware.md
 ├── module1/
-│   ├── index.md            # Module 1 overview
-│   ├── lecture1.md         # Sample lecture
-│   └── lab1.ipynb          # Python + ML warmup lab
-├── module2/index.md
-├── module3/index.md
-├── module4/index.md
+│   ├── index.md            # Module 1 overview + page-by-page map
+│   ├── notes1-networks.md  # 1.1 … one file per section, no "Notes" wrapper
+│   ├── notes2-learning.md  # 1.2
+│   ├── notes3-cnn.md       # 1.3
+│   ├── notes4-cnn-in-practice.md   # 1.4
+│   ├── notes5-embeddings.md        # 1.5
+│   ├── notes6-labs.md      # Practice, exercises, further reading
+│   └── lab1.ipynb …        # four lab notebooks, listed under the Labs part
+├── module2/ … module8/     # index.md each; module7 also has notes.md
+├── capstone/index.md
+├── _ledger.yml             # content inventory — one row per artifact
+├── NOTES_GUIDE.md          # how to write a notes section page
 ├── _static/
-│   └── custom.css          # USF brand color overrides
+│   ├── custom.css          # USF brand color overrides
+│   └── companions/         # interactive companion pages
 ├── requirements.txt
 ├── .github/workflows/deploy.yml
 ├── .gitignore

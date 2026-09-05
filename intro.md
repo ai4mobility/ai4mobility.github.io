@@ -74,7 +74,7 @@ This course is organized around a problem-to-solution learning model. Students d
 
 ## Learning Modules
 
-Course materials are organized into eight modules across two parts, plus a capstone. Each module contains lecture notes, a video walkthrough on YouTube, hands-on lab notebooks (runnable in Google Colab), and recommended readings. The module sequence follows the week-by-week schedule on the {doc}`syllabus` page.
+Course materials are organized into eight modules across two parts, plus a capstone. Each module contains notes written section by section, a video walkthrough on YouTube, hands-on lab notebooks (runnable in Google Colab), and recommended readings. The module sequence follows the week-by-week schedule on the {doc}`syllabus` page, and every notebook in the course is listed on the {doc}`All Labs <labs>` page.
 
 **Part I — AI foundations through a transportation lens**
 

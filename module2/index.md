@@ -93,6 +93,6 @@ fragment into three or more tokens.
   routers rather than as the tidy alignment maps that published figures suggest, which is a
   useful corrective before you read your next attention visualization.
 
-- Module 1's **{doc}`../module1/lab4_clip_vs_traditional_cv`** is the bridge into this module.
+- Module 1's **{doc}`Lab 4 — CLIP vs. traditional computer vision <../module1/lab4_clip_vs_traditional_cv>`** is the bridge into this module.
   If you skipped it, run it first — the multimodal embedding space it builds is the foundation
   for everything in the vision-language section here.

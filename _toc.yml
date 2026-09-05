@@ -16,28 +16,20 @@ parts:
     chapters:
       - file: module1/index
         sections:
-          # Notes chapter first: one chapter per module, sessions are sections
-          # inside it. See NOTES_GUIDE.md for the template.
-          - file: module1/notes
-            title: Notes
-            sections:
-              - file: module1/notes1-networks
-                title: "1.1 From the logit to the network"
-              - file: module1/notes2-learning
-                title: "1.2 How a network learns"
-              - file: module1/notes3-cnn
-                title: "1.3 Convolution, and a network that sees"
-              - file: module1/notes4-cnn-in-practice
-                title: "1.4 Choosing a network, and interrogating it"
-              - file: module1/notes5-embeddings
-                title: "1.5 Representation learning and embeddings"
-              - file: module1/notes6-labs
-                title: "Labs, practice, and further reading"
-          - file: module1/lecture1
-          - file: module1/lab1
-          - file: module1/lab2_word_embeddings
-          - file: module1/lab3_image_embeddings
-          - file: module1/lab4_clip_vs_traditional_cv
+          # Section pages sit directly under the module index -- no "Notes"
+          # wrapper. The module index carries the map. See NOTES_GUIDE.md.
+          - file: module1/notes1-networks
+            title: "1.1 From the logit to the network"
+          - file: module1/notes2-learning
+            title: "1.2 How a network learns"
+          - file: module1/notes3-cnn
+            title: "1.3 Convolution, and a network that sees"
+          - file: module1/notes4-cnn-in-practice
+            title: "1.4 Choosing a network, and interrogating it"
+          - file: module1/notes5-embeddings
+            title: "1.5 Representation learning and embeddings"
+          - file: module1/notes6-labs
+            title: "Practice, exercises, and further reading"
       - file: module2/index
       - file: module3/index
       - file: module4/index
@@ -51,6 +43,22 @@ parts:
           - file: module7/notes
             title: Notes
       - file: module8/index
+
+  - caption: Labs
+    chapters:
+      # The lab notebooks live in module1/ on disk but are listed here so all
+      # labs, from every module, have one home students can find.
+      - file: labs
+        title: "All Labs"
+        sections:
+          - file: module1/lab1
+            title: "Lab 1 — Python and ML Warmup"
+          - file: module1/lab2_word_embeddings
+            title: "Lab 2 — From Word2Vec to Road2Vec"
+          - file: module1/lab3_image_embeddings
+            title: "Lab 3 — Image Embeddings with a Deep CNN"
+          - file: module1/lab4_clip_vs_traditional_cv
+            title: "Lab 4 — CLIP vs. Traditional Computer Vision"
 
   - caption: Capstone
     chapters:

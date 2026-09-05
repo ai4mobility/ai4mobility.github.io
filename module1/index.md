@@ -11,7 +11,90 @@ The Aug 27 opening session has its own page: {doc}`../course-intro`.
 | Sept 3 | Neural network basics and deep learning foundations | **Project interest survey** |
 | Sept 10 | Representation learning, embeddings, transfer learning, contrastive learning, and mobility representations | Preliminary project idea memo; lab preparation as assigned |
 
-## Overview
+## Why the foundations come first
+
+Transportation is being reshaped by AI on three fronts: how we **sense** the
+system (cameras, lidar, radar, V2X, probe data), how we **operate** vehicles
+(ADAS, lane keeping, driving automation), and how we **plan and manage**
+networks (simulation, digital twins, signal control, demand prediction).
+
+That is the optimistic framing, and it is broadly true. It is also exactly why a
+critical engineering perspective matters. The AI-for-mobility literature
+publishes impressive demonstrations alongside a large number of results that do
+not replicate, do not deploy, or do not actually beat a well-tuned classical
+baseline. A significant part of what you should get out of this course is the
+ability to tell those apart &mdash; quickly, and in front of a vendor.
+
+Telling them apart takes more than scepticism. It takes knowing what the model
+is actually computing, what it costs, and what it would take to make it fail.
+That is why this module comes before every applied one: two sessions spent
+building a neural network out of a model you already use, and then the
+representation idea that everything after Module 1 assumes you have. Nothing
+here is method for its own sake &mdash; each piece is chosen because a later module
+breaks without it.
+
+## The module, page by page
+
+:::{admonition} How to read this module
+:class: tip
+Sections 1.1&ndash;1.4 pair with the Sept 3 meeting and section 1.5 with Sept 10;
+skim before, read properly after, run the labs in between. Each page opens with
+a card naming its session, the interactive companions embedded in it, and the
+notebooks that go with it.
+
+The companions are the same pages posted on Canvas. They are not decoration:
+several of the results argued in these sections are only convincing if you move
+the sliders yourself.
+
+Looking for the workflow framing from the first class &mdash; the anatomy, the six
+leverage labels, the checkpoint rule, the Traffic Incident Management case? That
+is operations material and lives in {doc}`Module 7 §7.1 <../module7/notes>`. The
+{doc}`Week 1 course introduction <../course-intro>` carries the rest of Aug 27.
+:::
+
+<div class="practice-table-wrap">
+<table class="practice-table notes-map">
+<thead>
+<tr><th style="width:26%">Page</th><th style="width:44%">What it covers</th><th style="width:30%">Companions &amp; notebooks</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="notes1-networks.html"><strong>1.1 From the logit to the network</strong></a><br><em>Sept 3</em></td>
+  <td>The binary logit <em>is</em> a sigmoid; tanh; softmax <em>is</em> the MNL; IIA; saturation; the loss function; stacking layers; two results that argue against a network; what one costs.</td>
+  <td><a href="../_static/companions/Sigmoid_Tanh_Companion.html" target="_blank" rel="noopener">Sigmoid, tanh, softmax &#8599;</a><br><a href="../_static/companions/Multilayer_Networks_Companion.html" target="_blank" rel="noopener">Multilayer networks &#8599;</a><br><a href="lab1.html">Lab 1</a></td>
+</tr>
+<tr>
+  <td><a href="notes2-learning.html"><strong>1.2 How a network learns</strong></a><br><em>Sept 3</em></td>
+  <td>Weights, biases and activations one at a time; when one boundary is not enough; backpropagation traced number by number; where training goes wrong, measured.</td>
+  <td><a href="../_static/companions/Neural_Networks_and_Backprop_Companion.html" target="_blank" rel="noopener">Network basics and backprop &#8599;</a><br><a href="lab1.html">Lab 1</a></td>
+</tr>
+<tr>
+  <td><a href="notes3-cnn.html"><strong>1.3 Convolution, and a network that sees</strong></a><br><em>Sept 3</em></td>
+  <td>Convolution from a moving average; weight sharing; a worked case &mdash; a child on a scooter, seen by a stock detector.</td>
+  <td><a href="../_static/companions/Convolution_Kernels_Companion.html" target="_blank" rel="noopener">Convolution kernels &#8599;</a><br><a href="../_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">The scooter-kid case &#8599;</a><br><a href="lab3_image_embeddings.html">Lab 3</a></td>
+</tr>
+<tr>
+  <td><a href="notes4-cnn-in-practice.html"><strong>1.4 Choosing a network, and interrogating it</strong></a><br><em>Sept 3 &amp; 10</em></td>
+  <td>Which architecture, and what it costs in parameters, latency and roadside power; saliency maps and the honest limits of what they prove.</td>
+  <td><a href="../_static/companions/CNN_Architectures_Companion.html" target="_blank" rel="noopener">CNN architectures &#8599;</a><br><a href="../_static/companions/Saliency_Maps_Companion.html" target="_blank" rel="noopener">Saliency maps &#8599;</a><br><a href="lab3_image_embeddings.html">Lab 3</a></td>
+</tr>
+<tr>
+  <td><a href="notes5-embeddings.html"><strong>1.5 Representation learning and embeddings</strong></a><br><em>Sept 10</em></td>
+  <td>One-hot and its three failures; embeddings as geometry; Word2Vec &rarr; Road2Vec; transfer learning; contrastive learning; CLIP; how to check a representation.</td>
+  <td><em>No companion &mdash; the work is in the notebooks</em><br><a href="lab2_word_embeddings.html">Lab 2</a>, <a href="lab3_image_embeddings.html">Lab 3</a>, <a href="lab4_clip_vs_traditional_cv.html">Lab 4</a></td>
+</tr>
+<tr>
+  <td><a href="notes6-labs.html"><strong>Practice, exercises, and further reading</strong></a><br><em>Both sessions</em></td>
+  <td>What each notebook proves; using this on the job; the reading list; four exercises; where this goes next.</td>
+  <td>All four notebooks</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+Start with {doc}`1.1 From the logit to the network <notes1-networks>`.
+
+## What this module covers
 
 This module establishes the foundation for the rest of the course, and it does so in two
 steps. What "AI" covers, where it is deployed in mobility today, and how to read a capability
@@ -77,27 +160,6 @@ By the end of this module you will be able to:
 - Mobility representations: what should be embedded — segments, trajectories, OD pairs, scenes
 - Visualizing and sanity-checking an embedding space before you trust it
 
-## Contents
-
-```{tableofcontents}
-```
-
-### The notes chapter, page by page
-
-The Module 1 notes are the written version of both sessions. They are split
-into six short pages so you can jump to the one you need — each opens with a
-card naming its session, the interactive companions embedded in it, and the
-notebooks that go with it. The {doc}`notes` landing page carries the full map.
-
-| Page | Session | Goes with |
-| --- | --- | --- |
-| {doc}`1.1 From the logit to the network <notes1-networks>` | Sept 3 | {doc}`Lab 1 <lab1>` |
-| {doc}`1.2 How a network learns <notes2-learning>` | Sept 3 | {doc}`Lab 1 <lab1>` |
-| {doc}`1.3 Convolution, and a network that sees <notes3-cnn>` | Sept 3 | {doc}`Lab 3 <lab3_image_embeddings>` |
-| {doc}`1.4 Choosing a network, and interrogating it <notes4-cnn-in-practice>` | Sept 3 & 10 | {doc}`Lab 3 <lab3_image_embeddings>` |
-| {doc}`1.5 Representation learning and embeddings <notes5-embeddings>` | Sept 10 | {doc}`Lab 2 <lab2_word_embeddings>`, {doc}`Lab 3 <lab3_image_embeddings>`, {doc}`Lab 4 <lab4_clip_vs_traditional_cv>` |
-| {doc}`Labs, practice, and further reading <notes6-labs>` | Both | All four |
-
 ## Video lectures
 
 | Lecture | Topic | Video |
@@ -120,15 +182,25 @@ notebooks that go with it. The {doc}`notes` landing page carries the full map.
 
 ## Labs
 
-Four hands-on Jupyter notebooks accompany this module. All are runnable in Google Colab and use only open data.
+Four hands-on notebooks accompany this module. All run in Google Colab and use
+only open data. Full descriptions, what each one proves, and the run-time and
+setup notes are on the {doc}`All Labs <../labs>` page, which lists every lab in
+the course in one place.
 
-- **{doc}`lab1` — Python + ML warmup.** Loads a synthetic traffic-flow dataset, visualizes the Greenshields fundamental diagram (speed vs density), and fits a simple model. The goal is to verify your environment and recall the supervised-learning pipeline before we dive into representation learning.
-- **{doc}`lab2_word_embeddings` — From Word2Vec to Road2Vec.** Write skip-gram with negative sampling from scratch in numpy, train it on a small text corpus and watch analogy structure appear, then hand the *same trainer* random walks over the real road network around USF Tampa. Intersection embeddings do recover functional classification without ever seeing the labels — but the lab then tests that claim against a baseline as cheap as latitude and longitude, and the comparison is where the real lesson is. Runs offline: numpy and matplotlib only.
-- **{doc}`lab3_image_embeddings` — Image embeddings with a deep CNN.** Load a pretrained ResNet-50, visualize feature maps across layers (edges → textures → parts → objects), extract 2048-dimensional embeddings for a handful of test images, and verify that semantically similar images (e.g., two stop signs) cluster in the embedding space. This is transfer learning in its simplest useful form: you are reusing a representation you did not pay to train.
-- **{doc}`lab4_clip_vs_traditional_cv` — CLIP vs. traditional computer vision for mobility AI.** Compare a closed-set image classifier with a CLIP-style multimodal model on real roadway and dashcam-style scenes. Run zero-shot recognition against open-vocabulary prompts ("a flooded roadway", "a construction work zone", "a pedestrian crossing at night"), visualize image–text similarity in the shared embedding space, experiment with prompt engineering, and probe CLIP's failure cases. The lab closes with a discussion of mobility AI implications — why multimodal foundation models matter for long-tail safety scenarios that don't fit neatly into ImageNet-style label sets.
+| Notebook | What you build | Read alongside |
+| --- | --- | --- |
+| {doc}`Lab 1 — Python and ML warmup <lab1>` | The Greenshields fundamental diagram, fitted end to end | 1.1, 1.2 |
+| {doc}`Lab 2 — From Word2Vec to Road2Vec <lab2_word_embeddings>` | Skip-gram from scratch, then the same trainer on the USF road network | 1.5 |
+| {doc}`Lab 3 — Image embeddings with a deep CNN <lab3_image_embeddings>` | ResNet-50 feature maps and 2048-dimensional embeddings | 1.3, 1.4 |
+| {doc}`Lab 4 — CLIP vs. traditional computer vision <lab4_clip_vs_traditional_cv>` | Zero-shot recognition of open-world mobility scenes | 1.5 |
 
-Seven interactive companions support the Sept 3 and Sept 10 sessions. They are embedded in the
-{doc}`notes` chapter &mdash; split into six short pages &mdash; and also linked here: one walks the sigmoid, tanh and softmax activations
+Lab 4 physically lives in this module and is referenced again in Module 2 as the
+bridge into multimodal models.
+
+## Interactive companions
+
+Seven interactive companions support the Sept 3 and Sept 10 sessions. Each is
+embedded in the section it belongs to and is also linked here: one walks the sigmoid, tanh and softmax activations
 from the binary-logit starting point; one works through the learned-versus-fixed basis
 comparison and the point where a multilayer network becomes the cheaper option; one takes
 a network apart piece by piece — weights, bias, activation, connections — then traces

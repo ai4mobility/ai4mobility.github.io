@@ -1,11 +1,11 @@
-# Labs, practice, and further reading
+# Practice, exercises, and further reading
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 1 &middot; Module 1 &middot; Practice</span>
+    <span class="notes-card-eyebrow">Module 1 &middot; Practice</span>
     <span class="notes-card-session">Sessions: Sept 3 &amp; Sept 10</span>
   </div>
-  <p class="notes-card-lede">The four notebooks and what each one <em>proves</em>; how to use this module in front of a vendor or a review board; the reading list; and four exercises. Everything here is practice &mdash; the explanations live in sections 1.1&ndash;1.5.</p>
+  <p class="notes-card-lede">What each of the four notebooks <em>proves</em>; how to use this module in front of a vendor or a review board; the reading list; and four exercises. Everything here is practice &mdash; the explanations live in sections 1.1&ndash;1.5.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Notebooks that go with it</h4>
@@ -16,20 +16,28 @@
       <li><a href="lab4_clip_vs_traditional_cv.html">Lab 4 &mdash; CLIP versus traditional computer vision</a></li>
       </ul>
     </div>
+    <div>
+      <h4>Every lab in the course</h4>
+      <ul>
+      <li><a href="../labs.html">All Labs &mdash; the full directory &#8599;</a></li>
+      </ul>
+    </div>
   </div>
 </div>
 
-## Labs
+## What each lab proves
 
 Four notebooks accompany this module. All run in Google Colab and use open data.
-What matters is not that they run — it is what each one proves.
+What matters is not that they run — it is what each one proves. Setup notes,
+difficulty, and the labs coming in later modules are on the
+{doc}`All Labs <../labs>` page.
 
-- **{doc}`lab1` — Python and ML warmup.** Loads a synthetic traffic-flow
+- **{doc}`Lab 1 — Python and ML warmup <lab1>`.** Loads a synthetic traffic-flow
   dataset, plots the Greenshields fundamental diagram, and fits a simple model.
   *Proves:* your environment works, and the supervised-learning pipeline
   (data → model → loss → optimization → evaluation) is a thing you can execute
   end to end.
-- **{doc}`lab2_word_embeddings` — From Word2Vec to Road2Vec.** Write skip-gram
+- **{doc}`Lab 2 — From Word2Vec to Road2Vec <lab2_word_embeddings>`.** Write skip-gram
   with negative sampling from scratch, train it on a small corpus and see the
   analogy structure appear, then hand the *same trainer* random walks on the real
   road network around USF Tampa. *Proves:* representation learning is not about
@@ -38,13 +46,13 @@ What matters is not that they run — it is what each one proves.
   recover it just as well, because a uniform random walk mostly encodes where a
   place is, not what it does. Evaluating a representation against a free baseline
   is the habit the lab is really teaching.
-- **{doc}`lab3_image_embeddings` — Image embeddings with a deep CNN.** Load a
+- **{doc}`Lab 3 — Image embeddings with a deep CNN <lab3_image_embeddings>`.** Load a
   pretrained ResNet-50, visualize what each layer responds to, extract
   2048-dimensional embeddings, and check that semantically similar images
   cluster. *Proves:* transfer learning in its simplest useful form, and gives
   you a feel for what "the representation is already in there" means.
-- **{doc}`lab4_clip_vs_traditional_cv` — CLIP versus traditional computer
-  vision.** Compare a closed-set classifier with a CLIP-style model on roadway
+- **{doc}`Lab 4 — CLIP versus traditional computer vision <lab4_clip_vs_traditional_cv>`.**
+  Compare a closed-set classifier with a CLIP-style model on roadway
   and dashcam-style scenes; run zero-shot recognition against open-vocabulary
   prompts; probe the failure cases. *Proves:* why open-vocabulary perception
   matters for long-tail safety scenarios — and how brittle prompt phrasing can

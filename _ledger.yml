@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-09-03
+  updated: 2026-09-05
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -41,19 +41,21 @@ meta:
 items:
 
   - id: m1-notes
-    file: site/module1/notes.md
+    file: _to_delete/module1-flatten-2026-09-05/notes.md.retired-landing-page
     kind: notes
     module: 1
     session: [2026-08-27, 2026-09-03, 2026-09-10]
-    status: drafted
+    status: superseded
+    dest: site/module1/index.md
     notes: >
-      Landing page / map for the split chapter. Establishes the template all
-      other chapters follow. Built 2026-08-24 from lecture1.md, the four
-      Module 1 companions, and the four Module 1 labs; split into seven pages
-      2026-09-04 because the single 90 KB page was unnavigable, and renumbered
-      1.1-1.5 on 2026-09-04 when the workflow half moved to Module 7. This file now
-      holds the reading guide, section 1.0, and the section-to-companion-to-
-      notebook map table.
+      RETIRED 2026-09-05. Was the landing page / map for the split chapter.
+      Built 2026-08-24 from lecture1.md, the four Module 1 companions and the
+      four Module 1 labs; split into seven pages 2026-09-04, renumbered 1.1-1.5
+      the same day when the workflow half moved to Module 7. Removed as a
+      navigation level on Hao's call: the "Notes" wrapper made students click
+      twice to reach a section. Its reading guide, section 1.0 and the
+      page-by-page map now live on site/module1/index.md; the section pages sit
+      directly under the module index in _toc.yml.
 
   - id: m1-notes-1-workflow
     file: site/module1/notes1-workflow.md
@@ -163,19 +165,19 @@ items:
       critical reading, exercises, where this goes next.
 
   - id: m1-lecture1
-    file: site/module1/lecture1.md
+    file: _to_delete/module1-flatten-2026-09-05/lecture1.md.retired
     kind: notes
     module: 1
     session: 2026-08-27
     status: superseded
-    dest: site/module1/notes.md
+    dest: site/course-intro.md
     notes: >
-      DECISION PENDING. Its Part 2 (embeddings) prose is now expanded inside
-      notes.md, and its "How this course is organized" section still uses the
-      retired 4-module numbering (says Module 2 = AI sensing; that is now
-      Module 5). Either fold the remaining unique content into notes.md and
-      drop the page, or keep it as the Lecture 1 recording page and cut its
-      duplicated body. Do not leave both as-is past Aug 27.
+      DECIDED 2026-09-05 — deleted. Hao's call: the module is organised by
+      section, not by lecture, so a "Lecture 1" page in the sidebar contradicted
+      the structure. Its Part 1 (course overview) was already superseded by
+      course-intro.md and still used the retired 4-module numbering; its Part 2
+      (embeddings) is expanded in module1/notes5-embeddings.md. The YouTube link
+      it carried lives on in the Video lectures table on module1/index.md.
 
   - id: m1-workflow-companion
     file: AI_Workflow_Companion.html
@@ -417,6 +419,21 @@ items:
     status: integrated
     dest: site/module1/notes.md#stacking-layers-a-basis-that-moves
     mounted: site/_static/companions/Multilayer_Networks_Companion.html
+
+  - id: site-labs-directory
+    file: site/labs.md
+    kind: notes
+    module: all
+    session: all
+    status: drafted
+    notes: >
+      Built 2026-09-05. Course-wide lab directory, its own "Labs" part in
+      _toc.yml with the four Module 1 notebooks nested under it. Holds the
+      at-a-glance table of all 19 labs (4 built, 15 planned), cards for the
+      Module 1 four, a per-module list of what is coming, a "Running a lab"
+      panel, and the standing baseline/split/ugly-cases evaluation close.
+      Planned-lab copy is condensed from each moduleN/index.md Labs section —
+      keep the two in sync when a module's labs change.
 
   - id: m1-lab1
     file: site/module1/lab1.ipynb
