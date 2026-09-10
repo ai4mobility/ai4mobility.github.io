@@ -260,6 +260,28 @@ corridor on the same day are not independent observations.
 the number of dead units, not the best of three restarts.
 :::
 
+Which loss, though? That question is not a detail, and it does not stop at the
+choice between squared error and cross-entropy. The loss is the only place in the
+whole system where what you actually want enters, and the machinery downstream of
+it will optimize exactly what you wrote there — including the parts you wrote by
+accident. Push the same reasoning far enough and it runs into the case where the
+grader is not a formula at all but a number the world hands back after the fact,
+which is what reinforcement learning is.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — Loss and reward design</span>
+    <a href="../_static/companions/Loss_Reward_Design_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Loss_Reward_Design_Companion.html"
+          title="Loss and reward design — how you tell a model what you want" loading="lazy"></iframe>
+</div>
+
+Move two knobs there and watch what they cost you: the Huber knee δ on a detector
+archive with stuck records, and the class weight on breakdown prediction, where the
+model you would actually deploy scores *worse* accuracy than always saying "no
+breakdown." Then let a controller learn from a reward that is a coin flip.
+
 ---
 
 Next: {doc}`notes3-cnn` rewires the same neuron so it can look at a camera frame.

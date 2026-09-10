@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Loss and Reward Design — AI for Mobility</title>
+<style>
+  :root{
+    --usf-green:#006747;--usf-green-d:#00543a;--usf-gold:#CFC493;--gold-deep:#b9a96a;
+    --ink:#1c2422;--muted:#5b6b66;--paper:#f6f8f7;--card:#fff;--line:#e2e8e5;
+    --sig:#006747;--tan:#1f6f8b;--relu:#9b5de5;--warn:#c0392b;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 6px 22px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--paper);line-height:1.58}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding:32px 0 26px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--usf-gold);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:28px;font-weight:780}
+  header.hero p{margin:0;max-width:880px;color:#e7efeb;font-size:15px}
+  nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:4px;flex-wrap:wrap;padding-top:7px;padding-bottom:7px}
+  nav.tabs button{border:none;background:transparent;font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 14px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  section.page{display:none;padding:24px 0 10px}
+  section.page.active{display:block}
+  h2.sec{font-size:23px;margin:4px 0 2px;color:var(--usf-green-d)}
+  h3{font-size:16px;margin:20px 0 6px;color:var(--ink)}
+  .lead{color:var(--muted);max-width:880px;margin:0 0 16px;font-size:15px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+  .eq{background:#0f1c18;color:#eafff5;border-radius:10px;padding:14px 18px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14.5px;line-height:1.95;white-space:pre-wrap}
+  .eq b{color:var(--usf-gold)}.eq .g{color:#7fd8b0}.eq .bl{color:#6fc3e0}.eq .rd{color:#ff9b8f}.eq .dim{color:#7f948d}
+  .callout{border-left:4px solid var(--usf-gold);background:#fffdf3;padding:11px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:13.8px}
+  .callout.good{border-left-color:#1e9e57;background:#f3fbf6}
+  .callout.sig{border-left-color:var(--tan);background:#f1f8fb}
+  .callout.warn{border-left-color:var(--warn);background:#fdf4f2}
+  .small{font-size:12px;color:var(--muted)}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;margin:6px 0 16px}
+  .ctrl{display:flex;flex-direction:column;gap:5px;min-width:150px}
+  .ctrl label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .ctrl label.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  .ctrl input[type=range]{width:220px;accent-color:var(--usf-green)}
+  .ctrl select{font:inherit;font-size:13.5px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .ctrl .val{font-family:ui-monospace,monospace;font-size:13px;color:var(--usf-green-d);font-weight:700}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  button.act{border:1px solid var(--usf-green);background:var(--usf-green);color:#fff;font-weight:700;font-size:13.5px;padding:9px 15px;border-radius:9px;cursor:pointer}
+  button.act:hover{background:var(--usf-green-d)}
+  button.ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:13.5px;padding:9px 14px;border-radius:9px;cursor:pointer}
+  button.ghost:hover{background:var(--paper)}
+  .readout{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+  .stat{background:#fbfdfc;border:1px solid var(--line);border-radius:11px;padding:9px 14px;min-width:108px;text-align:center}
+  .stat .n{font-size:18px;font-weight:780;font-family:ui-monospace,monospace;color:var(--usf-green-d)}
+  .stat .n.t{color:var(--tan)}.stat .n.w{color:var(--warn)}.stat .n.r{color:var(--relu)}
+  .stat .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+  .stat .l.raw{text-transform:none;letter-spacing:.02em;font-size:11px}
+  canvas{border-radius:10px;border:1px solid var(--line);background:#fff;display:block}
+  .canvasrow{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+  figure{margin:0}
+  figcaption{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;text-align:center}
+  table.map{width:100%;border-collapse:collapse;font-size:13.4px;margin-top:8px}
+  table.map th,table.map td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.map th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--line)}
+  table.map td:first-child{font-weight:700;color:var(--usf-green-d);white-space:nowrap}
+  .swatch{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:baseline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);font-weight:600;margin:2px 0 10px}
+  details{margin:14px 0 2px;border:1px solid var(--line);border-radius:10px;background:#fbfdfc;padding:0 14px}
+  details[open]{padding-bottom:12px}
+  summary{cursor:pointer;font-weight:700;font-size:13.5px;color:var(--usf-green-d);padding:11px 0}
+  details p,details ul{font-size:13.5px;color:var(--ink);margin:6px 0}
+  .cm{display:grid;grid-template-columns:132px 1fr 1fr;gap:6px;max-width:460px;margin-top:10px}
+  .cm div{padding:10px 8px;border-radius:8px;font-size:13px;text-align:center}
+  .cm .hd{background:transparent;color:var(--muted);font-size:10.5px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;justify-content:center}
+  .cm .rh{background:transparent;color:var(--muted);font-size:11.5px;font-weight:700;text-align:right;
+    display:flex;align-items:center;justify-content:flex-end;padding-right:10px}
+  .cm .cell{font-family:ui-monospace,monospace;font-weight:780;font-size:17px}
+  .cm .ok{background:#eef7f2;color:#17603f}
+  .cm .bad{background:#fdf1ef;color:#a2301f}
+  footer{padding:26px 0;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);margin-top:18px}
+  @media(max-width:700px){.ctrl input[type=range]{width:min(72vw,220px)}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility &middot; Module 1 &middot; University of South Florida</div>
+  <h1>Loss and Reward Design &mdash; how you tell a model what you want</h1>
+  <p>Backpropagation does not know or care what problem you are solving. The loss is the only place
+     in the whole system where <em>what you actually want</em> enters &mdash; and the machinery will
+     optimize exactly what you wrote there, including the parts you wrote by accident. Move the two
+     knobs that matter (<span class="mono">&delta;</span> and the class weight), then watch what
+     happens when the grader is no longer a formula you can write down at all. Every number on this
+     page was computed in numpy by <span class="mono">loss_reward_companion_data.py</span> and
+     asserted against the lecture slides before it was baked in &mdash; nothing here is estimated in
+     your browser.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap">
+  <button data-tab="p1" class="active">1 &middot; The grader</button>
+  <button data-tab="p2">2 &middot; &delta; and a dirty archive</button>
+  <button data-tab="p3">3 &middot; What a miss costs</button>
+  <button data-tab="p4">4 &middot; The reward you wrote down</button>
+  <button data-tab="p5">5 &middot; Learning from a coin flip</button>
+</div></nav>
+
+<!-- ==================== PAGE 1 ==================== -->
+<section class="page active" id="p1"><div class="wrap">
+  <h2 class="sec">A loss is a statement about how much each record gets to matter</h2>
+  <p class="lead">Every loss you have ever used answers one question: when a record sits a
+     distance <span class="mono">r</span> away from the model, how hard should it pull? The left
+     panel is the penalty. <b>The right panel is the mechanism</b> &mdash; the pull itself, which is
+     the slope of the penalty. Drag the residual and watch the three losses disagree.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label class="raw">residual r of one bin (mph)</label>
+        <input type="range" id="t1r" min="-25" max="25" step="0.5" value="12">
+        <span class="val" id="t1rv">12.0</span></div>
+      <div class="ctrl"><label class="raw">Huber knee &delta; (mph)</label>
+        <input type="range" id="t1d" min="0.5" max="20" step="0.5" value="3">
+        <span class="val" id="t1dv">3.0</span></div>
+    </div>
+    <div class="legend">
+      <span><i class="swatch" style="background:#c0392b"></i>squared error</span>
+      <span><i class="swatch" style="background:#1f6f8b"></i>absolute error</span>
+      <span><i class="swatch" style="background:#006747"></i>Huber</span>
+    </div>
+    <div class="canvasrow">
+      <figure><canvas id="c1a" data-w="460" data-h="300"></canvas>
+        <figcaption>Penalty &rho;(r) &mdash; what one record costs</figcaption></figure>
+      <figure><canvas id="c1b" data-w="460" data-h="300"></canvas>
+        <figcaption>Pull &psi;(r) = &rho;&prime;(r) &mdash; how hard it drags the fit</figcaption></figure>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n w" id="s1pm">&mdash;</div><div class="l raw">pull, squared</div></div>
+      <div class="stat"><div class="n t" id="s1pa">&mdash;</div><div class="l raw">pull, absolute</div></div>
+      <div class="stat"><div class="n" id="s1ph">&mdash;</div><div class="l raw">pull, Huber</div></div>
+      <div class="stat"><div class="n r" id="s1rat">&mdash;</div><div class="l raw">squared &divide; Huber</div></div>
+    </div>
+    <div class="eq">&rho;<b>_MSE</b>(r) = &frac12; r&sup2;          &psi;(r) = <b>r</b>          <span class="dim">grows without limit</span>
+&rho;<b>_MAE</b>(r) = |r|            &psi;(r) = <b>sign(r)</b>    <span class="dim">every record pulls the same</span>
+&rho;<b>_Huber</b>(r) = &frac12;r&sup2; if |r| &le; &delta;   &psi;(r) = <b>clip(r, &plusmn;&delta;)</b>  <span class="dim">squared near zero, flat past &delta;</span>
+             &delta;(|r| &minus; &frac12;&delta;) otherwise</div>
+    <p class="small" style="margin-top:10px">MSE is drawn as &frac12;r&sup2; so all three pulls agree for a
+       small residual; &frac12;r&sup2; and r&sup2; have the same minimizer, so nothing about the fit changes.</p>
+    <div class="callout sig"><b>Read the right panel, not the left.</b> The penalty tells you what a
+      record costs. The <em>slope</em> tells you what it does to the answer &mdash; and a squared
+      penalty says a 25&nbsp;mph outlier deserves 25&times; the pull of a 1&nbsp;mph one, forever.
+      That single line is why the next tab happens.</div>
+    <details><summary>Going deeper &mdash; the pull is literally the fitting weight</summary>
+      <p>Fitting any of these by iteratively reweighted least squares uses the weight
+         w(r) = &psi;(r)/r. For squared error that is a constant: every bin counts the same, which
+         is the assumption. For absolute error it is 1/|r|: a bin 20&nbsp;mph out counts a twentieth
+         as much as one 1&nbsp;mph out. Huber switches between the two at &delta;. So "which loss"
+         and "which records do I believe" are the same question asked twice &mdash; and Huber
+         answers it without you having to label the bad records in advance.</p>
+      <p class="small">Huber (1964), <em>Robust estimation of a location parameter</em>.</p>
+    </details>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 2 ==================== -->
+<section class="page" id="p2"><div class="wrap">
+  <h2 class="sec">One archive, three losses, three free-flow speeds</h2>
+  <p class="lead">A <b>synthetic</b> single-detector archive: 2,000 five-minute bins on a
+     Greenshields speed&ndash;occupancy line at 65&nbsp;mph free-flow with 3&nbsp;mph of noise, plus
+     a share of bins from a detector <b>stuck at 0&nbsp;mph</b>. One model, one dataset, three
+     losses &mdash; and three different numbers to hand the agency.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label>stuck records</label>
+        <input type="range" id="t2c" min="0" max="8" step="1" value="3">
+        <span class="val" id="t2cv">3%</span></div>
+      <div class="ctrl"><label class="raw">Huber knee &delta; (mph)</label>
+        <input type="range" id="t2d" min="0" max="50" step="1" value="10">
+        <span class="val" id="t2dv">3.0</span></div>
+    </div>
+    <div class="legend">
+      <span><i class="swatch" style="background:#9aa8a3"></i>truth</span>
+      <span><i class="swatch" style="background:#c0392b"></i>MSE fit</span>
+      <span><i class="swatch" style="background:#1f6f8b"></i>MAE fit</span>
+      <span><i class="swatch" style="background:#006747"></i>Huber fit</span>
+    </div>
+    <div class="canvasrow">
+      <figure><canvas id="c2a" data-w="460" data-h="320"></canvas>
+        <figcaption>420 of the 2,000 bins drawn; all three lines fitted on all 2,000</figcaption></figure>
+      <figure><canvas id="c2b" data-w="460" data-h="320"></canvas>
+        <figcaption>Clean held-out error as &delta; moves</figcaption></figure>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n w" id="s2vm">&mdash;</div><div class="l raw">v_f, MSE (true 65.0)</div></div>
+      <div class="stat"><div class="n t" id="s2va">&mdash;</div><div class="l raw">v_f, MAE</div></div>
+      <div class="stat"><div class="n" id="s2vh">&mdash;</div><div class="l raw">v_f, Huber</div></div>
+      <div class="stat"><div class="n r" id="s2sh">&mdash;</div><div class="l raw">of MSE objective from stuck bins</div></div>
+      <div class="stat"><div class="n" id="s2dw">&mdash;</div><div class="l raw">of bins Huber down-weights</div></div>
+    </div>
+    <div class="callout" id="t2note"></div>
+    <div class="callout warn"><b>Watch &delta; go to 20.</b> Huber's line walks over and lands on top
+      of the MSE line, because a knee wider than every residual never switches. &delta; is not a
+      free win &mdash; it is you stating, in mph, how large an error you are still willing to call
+      noise. Set it to the measurement noise and it does what you want; set it to the size of the
+      outliers and you have written squared error the long way round.</div>
+    <p class="small"><b>Before you trust this result:</b> the baseline is the true generating line,
+      drawn in gray. The held-out set is a fresh clean draw from the same generator, so this is
+      honest about sampling and says nothing about a different corridor or season. The ugly cases
+      are the stuck bins themselves, and they are the only contamination present &mdash; a real
+      archive also has drift, missing bins, and lanes reporting at different times.</p>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 3 ==================== -->
+<section class="page" id="p3"><div class="wrap">
+  <h2 class="sec">The class weight is where you say what a miss costs</h2>
+  <p class="lead">Breakdown prediction from density and v/c. <b>Synthetic</b>, 21.1% base rate,
+     20,000 held-out five-minute bins &mdash; about 69 days of one detector. One knob: how much more
+     a missed breakdown counts than a false alarm. Nothing else changes.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label class="raw">weight on the breakdown class</label>
+        <input type="range" id="t3w" min="0" max="48" step="1" value="0">
+        <span class="val" id="t3wv">1.00&times;</span></div>
+      <div class="btnrow">
+        <button class="ghost" id="t3b1">plain cross-entropy</button>
+        <button class="ghost" id="t3b2">inverse frequency (3.74&times;)</button>
+      </div>
+    </div>
+    <div class="cm">
+      <div></div><div class="hd">predicted breakdown</div><div class="hd">predicted clear</div>
+      <div class="rh">actually breakdown</div>
+      <div class="cell ok" id="cmtp">&mdash;</div><div class="cell bad" id="cmfn">&mdash;</div>
+      <div class="rh">actually clear</div>
+      <div class="cell bad" id="cmfp">&mdash;</div><div class="cell ok" id="cmtn">&mdash;</div>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s3acc">&mdash;</div><div class="l">accuracy</div></div>
+      <div class="stat"><div class="n t" id="s3rec">&mdash;</div><div class="l">recall</div></div>
+      <div class="stat"><div class="n" id="s3bal">&mdash;</div><div class="l raw">balanced accuracy</div></div>
+      <div class="stat"><div class="n w" id="s3fn">&mdash;</div><div class="l raw">breakdowns missed</div></div>
+      <div class="stat"><div class="n w" id="s3fa">&mdash;</div><div class="l raw">false alarms per day</div></div>
+    </div>
+    <div class="canvasrow">
+      <figure><canvas id="c3a" data-w="460" data-h="300"></canvas>
+        <figcaption>Accuracy and balanced accuracy as the weight moves</figcaption></figure>
+      <figure><canvas id="c3b" data-w="460" data-h="300"></canvas>
+        <figcaption>The operating curve you actually have to choose a point on</figcaption></figure>
+    </div>
+    <div class="callout warn" id="t3note"></div>
+    <div class="eq">L(&theta;) = &minus; &Sigma;<sub>i</sub> <b>w<sub>i</sub></b> [ y<sub>i</sub> log &#375;<sub>i</sub> + (1&minus;y<sub>i</sub>) log(1&minus;&#375;<sub>i</sub>) ]        <b>w<sub>i</sub></b> = weight, larger for breakdown bins
+<span class="dim">y = 1 if the bin broke down &middot; &#375; = the model's probability &middot; w is the only thing that changed on this tab</span></div>
+    <p class="small"><b>Before you trust this result:</b> the baseline is the majority rule &mdash;
+      always predict "no breakdown" &mdash; drawn as the gray line on the left panel. The split is a
+      fresh draw from the same generator, so it is honest about sampling and silent about a different
+      site or season. The ugly cases are the breakdowns, and there are
+      <span class="mono" id="s3nb">&mdash;</span> of them in the held-out set.</p>
+    <details><summary>Going deeper &mdash; why accuracy stops being a metric here</summary>
+      <p>At a 21.1% base rate the majority rule already scores 79%, so accuracy is mostly a
+         measurement of the base rate rather than of the model. Balanced accuracy averages recall on
+         each class, so the majority rule scores exactly 50% and the number becomes informative
+         again. Neither replaces the operational pair a TMC actually argues about: breakdowns caught
+         per week, and false alarms per day. Report all four.</p>
+    </details>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 4 ==================== -->
+<section class="page" id="p4"><div class="wrap">
+  <h2 class="sec">Three objectives, one intersection, three different timings</h2>
+  <p class="lead">Deterministic queueing over a one-hour peak. Main street 1,500&nbsp;veh/h, side
+     street 300, saturation flow 1,800, 120&nbsp;s cycle, 8&nbsp;s lost time. Capacity is
+     1,680&nbsp;veh/h, so demand exceeds it by 120 &mdash; somebody is going to wait. Press each
+     button and watch which split it picks.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label class="raw">main-street effective green g (s)</label>
+        <input type="range" id="t4g" min="0" max="48" step="1" value="40">
+        <span class="val" id="t4gv">100 s</span></div>
+      <div class="btnrow">
+        <button class="act" id="t4b1">maximize throughput</button>
+        <button class="act" id="t4b2">minimize total delay</button>
+        <button class="act" id="t4b3">minimize the worst approach</button>
+      </div>
+    </div>
+    <div class="canvasrow">
+      <figure><canvas id="c4a" data-w="460" data-h="300"></canvas>
+        <figcaption>Throughput &mdash; flat across every split in the shaded band</figcaption></figure>
+      <figure><canvas id="c4b" data-w="460" data-h="300"></canvas>
+        <figcaption>Average delay by approach &mdash; not flat at all</figcaption></figure>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s4thr">&mdash;</div><div class="l raw">throughput (veh/h)</div></div>
+      <div class="stat"><div class="n t" id="s4dm">&mdash;</div><div class="l raw">main delay (s/veh)</div></div>
+      <div class="stat"><div class="n w" id="s4ds">&mdash;</div><div class="l raw">side delay (s/veh)</div></div>
+      <div class="stat"><div class="n" id="s4tot">&mdash;</div><div class="l raw">total delay (veh-h)</div></div>
+      <div class="stat"><div class="n r" id="s4mx">&mdash;</div><div class="l raw">worst approach (s/veh)</div></div>
+    </div>
+    <div class="callout warn" id="t4note"></div>
+    <div class="callout"><b>Nothing here is broken.</b> Each objective found the true optimum of the
+      thing it was handed. This is what reward hacking looks like in traffic engineering, and it
+      almost never looks like a bug &mdash; it looks like a KPI that went up. The equity objective
+      costs about 1.6% in total delay, which is the price of the goal nobody wrote down.</div>
+    <p class="small"><b>Before you trust this result:</b> this is a deterministic queueing
+      calculation, not a simulation and not a fit &mdash; no randomness, no platoons, no turning
+      movements, no pedestrian phase. It shows the shape of the trap, not the magnitude at your
+      intersection.</p>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 5 ==================== -->
+<section class="page" id="p5"><div class="wrap">
+  <h2 class="sec">The reward is a coin flip, and gradient descent finds the best phase anyway</h2>
+  <p class="lead">Four phases. Serve one, and the queue either clears or it does not &mdash; the
+     reward is 0 or 1, a Bernoulli draw, about as non-differentiable as a signal gets. The controller
+     is not told the clearance probabilities and never estimates the environment. It only ever
+     multiplies that 0 or 1 into the gradient of its own log-probability. Press play.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label class="raw">decisions elapsed</label>
+        <input type="range" id="t5t" min="0" max="80" step="1" value="0">
+        <span class="val" id="t5tv">0</span></div>
+      <div class="btnrow">
+        <button class="act" id="t5run">&#9654; Play</button>
+        <button class="ghost" id="t5reset">Reset</button>
+      </div>
+    </div>
+    <div class="canvasrow">
+      <figure><canvas id="c5a" data-w="460" data-h="320"></canvas>
+        <figcaption>The policy &pi; over the four phases &mdash; true clearance rate underneath</figcaption></figure>
+      <figure><canvas id="c5b" data-w="460" data-h="320"></canvas>
+        <figcaption>40 independent runs: queues cleared in 800 decisions</figcaption></figure>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="n" id="s5p4">&mdash;</div><div class="l raw">&pi;(&Phi;4), the best phase</div></div>
+      <div class="stat"><div class="n t" id="s5cl">&mdash;</div><div class="l raw">cleared, this run</div></div>
+      <div class="stat"><div class="n" id="s5or">&mdash;</div><div class="l raw">of the oracle's 760</div></div>
+      <div class="stat"><div class="n w" id="s5sp">&mdash;</div><div class="l raw">spread over 40 runs</div></div>
+    </div>
+    <div class="eq">&nabla;<sub>&theta;</sub> J(&theta;) = E[ <b>r</b> &middot; &nabla;<sub>&theta;</sub> log &pi;<sub>&theta;</sub>(a | s) ]
+<span class="dim">J = average reward per decision &middot; r = what the intersection handed back &middot; &pi;(a|s) = the probability the policy gave the action it took</span>
+<span class="g">In words: r is never differentiated. It is a scalar that scales the gradient of the log-probability of the action you actually tried.</span></div>
+    <div class="callout good"><b>Why this works at all.</b> With a deterministic controller a 0/1
+      reward gives a flat objective &mdash; zero gradient everywhere, nothing to descend. Randomizing
+      the choice is what makes J(&theta;) smooth, because J is then a weighted average of rewards
+      with the policy's own probabilities as the weights, and <em>those</em> are differentiable. The
+      intersection stays as jagged as it likes.</div>
+    <div class="callout warn"><b>And what it costs &mdash; count the decisions, not the spread.</b>
+      It took <b>800 tries to sort four options</b>, and 40 seeds still land anywhere in
+      <span class="mono" id="s5sp2">&mdash;</span>, recovering about
+      <span class="mono" id="s5gap">&mdash;</span> of the gap between choosing at random (504) and
+      knowing the answer (760). A supervised learner with labels would need four. Nothing was
+      biased; the direction was simply <em>inferred</em> from the correlation between "how likely
+      was that action" and "how did it go" rather than read off a label. That is variance, and it
+      is why RL burns millions of samples and why almost all of it happens in simulation.</div>
+    <details><summary>Going deeper &mdash; why the reward never needs a derivative</summary>
+      <p>Write the objective as an expectation over trajectories &tau; drawn from p<sub>&theta;</sub>
+         and use &nabla;p = p&nbsp;&nabla;log&nbsp;p:</p>
+      <p class="mono" style="font-size:12.5px">&nabla;E[R(&tau;)] = &int; &nabla;p<sub>&theta;</sub>(&tau;) R(&tau;) d&tau; = &int; p<sub>&theta;</sub>(&tau;) &nabla;log p<sub>&theta;</sub>(&tau;) R(&tau;) d&tau;</p>
+      <p>Since p<sub>&theta;</sub>(&tau;) = p(s<sub>0</sub>) &prod; p(s<sub>t+1</sub>|s<sub>t</sub>,a<sub>t</sub>) &middot; &pi;<sub>&theta;</sub>(a<sub>t</sub>|s<sub>t</sub>)
+         and the transitions do not depend on &theta;, they vanish from the gradient, leaving only
+         the sum of &nabla;log&nbsp;&pi;. R survives as a plain multiplier, so it may be an
+         indicator, a measurement, or a human thumbs-up. In code you hand autograd the
+         <em>surrogate</em> &minus;(1/N)&nbsp;&Sigma;&nbsp;log&nbsp;&pi;(a|s)&nbsp;&middot;&nbsp;&Acirc;
+         with &Acirc; detached; its value is not an error and means nothing, only its gradient does.</p>
+      <p class="small">Williams (1992), <em>Simple statistical gradient-following algorithms</em>;
+         Sutton &amp; Barto, <em>Reinforcement Learning</em>, 2nd ed., ch. 13.</p>
+    </details>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <b>AI for Mobility</b> &middot; CGN 6933 &middot; University of South Florida.
+  Companion to the Module&nbsp;1 segment <span class="mono">Loss_Reward_Design_Slides.md</span>.
+  All values precomputed by <span class="mono">loss_reward_companion_data.py</span> and asserted
+  against <span class="mono">loss_reward_design_numbers.json</span>. Runs entirely in your browser;
+  no data leaves the page.
+</div></footer>
+
+<script>
+/* generated by loss_reward_companion_data.py -- do not edit by hand */
+const LRD = {"t2":{"levels":[0,1,2,3,5,8,10,15,20],"deltas":[0.5,0.75,1.0,1.25,1.5,1.75,2.0,2.25,2.5,2.75,3.0,3.25,3.5,3.75,4.0,4.25,4.5,4.75,5.0,5.25,5.5,5.75,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0,12.5,13.0,13.5,14.0,14.5,15.0,15.5,16.0,16.5,17.0,17.5,18.0,18.5,19.0,19.5,20.0],"grid":{"0":{"mse":[65.02,-1.25,2.34],"mae":[64.97,-1.2505,2.339],"share":0.0,"huber":[[64.95,-1.2496,2.339,86.5],[64.95,-1.2492,2.339,80.2],[64.94,-1.2489,2.339,73.2],[64.95,-1.2489,2.339,67.2],[64.96,-1.2491,2.339,61.1],[64.98,-1.2492,2.339,54.8],[64.98,-1.2491,2.339,48.9],[64.99,-1.2489,2.34,44.0],[64.99,-1.2486,2.34,39.6],[64.99,-1.2486,2.34,34.8],[65.0,-1.2486,2.34,31.4],[65.0,-1.2487,2.34,27.6],[65.01,-1.2489,2.341,24.6],[65.02,-1.2491,2.341,20.8],[65.02,-1.2493,2.341,18.1],[65.03,-1.2494,2.341,15.5],[65.03,-1.2496,2.341,13.5],[65.03,-1.2497,2.341,11.2],[65.03,-1.2498,2.341,9.4],[65.04,-1.2499,2.341,7.8],[65.04,-1.25,2.341,6.3],[65.04,-1.2501,2.341,4.8],[65.04,-1.2501,2.341,4.0],[65.03,-1.2502,2.341,2.8],[65.03,-1.2501,2.34,1.9],[65.03,-1.25,2.34,1.2],[65.02,-1.25,2.34,0.8],[65.02,-1.25,2.34,0.5],[65.02,-1.2499,2.34,0.2],[65.02,-1.2499,2.34,0.1],[65.02,-1.2499,2.34,0.1],[65.02,-1.2499,2.34,0.1],[65.02,-1.25,2.34,0.1],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0],[65.02,-1.25,2.34,0.0]]},"1":{"mse":[64.27,-1.2335,2.35],"mae":[64.93,-1.2504,2.339],"share":63.4,"huber":[[64.9,-1.2489,2.338,86.5],[64.9,-1.2486,2.338,80.5],[64.89,-1.2482,2.338,73.7],[64.9,-1.2482,2.338,67.5],[64.91,-1.2484,2.338,61.4],[64.93,-1.2486,2.339,55.5],[64.93,-1.2484,2.339,49.3],[64.94,-1.2482,2.339,44.5],[64.94,-1.2479,2.339,40.8],[64.94,-1.2478,2.339,35.5],[64.94,-1.2478,2.339,32.4],[64.94,-1.2478,2.339,28.4],[64.95,-1.248,2.339,25.2],[64.95,-1.2482,2.339,21.9],[64.96,-1.2484,2.339,19.0],[64.96,-1.2486,2.339,16.2],[64.96,-1.2487,2.339,14.5],[64.96,-1.2488,2.339,12.2],[64.96,-1.2489,2.339,10.5],[64.96,-1.249,2.339,8.9],[64.96,-1.2491,2.339,7.2],[64.96,-1.2491,2.339,5.8],[64.95,-1.2492,2.339,5.1],[64.95,-1.2491,2.339,3.8],[64.94,-1.249,2.339,2.9],[64.93,-1.2489,2.338,2.1],[64.92,-1.2488,2.338,1.8],[64.91,-1.2487,2.338,1.5],[64.91,-1.2487,2.338,1.2],[64.9,-1.2487,2.338,1.1],[64.89,-1.2486,2.338,1.1],[64.89,-1.2486,2.338,1.0],[64.88,-1.2485,2.338,1.0],[64.88,-1.2485,2.338,1.0],[64.87,-1.2484,2.338,0.9],[64.86,-1.2483,2.338,0.9],[64.86,-1.2482,2.338,0.9],[64.85,-1.2481,2.338,0.9],[64.84,-1.2481,2.338,0.9],[64.84,-1.248,2.338,0.9],[64.83,-1.2479,2.338,0.9],[64.82,-1.2477,2.338,0.8],[64.81,-1.2476,2.338,0.8],[64.81,-1.2474,2.338,0.8],[64.8,-1.2472,2.338,0.8],[64.79,-1.2471,2.338,0.8],[64.78,-1.2469,2.339,0.8],[64.78,-1.2467,2.339,0.8],[64.77,-1.2466,2.339,0.8],[64.76,-1.2464,2.339,0.8],[64.75,-1.2463,2.339,0.8]]},"2":{"mse":[63.41,-1.2133,2.417],"mae":[64.89,-1.2497,2.338],"share":77.0,"huber":[[64.88,-1.249,2.338,86.9],[64.87,-1.2487,2.338,80.8],[64.87,-1.2484,2.338,74.1],[64.87,-1.2485,2.338,67.8],[64.89,-1.2487,2.338,62.0],[64.9,-1.2489,2.338,56.0],[64.91,-1.2488,2.338,49.8],[64.91,-1.2486,2.338,45.1],[64.91,-1.2483,2.338,41.5],[64.9,-1.2481,2.338,36.6],[64.9,-1.248,2.338,32.9],[64.9,-1.248,2.338,29.4],[64.91,-1.2482,2.338,26.0],[64.91,-1.2483,2.338,22.9],[64.91,-1.2485,2.338,20.1],[64.91,-1.2487,2.338,17.2],[64.91,-1.2488,2.338,15.1],[64.91,-1.2489,2.338,13.2],[64.91,-1.2489,2.338,11.4],[64.91,-1.249,2.338,9.6],[64.9,-1.2491,2.338,8.2],[64.9,-1.2491,2.338,6.9],[64.89,-1.2491,2.338,6.0],[64.87,-1.2489,2.338,4.9],[64.86,-1.2488,2.338,3.8],[64.84,-1.2486,2.338,3.1],[64.83,-1.2484,2.338,2.8],[64.82,-1.2483,2.339,2.4],[64.8,-1.2482,2.339,2.2],[64.79,-1.2481,2.339,2.0],[64.78,-1.2479,2.339,1.8],[64.76,-1.2477,2.339,1.8],[64.75,-1.2474,2.34,1.8],[64.73,-1.2472,2.34,1.8],[64.72,-1.2469,2.34,1.7],[64.7,-1.2465,2.34,1.7],[64.68,-1.2462,2.341,1.7],[64.67,-1.2459,2.341,1.7],[64.65,-1.2456,2.341,1.7],[64.64,-1.2452,2.342,1.7],[64.62,-1.2449,2.342,1.6],[64.6,-1.2445,2.343,1.5],[64.58,-1.2441,2.343,1.5],[64.57,-1.2438,2.344,1.5],[64.55,-1.2434,2.344,1.5],[64.53,-1.243,2.345,1.5],[64.52,-1.2426,2.345,1.5],[64.5,-1.2422,2.346,1.5],[64.48,-1.2418,2.346,1.5],[64.46,-1.2414,2.347,1.5],[64.45,-1.241,2.347,1.5]]},"3":{"mse":[62.76,-1.2016,2.514],"mae":[64.87,-1.2505,2.339],"share":81.6,"huber":[[64.82,-1.2486,2.339,87.1],[64.81,-1.2482,2.339,81.0],[64.81,-1.2479,2.339,74.5],[64.81,-1.2479,2.338,68.2],[64.83,-1.2481,2.338,62.1],[64.84,-1.2482,2.338,56.2],[64.84,-1.2481,2.338,50.5],[64.84,-1.2479,2.338,45.9],[64.84,-1.2476,2.338,42.5],[64.83,-1.2473,2.338,37.5],[64.83,-1.2472,2.338,33.3],[64.83,-1.2473,2.338,30.4],[64.83,-1.2474,2.338,27.0],[64.83,-1.2475,2.338,23.9],[64.84,-1.2477,2.338,21.2],[64.83,-1.2479,2.338,18.4],[64.83,-1.2479,2.338,16.2],[64.83,-1.248,2.338,14.3],[64.82,-1.2481,2.338,12.3],[64.82,-1.2482,2.339,10.5],[64.81,-1.2482,2.339,9.2],[64.8,-1.2482,2.339,8.0],[64.79,-1.2481,2.339,7.0],[64.77,-1.2479,2.339,5.8],[64.75,-1.2477,2.34,4.9],[64.73,-1.2476,2.34,4.2],[64.71,-1.2473,2.341,3.8],[64.69,-1.2472,2.341,3.5],[64.67,-1.2471,2.342,3.2],[64.65,-1.2469,2.343,3.0],[64.63,-1.2467,2.343,2.9],[64.61,-1.2465,2.344,2.8],[64.59,-1.2461,2.345,2.8],[64.57,-1.2458,2.346,2.8],[64.55,-1.2455,2.347,2.6],[64.53,-1.2451,2.348,2.6],[64.5,-1.2448,2.349,2.6],[64.48,-1.2444,2.35,2.6],[64.46,-1.244,2.351,2.6],[64.44,-1.2436,2.352,2.6],[64.41,-1.2432,2.353,2.5],[64.39,-1.2428,2.354,2.5],[64.37,-1.2423,2.356,2.5],[64.34,-1.2419,2.357,2.5],[64.32,-1.2414,2.359,2.5],[64.3,-1.2409,2.36,2.4],[64.27,-1.2404,2.362,2.4],[64.25,-1.24,2.363,2.4],[64.22,-1.2395,2.365,2.4],[64.2,-1.239,2.367,2.4],[64.18,-1.2385,2.368,2.4]]},"5":{"mse":[61.46,-1.1778,2.811],"mae":[64.78,-1.2489,2.34],"share":84.9,"huber":[[64.75,-1.2487,2.341,87.0],[64.74,-1.2483,2.341,80.9],[64.74,-1.2481,2.34,75.1],[64.74,-1.2479,2.34,68.5],[64.74,-1.248,2.34,62.7],[64.75,-1.2482,2.34,57.0],[64.76,-1.2482,2.34,51.8],[64.76,-1.2481,2.34,47.3],[64.76,-1.2478,2.34,43.8],[64.75,-1.2475,2.34,39.1],[64.74,-1.2474,2.34,34.9],[64.74,-1.2475,2.34,31.9],[64.74,-1.2475,2.34,28.8],[64.74,-1.2477,2.34,26.2],[64.74,-1.2478,2.34,23.1],[64.73,-1.248,2.341,20.4],[64.72,-1.248,2.341,18.1],[64.71,-1.248,2.341,16.6],[64.71,-1.2481,2.342,14.6],[64.7,-1.2481,2.342,12.8],[64.68,-1.248,2.343,11.3],[64.67,-1.248,2.343,10.4],[64.66,-1.2479,2.344,9.1],[64.62,-1.2476,2.345,7.6],[64.59,-1.2473,2.347,6.7],[64.56,-1.247,2.349,6.2],[64.53,-1.2467,2.35,5.8],[64.49,-1.2465,2.352,5.4],[64.46,-1.2463,2.355,5.2],[64.43,-1.2461,2.357,5.0],[64.4,-1.2457,2.36,4.9],[64.36,-1.2453,2.362,4.8],[64.33,-1.2449,2.365,4.8],[64.29,-1.2445,2.368,4.7],[64.26,-1.2441,2.372,4.7],[64.22,-1.2436,2.375,4.7],[64.19,-1.2431,2.379,4.6],[64.15,-1.2426,2.383,4.5],[64.12,-1.2421,2.387,4.5],[64.08,-1.2415,2.391,4.5],[64.04,-1.2409,2.395,4.2],[64.0,-1.2402,2.4,4.2],[63.96,-1.2395,2.404,4.2],[63.92,-1.2388,2.409,4.2],[63.89,-1.2381,2.414,4.2],[63.85,-1.2374,2.419,4.2],[63.81,-1.2367,2.424,4.2],[63.77,-1.236,2.429,4.1],[63.73,-1.2352,2.434,4.1],[63.69,-1.2345,2.439,4.1],[63.65,-1.2338,2.445,4.1]]},"8":{"mse":[59.24,-1.131,3.519],"mae":[64.58,-1.2478,2.348],"share":85.3,"huber":[[64.57,-1.2474,2.348,87.5],[64.56,-1.2471,2.348,81.4],[64.56,-1.247,2.348,75.7],[64.56,-1.2468,2.348,69.8],[64.57,-1.2469,2.348,63.6],[64.57,-1.2469,2.347,58.5],[64.58,-1.247,2.347,54.2],[64.58,-1.2469,2.347,50.0],[64.57,-1.2467,2.347,45.5],[64.56,-1.2464,2.348,41.4],[64.55,-1.2462,2.348,37.6],[64.54,-1.2462,2.348,34.1],[64.53,-1.2461,2.349,31.4],[64.52,-1.2461,2.349,28.9],[64.52,-1.2462,2.35,26.1],[64.5,-1.2462,2.351,23.3],[64.49,-1.2463,2.352,21.1],[64.47,-1.2462,2.353,19.1],[64.46,-1.2463,2.355,17.5],[64.44,-1.2462,2.356,15.9],[64.42,-1.2461,2.358,14.5],[64.4,-1.2459,2.36,13.3],[64.38,-1.2458,2.362,12.6],[64.33,-1.2454,2.366,10.7],[64.28,-1.2451,2.372,9.8],[64.23,-1.2447,2.377,9.3],[64.18,-1.2444,2.384,8.8],[64.13,-1.244,2.391,8.6],[64.08,-1.2437,2.399,8.1],[64.03,-1.2432,2.407,7.8],[63.97,-1.2426,2.416,7.6],[63.92,-1.242,2.425,7.6],[63.86,-1.2413,2.434,7.5],[63.8,-1.2406,2.444,7.4],[63.74,-1.2398,2.454,7.4],[63.69,-1.239,2.464,7.3],[63.63,-1.2382,2.475,7.2],[63.57,-1.2373,2.486,7.1],[63.5,-1.2363,2.498,7.0],[63.44,-1.2353,2.51,6.9],[63.38,-1.2342,2.522,6.8],[63.31,-1.2331,2.534,6.8],[63.25,-1.232,2.547,6.8],[63.19,-1.2308,2.56,6.7],[63.12,-1.2297,2.574,6.7],[63.06,-1.2285,2.587,6.7],[62.99,-1.2273,2.601,6.7],[62.93,-1.2261,2.615,6.6],[62.87,-1.2249,2.629,6.6],[62.8,-1.2236,2.644,6.5],[62.74,-1.2224,2.659,6.4]]},"10":{"mse":[58.01,-1.1086,4.058],"mae":[64.44,-1.2453,2.355],"share":84.6,"huber":[[64.46,-1.2467,2.355,87.6],[64.46,-1.2465,2.355,81.8],[64.46,-1.2464,2.355,75.9],[64.46,-1.2464,2.355,70.0],[64.46,-1.2464,2.355,64.0],[64.47,-1.2464,2.354,59.3],[64.47,-1.2465,2.354,55.2],[64.47,-1.2465,2.354,51.2],[64.46,-1.2465,2.355,46.9],[64.45,-1.2462,2.356,42.9],[64.44,-1.246,2.356,39.2],[64.43,-1.246,2.357,35.7],[64.41,-1.246,2.359,33.4],[64.4,-1.246,2.36,30.4],[64.39,-1.2461,2.361,28.2],[64.38,-1.2461,2.363,25.4],[64.36,-1.2461,2.365,23.1],[64.34,-1.2462,2.367,20.9],[64.32,-1.2462,2.37,19.1],[64.3,-1.2461,2.372,17.8],[64.27,-1.246,2.375,16.7],[64.25,-1.2459,2.379,15.2],[64.22,-1.2457,2.383,14.5],[64.16,-1.2454,2.391,12.8],[64.11,-1.2451,2.4,11.7],[64.05,-1.2447,2.411,11.2],[63.98,-1.2444,2.422,10.8],[63.92,-1.2441,2.434,10.5],[63.86,-1.2437,2.447,10.2],[63.79,-1.2432,2.46,9.8],[63.73,-1.2425,2.475,9.6],[63.66,-1.2418,2.49,9.5],[63.59,-1.241,2.506,9.3],[63.51,-1.2402,2.522,9.3],[63.44,-1.2393,2.539,9.2],[63.37,-1.2383,2.556,9.1],[63.29,-1.2372,2.574,8.9],[63.22,-1.2361,2.592,8.8],[63.14,-1.2349,2.611,8.6],[63.06,-1.2336,2.63,8.5],[62.98,-1.2323,2.649,8.5],[62.9,-1.2309,2.668,8.3],[62.82,-1.2295,2.688,8.3],[62.74,-1.228,2.708,8.2],[62.66,-1.2266,2.728,8.2],[62.58,-1.2251,2.748,8.2],[62.5,-1.2236,2.769,8.1],[62.42,-1.2221,2.79,8.1],[62.34,-1.2205,2.812,8.0],[62.26,-1.219,2.834,7.9],[62.18,-1.2174,2.856,7.9]]},"15":{"mse":[54.46,-1.0371,5.708],"mae":[64.17,-1.2458,2.392],"share":81.1,"huber":[[64.16,-1.2454,2.392,88.5],[64.17,-1.246,2.392,82.6],[64.17,-1.246,2.392,76.9],[64.17,-1.246,2.392,71.2],[64.17,-1.2458,2.392,66.3],[64.16,-1.2454,2.392,62.0],[64.15,-1.2452,2.394,58.1],[64.14,-1.2452,2.395,54.2],[64.13,-1.2452,2.397,50.3],[64.11,-1.2451,2.4,46.4],[64.09,-1.2449,2.403,43.3],[64.06,-1.2446,2.406,40.6],[64.04,-1.2444,2.411,37.5],[64.01,-1.2443,2.415,35.1],[63.99,-1.2442,2.42,32.9],[63.96,-1.2442,2.426,30.6],[63.94,-1.2442,2.431,28.5],[63.91,-1.2441,2.438,26.2],[63.88,-1.244,2.445,24.6],[63.84,-1.2438,2.453,23.0],[63.8,-1.2435,2.461,22.1],[63.76,-1.2432,2.471,20.8],[63.71,-1.2429,2.481,19.9],[63.62,-1.2423,2.503,18.2],[63.53,-1.2418,2.529,17.2],[63.44,-1.2412,2.557,16.2],[63.34,-1.2406,2.587,16.0],[63.24,-1.24,2.619,15.6],[63.13,-1.2391,2.652,15.0],[63.03,-1.2381,2.686,14.5],[62.92,-1.2369,2.721,14.2],[62.8,-1.2356,2.757,14.0],[62.69,-1.2341,2.794,13.8],[62.57,-1.2326,2.833,13.7],[62.45,-1.2309,2.872,13.5],[62.33,-1.2291,2.913,13.3],[62.2,-1.2271,2.953,13.1],[62.08,-1.2251,2.995,12.8],[61.95,-1.2229,3.038,12.8],[61.82,-1.2207,3.082,12.7],[61.7,-1.2184,3.126,12.5],[61.57,-1.2161,3.172,12.4],[61.44,-1.2137,3.218,12.3],[61.31,-1.2113,3.265,12.3],[61.18,-1.2089,3.314,12.2],[61.05,-1.2064,3.362,12.1],[60.92,-1.2039,3.411,12.0],[60.79,-1.2014,3.461,11.9],[60.66,-1.1988,3.511,11.8],[60.52,-1.1961,3.562,11.6],[60.39,-1.1934,3.614,11.5]]},"20":{"mse":[50.89,-0.9637,7.44],"mae":[63.9,-1.2444,2.441],"share":76.8,"huber":[[63.84,-1.2434,2.449,89.2],[63.86,-1.244,2.449,83.7],[63.87,-1.2444,2.449,78.5],[63.86,-1.2443,2.45,73.6],[63.85,-1.2441,2.452,69.3],[63.83,-1.2439,2.455,65.5],[63.81,-1.2436,2.459,61.4],[63.79,-1.2434,2.463,57.6],[63.77,-1.2433,2.468,54.1],[63.74,-1.2432,2.474,51.0],[63.72,-1.2431,2.481,47.9],[63.68,-1.2429,2.489,45.5],[63.65,-1.2425,2.498,42.9],[63.61,-1.2422,2.508,40.2],[63.57,-1.2421,2.519,37.9],[63.53,-1.2419,2.531,36.2],[63.48,-1.2416,2.543,34.2],[63.44,-1.2414,2.557,32.8],[63.39,-1.2411,2.572,30.9],[63.34,-1.2408,2.588,29.2],[63.29,-1.2405,2.606,28.0],[63.23,-1.2401,2.624,26.7],[63.17,-1.2397,2.644,25.8],[63.04,-1.2389,2.686,24.4],[62.91,-1.238,2.733,22.9],[62.78,-1.2372,2.785,21.9],[62.64,-1.2362,2.84,20.9],[62.49,-1.235,2.898,20.4],[62.34,-1.2335,2.96,20.0],[62.18,-1.2318,3.023,19.4],[62.02,-1.2299,3.089,19.1],[61.86,-1.2278,3.156,18.6],[61.69,-1.2255,3.227,18.2],[61.52,-1.223,3.299,17.9],[61.35,-1.2203,3.372,17.6],[61.17,-1.2175,3.447,17.4],[60.99,-1.2145,3.523,17.2],[60.81,-1.2114,3.601,17.2],[60.63,-1.2083,3.681,17.1],[60.45,-1.2051,3.762,17.0],[60.27,-1.2019,3.844,16.8],[60.08,-1.1986,3.928,16.6],[59.9,-1.1952,4.013,16.6],[59.71,-1.1917,4.098,16.4],[59.53,-1.1882,4.184,16.2],[59.34,-1.1845,4.27,15.9],[59.15,-1.1808,4.356,15.8],[58.97,-1.177,4.442,15.6],[58.78,-1.1732,4.529,15.5],[58.59,-1.1693,4.615,15.2],[58.4,-1.1652,4.7,14.8]]}},"n":2000,"scatter":[[42.33,13.62,710],[21.64,39.97,1991],[10.45,51.58,1811],[3.75,61.6,208],[35.0,19.91,1745],[24.73,33.04,542],[22.18,36.77,1483],[17.0,41.67,23],[33.69,22.42,297],[20.45,43.1,585],[34.64,17.73,488],[6.13,62.97,821],[24.11,36.13,1387],[15.93,50.07,1323],[31.75,25.65,1338],[31.15,23.04,1737],[33.64,22.79,1246],[28.0,32.73,681],[34.38,20.15,605],[40.46,13.22,1528],[14.97,48.94,1579],[23.78,37.87,1809],[38.59,16.08,931],[32.46,19.67,1592],[17.72,42.08,652],[26.74,31.87,1020],[32.42,21.45,1199],[12.48,46.32,884],[27.53,31.13,121],[25.4,40.52,348],[5.42,59.59,152],[34.74,19.24,1480],[3.5,56.01,88],[8.51,60.35,227],[21.43,38.18,228],[20.95,42.61,602],[27.53,24.86,1505],[13.05,54.0,130],[7.68,51.47,384],[8.96,57.36,39],[11.91,48.89,1801],[27.92,27.16,913],[15.17,44.85,76],[13.74,52.69,1439],[27.67,30.22,1549],[12.35,49.85,289],[11.2,54.3,1430],[21.63,39.57,1325],[7.28,54.52,1110],[20.93,42.88,1208],[17.4,40.04,1249],[31.01,24.34,476],[43.91,9.35,1536],[8.99,50.77,759],[37.77,20.95,1225],[28.11,33.67,1065],[23.56,34.55,214],[43.28,12.24,711],[27.0,25.02,996],[28.07,20.49,1010],[44.05,12.42,127],[43.58,7.56,1958],[12.04,50.44,1042],[31.59,28.35,998],[17.41,43.39,126],[13.55,50.6,1069],[24.36,31.64,79],[7.51,59.53,1585],[36.04,15.22,1045],[39.32,18.4,879],[20.42,37.81,1079],[40.99,13.73,878],[36.42,22.37,1970],[26.58,31.95,1237],[18.19,40.3,1344],[25.51,32.05,718],[16.41,43.49,445],[29.07,31.95,1554],[19.0,43.03,449],[15.33,46.47,790],[24.4,33.28,66],[2.26,55.43,980],[2.21,60.6,1792],[29.96,24.43,777],[21.62,42.63,61],[34.88,25.08,1802],[32.82,19.45,1259],[6.33,60.89,1078],[24.25,34.8,565],[43.78,11.86,1257],[9.8,55.64,366],[7.05,55.78,1406],[35.33,21.73,282],[20.36,42.28,292],[30.54,28.96,1523],[41.68,12.63,1984],[27.25,32.67,1842],[25.46,34.56,891],[23.58,34.66,468],[13.04,48.68,812],[34.06,23.68,1715],[9.66,44.31,110],[22.5,39.88,555],[18.16,36.82,899],[20.95,41.0,976],[33.07,24.03,59],[26.14,35.75,1719],[3.21,63.77,1832],[5.99,48.85,220],[6.89,55.79,984],[27.95,35.3,1521],[37.49,15.44,382],[18.45,40.25,695],[9.3,53.54,12],[39.3,17.71,1417],[32.02,19.27,1289],[9.52,50.67,1135],[27.34,33.54,661],[13.38,47.01,1398],[12.87,51.75,211],[19.83,40.32,1055],[35.56,16.43,864],[43.29,12.15,1317],[23.2,28.91,1736],[42.15,11.9,256],[43.92,9.02,247],[2.53,60.3,734],[18.59,40.82,1726],[32.94,28.26,903],[42.15,15.69,1618],[38.09,20.68,1648],[39.3,15.24,1919],[7.92,54.61,165],[9.18,51.94,1270],[42.91,16.5,428],[8.57,56.55,275],[42.56,10.19,1886],[44.63,8.39,1775],[44.67,9.32,408],[40.19,9.84,470],[24.48,32.47,1332],[29.25,26.34,738],[15.03,46.56,1334],[8.06,46.09,716],[16.05,46.88,269],[29.98,18.28,253],[16.42,44.21,612],[29.76,27.33,827],[8.56,52.99,101],[43.53,9.62,31],[41.02,13.82,112],[40.0,10.87,153],[33.08,26.72,1400],[2.32,64.19,750],[43.29,13.2,29],[21.65,34.15,129],[30.43,31.83,200],[42.79,10.86,1321],[2.05,62.58,1510],[31.54,24.07,925],[5.27,55.26,843],[6.96,56.17,1828],[6.07,60.07,551],[42.96,11.14,919],[15.58,43.77,26],[17.13,45.0,1617],[41.92,15.37,743],[21.43,37.11,154],[19.57,36.51,611],[15.15,45.76,1765],[38.35,20.78,1568],[35.9,24.67,1373],[18.18,40.6,1],[8.54,54.67,1998],[4.83,55.12,598],[9.41,52.68,575],[15.91,45.24,1107],[18.76,41.17,158],[30.81,25.57,568],[12.36,54.54,1314],[23.92,36.16,206],[35.22,18.95,1672],[9.97,46.75,536],[33.27,25.59,349],[7.05,61.1,148],[32.85,25.23,1768],[44.8,9.99,1396],[29.24,29.85,456],[28.24,30.9,658],[42.49,12.32,1626],[18.29,37.24,1721],[3.85,59.65,1543],[23.73,35.05,52],[13.0,46.57,910],[40.07,20.53,1561],[32.16,23.04,49],[39.52,15.75,493],[15.96,44.14,1609],[23.6,32.82,181],[32.57,26.69,1892],[34.39,20.17,1306],[35.87,16.01,1611],[6.95,58.44,1404],[41.99,12.67,219],[20.37,40.49,709],[20.6,42.87,1746],[29.34,30.84,467],[8.97,53.76,1450],[35.19,23.23,836],[17.28,44.92,1229],[18.34,41.77,450],[41.41,14.54,1477],[33.57,21.62,335],[5.52,54.95,1368],[44.89,11.29,1353],[16.9,42.51,973],[36.48,17.07,682],[42.53,3.71,6],[37.79,19.09,1582],[38.14,22.41,1810],[15.81,45.89,3],[30.24,29.16,62],[5.79,59.77,1917],[40.68,10.73,979],[30.4,30.93,1565],[6.9,60.11,1679],[32.59,20.94,717],[6.47,59.62,1663],[31.06,25.58,1426],[27.09,31.53,529],[38.1,14.0,932],[43.01,9.5,241],[2.4,60.04,1513],[24.14,37.97,174],[6.54,51.16,1194],[13.33,47.33,43],[5.51,58.15,1112],[34.45,25.54,1143],[23.69,35.72,1799],[35.38,23.82,889],[35.91,23.86,606],[9.34,54.87,1520],[10.96,52.4,1500],[36.03,16.29,840],[3.71,57.83,1268],[31.63,24.77,1827],[38.05,17.4,58],[24.76,33.79,659],[43.12,13.83,1495],[17.42,41.88,905],[35.22,16.58,813],[30.92,21.0,1006],[21.63,39.66,1874],[14.04,44.18,768],[23.26,34.94,833],[26.6,26.7,999],[38.29,10.92,1808],[43.73,9.55,1063],[17.71,41.95,1007],[7.06,54.82,67],[22.61,37.35,1785],[25.31,39.05,218],[29.56,33.14,251],[18.88,39.28,1651],[4.16,62.04,490],[8.18,56.17,1097],[10.05,50.43,341],[36.81,16.8,1280],[30.44,25.77,676],[16.76,44.19,1971],[37.28,17.82,1471],[7.9,56.92,1960],[5.9,58.89,42],[18.45,42.43,99],[21.91,34.69,760],[11.8,55.58,243],[44.15,11.69,1458],[42.92,13.38,1531],[36.06,20.35,1540],[43.21,8.31,1904],[28.01,26.3,51],[37.99,17.36,1402],[28.58,28.67,1572],[32.06,23.91,78],[9.19,57.1,1942],[18.17,42.65,517],[32.7,24.89,997],[6.94,53.43,150],[22.87,35.88,897],[2.62,63.31,367],[6.75,60.72,700],[8.05,53.71,1880],[14.75,43.54,904],[13.47,47.43,1750],[6.74,56.56,411],[42.35,12.69,761],[9.6,55.96,1503],[30.74,30.75,744],[43.45,9.79,479],[43.73,11.36,1859],[9.59,56.73,941],[32.98,27.5,364],[3.76,60.27,730],[8.28,55.39,1966],[29.96,21.67,1853],[44.34,12.9,1385],[5.25,51.05,1298],[18.51,40.45,1227],[35.49,23.12,662],[39.83,16.66,5],[2.64,61.76,344],[27.54,29.85,1250],[39.14,15.39,1221],[40.57,17.58,894],[17.26,41.65,1593],[41.16,11.07,1967],[34.13,19.64,1946],[41.75,7.74,400],[42.61,10.38,298],[10.67,50.85,715],[30.9,27.67,1650],[10.22,49.59,560],[31.4,27.8,650],[4.24,57.84,1269],[4.46,61.7,593],[23.97,28.83,1209],[39.88,16.48,17],[27.73,28.57,920],[10.42,52.42,1584],[8.72,52.48,987],[36.39,24.09,762],[20.44,38.32,1793],[35.31,21.76,1566],[37.79,20.31,1064],[33.43,23.11,1608],[20.55,41.0,452],[5.54,54.86,902],[5.46,56.51,1054],[30.41,19.01,198],[3.26,58.08,1553],[22.86,37.4,707],[17.64,41.34,1956],[17.3,46.91,441],[25.74,37.03,1519],[35.28,22.25,1496],[33.18,22.61,1689],[16.02,43.53,788],[27.78,27.57,1729],[14.35,45.87,70],[33.53,21.51,861],[2.92,57.38,1935],[33.63,18.79,1273],[27.66,27.49,72],[17.08,45.25,229],[23.29,37.31,735],[32.1,23.9,1277],[44.8,12.23,1140],[40.7,17.99,1557],[36.51,19.51,742],[40.37,14.44,1711],[34.19,18.8,1178],[42.35,11.37,1345],[26.66,27.4,271],[38.7,11.32,1286],[42.48,12.32,1313],[36.43,15.25,225],[6.89,54.31,196],[31.68,21.57,236],[19.73,51.82,204],[3.98,57.13,680],[16.65,39.96,294],[22.99,38.44,1484],[37.45,17.93,814],[4.91,56.09,572],[34.3,18.27,1009],[15.96,43.34,1512],[16.08,41.26,1714],[10.37,56.09,1569],[39.36,16.85,818],[6.14,58.86,1922],[23.12,35.73,1307],[35.53,16.36,992],[20.31,40.33,1215],[41.4,17.03,1507],[5.01,62.68,425],[12.44,48.47,210],[6.33,57.33,1610],[20.02,37.71,94],[3.16,60.83,556],[31.37,26.37,267],[32.6,29.69,1705],[11.53,49.52,133],[5.24,64.04,1375],[37.83,15.58,872],[20.96,43.69,1863],[6.71,57.24,748],[6.11,51.2,541],[25.79,32.85,1704],[11.19,54.65,117],[19.19,43.65,1251],[20.9,39.58,756],[22.55,34.83,1677],[3.21,59.31,1233],[20.55,39.94,823],[30.17,29.13,1005],[13.92,48.74,847],[14.93,46.15,1697],[37.36,21.18,1366],[8.53,50.86,279],[44.42,7.69,647],[35.99,21.63,1856],[44.72,6.83,558],[37.71,14.25,1741],[6.25,56.55,1559],[17.94,38.03,1908],[14.7,45.74,727],[42.21,12.21,1223],[4.53,61.18,1254],[37.08,12.59,564],[18.29,44.81,186]],"n_drawn":420,"truth":{"vf":65.0,"slope":-1.25,"noise_sd":3.0}},"t3":{"weights":[1.0,1.25,1.5,1.75,2.0,2.25,2.5,2.75,3.0,3.25,3.5,3.7382136934375745,4.0,4.25,4.5,4.75,5.0,5.25,5.5,5.75,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0,12.5,13.0,13.5,14.0,14.5,15.0,15.5,16.0,16.5,17.0,17.5,18.0,18.5,19.0,19.5,20.0],"rows":[{"w":1.0,"tp":1534,"fp":749,"fn":2675,"tn":15042},{"w":1.25,"tp":1863,"fp":1105,"fn":2346,"tn":14686},{"w":1.5,"tp":2138,"fp":1444,"fn":2071,"tn":14347},{"w":1.75,"tp":2363,"fp":1805,"fn":1846,"tn":13986},{"w":2.0,"tp":2557,"fp":2123,"fn":1652,"tn":13668},{"w":2.25,"tp":2702,"fp":2446,"fn":1507,"tn":13345},{"w":2.5,"tp":2842,"fp":2745,"fn":1367,"tn":13046},{"w":2.75,"tp":2958,"fp":3016,"fn":1251,"tn":12775},{"w":3.0,"tp":3053,"fp":3295,"fn":1156,"tn":12496},{"w":3.25,"tp":3141,"fp":3572,"fn":1068,"tn":12219},{"w":3.5,"tp":3214,"fp":3851,"fn":995,"tn":11940},{"w":3.7382,"tp":3271,"fp":4096,"fn":938,"tn":11695},{"w":4.0,"tp":3332,"fp":4376,"fn":877,"tn":11415},{"w":4.25,"tp":3376,"fp":4625,"fn":833,"tn":11166},{"w":4.5,"tp":3421,"fp":4859,"fn":788,"tn":10932},{"w":4.75,"tp":3467,"fp":5061,"fn":742,"tn":10730},{"w":5.0,"tp":3510,"fp":5270,"fn":699,"tn":10521},{"w":5.25,"tp":3559,"fp":5462,"fn":650,"tn":10329},{"w":5.5,"tp":3596,"fp":5650,"fn":613,"tn":10141},{"w":5.75,"tp":3631,"fp":5855,"fn":578,"tn":9936},{"w":6.0,"tp":3670,"fp":6069,"fn":539,"tn":9722},{"w":6.5,"tp":3724,"fp":6451,"fn":485,"tn":9340},{"w":7.0,"tp":3769,"fp":6803,"fn":440,"tn":8988},{"w":7.5,"tp":3812,"fp":7123,"fn":397,"tn":8668},{"w":8.0,"tp":3836,"fp":7425,"fn":373,"tn":8366},{"w":8.5,"tp":3864,"fp":7713,"fn":345,"tn":8078},{"w":9.0,"tp":3896,"fp":7996,"fn":313,"tn":7795},{"w":9.5,"tp":3919,"fp":8266,"fn":290,"tn":7525},{"w":10.0,"tp":3940,"fp":8496,"fn":269,"tn":7295},{"w":10.5,"tp":3958,"fp":8720,"fn":251,"tn":7071},{"w":11.0,"tp":3978,"fp":8941,"fn":231,"tn":6850},{"w":11.5,"tp":3998,"fp":9137,"fn":211,"tn":6654},{"w":12.0,"tp":4016,"fp":9316,"fn":193,"tn":6475},{"w":12.5,"tp":4026,"fp":9515,"fn":183,"tn":6276},{"w":13.0,"tp":4037,"fp":9713,"fn":172,"tn":6078},{"w":13.5,"tp":4048,"fp":9863,"fn":161,"tn":5928},{"w":14.0,"tp":4058,"fp":10035,"fn":151,"tn":5756},{"w":14.5,"tp":4065,"fp":10183,"fn":144,"tn":5608},{"w":15.0,"tp":4079,"fp":10343,"fn":130,"tn":5448},{"w":15.5,"tp":4087,"fp":10499,"fn":122,"tn":5292},{"w":16.0,"tp":4096,"fp":10638,"fn":113,"tn":5153},{"w":16.5,"tp":4107,"fp":10766,"fn":102,"tn":5025},{"w":17.0,"tp":4110,"fp":10898,"fn":99,"tn":4893},{"w":17.5,"tp":4114,"fp":11029,"fn":95,"tn":4762},{"w":18.0,"tp":4121,"fp":11135,"fn":88,"tn":4656},{"w":18.5,"tp":4125,"fp":11271,"fn":84,"tn":4520},{"w":19.0,"tp":4127,"fp":11373,"fn":82,"tn":4418},{"w":19.5,"tp":4128,"fp":11481,"fn":81,"tn":4310},{"w":20.0,"tp":4131,"fp":11588,"fn":78,"tn":4203}],"n_test":20000,"bins_per_day":288,"base_rate_pct":21.1,"w_inverse_freq":3.74,"n_breakdowns":4209},"t4":{"rows":[{"g":60.0,"thr":1200.0,"dm":750.0,"ds":23.1,"tot":314.43,"mx":750.0},{"g":61.0,"thr":1215.0,"dm":731.5,"ds":23.8,"tot":306.78,"mx":731.5},{"g":62.0,"thr":1230.0,"dm":713.0,"ds":24.5,"tot":299.12,"mx":713.0},{"g":63.0,"thr":1245.0,"dm":694.5,"ds":25.2,"tot":291.48,"mx":694.5},{"g":64.0,"thr":1260.0,"dm":676.0,"ds":25.9,"tot":283.83,"mx":676.0},{"g":65.0,"thr":1275.0,"dm":657.5,"ds":26.6,"tot":276.18,"mx":657.5},{"g":66.0,"thr":1290.0,"dm":639.0,"ds":27.4,"tot":268.53,"mx":639.0},{"g":67.0,"thr":1305.0,"dm":620.5,"ds":28.1,"tot":260.89,"mx":620.5},{"g":68.0,"thr":1320.0,"dm":602.0,"ds":28.9,"tot":253.24,"mx":602.0},{"g":69.0,"thr":1335.0,"dm":583.5,"ds":29.6,"tot":245.6,"mx":583.5},{"g":70.0,"thr":1350.0,"dm":565.0,"ds":30.4,"tot":237.95,"mx":565.0},{"g":71.0,"thr":1365.0,"dm":546.5,"ds":31.2,"tot":230.31,"mx":546.5},{"g":72.0,"thr":1380.0,"dm":528.0,"ds":32.0,"tot":222.67,"mx":528.0},{"g":73.0,"thr":1395.0,"dm":509.5,"ds":32.8,"tot":215.03,"mx":509.5},{"g":74.0,"thr":1410.0,"dm":491.0,"ds":33.6,"tot":207.38,"mx":491.0},{"g":75.0,"thr":1425.0,"dm":472.5,"ds":34.4,"tot":199.75,"mx":472.5},{"g":76.0,"thr":1440.0,"dm":454.0,"ds":35.3,"tot":192.11,"mx":454.0},{"g":77.0,"thr":1455.0,"dm":435.5,"ds":36.1,"tot":184.47,"mx":435.5},{"g":78.0,"thr":1470.0,"dm":417.0,"ds":37.0,"tot":176.83,"mx":417.0},{"g":79.0,"thr":1485.0,"dm":398.5,"ds":37.8,"tot":169.2,"mx":398.5},{"g":80.0,"thr":1500.0,"dm":380.0,"ds":38.7,"tot":161.56,"mx":380.0},{"g":81.0,"thr":1515.0,"dm":361.5,"ds":39.6,"tot":153.93,"mx":361.5},{"g":82.0,"thr":1530.0,"dm":343.0,"ds":40.5,"tot":146.29,"mx":343.0},{"g":83.0,"thr":1545.0,"dm":324.5,"ds":41.4,"tot":138.66,"mx":324.5},{"g":84.0,"thr":1560.0,"dm":306.0,"ds":42.3,"tot":131.03,"mx":306.0},{"g":85.0,"thr":1575.0,"dm":287.5,"ds":43.2,"tot":123.4,"mx":287.5},{"g":86.0,"thr":1590.0,"dm":269.0,"ds":44.2,"tot":115.76,"mx":269.0},{"g":87.0,"thr":1605.0,"dm":250.5,"ds":45.1,"tot":108.14,"mx":250.5},{"g":88.0,"thr":1620.0,"dm":232.0,"ds":46.1,"tot":100.51,"mx":232.0},{"g":89.0,"thr":1635.0,"dm":213.5,"ds":47.0,"tot":92.88,"mx":213.5},{"g":90.0,"thr":1650.0,"dm":195.0,"ds":48.0,"tot":85.25,"mx":195.0},{"g":91.0,"thr":1665.0,"dm":176.5,"ds":49.0,"tot":77.63,"mx":176.5},{"g":92.0,"thr":1680.0,"dm":158.0,"ds":50.0,"tot":70.0,"mx":158.0},{"g":93.0,"thr":1680.0,"dm":139.5,"ds":140.5,"tot":69.83,"mx":140.5},{"g":94.0,"thr":1680.0,"dm":121.0,"ds":231.0,"tot":69.67,"mx":231.0},{"g":95.0,"thr":1680.0,"dm":102.5,"ds":321.5,"tot":69.5,"mx":321.5},{"g":96.0,"thr":1680.0,"dm":84.0,"ds":412.0,"tot":69.33,"mx":412.0},{"g":97.0,"thr":1680.0,"dm":65.5,"ds":502.5,"tot":69.17,"mx":502.5},{"g":98.0,"thr":1680.0,"dm":47.0,"ds":593.0,"tot":69.0,"mx":593.0},{"g":99.0,"thr":1680.0,"dm":28.5,"ds":683.5,"tot":68.83,"mx":683.5},{"g":100.0,"thr":1680.0,"dm":10.0,"ds":774.0,"tot":68.67,"mx":774.0},{"g":101.0,"thr":1665.0,"dm":9.0,"ds":864.5,"tot":75.8,"mx":864.5},{"g":102.0,"thr":1650.0,"dm":8.1,"ds":955.0,"tot":82.96,"mx":955.0},{"g":103.0,"thr":1635.0,"dm":7.2,"ds":1045.5,"tot":90.14,"mx":1045.5},{"g":104.0,"thr":1620.0,"dm":6.4,"ds":1136.0,"tot":97.33,"mx":1136.0},{"g":105.0,"thr":1605.0,"dm":5.6,"ds":1226.5,"tot":104.55,"mx":1226.5},{"g":106.0,"thr":1590.0,"dm":4.9,"ds":1317.0,"tot":111.79,"mx":1317.0},{"g":107.0,"thr":1575.0,"dm":4.2,"ds":1407.5,"tot":119.05,"mx":1407.5},{"g":108.0,"thr":1560.0,"dm":3.6,"ds":1498.0,"tot":126.33,"mx":1498.0}],"setup":{"cycle_s":120.0,"lost_time_s":8.0,"saturation_flow_vph":1800.0,"demand_main_vph":1500.0,"demand_side_vph":300.0,"intersection_capacity_vph":1680.0,"excess_demand_vph":120.0},"tied_range":[92.0,100.0],"tied_side_delay":[50.0,774.0]},"t5":{"p_true":[0.42,0.55,0.6,0.95],"n_decisions":800,"alpha":0.1,"reference":{"pi":[0.008,0.011,0.0127,0.9683],"cleared":721,"last100_best":93,"traj":[[0.25,0.25,0.25,0.25],[0.2014,0.2044,0.2205,0.3737],[0.1829,0.1965,0.2194,0.4012],[0.1579,0.1885,0.1984,0.4552],[0.1493,0.1885,0.1755,0.4868],[0.1526,0.177,0.1873,0.4831],[0.1581,0.1823,0.1573,0.5023],[0.1307,0.169,0.153,0.5473],[0.1232,0.1577,0.1221,0.5971],[0.1,0.1435,0.1217,0.6348],[0.0839,0.1268,0.1081,0.6812],[0.0775,0.1028,0.0971,0.7226],[0.07,0.0925,0.0787,0.7588],[0.0685,0.0875,0.0721,0.7719],[0.0652,0.0795,0.0686,0.7867],[0.0631,0.0768,0.0664,0.7937],[0.0614,0.0746,0.0645,0.7995],[0.0575,0.0644,0.0617,0.8164],[0.0493,0.0521,0.045,0.8536],[0.0428,0.05,0.0423,0.865],[0.0345,0.0402,0.0369,0.8883],[0.0342,0.0398,0.0365,0.8895],[0.0338,0.0394,0.0362,0.8906],[0.0312,0.0363,0.0306,0.9018],[0.0265,0.0335,0.0283,0.9117],[0.0244,0.031,0.024,0.9206],[0.0209,0.0288,0.0226,0.9277],[0.0208,0.0288,0.0225,0.9279],[0.018,0.0209,0.0195,0.9416],[0.0179,0.0208,0.0194,0.9419],[0.0179,0.0207,0.0193,0.9421],[0.0177,0.0206,0.0192,0.9426],[0.0176,0.0204,0.019,0.943],[0.0175,0.0203,0.0189,0.9433],[0.0176,0.0203,0.019,0.9431],[0.0162,0.017,0.0174,0.9494],[0.0163,0.0171,0.0177,0.9489],[0.0163,0.0171,0.0177,0.9488],[0.0166,0.0173,0.0178,0.9483],[0.0166,0.0173,0.0178,0.9483],[0.0165,0.0172,0.0177,0.9485],[0.0164,0.0171,0.0177,0.9487],[0.0166,0.0173,0.0178,0.9483],[0.0165,0.0172,0.0177,0.9486],[0.0167,0.0173,0.018,0.948],[0.0153,0.0145,0.0165,0.9537],[0.0153,0.0144,0.0164,0.9539],[0.0153,0.0144,0.0164,0.954],[0.0153,0.0144,0.0164,0.9539],[0.0153,0.0144,0.0164,0.954],[0.0152,0.0143,0.0163,0.9541],[0.0154,0.0144,0.0164,0.9537],[0.0153,0.0144,0.0164,0.9539],[0.0153,0.0144,0.0164,0.954],[0.0154,0.0145,0.0165,0.9536],[0.0154,0.0145,0.0164,0.9537],[0.0154,0.0145,0.0165,0.9536],[0.0154,0.0146,0.0165,0.9534],[0.013,0.0135,0.0152,0.9584],[0.0108,0.0123,0.0139,0.9629],[0.0108,0.0123,0.014,0.9629],[0.0108,0.0123,0.0139,0.963],[0.0108,0.0123,0.0139,0.9631],[0.0107,0.0123,0.0139,0.9632],[0.0091,0.0113,0.0128,0.9668],[0.009,0.0113,0.0128,0.9669],[0.009,0.0113,0.0128,0.9668],[0.0092,0.0116,0.0131,0.9661],[0.0093,0.0116,0.0132,0.9659],[0.0094,0.0117,0.0132,0.9657],[0.0094,0.0117,0.0132,0.9658],[0.0093,0.0116,0.0132,0.9659],[0.0094,0.0117,0.0132,0.9658],[0.0095,0.0118,0.0135,0.9652],[0.0095,0.0118,0.0135,0.9653],[0.0096,0.012,0.0137,0.9647],[0.008,0.011,0.0126,0.9684],[0.008,0.011,0.0127,0.9683],[0.008,0.011,0.0127,0.9683],[0.008,0.011,0.0126,0.9684],[0.008,0.011,0.0127,0.9683]]},"oracle":760,"uniform":504,"seed_spread":{"n":40,"min":678,"max":731,"mean":703.1,"counts":[678,683,685,686,687,690,691,691,692,693,693,694,696,697,698,698,698,700,704,705,705,705,706,707,707,707,709,709,710,710,710,713,714,714,716,721,721,722,729,731]}}};
+
+</script>
+<script>
+/* ============================ helpers (lifted from Sigmoid_Tanh_Companion.html) === */
+const el = id => document.getElementById(id);
+const clampn = (v,a,b) => Math.max(a, Math.min(b, v));
+
+function mkAxes(cv, xmin, xmax, ymin, ymax, pad){
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const W = +cv.dataset.w, H = +cv.dataset.h;
+  cv.style.width = W+'px'; cv.style.height = H+'px';
+  cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+  const g = cv.getContext('2d');
+  g.setTransform(dpr,0,0,dpr,0,0);
+  const L = pad.l, R = W-pad.r, T = pad.t, B = H-pad.b;
+  return {g,W,H,L,R,T,B,xmin,xmax,ymin,ymax,
+    X: x => L + (x-xmin)/(xmax-xmin)*(R-L),
+    Y: y => B - (y-ymin)/(ymax-ymin)*(B-T)};
+}
+function clear(a){ a.g.clearRect(0,0,a.W,a.H); a.g.fillStyle='#fff'; a.g.fillRect(0,0,a.W,a.H); }
+function frame(a,o){
+  o = o||{}; const g = a.g; g.save();
+  g.strokeStyle = '#eef2f0'; g.lineWidth = 1;
+  (o.yticks||[]).forEach(t => { const y = a.Y(t); g.beginPath(); g.moveTo(a.L,y); g.lineTo(a.R,y); g.stroke(); });
+  (o.xticks||[]).forEach(t => { const x = a.X(t); g.beginPath(); g.moveTo(x,a.T); g.lineTo(x,a.B); g.stroke(); });
+  if(o.zeroy && a.ymin < 0 && a.ymax > 0){ g.strokeStyle='#c9d4d0'; g.lineWidth=1.2;
+    const y=a.Y(0); g.beginPath(); g.moveTo(a.L,y); g.lineTo(a.R,y); g.stroke(); }
+  g.strokeStyle = '#c9d4d0'; g.lineWidth = 1.2;
+  g.beginPath(); g.moveTo(a.L,a.T); g.lineTo(a.L,a.B); g.lineTo(a.R,a.B); g.stroke();
+  g.fillStyle = '#5b6b66'; g.font = '11px ui-monospace,Menlo,Consolas,monospace';
+  g.textAlign = 'center'; g.textBaseline = 'top';
+  (o.xticks||[]).forEach(t => g.fillText(o.xfmt ? o.xfmt(t) : String(t), a.X(t), a.B+5));
+  g.textAlign = 'right'; g.textBaseline = 'middle';
+  (o.yticks||[]).forEach(t => g.fillText(o.yfmt ? o.yfmt(t) : String(t), a.L-6, a.Y(t)));
+  g.font = '600 11.5px -apple-system,system-ui,sans-serif';
+  if(o.xlabel){ g.textAlign='center'; g.textBaseline='bottom'; g.fillText(o.xlabel,(a.L+a.R)/2, a.H-1); }
+  if(o.ylabel){ g.save(); g.translate(12,(a.T+a.B)/2); g.rotate(-Math.PI/2);
+    g.textAlign='center'; g.textBaseline='top'; g.fillText(o.ylabel,0,0); g.restore(); }
+  g.restore();
+}
+function clipArea(a){ const g=a.g; g.save(); g.beginPath();
+  g.rect(a.L-1, a.T-4, a.R-a.L+2, a.B-a.T+8); g.clip(); }
+function curve(a, fn, color, lw, dash){
+  const g = a.g; clipArea(a);
+  g.strokeStyle = color; g.lineWidth = lw||2.4; g.lineJoin='round';
+  if(dash) g.setLineDash(dash);
+  g.beginPath(); let on = false; const N = 500;
+  for(let i=0;i<=N;i++){
+    const x = a.xmin + (a.xmax-a.xmin)*i/N, y = fn(x);
+    if(!isFinite(y)){ on = false; continue; }
+    const py = clampn(a.Y(y), a.T-30, a.B+30);
+    if(!on){ g.moveTo(a.X(x), py); on = true; } else g.lineTo(a.X(x), py);
+  }
+  g.stroke(); g.restore();
+}
+function poly(a, pts, color, lw, dash){
+  const g=a.g; clipArea(a); g.strokeStyle=color; g.lineWidth=lw||2.4; g.lineJoin='round';
+  if(dash) g.setLineDash(dash);
+  g.beginPath();
+  pts.forEach((p,i) => { const px=a.X(p[0]), py=clampn(a.Y(p[1]), a.T-30, a.B+30);
+    i ? g.lineTo(px,py) : g.moveTo(px,py); });
+  g.stroke(); g.restore();
+}
+function band(a, x1, x2, color){ const g=a.g; clipArea(a); g.fillStyle=color;
+  g.fillRect(a.X(x1), a.T, a.X(x2)-a.X(x1), a.B-a.T); g.restore(); }
+function vmark(a,x,color){ const g=a.g; g.save(); g.strokeStyle=color; g.lineWidth=1.4; g.setLineDash([4,4]);
+  g.beginPath(); g.moveTo(a.X(x),a.T); g.lineTo(a.X(x),a.B); g.stroke(); g.restore(); }
+function hmark(a,y,color){ const g=a.g; g.save(); g.strokeStyle=color; g.lineWidth=1.4; g.setLineDash([4,4]);
+  g.beginPath(); g.moveTo(a.L,a.Y(y)); g.lineTo(a.R,a.Y(y)); g.stroke(); g.restore(); }
+function dot(a,x,y,color,r){ const g=a.g; clipArea(a); g.fillStyle=color; g.strokeStyle='#fff'; g.lineWidth=2;
+  g.beginPath(); g.arc(a.X(x),a.Y(y),r||5.5,0,Math.PI*2); g.fill(); g.stroke(); g.restore(); }
+function pt(a,x,y,color,r){ const g=a.g; clipArea(a); g.fillStyle=color;
+  g.beginPath(); g.arc(a.X(x),a.Y(y),r||2.2,0,Math.PI*2); g.fill(); g.restore(); }
+function tag(a,x,y,text,color,dx,dy){ const g=a.g; g.save();
+  g.font='700 11.5px ui-monospace,Menlo,Consolas,monospace'; g.fillStyle=color;
+  g.textAlign='left'; g.textBaseline='middle'; g.fillText(text, a.X(x)+(dx||8), a.Y(y)+(dy||0)); g.restore(); }
+function vbars(cv, items, o){
+  o = o||{};
+  const a = mkAxes(cv, 0, items.length, 0, o.ymax || 1.06, {l:56,r:16,t:20,b:o.b||54});
+  clear(a);
+  frame(a,{yticks:o.yticks||[0,0.25,0.5,0.75,1], xticks:[],
+    yfmt:o.yfmt || (v=>v.toFixed(2)), ylabel:o.ylabel||''});
+  const g = a.g, bw = (a.R-a.L)/items.length;
+  items.forEach((it,i) => {
+    const x0 = a.L + i*bw + bw*0.17, w = bw*0.66;
+    const y = a.Y(Math.min(it.value, a.ymax)), h = Math.max(a.B - y, 1.5);
+    g.fillStyle = it.color;
+    if(g.roundRect){ g.beginPath(); g.roundRect(x0, y, w, h, [6,6,0,0]); g.fill(); }
+    else g.fillRect(x0, y, w, h);
+    g.textAlign = 'center';
+    g.fillStyle = '#1c2422'; g.font = '700 12.5px ui-monospace,Menlo,Consolas,monospace';
+    g.textBaseline = 'bottom';
+    g.fillText(o.fmt ? o.fmt(it.value) : it.value.toFixed(3), x0+w/2, y-5);
+    g.textBaseline = 'top';
+    g.fillStyle = it.dim ? '#8a9a95' : '#3d4d48';
+    g.font = '700 11.5px -apple-system,system-ui,sans-serif';
+    String(it.label).split('\n').forEach((ln,k) => g.fillText(ln, x0+w/2, a.B+7+k*13));
+    if(it.sub){ g.fillStyle='#8a9a95'; g.font='11px ui-monospace,Menlo,monospace';
+      g.fillText(it.sub, x0+w/2, a.B+7+String(it.label).split('\n').length*13); }
+  });
+  return a;
+}
+const CMSE='#c0392b', CMAE='#1f6f8b', CHUB='#006747', CTRU='#9aa8a3', CGOLD='#b9a96a';
+
+/* ============================ tab 1 ============================ */
+function drawT1(){
+  const r = +el('t1r').value, d = +el('t1d').value;
+  el('t1rv').textContent = r.toFixed(1);
+  el('t1dv').textContent = d.toFixed(1);
+  const rho = {
+    mse: x => 0.5*x*x,
+    mae: x => Math.abs(x),
+    hub: x => Math.abs(x) <= d ? 0.5*x*x : d*(Math.abs(x) - 0.5*d)
+  };
+  const psi = { mse: x => x, mae: x => Math.sign(x), hub: x => clampn(x, -d, d) };
+
+  let a = mkAxes(el('c1a'), -25, 25, 0, 320, {l:56,r:14,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[-25,-15,-5,5,15,25], yticks:[0,80,160,240,320],
+    xlabel:'residual r of one bin (mph)', ylabel:'penalty'});
+  curve(a, rho.mae, CMAE, 2.6); curve(a, rho.hub, CHUB, 3.0); curve(a, rho.mse, CMSE, 2.6);
+  vmark(a, r, CGOLD);
+  dot(a, r, Math.min(rho.mse(r), 318), CMSE, 4.5);
+  dot(a, r, rho.hub(r), CHUB, 4.5);
+  dot(a, r, rho.mae(r), CMAE, 4.5);
+
+  a = mkAxes(el('c1b'), -25, 25, -26, 26, {l:56,r:14,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[-25,-15,-5,5,15,25], yticks:[-25,-12.5,0,12.5,25], zeroy:true,
+    yfmt:t=>t.toFixed(1), xlabel:'residual r of one bin (mph)', ylabel:'pull on the fit'});
+  curve(a, psi.mse, CMSE, 2.6); curve(a, psi.hub, CHUB, 3.2); curve(a, psi.mae, CMAE, 2.6);
+  vmark(a, r, CGOLD);
+  dot(a, r, psi.mse(r), CMSE, 4.5); dot(a, r, psi.hub(r), CHUB, 4.5); dot(a, r, psi.mae(r), CMAE, 4.5);
+  tag(a, -24, d+2.5, 'clipped at δ', CHUB, 2, 0);
+
+  el('s1pm').textContent = psi.mse(r).toFixed(1);
+  el('s1pa').textContent = psi.mae(r).toFixed(1);
+  el('s1ph').textContent = psi.hub(r).toFixed(1);
+  const ratio = Math.abs(psi.hub(r)) < 1e-9 ? '—' : (Math.abs(psi.mse(r))/Math.abs(psi.hub(r))).toFixed(1)+'×';
+  el('s1rat').textContent = ratio;
+}
+
+/* ============================ tab 2 ============================ */
+function drawT2(){
+  const D = LRD.t2;
+  const pct = D.levels[+el('t2c').value];
+  const di  = +el('t2d').value, delta = D.deltas[di];
+  el('t2cv').textContent = pct + '%';
+  el('t2dv').textContent = delta.toFixed(1);
+  const row = D.grid[String(pct)];
+  const hub = row.huber[di];
+  const k = Math.round(pct/100 * D.n);
+
+  let a = mkAxes(el('c2a'), 0, 48, -4, 72, {l:52,r:14,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[0,10,20,30,40], yticks:[0,20,40,60],
+    xlabel:'occupancy (%)', ylabel:'speed (mph)'});
+  D.scatter.forEach(p => {
+    const stuck = p[2] < k;
+    pt(a, p[0], stuck ? 0 : p[1], stuck ? '#c0392b' : '#b9c6c1', stuck ? 3.0 : 2.1);
+  });
+  const line = (aa,bb,col,lw,dash) => poly(a, [[0,aa],[48,aa+bb*48]], col, lw, dash);
+  line(65, -1.25, '#bccac5', 6.5);                 // truth: pale and wide, underneath
+  line(row.mse[0], row.mse[1], CMSE, 2.4);
+  line(hub[0], hub[1], CHUB, 3.0);
+  line(row.mae[0], row.mae[1], CMAE, 2.2, [9,6]);  // dashed, so Huber shows through
+
+  const vals = D.deltas.map((dd,i) => row.huber[i][2]).concat([row.mse[2], row.mae[2]]);
+  const lo = Math.min(...vals), hi = Math.max(...vals);
+  const padY = Math.max(0.06, (hi - lo) * 0.18);
+  const y0 = lo - padY, y1 = hi + padY;
+  a = mkAxes(el('c2b'), 0.5, 20, y0, y1, {l:60,r:14,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[0.5,5,10,15,20], yticks:[0,1,2,3,4].map(i => y0 + i*(y1-y0)/4),
+    yfmt:t=>t.toFixed(2), xlabel:'Huber knee δ (mph)', ylabel:'clean held-out MAE (mph)'});
+  hmark(a, row.mse[2], CMSE); tag(a, 15.5, row.mse[2], 'MSE', CMSE, 4, -9);
+  hmark(a, row.mae[2], CMAE); tag(a, 15.5, row.mae[2], 'MAE', CMAE, 4, -9);
+  poly(a, D.deltas.map((dd,i) => [dd, row.huber[i][2]]), CHUB, 3.0);
+  vmark(a, delta, CGOLD);
+  dot(a, delta, hub[2], CHUB, 5);
+
+  el('s2vm').textContent = row.mse[0].toFixed(1);
+  el('s2va').textContent = row.mae[0].toFixed(1);
+  el('s2vh').textContent = hub[0].toFixed(1);
+  el('s2sh').textContent = row.share.toFixed(1) + '%';
+  el('s2dw').textContent = hub[3].toFixed(1) + '%';
+
+  const note = el('t2note');
+  if(pct === 0){
+    note.className = 'callout good';
+    note.innerHTML = '<b>A clean archive.</b> All three losses land on top of each other and on the '
+      + 'truth. With no outliers there is nothing to be robust to, and squared error is the right '
+      + 'default — it is the maximum-likelihood answer under Gaussian noise. Now add stuck records.';
+  } else {
+    const errM = Math.abs(row.mse[0] - 65), errH = Math.abs(hub[0] - 65);
+    note.className = errM > errH + 0.4 ? 'callout warn' : 'callout';
+    note.innerHTML = '<b>' + pct + '% of the bins are stuck at 0 mph — and they supply '
+      + row.share.toFixed(1) + '% of the squared-error objective.</b> MSE reports a free-flow speed '
+      + 'of ' + row.mse[0].toFixed(1) + ' mph against a true 65.0; Huber at δ = ' + delta.toFixed(1)
+      + ' reports ' + hub[0].toFixed(1) + '. Clean held-out error: '
+      + row.mse[2].toFixed(2) + ' mph for MSE, ' + hub[2].toFixed(2) + ' for Huber.';
+  }
+}
+
+/* ============================ tab 3 ============================ */
+function t3row(){ return LRD.t3.rows[+el('t3w').value]; }
+function drawT3(){
+  const D = LRD.t3, i = +el('t3w').value, r = D.rows[i];
+  el('t3wv').textContent = r.w.toFixed(2) + '×';
+  const N = D.n_test, days = N / D.bins_per_day;
+  const acc = 100*(r.tp+r.tn)/N, rec = 100*r.tp/(r.tp+r.fn),
+        spec = 100*r.tn/(r.tn+r.fp), bal = (rec+spec)/2, fa = r.fp/days;
+  const majAcc = 100*(N - D.n_breakdowns)/N;
+
+  el('cmtp').textContent = r.tp.toLocaleString();
+  el('cmfn').textContent = r.fn.toLocaleString();
+  el('cmfp').textContent = r.fp.toLocaleString();
+  el('cmtn').textContent = r.tn.toLocaleString();
+  el('s3acc').textContent = acc.toFixed(1) + '%';
+  el('s3rec').textContent = rec.toFixed(1) + '%';
+  el('s3bal').textContent = bal.toFixed(1) + '%';
+  el('s3fn').textContent = r.fn.toLocaleString();
+  el('s3fa').textContent = fa.toFixed(1);
+  el('s3nb').textContent = D.n_breakdowns.toLocaleString();
+
+  let a = mkAxes(el('c3a'), 1, 20, 45, 90, {l:52,r:14,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[1,5,10,15,20], yticks:[50,60,70,80,90],
+    xlabel:'weight on the breakdown class', ylabel:'percent'});
+  hmark(a, majAcc, CTRU);
+  tag(a, 1.3, majAcc, 'always "no breakdown" · ' + majAcc.toFixed(1) + '%', '#7d8a86', 0, -9);
+  poly(a, D.rows.map(x => [x.w, 100*(x.tp+x.tn)/N]), CMSE, 2.6);
+  poly(a, D.rows.map(x => {
+    const rc = 100*x.tp/(x.tp+x.fn), sp = 100*x.tn/(x.tn+x.fp); return [x.w, (rc+sp)/2];
+  }), CHUB, 3.0);
+  const at = w => D.rows.reduce((b,x) => Math.abs(x.w-w) < Math.abs(b.w-w) ? x : b);
+  const accAt = x => 100*(x.tp+x.tn)/N;
+  const balAt = x => (100*x.tp/(x.tp+x.fn) + 100*x.tn/(x.tn+x.fp))/2;
+  tag(a, 8,  accAt(at(8)),  'accuracy', CMSE, 3, 14);
+  tag(a, 14, balAt(at(14)), 'balanced accuracy', CHUB, -104, -11);
+  vmark(a, r.w, CGOLD);
+  dot(a, r.w, acc, CMSE, 4.5); dot(a, r.w, bal, CHUB, 4.5);
+
+  a = mkAxes(el('c3b'), 0, 150, 0, 100, {l:52,r:14,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[0,30,60,90,120,150], yticks:[0,25,50,75,100],
+    xlabel:'false alarms per day', ylabel:'breakdowns caught (%)'});
+  poly(a, D.rows.map(x => [x.fp/days, 100*x.tp/(x.tp+x.fn)]), CHUB, 2.8);
+  D.rows.forEach(x => pt(a, x.fp/days, 100*x.tp/(x.tp+x.fn), '#cfdad6', 2.0));
+  dot(a, fa, rec, CGOLD, 6);
+  tag(a, fa, rec, r.w.toFixed(2)+'×', '#8a6d1f', 9, -10);
+
+  const note = el('t3note');
+  if(acc < majAcc){
+    note.className = 'callout warn';
+    note.innerHTML = '<b>This model is less accurate than saying "no breakdown" every single time'
+      + ' (' + majAcc.toFixed(1) + '%) — and it is the one you would deploy.</b> It catches '
+      + rec.toFixed(1) + '% of breakdowns instead of none, at ' + fa.toFixed(1)
+      + ' false alarms a day. Accuracy is not the metric here; the pair of operational numbers is.';
+  } else {
+    note.className = 'callout';
+    note.innerHTML = '<b>Accuracy ' + acc.toFixed(1) + '%, and the majority rule already scores '
+      + majAcc.toFixed(1) + '%.</b> At this weight the model still misses '
+      + r.fn.toLocaleString() + ' of ' + D.n_breakdowns.toLocaleString()
+      + ' breakdowns. Push the weight up and watch accuracy fall while the model gets more useful.';
+  }
+}
+
+/* ============================ tab 4 ============================ */
+function drawT4(){
+  const D = LRD.t4, i = +el('t4g').value, r = D.rows[i];
+  el('t4gv').textContent = r.g.toFixed(0) + ' s';
+  el('s4thr').textContent = r.thr.toFixed(0);
+  el('s4dm').textContent = r.dm.toFixed(1);
+  el('s4ds').textContent = r.ds.toFixed(1);
+  el('s4tot').textContent = r.tot.toFixed(1);
+  el('s4mx').textContent = r.mx.toFixed(1);
+
+  const g0 = D.rows[0].g, g1 = D.rows[D.rows.length-1].g;
+  let a = mkAxes(el('c4a'), g0, g1, 1400, 1720, {l:60,r:14,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[60,72,84,96,108], yticks:[1400,1480,1560,1640,1720],
+    xlabel:'main-street effective green g (s)', ylabel:'vehicles served (veh/h)'});
+  band(a, D.tied_range[0], D.tied_range[1], 'rgba(183,159,77,.20)');
+  poly(a, D.rows.map(x => [x.g, x.thr]), CHUB, 3.0);
+  vmark(a, r.g, CGOLD); dot(a, r.g, r.thr, CHUB, 5);
+  tag(a, D.tied_range[0], 1690, 'all identical', '#8a6d1f', 4, 0);
+
+  a = mkAxes(el('c4b'), g0, g1, 0, 900, {l:56,r:14,t:14,b:38});
+  clear(a);
+  frame(a,{xticks:[60,72,84,96,108], yticks:[0,225,450,675,900],
+    xlabel:'main-street effective green g (s)', ylabel:'average delay (s/veh)'});
+  band(a, D.tied_range[0], D.tied_range[1], 'rgba(183,159,77,.20)');
+  poly(a, D.rows.map(x => [x.g, x.dm]), CMAE, 2.8);
+  poly(a, D.rows.map(x => [x.g, x.ds]), CMSE, 2.8);
+  tag(a, 63, D.rows[3].dm, 'main', CMAE, 0, -10);
+  tag(a, 101, 700, 'side', CMSE, 0, 0);
+  vmark(a, r.g, CGOLD);
+  dot(a, r.g, r.dm, CMAE, 4.5); dot(a, r.g, r.ds, CMSE, 4.5);
+
+  const note = el('t4note');
+  const best = { thr: D.rows.filter(x => Math.abs(x.thr - Math.max(...D.rows.map(y=>y.thr))) < 0.05),
+                 tot: D.rows.reduce((m,x) => x.tot < m.tot ? x : m),
+                 mx:  D.rows.reduce((m,x) => x.mx  < m.mx  ? x : m) };
+  note.innerHTML = '<b>Throughput ties across ' + best.thr.length + ' different splits ('
+    + D.tied_range[0] + '–' + D.tied_range[1] + ' s), and cannot see the side street at all</b> — '
+    + 'across that band the side street waits anywhere from ' + D.tied_side_delay[0].toFixed(0)
+    + ' s to ' + D.tied_side_delay[1].toFixed(0) + ' s, a swing of '
+    + ((D.tied_side_delay[1]-D.tied_side_delay[0])/60).toFixed(1) + ' minutes. Total delay picks g = '
+    + best.tot.g.toFixed(0) + ' s and leaves the side street at ' + best.tot.ds.toFixed(0)
+    + ' s. Only the worst-approach objective picks g = ' + best.mx.g.toFixed(0)
+    + ' s, where both approaches wait about ' + best.mx.mx.toFixed(0) + ' s. '
+    + '<em>Press "maximize throughput" again — it lands somewhere different every time, '
+    + 'because the objective genuinely cannot tell these splits apart.</em>';
+}
+function jumpT4(kind){
+  const D = LRD.t4;
+  let idx;
+  if(kind === 'thr'){
+    // the objective is genuinely indifferent across the tie, so the button is too:
+    // press it twice and it lands somewhere else, which is the whole lesson
+    const b = Math.max(...D.rows.map(y => y.thr));
+    const tie = D.rows.map((x,k) => [x,k]).filter(([x]) => Math.abs(x.thr - b) < 0.05);
+    const cur = +el('t4g').value;
+    const pool = tie.filter(([,k]) => k !== cur);
+    idx = (pool.length ? pool : tie)[Math.floor(Math.random() * (pool.length || tie.length))][1];
+  } else if(kind === 'tot'){
+    idx = D.rows.indexOf(D.rows.reduce((m,x) => x.tot < m.tot ? x : m));
+  } else {
+    idx = D.rows.indexOf(D.rows.reduce((m,x) => x.mx < m.mx ? x : m));
+  }
+  el('t4g').value = idx; drawT4();
+}
+
+/* ============================ tab 5 ============================ */
+let T5timer = null;
+function drawT5(){
+  const D = LRD.t5, i = +el('t5t').value;
+  const pi = D.reference.traj[i];
+  const decisions = Math.min(i*10, D.n_decisions);
+  el('t5tv').textContent = decisions;
+
+  const names = ['Φ1','Φ2','Φ3','Φ4'];
+  vbars(el('c5a'), pi.map((p,k) => ({
+    label: names[k], sub: 'clears ' + (D.p_true[k]*100).toFixed(0) + '%',
+    value: p, color: k === 3 ? CHUB : '#9db5ad', dim: k !== 3
+  })), {ylabel:'policy probability', fmt: v => (v*100).toFixed(1)+'%'});
+
+  const counts = D.seed_spread.counts;
+  const a = mkAxes(el('c5b'), 460, 800, 0, 11, {l:46,r:14,t:16,b:38});
+  clear(a);
+  frame(a,{xticks:[480,560,640,720,800], yticks:[0,3,6,9],
+    xlabel:'queues cleared in 800 decisions', ylabel:'runs'});
+  const bins = new Array(17).fill(0);
+  counts.forEach(c => bins[Math.min(16, Math.max(0, Math.floor((c-460)/20)))]++);
+  const g = a.g; clipArea(a);
+  bins.forEach((n,k) => {
+    if(!n) return;
+    const x0 = a.X(460+k*20), x1 = a.X(460+(k+1)*20);
+    g.fillStyle = '#9db5ad';
+    g.fillRect(x0+1, a.Y(n), x1-x0-2, a.B-a.Y(n));
+  });
+  g.restore();
+  vmark(a, D.uniform, '#9aa8a3'); tag(a, D.uniform, 10.2, 'random ' + D.uniform, '#7d8a86', 4, 0);
+  vmark(a, D.oracle, CMSE);      tag(a, D.oracle, 10.2, 'oracle ' + D.oracle, CMSE, -78, 0);
+  const gg = a.g; gg.save(); gg.strokeStyle = '#8a6d1f'; gg.lineWidth = 2.6;
+  gg.beginPath(); gg.moveTo(a.X(D.reference.cleared), a.T); gg.lineTo(a.X(D.reference.cleared), a.B);
+  gg.stroke(); gg.restore();
+  tag(a, D.reference.cleared, 7.6, 'this run', '#8a6d1f', -58, 0);
+
+  el('s5p4').textContent = (pi[3]*100).toFixed(1) + '%';
+  el('s5cl').textContent = decisions >= D.n_decisions ? D.reference.cleared : '—';
+  el('s5or').textContent = decisions >= D.n_decisions
+    ? (100*D.reference.cleared/D.oracle).toFixed(0) + '%' : '—';
+  el('s5sp').textContent = D.seed_spread.min + '–' + D.seed_spread.max;
+  el('s5sp2').textContent = D.seed_spread.min + '–' + D.seed_spread.max;
+  el('s5gap').textContent =
+    (100*(D.seed_spread.mean - D.uniform)/(D.oracle - D.uniform)).toFixed(0) + '%';
+}
+function stopT5(){ if(T5timer){ clearInterval(T5timer); T5timer = null; } el('t5run').innerHTML = '&#9654; Play'; }
+
+/* ============================ wiring ============================ */
+function redrawAll(){ drawT1(); drawT2(); drawT3(); drawT4(); drawT5(); }
+
+['t1r','t1d'].forEach(id => el(id).addEventListener('input', drawT1));
+['t2c','t2d'].forEach(id => el(id).addEventListener('input', drawT2));
+el('t3w').addEventListener('input', drawT3);
+el('t4g').addEventListener('input', drawT4);
+el('t5t').addEventListener('input', () => { stopT5(); drawT5(); });
+
+el('t3b1').onclick = () => { el('t3w').value = 0; drawT3(); };
+el('t3b2').onclick = () => {
+  const i = LRD.t3.rows.reduce((b,x,k,arr) =>
+    Math.abs(x.w - LRD.t3.w_inverse_freq) < Math.abs(arr[b].w - LRD.t3.w_inverse_freq) ? k : b, 0);
+  el('t3w').value = i; drawT3();
+};
+el('t4b1').onclick = () => jumpT4('thr');
+el('t4b2').onclick = () => jumpT4('tot');
+el('t4b3').onclick = () => jumpT4('mx');
+el('t5reset').onclick = () => { stopT5(); el('t5t').value = 0; drawT5(); };
+el('t5run').onclick = () => {
+  if(T5timer){ stopT5(); return; }
+  if(+el('t5t').value >= 80) el('t5t').value = 0;
+  el('t5run').innerHTML = '&#10074;&#10074; Pause';
+  T5timer = setInterval(() => {
+    const v = +el('t5t').value + 1;
+    el('t5t').value = v; drawT5();
+    if(v >= 80) stopT5();
+  }, 55);
+};
+
+document.querySelectorAll('nav.tabs button').forEach(btn => btn.onclick = () => {
+  document.querySelectorAll('nav.tabs button').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('section.page').forEach(x => x.classList.remove('active'));
+  btn.classList.add('active');
+  el(btn.dataset.tab).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  redrawAll();
+});
+
+/* defaults: the slide settings -- 3% stuck, delta = 3 mph, plain CE, g = 100 s */
+el('t2c').value = LRD.t2.levels.indexOf(3);
+el('t2d').value = LRD.t2.deltas.indexOf(3.0);
+el('t4g').value = LRD.t4.rows.findIndex(x => x.g === 100);
+redrawAll();
+</script>
+</body>
+</html>
