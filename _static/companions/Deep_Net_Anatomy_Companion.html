@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Anatomy of a Deep Network — Visual Companion | AI for Mobility</title>
+<style>
+  :root{
+    --usf-green:#006747;--usf-green-d:#00543a;--usf-gold:#CFC493;--gold-deep:#b9a96a;
+    --ink:#1c2422;--muted:#5b6b66;--paper:#f6f8f7;--card:#fff;--line:#e2e8e5;
+    /* categorical series — validated (light surface): PASS on all six checks */
+    --s1:#00785A;--s2:#8E44AD;--s3:#B5581E;--s4:#0E6E9E;
+    /* diverging pair for gradient sign, neutral gray midpoint */
+    --dn:#0E6E9E;--dp:#B5581E;--dz:#c8d0cd;
+    --warn:#c0392b;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 6px 22px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--paper);line-height:1.58}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding:32px 0 26px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--usf-gold);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:28px;font-weight:780}
+  header.hero p{margin:0;max-width:880px;color:#e7efeb;font-size:15px}
+  nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:4px;flex-wrap:wrap;padding-top:7px;padding-bottom:7px}
+  nav.tabs button{border:none;background:transparent;font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 13px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  section.page{display:none;padding:24px 0 10px}
+  section.page.active{display:block}
+  h2.sec{font-size:23px;margin:4px 0 2px;color:var(--usf-green-d)}
+  h3{font-size:16px;margin:20px 0 6px;color:var(--ink)}
+  h4{font-size:13.5px;margin:14px 0 4px;color:var(--usf-green-d);text-transform:uppercase;letter-spacing:.05em}
+  h4.raw{text-transform:none;letter-spacing:.01em;font-size:15px}
+  .lead{color:var(--muted);max-width:880px;margin:0 0 16px;font-size:15px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+  .card.tight{padding:15px 18px}
+  .eq{background:#0f1c18;color:#eafff5;border-radius:10px;padding:14px 18px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14.5px;line-height:1.95;white-space:pre-wrap}
+  .eq b{color:var(--usf-gold)}.eq .g{color:#7fd8b0}.eq .bl{color:#6fc3e0}.eq .rd{color:#ff9b8f}.eq .dim{color:#7f948d}.eq .yl{color:#ffd98a}
+  .callout{border-left:4px solid var(--usf-gold);background:#fffdf3;padding:11px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:13.8px}
+  .callout.good{border-left-color:#1e9e57;background:#f3fbf6}
+  .callout.sig{border-left-color:var(--s4);background:#f1f8fb}
+  .callout.warn{border-left-color:var(--warn);background:#fdf4f2}
+  .callout b{color:var(--usf-green-d)}
+  .callout.warn b{color:var(--warn)}
+  .small{font-size:12px;color:var(--muted)}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin:6px 0 14px}
+  .ctrl{display:flex;flex-direction:column;gap:5px;min-width:140px}
+  .ctrl label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .ctrl label.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  .ctrl input[type=range]{width:210px;accent-color:var(--usf-green)}
+  .ctrl input[type=range].sm{width:150px}
+  .ctrl select,.ctrl input[type=number]{font:inherit;font-size:13.5px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .ctrl input[type=number]{width:96px;font-family:ui-monospace,monospace}
+  .ctrl .val{font-family:ui-monospace,monospace;font-size:13px;color:var(--usf-green-d);font-weight:700}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 4px}
+  button.act{border:1px solid var(--usf-green);background:var(--usf-green);color:#fff;font-weight:700;font-size:13.5px;padding:9px 15px;border-radius:9px;cursor:pointer}
+  button.act:hover{background:var(--usf-green-d)}
+  button.act:disabled{opacity:.45;cursor:not-allowed}
+  button.ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:13.5px;padding:9px 14px;border-radius:9px;cursor:pointer}
+  button.ghost:hover{background:var(--paper)}
+  button.ghost.on{border-color:var(--usf-green);background:#eef7f3;color:var(--usf-green-d)}
+  .readout{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+  .stat{background:#fbfdfc;border:1px solid var(--line);border-radius:11px;padding:9px 13px;min-width:104px;text-align:center}
+  .stat .n{font-size:18px;font-weight:780;font-family:ui-monospace,monospace;color:var(--usf-green-d)}
+  .stat .n.t{color:var(--s2)}.stat .n.w{color:var(--warn)}.stat .n.r{color:var(--s3)}.stat .n.b{color:var(--s4)}
+  .stat .n.sm{font-size:15px}
+  .stat .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+  .stat .l.raw{text-transform:none;letter-spacing:.02em;font-size:11px}
+  canvas{border-radius:10px;border:1px solid var(--line);background:#fff;display:block;max-width:100%}
+  .canvasrow{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+  figure{margin:0}
+  figcaption{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;text-align:center;max-width:460px}
+  table.map{width:100%;border-collapse:collapse;font-size:13.4px;margin-top:8px}
+  table.map th,table.map td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.map th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--line)}
+  table.map th.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  table.map td:first-child{font-weight:700;color:var(--usf-green-d)}
+  table.map td.num,table.map th.num{text-align:right;font-family:ui-monospace,monospace;font-size:12.8px}
+  table.map tr.hl td{background:#f3fbf6}
+  .swatch{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:baseline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);font-weight:600;margin:4px 0 10px;align-items:center}
+  .legend i{display:inline-block;width:22px;height:0;border-top-width:3px;border-top-style:solid;margin-right:6px;vertical-align:middle}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr}}
+  .narr{background:#f3fbf6;border:1px solid #cfe8dc;border-radius:10px;padding:12px 15px;font-size:13.6px;min-height:74px}
+  .narr b{color:var(--usf-green-d)}
+  .stagebar{display:flex;gap:5px;flex-wrap:wrap;margin:12px 0 10px}
+  .stagebar span{font-size:11px;font-weight:700;padding:5px 9px;border-radius:7px;background:#eef2f0;color:var(--muted);white-space:nowrap}
+  .stagebar span.done{background:#dff0e8;color:var(--usf-green-d)}
+  .stagebar span.now{background:var(--usf-green);color:#fff}
+  .netbox{background:#fbfdfc;border:1px solid var(--line);border-radius:12px;padding:6px}
+  .netbox svg{display:block;width:100%;height:auto}
+  ul.tight{margin:8px 0 0;padding-left:20px}ul.tight li{margin-bottom:5px;font-size:13.8px}
+  ol.tight{margin:8px 0 0;padding-left:20px}ol.tight li{margin-bottom:5px;font-size:13.8px}
+  footer{padding:26px 0;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);margin-top:18px}
+  .progress{height:6px;background:#eef2f0;border-radius:4px;overflow:hidden;margin:8px 0 0;max-width:340px}
+  .progress > i{display:block;height:100%;background:var(--usf-green);width:0%}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#eef7f3;color:var(--usf-green-d);margin-left:6px}
+  .pill.w{background:#fdf1ee;color:var(--warn)}
+  @media(max-width:700px){.ctrl input[type=range]{width:min(72vw,210px)}}
+  .chiprow{display:flex;gap:7px;flex-wrap:wrap;margin:2px 0 14px}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer;
+        font-size:13px;font-weight:650;color:var(--ink);text-align:left;line-height:1.3;transition:.12s}
+  .chip:hover{background:var(--paper);border-color:var(--gold-deep)}
+  .chip.on{background:var(--usf-green);border-color:var(--usf-green);color:#fff}
+  .chip .yr{display:block;font-size:10.5px;font-weight:600;opacity:.72;margin-top:1px}
+  .archbox{background:#fbfdfc;border:1px solid var(--line);border-radius:12px;padding:10px 8px 4px}
+  .archbox svg{display:block;width:100%;height:auto}
+  .blk{cursor:pointer}
+  .blk rect{transition:.12s}
+  .blk:hover rect{stroke:#1c2422;stroke-width:2.5}
+  .blk.sel rect{stroke:#1c2422;stroke-width:3}
+  .rolekey{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;font-weight:650;color:var(--muted);margin:10px 0 2px}
+  .rolekey i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .detail{background:#f3fbf6;border:1px solid #cfe8dc;border-radius:10px;padding:12px 15px;font-size:13.6px;min-height:88px}
+  .detail b{color:var(--usf-green-d)}
+  .detail .dnums{display:flex;gap:16px;flex-wrap:wrap;margin-top:7px;font-family:ui-monospace,monospace;font-size:12.6px;color:var(--muted)}
+  .detail .dnums b{font-family:inherit}
+  .silrow{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:center;margin-bottom:7px}
+  .silrow .nm{font-size:12.8px;font-weight:700;color:var(--usf-green-d);line-height:1.25}
+  .silrow .nm em{display:block;font-style:normal;font-weight:600;font-size:11px;color:var(--muted)}
+  .silrow svg{display:block;width:100%;height:auto;preserveAspectRatio:none;background:#fbfdfc;border:1px solid var(--line);border-radius:9px}
+  .patgroup{margin:16px 0 4px}
+  .patgroup h4{margin-bottom:2px}
+  .patgroup > p{margin:0 0 9px;font-size:13.2px;color:var(--muted);max-width:840px}
+  .verdict{border-radius:12px;padding:15px 18px;font-size:14px;border:1px solid}
+  .verdict.ok{background:#f3fbf6;border-color:#cfe8dc}
+  .verdict.no{background:#fdf4f2;border-color:#f0cfc8}
+  .verdict h4{margin:0 0 6px;font-size:13px}
+  .verdict .big{font-size:20px;font-weight:780;font-family:ui-monospace,monospace;color:var(--usf-green-d)}
+  .keepbar{display:flex;height:26px;border-radius:7px;overflow:hidden;margin:10px 0 4px;border:1px solid var(--line)}
+  .keepbar div{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden}
+  details.deeper{margin:14px 0 0;border:1px solid var(--line);border-radius:10px;background:#fff;padding:0}
+  details.deeper summary{cursor:pointer;padding:11px 15px;font-size:13px;font-weight:700;color:var(--usf-green-d);list-style:none}
+  details.deeper summary::-webkit-details-marker{display:none}
+  details.deeper summary:before{content:"▸ ";color:var(--gold-deep)}
+  details.deeper[open] summary:before{content:"▾ "}
+  details.deeper .inner{padding:0 15px 14px;font-size:13.4px;color:var(--ink)}
+  @media(max-width:820px){.silrow{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · Module 1 · University of South Florida</div>
+  <h1>The anatomy of a deep network</h1>
+  <p>Eight real networks, opened up — not eight diagrams copied from eight papers, but eight architectures
+     <b>built in PyTorch and measured</b>, so every parameter count and every tensor shape here came out of
+     the code rather than out of a caption. Read them in order and one fact keeps repeating: <b>the exit
+     changes every time, and the body never does.</b> The body is between 92% and 100% of every network on
+     this page. Which means the question that decides whether any of this is useful to you is not which head
+     to bolt on — it is <b>where a good body comes from</b>. That question has a name, and the last tab is
+     the door to it.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap">
+  <button data-tab="p1" class="active">1 · Eight real networks</button>
+  <button data-tab="p2">2 · The pattern underneath</button>
+  <button data-tab="p3">3 · Swap the task</button>
+  <button data-tab="p4">4 · Where the body comes from</button>
+</div></nav>
+
+<!-- ==================== PAGE 1 ==================== -->
+<section class="page active" id="p1"><div class="wrap">
+  <h2 class="sec">Eight real networks, drawn to one scale</h2>
+  <p class="lead">Pick one. Every block is a real stage of the real architecture; click any block to see what
+     it does, what it costs, and what shape comes out of it.</p>
+
+  <div class="chiprow" id="chips"></div>
+
+  <div class="card">
+    <div id="archhead"></div>
+    <div class="archbox"><svg id="archsvg" viewBox="0 0 1000 356" role="img" aria-labelledby="archttl"><title id="archttl">Architecture diagram</title></svg></div>
+    <div class="rolekey" id="rolekey"></div>
+    <div class="readout" id="archstats"></div>
+    <div class="detail" id="archdetail" style="margin-top:12px"></div>
+  </div>
+
+  <div class="callout"><b>How to read the picture.</b> <b>Height</b> is how much of the input's layout
+    survives at that point — the size of the feature map, or the length of the token sequence — on a
+    compressed scale so that a 256×256 map and a single vector both fit on one screen. <b>Width</b> is
+    channels: how many numbers describe each position. This is the same encoding used in the
+    <em>Which network, and what it costs</em> companion, so the two pages can be read together.
+    <br><br>Height falling off a cliff means the layout was thrown away and a <b>head</b> follows.
+    Height coming back up means a <b>decoder</b> is rebuilding it. Height flat and low with the width
+    pinching means a fully connected bottleneck. Parameter counts are in the row underneath and on every
+    block you click — they are deliberately <em>not</em> in the drawing, because size and shape are
+    different questions.</div>
+</div></section>
+
+<!-- ==================== PAGE 2 ==================== -->
+<section class="page" id="p2"><div class="wrap">
+  <h2 class="sec">The pattern underneath</h2>
+  <p class="lead">Same eight networks, stripped to their silhouettes and grouped. Nothing here is new
+     information — it is the same measured geometry from tab 1, sorted. Look at the shapes before you read
+     the labels.</p>
+
+  <div id="patterns"></div>
+
+  <div class="card">
+    <h3>What actually decides the shape</h3>
+    <p style="font-size:14px;margin:4px 0 10px">Not the model family. Not the year. Sort the eight by how
+       big their output is and the design pattern falls out in order:</p>
+    <table class="map" id="outtable">
+      <thead><tr><th class="raw">Network</th><th class="raw">What comes out</th>
+        <th class="num">Numbers out</th><th class="raw">So the exit is…</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <div class="callout good" style="margin-top:16px"><b>The rule.</b> If what has to come out is a handful of
+      numbers, you need a <b>head</b> — one or two layers, and the representation gets collapsed on the way in.
+      If what has to come out is as big and as structured as what went in, you need a <b>decoder</b> — and it
+      will cost about as much as the encoder did. If what has to come out <em>is</em> the representation, you
+      need neither. <b>The body is the same in all three cases</b> — which is the whole reason the next two
+      tabs exist. If the body is what every one of these has in common, and it is nearly all of the
+      parameters, then it is the thing worth understanding.</div>
+  </div>
+
+  <div class="card">
+    <h3>Three names for the same block, and when each is right</h3>
+    <table class="map">
+      <thead><tr><th class="raw">Word</th><th class="raw">Means</th><th class="raw">Safe to say when…</th></tr></thead>
+      <tbody>
+        <tr><td>Backbone</td><td>the stack that turns raw input into a representation</td>
+            <td>always — it names a <em>role</em>, so it never collides</td></tr>
+        <tr><td>Encoder</td><td>the same stack, when something decodes afterwards</td>
+            <td>there is an actual decoder (U-Net, VAE, translation). Otherwise it invites the reader to
+                look for a decoder that isn't there</td></tr>
+        <tr><td>Feature extractor</td><td>the same stack, frozen</td>
+            <td>you are not training it</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn"><b>The word that will trip you.</b> “Encoder” also names one specific half of a
+      transformer — and GPT is called <em>decoder</em>-only even though nothing in it decodes anything back to
+      the input space. Its exit is a single linear layer: a head, run in a loop. When the name and the shape
+      disagree, trust the shape.</div>
+  </div>
+
+  <details class="deeper"><summary>Going deeper — why the decoder costs what it costs</summary>
+    <div class="inner">
+      <p>A head maps <span class="mono">d → k</span>, so it holds <span class="mono">d·k + k</span> weights,
+      and <span class="mono">k</span> is small — 2 damage classes, 1000 ImageNet classes. A decoder has to
+      rebuild a signal of the same order as the input, so it needs roughly the encoder's capacity run
+      backwards. In the U-Net measured here that is <b id="k-dec"></b> against an encoder-plus-bottleneck of
+      <b id="k-enc"></b> — the same order, as expected.</p>
+      <p>The exception on this page is GPT-2, whose exit maps 768 → 50,257 and so <em>should</em> cost
+      38,597,376 weights. It costs zero, because those weights are the token embedding table read backwards
+      — the same matrix used twice. Weight tying is worth knowing by name: it is why GPT-2 small is
+      124,439,808 parameters and not 163,037,184.</p>
+      <p class="small">Ronneberger, Fischer &amp; Brox, <em>U-Net</em>, MICCAI 2015 · Press &amp; Wolf,
+      <em>Using the Output Embedding to Improve Language Models</em>, EACL 2017.</p>
+    </div>
+  </details>
+</div></section>
+
+<!-- ==================== PAGE 3 ==================== -->
+<section class="page" id="p3"><div class="wrap">
+  <h2 class="sec">Swap the task</h2>
+  <p class="lead">You have a trained network. A different question arrives. What survives? Pick a starting
+     point and a new job — every number in the answer is computed from the measured architectures, not
+     estimated.</p>
+
+  <div class="controls">
+    <div class="ctrl"><label class="raw">Start from</label><select id="selModel"></select></div>
+    <div class="ctrl"><label class="raw">New job</label><select id="selTask"></select></div>
+  </div>
+
+  <div id="planout"></div>
+
+  <div class="card tight" style="margin-top:18px">
+    <h4 class="raw" style="margin-top:2px">Two rules doing all the work here</h4>
+    <ol class="tight">
+      <li><b>The body is indexed by the input.</b> Change the modality and nothing transfers — not one layer.
+        A network that has only ever seen photographs has no opinion about a crash narrative.</li>
+      <li><b>The exit is indexed by the output.</b> Change what has to come out and you rebuild the exit —
+        cheap if the new output is small, expensive if it is a map.</li>
+    </ol>
+  </div>
+
+</div></section>
+
+
+<!-- ==================== PAGE 4 ==================== -->
+<section class="page" id="p4"><div class="wrap">
+  <h2 class="sec">Where the body comes from</h2>
+  <p class="lead">Every tab so far has been about <em>shape</em>. This one is about <em>training</em> — and
+     it is the door into the rest of today. All eight bodies were learned. None of them was learned on the
+     job you actually want done. So what taught them?</p>
+
+  <div class="card">
+    <h3>What each body was actually trained to do</h3>
+    <table class="map" id="objtable">
+      <thead><tr><th class="raw">Network</th><th class="raw">The task that taught the body</th>
+        <th class="raw">Did a person have to label it?</th><th class="num">Body</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p class="small" style="margin-top:10px">Objectives are stated exactly, because that is the point.
+       Corpus sizes are given only where they are unambiguous; sources are on each row.</p>
+  </div>
+
+  <div class="card">
+    <h3>Sort those bodies by size and something falls out</h3>
+    <div class="readout" id="findstats"></div>
+    <div class="callout good" id="findtext"></div>
+    <p style="font-size:14px;margin:12px 0 0">Look at what the label-free three were asked to do. Nobody
+       sat down and annotated anything for them. <b>They manufactured their own supervision out of the
+       structure of the data</b> — and that, not the architecture, is why they are the biggest bodies here.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h4 class="raw">Trick 1 — hide part of the data and predict it</h4>
+      <p style="font-size:13.8px;margin:6px 0 10px">The answer key was in the data the whole time; you just
+         cover it up. <b>BERT</b> blanks out 15% of the tokens and predicts them from both sides.
+         <b>GPT-2</b> hides everything after the current word. The <b>VAE</b> squeezes the input through a
+         two-number waist and asks for it back.</p>
+      <div class="callout"><b>The transportation version.</b> Blank out one detector station and predict it
+        from its neighbours. Hide the next fifteen minutes and predict them from the last hour. Mask a
+        segment of a trajectory and reconstruct it. <b>Your detector archive is its own answer key</b> —
+        and unlike crash labels, you already have ten years of it.</div>
+    </div>
+    <div class="card">
+      <h4 class="raw">Trick 2 — use pairs that already occur together</h4>
+      <p style="font-size:13.8px;margin:6px 0 10px">If two things reliably show up together, that
+         co-occurrence is a free training signal. <b>CLIP</b> learns that an image and <em>its own</em>
+         caption belong together and every other caption does not. Nobody wrote those captions for CLIP;
+         they were already on the page.</p>
+      <div class="callout"><b>The transportation version.</b> A road link and the links that follow it in a
+        trajectory. A signal phase and the phase that follows it. A ramp and the mainline segment that
+        backs up when it does. <b>Nobody labelled those either</b> — the trajectories already exist, and
+        co-occurrence is sitting in them.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>That is representation learning</h3>
+    <p style="font-size:14.5px;margin:4px 0 10px"><b>Learn a body on a task you do not care about, so you
+       can use it on the task you do.</b> The throwaway task is called a <em>pretext</em> task, and the two
+       tricks above are how you build one when nobody will pay for labels.</p>
+    <p style="font-size:14px;margin:0 0 6px">Which is exactly where the rest of today goes:</p>
+    <ul class="tight">
+      <li><b>Word2vec</b> — trick 1, applied to words: hide a word, predict it from its neighbours. Then we
+        run the same algorithm on a road network instead of a corpus, and see what the geometry knows.</li>
+      <li><b>Contrastive learning</b> — trick 2, stated in general: pull things that belong together
+        closer, push everything else apart.</li>
+      <li><b>CLIP</b> — trick 2 across two modalities at once, which is how the picture space and the
+        sentence space become one space.</li>
+    </ul>
+    <div class="callout warn" style="margin-top:14px"><b>Why this matters more in transportation than in
+      computer vision.</b> The reason CV could afford ImageNet is that a person can label a photo in
+      seconds. Nobody can label a crash in seconds, and there are only ever forty of them at your
+      intersection. Label-free objectives are not an elegance here — they are frequently the only way a
+      model gets built at all.</div>
+  </div>
+
+  <div class="card">
+    <h3>Check yourself</h3>
+    <ol class="tight">
+      <li>You have a ResNet-50 fine-tuned to flag damaged segments, and the district now wants the damage
+        located to the tenth of a mile. Using tab 3, what changes — and by what factor does the trainable
+        parameter count go up?</li>
+      <li>Which two of the eight networks could answer “find every clip that looks like this one” with
+        <em>no</em> new training at all, and what would you compare?</li>
+      <li>A vendor offers a “pretrained traffic model” for your 20-station detector feed. Tab 1 has one
+        network whose input is a grid like yours. What does its size tell you about how much a pretrained
+        backbone could possibly be worth here?</li>
+      <li>BERT and GPT-2 have nearly the same body and nearly the same parameter count. Name the one
+        architectural difference, and say which task in tab 3 it makes impossible for BERT.</li>
+      <li>You have three years of 5-minute speed data from 20 detector stations and no labels of any kind.
+        Write down a pretext task for it — one that uses trick 1 — and say what the body would end up
+        being good at.</li>
+      <li>Someone proposes pretraining on dashcam video by predicting the next frame. Using trick 1, say
+        why that is a reasonable pretext task — and one reason the representation it learns might be
+        useless for spotting a flooded shoulder.</li>
+    </ol>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <b>AI for Mobility</b> · CGN 6933 · University of South Florida ·
+  Companion to Module 1, representation learning and transfer.
+  <span id="provenance"></span>
+</div></footer>
+
+<script>
+const ZOO = {"meta":{"torch":"2.14.0+cpu","torchvision":"0.29.0+cpu","transformers":"5.17.0","note":"All models built from their architecture definitions with random weights. Parameter counts and tensor shapes depend only on the architecture, so they are exact; no checkpoints were downloaded."},"models":{"resnet50":{"name":"ResNet-50","family":"Convolutional","year":2015,"pattern":"backbone + head","task":"Is this road segment damaged?","task_note":"one label for the whole photo","input":"3 \u00d7 224 \u00d7 224","input_note":"an RGB photo","total":25557032,"stages":[{"label":"stem \u2014 7\u00d77 conv, stride 2, then max-pool","role":"backbone","params":9536,"out":"64 \u00d7 56 \u00d7 56","note":"one big filter drops the resolution 4\u00d7 immediately","spatial":3136,"chan":64,"extent":200704},{"label":"layer1 \u2014 3 bottleneck blocks","role":"backbone","params":215808,"out":"256 \u00d7 56 \u00d7 56","note":"edges, colour blobs","spatial":3136,"chan":256,"extent":802816},{"label":"layer2 \u2014 4 bottleneck blocks","role":"backbone","params":1219584,"out":"512 \u00d7 28 \u00d7 28","note":"textures","spatial":784,"chan":512,"extent":401408},{"label":"layer3 \u2014 6 bottleneck blocks","role":"backbone","params":7098368,"out":"1024 \u00d7 14 \u00d7 14","note":"object parts","spatial":196,"chan":1024,"extent":200704},{"label":"layer4 \u2014 3 bottleneck blocks","role":"backbone","params":14964736,"out":"2048 \u00d7 7 \u00d7 7","note":"whole objects \u2014 and 64% of the parameters","spatial":49,"chan":2048,"extent":100352},{"label":"global average pool","role":"backbone","params":0,"out":"2048 \u00d7 1 \u00d7 1","note":"7\u00d77 spatial grid collapsed to one number per channel \u2014 location is discarded here","spatial":1,"chan":2048,"extent":2048},{"label":"fc \u2014 the ImageNet head","role":"head","params":2049000,"out":"1000","note":"2048 \u2192 1000 classes","spatial":1,"chan":1000,"extent":1000}],"role_totals":{"backbone":23508032,"head":2049000},"stage_sum":25557032,"input_spatial":50176,"input_chan":3,"modality":"image","out_desc":"one label for the whole photo","body_params":23508032,"body_width":2048,"exit_params":2049000,"training":{"objective":"Predict which 1 of 1000 ImageNet classes the photo is","labels":true,"cost":"one label per image, typed by a person","corpus":"ImageNet-1k \u2014 1,281,167 photos","cite":"Russakovsky et al., IJCV 2015"}},"vit_b16":{"name":"ViT-B/16","family":"Transformer (vision)","year":2020,"pattern":"backbone + head","task":"Is this road segment damaged?","task_note":"same task, completely different backbone","input":"3 \u00d7 224 \u00d7 224","input_note":"the same RGB photo","total":86567656,"stages":[{"label":"patch embedding \u2014 16\u00d716 patches, each \u2192 768-d","role":"backbone","params":590592,"out":"768 \u00d7 14 \u00d7 14","note":"224/16 = 14, so 196 patches; no convolution stack at all","spatial":196,"chan":768,"extent":150528},{"label":"+ class token, + position embeddings","role":"backbone","params":152064,"out":"197 \u00d7 768","note":"the extra token is the one the head will read","spatial":197,"chan":768,"extent":151296},{"label":"transformer encoder \u2014 12 blocks","role":"backbone","params":85056000,"out":"197 \u00d7 768","note":"every patch looks at every other patch, at every depth (includes the final LayerNorm)","spatial":197,"chan":768,"extent":151296},{"label":"take the class token only","role":"backbone","params":0,"out":"768","note":"196 patch vectors are dropped here \u2014 same collapse as average pooling","spatial":1,"chan":768,"extent":768},{"label":"heads.head \u2014 the ImageNet head","role":"head","params":769000,"out":"1000","note":"768 \u2192 1000 classes","spatial":1,"chan":1000,"extent":1000}],"role_totals":{"backbone":85798656,"head":769000},"stage_sum":86567656,"input_spatial":50176,"input_chan":3,"modality":"image","out_desc":"one label for the whole photo","body_params":85798656,"body_width":768,"exit_params":769000,"training":{"objective":"Predict which 1 of 1000 ImageNet classes the photo is","labels":true,"cost":"one label per image, typed by a person","corpus":"ImageNet-1k \u2014 1,281,167 photos","cite":"Dosovitskiy et al., ICLR 2021"}},"fasterrcnn":{"name":"Faster R-CNN + FPN","family":"Convolutional (detection)","year":2015,"pattern":"backbone + neck + heads","task":"Find and box every vehicle at the stop bar.","task_note":"many outputs per image, each with a location","input":"3 \u00d7 800 \u00d7 800","input_note":"a dashcam frame at detection resolution","total":41808406,"stages":[{"label":"ResNet-50 body \u2014 the same backbone as #1","role":"backbone","params":23508032,"out":"256-ch pyramid inputs","note":"literally the same layers; the fc head is gone","spatial":49,"chan":2048,"extent":100352},{"label":"FPN neck \u2014 merges 4 depths to one 256-ch pyramid","role":"neck","params":3344384,"out":"0: 256\u00d7200\u00d7200, 1: 256\u00d7100\u00d7100, 2: 256\u00d750\u00d750, \u2026","note":"a small object needs a shallow, high-resolution feature map","spatial":40000,"chan":256,"extent":10240000},{"label":"RPN head \u2014 objectness + box deltas, at every location","role":"head","params":593935,"out":"per-anchor scores + 4 box deltas","note":"convolutional, not an FNN \u2014 it slides over the map","spatial":40000,"chan":15,"extent":600000},{"label":"RoI box head \u2014 2 FC layers on each cropped region","role":"head","params":13895680,"out":"1024 per region","note":"this part IS an FNN, but it runs once per candidate box","spatial":1,"chan":1024,"extent":1024},{"label":"RoI predictor \u2014 class + refined box","role":"head","params":466375,"out":"91 classes + 91\u00d74 boxes","note":"the label vocabulary lives here, and only here","spatial":1,"chan":455,"extent":455}],"role_totals":{"backbone":23508032,"neck":3344384,"head":14955990},"stage_sum":41808406,"input_spatial":640000,"input_chan":3,"modality":"image","out_desc":"many outputs per image, each with a location","body_params":23508032,"body_width":2048,"exit_params":18300374,"training":{"objective":"Body from ImageNet; then predict every object's box and class","labels":true,"cost":"every object in every image, drawn by hand","corpus":"COCO 2017 \u2014 118,287 images","cite":"Ren et al., NeurIPS 2015 \u00b7 Lin et al., ECCV 2014"}},"unet":{"name":"U-Net","family":"Convolutional (segmentation)","year":2015,"pattern":"encoder + decoder, with skips","task":"Which pixels are flooded pavement?","task_note":"one label per PIXEL \u2014 the output is a map","input":"3 \u00d7 256 \u00d7 256","input_note":"a post-storm inspection photo","total":31043586,"stages":[{"label":"enc1 \u2014 double 3\u00d73 conv","role":"encoder","params":38976,"out":"64 \u00d7 256 \u00d7 256","note":"full resolution","spatial":65536,"chan":64,"extent":4194304},{"label":"enc2 (after pool)","role":"encoder","params":221952,"out":"128 \u00d7 128 \u00d7 128","note":"half","spatial":16384,"chan":128,"extent":2097152},{"label":"enc3 (after pool)","role":"encoder","params":886272,"out":"256 \u00d7 64 \u00d7 64","note":"quarter","spatial":4096,"chan":256,"extent":1048576},{"label":"enc4 (after pool)","role":"encoder","params":3542016,"out":"512 \u00d7 32 \u00d7 32","note":"eighth","spatial":1024,"chan":512,"extent":524288},{"label":"bottleneck","role":"latent","params":14161920,"out":"1024 \u00d7 16 \u00d7 16","note":"the narrowest point \u2014 16\u00d7 smaller than the input, and location is nearly gone","spatial":256,"chan":1024,"extent":262144},{"label":"up4 + dec4  \u27f5 skip from enc4","role":"decoder","params":9178624,"out":"512 \u00d7 32 \u00d7 32","note":"the skip hands back the fine detail the pooling threw away","spatial":1024,"chan":512,"extent":524288},{"label":"up3 + dec3  \u27f5 skip from enc3","role":"decoder","params":2295552,"out":"256 \u00d7 64 \u00d7 64","note":"","spatial":4096,"chan":256,"extent":1048576},{"label":"up2 + dec2  \u27f5 skip from enc2","role":"decoder","params":574336,"out":"128 \u00d7 128 \u00d7 128","note":"","spatial":16384,"chan":128,"extent":2097152},{"label":"up1 + dec1  \u27f5 skip from enc1","role":"decoder","params":143808,"out":"64 \u00d7 256 \u00d7 256","note":"back to full resolution","spatial":65536,"chan":64,"extent":4194304},{"label":"1\u00d71 conv \u2014 per-pixel class","role":"head","params":130,"out":"2 \u00d7 256 \u00d7 256","note":"65,536 predictions, not one","spatial":65536,"chan":2,"extent":131072}],"extra":{"encoder_params":4689216,"decoder_params":12192320},"role_totals":{"encoder":4689216,"latent":14161920,"decoder":12192320,"head":130},"stage_sum":31043586,"input_spatial":65536,"input_chan":3,"modality":"image","out_desc":"one label per PIXEL \u2014 the output is a map","body_params":18851136,"body_width":1024,"exit_params":12192450,"skips":[[3,5],[2,6],[1,7],[0,8]],"training":{"objective":"Predict the correct class for every pixel","labels":true,"cost":"the most expensive kind \u2014 someone outlines the region","corpus":"the original was trained on 30 annotated images","cite":"Ronneberger, Fischer & Brox, MICCAI 2015"}},"vae":{"name":"VAE (the course's CTM VAE)","family":"Fully connected","year":2013,"pattern":"encoder + decoder","task":"Compress a speed heat-map to 2 numbers \u2014 and put it back.","task_note":"the output is the same kind of thing as the input","input":"20 \u00d7 20 = 400","input_note":"a pooled CTM speed heat-map","total":77972,"stages":[{"label":"W1 \u2014 400 \u2192 96","role":"encoder","params":38496,"out":"96","note":"one hidden layer","spatial":1,"chan":96,"extent":96},{"label":"W\u03bc, Wlv \u2014 96 \u2192 2 (twice)","role":"encoder","params":388,"out":"2 + 2","note":"a mean and a log-variance: the encoder outputs a distribution, not a point","spatial":1,"chan":4,"extent":4},{"label":"z \u2014 sample","role":"latent","params":0,"out":"2","note":"the whole heat-map, as two numbers you can plot","spatial":1,"chan":2,"extent":2},{"label":"W2 \u2014 2 \u2192 96","role":"decoder","params":288,"out":"96","note":"","spatial":1,"chan":96,"extent":96},{"label":"W3 \u2014 96 \u2192 400","role":"decoder","params":38800,"out":"400","note":"back to a heat-map \u2014 no class label anywhere in this model","spatial":1,"chan":400,"extent":400}],"extra":{"encoder_params":38884,"decoder_params":39088},"role_totals":{"encoder":38884,"latent":0,"decoder":39088},"stage_sum":77972,"input_spatial":8000,"input_chan":20,"modality":"grid","out_desc":"the same heat-map, rebuilt","body_params":38884,"body_width":2,"exit_params":39088,"training":{"objective":"Reconstruct its own input through a 2-number waist","labels":false,"cost":"none \u2014 the input is the answer key","corpus":"whatever heat-maps you already have","cite":"Kingma & Welling, ICLR 2014"}},"bert":{"name":"BERT-base","family":"Transformer (text)","year":2018,"pattern":"backbone + head","task":"Classify a crash narrative: was ADAS engaged?","task_note":"one label for the whole document","input":"up to 512 tokens","input_note":"an NHTSA complaint, tokenized","total":109482240,"stages":[{"label":"token + position + segment embeddings (30,522 vocab)","role":"backbone","params":23837184,"out":"512 \u00d7 768","note":"a lookup table \u2014 this is the one-hot \u00d7 learned-matrix from the embeddings segment","spatial":512,"chan":768,"extent":393216},{"label":"encoder \u2014 12 transformer blocks","role":"backbone","params":85054464,"out":"512 \u00d7 768","note":"every token attends to every other token, both directions","spatial":512,"chan":768,"extent":393216},{"label":"pooler \u2014 take [CLS], one dense layer","role":"backbone","params":590592,"out":"768","note":"512 token vectors collapsed to one \u2014 the same move as global average pooling","spatial":1,"chan":768,"extent":768},{"label":"classification head (yours)","role":"head","params":1538,"out":"2","note":"768 \u2192 2. BERT ships without one; you attach it","spatial":1,"chan":2,"extent":2}],"role_totals":{"backbone":109482240,"head":1538},"stage_sum":109483778,"input_spatial":1,"input_chan":512,"modality":"text","out_desc":"one label for the whole document","body_params":109482240,"body_width":768,"exit_params":1538,"training":{"objective":"Blank out 15% of the tokens and predict them from both sides","labels":false,"cost":"none \u2014 the hidden word IS the answer","corpus":"BooksCorpus + English Wikipedia","cite":"Devlin et al., NAACL 2019"}},"gpt2":{"name":"GPT-2 small","family":"Transformer (text)","year":2019,"pattern":"decoder-only","task":"Draft the incident report from the log entries.","task_note":"the output is a sequence, one token at a time","input":"up to 1024 tokens","input_note":"the running text so far","total":124439808,"stages":[{"label":"token + position embeddings (50,257 vocab)","role":"backbone","params":39383808,"out":"1024 \u00d7 768","note":"","spatial":1024,"chan":768,"extent":786432},{"label":"12 transformer blocks \u2014 MASKED attention","role":"backbone","params":85054464,"out":"1024 \u00d7 768","note":"each token may look only at tokens BEFORE it \u2014 that mask is the only real difference from BERT","spatial":1024,"chan":768,"extent":786432},{"label":"final layer norm","role":"backbone","params":1536,"out":"1024 \u00d7 768","note":"","spatial":1024,"chan":768,"extent":786432},{"label":"lm_head \u2014 768 \u2192 vocabulary","role":"head","params":0,"shared_params":38597376,"out":"1024 \u00d7 50,257","note":"WEIGHT-TIED: it reuses the 38,597,376-number embedding table, read backwards. Costs nothing extra","spatial":1024,"chan":50257,"extent":51463168}],"extra":{"tied":true,"naive_sum":124439808,"unique":124439808},"role_totals":{"backbone":124439808,"head":0},"stage_sum":124439808,"input_spatial":1,"input_chan":1024,"modality":"text","out_desc":"a sequence, one token at a time","body_params":124439808,"body_width":768,"exit_params":0,"training":{"objective":"Predict the next token, over and over","labels":false,"cost":"none \u2014 the next word IS the answer","corpus":"WebText, scraped from the open internet","cite":"Radford et al., 2019"}},"clip":{"name":"CLIP ViT-B/32","family":"Transformer (two towers)","year":2021,"pattern":"two encoders, no head","task":"Find every clip matching \u201cdebris in the right lane\u201d.","task_note":"the output is a position in a shared space","input":"a photo AND a caption","input_note":"both, at the same time","total":151277313,"stages":[{"label":"vision tower \u2014 ViT-B/32","role":"encoder","params":87456000,"out":"768","note":"an image goes in one side","spatial":1,"chan":768,"extent":768,"lane":0},{"label":"visual projection \u2014 768 \u2192 512","role":"encoder","params":393216,"out":"512","note":"","spatial":1,"chan":512,"extent":512,"lane":0},{"label":"text tower \u2014 12-block transformer","role":"encoder","params":63165952,"out":"512","note":"a sentence goes in the other side","spatial":1,"chan":512,"extent":512,"lane":1},{"label":"text projection \u2014 512 \u2192 512","role":"encoder","params":262144,"out":"512","note":"","spatial":1,"chan":512,"extent":512,"lane":1},{"label":"the shared 512-d space","role":"latent","params":1,"out":"512","note":"no classifier anywhere: you compare by dot product. The 1 parameter is the learned temperature","spatial":1,"chan":512,"extent":512,"lane":2}],"role_totals":{"encoder":151277312,"latent":1},"stage_sum":151277313,"input_spatial":1,"input_chan":1,"modality":"image+text","out_desc":"a position in a shared space","body_params":151277313,"body_width":512,"exit_params":0,"training":{"objective":"Match each image to its own caption, against all the wrong captions","labels":false,"cost":"none \u2014 the captions were already attached","corpus":"400,000,000 image\u2013caption pairs","cite":"Radford et al., ICML 2021"}}},"finding":{"n":3,"names":["CLIP ViT-B/32","GPT-2 small","BERT-base"],"params":385199361,"first_labelled":"ViT-B/16","ranking":[["CLIP ViT-B/32",151277313,false],["GPT-2 small",124439808,false],["BERT-base",109482240,false],["ViT-B/16",85798656,true],["ResNet-50",23508032,true],["Faster R-CNN + FPN",23508032,true],["U-Net",18851136,true],["VAE (the course's CTM VAE)",38884,false]],"unlabelled_total":385238245,"labelled_total":151665856}};
+</script>
+<script>
+/* Anatomy of a Deep Network — AI for Mobility, Module 1.
+   Every number rendered here is read from ZOO (measured by measure.py).
+   Nothing numeric is written by hand in this file. */
+(function () {
+"use strict";
+const M = ZOO.models;
+const KEYS = ["resnet50","vit_b16","fasterrcnn","unet","vae","bert","gpt2","clip"];
+
+const ROLE = {
+  backbone:{c:"#006747", n:"backbone / encoder"},
+  encoder :{c:"#006747", n:"backbone / encoder"},
+  neck    :{c:"#2E7D5C", n:"neck (re-mixes depths)"},
+  latent  :{c:"#0E6E9E", n:"the narrow point"},
+  decoder :{c:"#8E44AD", n:"decoder (rebuilds the input space)"},
+  head    :{c:"#B79F4D", n:"head (names the output)"}
+};
+const fmt = n => n.toLocaleString("en-US");
+/* Same encoding the CNN architectures companion uses:
+   block HEIGHT = size of the feature map / sequence (how many positions),
+   block WIDTH  = channels (how many numbers per position).
+   A cliff in height means a head follows; a V means a decoder does; a V in
+   width with flat height is a fully-connected bottleneck. */
+const BAND_TOP = 52, BAND_H = 216, MIDY = BAND_TOP + BAND_H / 2;
+const hOf = sp => 16 + 190 * Math.pow(sp, 0.25) / Math.pow(65536, 0.25);
+const wOf = ch => Math.log2(1 + ch);
+const shortLabel = s => s.split("—")[0].split("⟵")[0].trim();
+
+/* one-sentence takeaway per network — prose, not measurement */
+const READ = {
+ resnet50:"Watch the sixth block. Five stages shrink the picture gently, then global average pooling throws away the 7×7 grid in one step and 100,352 numbers become 2,048. Everything after that cliff is the head.",
+ vit_b16:"No cliff until the very end, because there is no pooling: 197 patch vectors go all the way through. Then 196 of them are discarded and only the class token is read. Same collapse as ResNet's pooling — done by selection instead of averaging.",
+ fasterrcnn:"The only network here whose middle goes back UP. The FPN neck rebuilds high resolution because a small object needs a fine-grained map — you cannot box a distant truck from a 7×7 grid.",
+ unet:"The shape is the name. Down for four stages, then back up for four, with a skip at every level handing the decoder the detail that pooling destroyed. It ends the same size it started.",
+ vae:"77,972 parameters, and a waist of two numbers. Everything about a 400-number heat-map that the model kept is in those two — which is exactly why you can plot the latent plane and read it.",
+ bert:"Flat, then a cliff at the pooler: 512 token vectors become one. BERT ships with no head at all — the 1,538-parameter classifier at the end is one you attach, and it is the only part that knows your task.",
+ gpt2:"Flat all the way, and then the exit is BIGGER than the representation — 768 numbers become 50,257 logits. That exit is one linear layer that costs nothing, because it reuses the embedding table.",
+ clip:"No cliff, no V, no exit. Two separate towers, one for pictures and one for sentences, both landing in the same 512-d space — where the only operation left is a dot product."
+};
+
+/* ══════════════ tab 1 ══════════════ */
+let cur = "resnet50", sel = -1;
+
+function layout(m){
+  const W=1000, PAD=16, n=m.stages.length, gap=n>7?8:13;
+  const avail=W-2*PAD-gap*(n-1);
+  // scale the raw log-channel values to fill the band FIRST, then floor the
+  // narrow ones and re-fit — flooring first would make every block equal width
+  let ws=m.stages.map(s=>wOf(s.chan));
+  const k=avail/ws.reduce((x,y)=>x+y,0); ws=ws.map(w=>Math.max(26,w*k));
+  const k2=avail/ws.reduce((x,y)=>x+y,0); ws=ws.map(w=>w*k2);
+  let x=PAD;
+  return m.stages.map((s,i)=>{
+    const w=ws[i], h=hOf(s.spatial);
+    const cy = ("lane" in s) ? [MIDY-58, MIDY+58, MIDY][s.lane] : MIDY;
+    const b={x, y:cy-h/2, w, h, cy, s, i};
+    x+=w+gap; return b;
+  });
+}
+
+function drawArch(){
+  const m=M[cur], B=layout(m), svg=document.getElementById("archsvg");
+  let g=`<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5"
+    orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9aa8a3"/></marker></defs>`;
+
+  B.forEach((b,i)=>{ if(i===0) return; const p=B[i-1];
+    if(("lane" in b.s)&&("lane" in p.s)&&b.s.lane!==p.s.lane) return;
+    g+=`<line x1="${p.x+p.w}" y1="${p.cy}" x2="${b.x-2}" y2="${b.cy}" stroke="#9aa8a3"
+        stroke-width="1.5" marker-end="url(#ah)"/>`; });
+
+  if(cur==="clip"){ const t=B[4];
+    [B[1],B[3]].forEach(a2=>{ g+=`<path d="M${a2.x+a2.w} ${a2.cy} C ${a2.x+a2.w+26} ${a2.cy}, ${t.x-26} ${t.cy}, ${t.x-2} ${t.cy}"
+        fill="none" stroke="#9aa8a3" stroke-width="1.5" marker-end="url(#ah)"/>`; });
+    g+=`<text x="${(B[1].x+B[3].x)/2}" y="30" text-anchor="middle" font-size="10.5" font-weight="700"
+         fill="#5b6b66">two towers, run separately</text>`; }
+
+  // U-Net skips — each arc at its own height so they never overlap
+  (m.skips||[]).forEach(([p0,q0],j)=>{ const p=B[p0], q=B[q0];
+    const apex=42-j*9;
+    g+=`<path d="M${p.x+p.w/2} ${p.y-3} C ${p.x+p.w/2} ${apex}, ${q.x+q.w/2} ${apex}, ${q.x+q.w/2} ${q.y-3}"
+        fill="none" stroke="#8E44AD" stroke-width="1.4" stroke-dasharray="5 4" opacity=".8"/>`; });
+  if((m.skips||[]).length) g+=`<text x="${B[4].x+B[4].w/2}" y="16" text-anchor="middle" font-size="10.5"
+      font-weight="700" fill="#8E44AD">skip connections — the detail pooling threw away</text>`;
+
+  B.forEach((b,i)=>{
+    const r=ROLE[b.s.role], cx=b.x+b.w/2;
+    g+=`<g class="blk${i===sel?" sel":""}" data-i="${i}" role="button" tabindex="0">
+      <title>${b.s.label} — ${fmt(b.s.params)} parameters, out ${b.s.out}</title>
+      <rect x="${b.x.toFixed(1)}" y="${b.y.toFixed(1)}" width="${b.w.toFixed(1)}" height="${b.h.toFixed(1)}"
+            rx="4" fill="${r.c}" stroke="${r.c}"/>
+      <text x="${cx.toFixed(1)}" y="${(BAND_TOP+BAND_H+16).toFixed(1)}" font-size="9.6" font-weight="700"
+            fill="#3f4d48" text-anchor="end"
+            transform="rotate(-34 ${cx.toFixed(1)} ${(BAND_TOP+BAND_H+16).toFixed(1)})">${shortLabel(b.s.label)}</text>
+      </g>`;
+  });
+
+  // the selected block's shape, called out where it can't collide
+  if(sel>=0){ const b=B[sel];
+    g+=`<line x1="${b.x+b.w/2}" y1="${b.y-4}" x2="${b.x+b.w/2}" y2="${Math.max(BAND_TOP-26,8)}"
+         stroke="#1c2422" stroke-width="1"/>
+        <text x="${b.x+b.w/2}" y="${Math.max(BAND_TOP-32,4)}" text-anchor="middle" font-size="10.5"
+         font-weight="700" font-family="ui-monospace,monospace" fill="#1c2422">${b.s.out}</text>`; }
+
+  svg.innerHTML=g;
+  svg.querySelectorAll(".blk").forEach(el=>{
+    const go=()=>{ sel=+el.dataset.i; drawArch(); detail(); };
+    el.addEventListener("click",go);
+    el.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();go();} });
+  });
+}
+
+function detail(){
+  const m=M[cur], d=document.getElementById("archdetail");
+  if(sel<0){ d.innerHTML=`<b>Read this one for:</b> ${READ[cur]}
+      <div class="dnums"><span>click any block for its detail</span></div>`; return; }
+  const s=m.stages[sel];
+  d.innerHTML=`<b>${s.label}</b>${s.note?" — "+s.note:""}
+    <div class="dnums">
+      <span>role: <b style="color:${ROLE[s.role].c}">${ROLE[s.role].n}</b></span>
+      <span>parameters: <b>${fmt(s.params)}</b>${s.shared_params?` <em>(reuses ${fmt(s.shared_params)} it does not own)</em>`:""}</span>
+      <span>output: <b>${s.out}</b></span>
+      <span>= <b>${fmt(s.extent)}</b> numbers</span>
+    </div>`;
+}
+
+function stats(){
+  const m=M[cur];
+  document.getElementById("archhead").innerHTML=
+    `<h3 style="margin-top:2px">${m.name} <span class="pill">${m.pattern}</span></h3>
+     <p style="margin:2px 0 12px;font-size:13.6px;color:#5b6b66">
+       <b>${m.family}, ${m.year}.</b> In: ${m.input_note} (<span class="mono">${m.input}</span>).
+       The job: <b>${m.task}</b> — ${m.task_note}.</p>`;
+  document.getElementById("archstats").innerHTML=
+    [["total parameters",fmt(m.total)],["stages drawn",m.stages.length],
+     ["body (reusable)",fmt(m.body_params)],["exit (task-specific)",fmt(m.exit_params)]]
+    .map(([l,v])=>`<div class="stat"><div class="n sm">${v}</div><div class="l raw">${l}</div></div>`).join("");
+  const seen=new Set(m.stages.map(s=>ROLE[s.role].n));
+  document.getElementById("rolekey").innerHTML=[...seen].map(n=>{
+    const c=Object.values(ROLE).find(r=>r.n===n).c;
+    return `<span><i style="background:${c}"></i>${n}</span>`;}).join("");
+}
+
+document.getElementById("chips").innerHTML=KEYS.map(k=>
+  `<button class="chip${k===cur?" on":""}" data-k="${k}">${M[k].name}<span class="yr">${M[k].family}</span></button>`).join("");
+document.querySelectorAll("#chips .chip").forEach(b=>b.addEventListener("click",()=>{
+  cur=b.dataset.k; sel=-1;
+  document.querySelectorAll("#chips .chip").forEach(o=>o.classList.toggle("on",o===b));
+  stats(); drawArch(); detail(); }));
+
+/* ══════════════ tab 2 ══════════════ */
+const GROUPS=[
+ {t:"Backbone + head — a cliff, then a thin exit", k:["resnet50","vit_b16","bert"],
+  p:"The representation is deliberately collapsed — pooled, or one token selected — and a single layer names the answer. Three different families, three different decades, one silhouette."},
+ {t:"Backbone + neck + heads — the cliff, many times over", k:["fasterrcnn"],
+  p:"The output is still small, but there is one of them per location, so resolution has to be restored before the heads run. That is what the rise in the middle is."},
+ {t:"Encoder + decoder — the V", k:["unet","vae"],
+  p:"The output lives in the same space as the input, so something has to rebuild it. The waist is where the model decides what was worth keeping."},
+ {t:"No exit at all — the representation is the product", k:["clip"],
+  p:"Two towers, one space, and no classifier anywhere. What you do with it is arithmetic: nearest neighbours, retrieval, zero-shot comparison."},
+ {t:"The one whose name lies", k:["gpt2"],
+  p:"Called decoder-only, but nothing decodes back to the input space. It is a backbone and a head — run in a loop, with attention masked so no token sees the future."}
+];
+
+function sil(k){
+  const m=M[k], n=m.stages.length, W=520, H=118, PAD=6, gap=2;
+  const avail=W-2*PAD-gap*(n-1);
+  let ws=m.stages.map(s=>wOf(s.chan));
+  const kk=avail/ws.reduce((x,y)=>x+y,0); ws=ws.map(w=>Math.max(5,w*kk));
+  const kk2=avail/ws.reduce((x,y)=>x+y,0); ws=ws.map(w=>w*kk2);
+  let x=PAD, g="";
+  m.stages.forEach((s,i)=>{ const h=hOf(s.spatial)*(H-26)/206;
+    const cy=("lane" in s)?[H/2-26,H/2+26,H/2][s.lane]:H/2;
+    g+=`<rect x="${x.toFixed(1)}" y="${(cy-h/2).toFixed(1)}" width="${ws[i].toFixed(1)}"
+         height="${h.toFixed(1)}" rx="2" fill="${ROLE[s.role].c}"/>`; x+=ws[i]+gap; });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${m.name} silhouette">${g}</svg>`;
+}
+document.getElementById("patterns").innerHTML=GROUPS.map(G=>
+  `<div class="patgroup card"><h4 class="raw">${G.t}</h4><p>${G.p}</p>`+
+  G.k.map(k=>`<div class="silrow"><div class="nm">${M[k].name}<em>${fmt(M[k].total)} params</em></div>${sil(k)}</div>`).join("")+
+  `</div>`).join("");
+
+const OUTROW=KEYS.map(k=>{ const m=M[k], last=m.stages[m.stages.length-1];
+  return {k, name:m.name, out:m.out_desc, n:last.extent, exit:m.pattern}; })
+  .sort((a,b)=>a.n-b.n);
+document.querySelector("#outtable tbody").innerHTML=OUTROW.map(r=>
+  `<tr><td>${r.name}</td><td>${r.out}</td><td class="num">${fmt(r.n)}</td><td>${r.exit}</td></tr>`).join("");
+
+document.getElementById("k-dec").textContent=fmt(M.unet.extra.decoder_params)+" parameters";
+document.getElementById("k-enc").textContent=fmt(M.unet.body_params)+" parameters";
+
+/* ══════════════ tab 3 ══════════════ */
+const TASKS={
+ cls_img :{l:"Damaged / intact — one label per photo",        mod:"image", exit:"head"},
+ det_img :{l:"Box every vehicle at the stop bar",             mod:"image", exit:"neck + dense heads"},
+ seg_img :{l:"Which pixels are flooded pavement",             mod:"image", exit:"decoder"},
+ ret_img :{l:"Find clips matching a typed description",       mod:"image+text", exit:"none"},
+ cls_txt :{l:"Was ADAS engaged? — from a crash narrative",    mod:"text",  exit:"head"},
+ gen_txt :{l:"Draft the incident report",                     mod:"text",  exit:"head, in a loop"},
+ cmp_grid:{l:"Compress a 20×20 speed heat-map, and restore it",mod:"grid", exit:"decoder"}
+};
+const headCost=w=>w*2+2;
+const SEG=M.unet.extra.decoder_params + M.unet.stages[M.unet.stages.length-1].params;
+const DET=M.fasterrcnn.role_totals.neck + M.fasterrcnn.role_totals.head;
+
+function plan(mk,tk){
+  const m=M[mk], t=TASKS[tk], covers=m.modality.split("+");
+  const wantsBoth=t.mod==="image+text";
+  const ok = wantsBoth ? m.modality==="image+text" : covers.includes(t.mod);
+
+  if(!ok){
+    const gridCase=(t.mod==="grid"&&covers.includes("image"))||(m.modality==="grid"&&t.mod==="image");
+    if(gridCase) return {cls:"no", h:"Same shape, different world.",
+      body:`You can certainly feed a 20×20 speed heat-map into a network built for photographs — the tensor
+        fits. But what ${m.name}'s early layers learned are edge and texture detectors <em>for photographs</em>,
+        and a grid of speeds is not a photograph. Nothing useful transfers. This is the honest case:
+        <b>for detector data there is no pretrained backbone to start from</b>, which is why the one grid model
+        on this page has ${fmt(M.vae.total)} parameters and was trained from scratch.`};
+    return {cls:"no", h:"Wrong modality — nothing transfers.",
+      body:`${m.name} takes <b>${m.modality}</b>; this job takes <b>${t.mod}</b>.
+        The body is indexed by the input, so there is no partial credit here: not one of its
+        ${fmt(m.body_params)} parameters is worth keeping. You need a different starting point.`};
+  }
+
+  // already does it
+  const same={resnet50:"cls_img",vit_b16:"cls_img",fasterrcnn:"det_img",unet:"seg_img",
+              vae:"cmp_grid",bert:"cls_txt",gpt2:"gen_txt",clip:"ret_img"}[mk]===tk;
+
+  const keep=[{n:`${m.name} body — kept, frozen`, v:m.body_params}];
+  const drop=m.exit_params;
+  let build=[], note="", head="";
+
+  if(same){ head="You already have this. Nothing to rebuild.";
+    note=`This is what ${m.name} was built for. The interesting question is not what to change but whether
+      it beats the classical baseline on <em>your</em> corridor — which is a measurement, not an architecture choice.`;
+    build=[{n:"nothing to build", v:0}]; }
+  else if(tk==="cls_img"||tk==="cls_txt"){
+    build=[{n:`new head: ${m.body_width} → 2`, v:headCost(m.body_width)}];
+    head="A head swap — the cheap case.";
+    note=`Two classes on a ${m.body_width}-number representation is <b>${fmt(headCost(m.body_width))}</b>
+      parameters. You are discarding ${fmt(drop)} that solved a question you no longer have, and training
+      ${(m.body_params/headCost(m.body_width)).toFixed(0)}× fewer numbers than the body holds.`;
+    if(mk==="clip") note+=` <b>Or train nothing at all:</b> encode “flooded pavement” and “dry pavement” as
+      sentences and ask which one the photo's vector is closer to. Zero parameters, zero labels — that is
+      what “zero-shot” means, and it is only possible because CLIP has no head to get in the way.`;
+    if(mk==="unet") note+=` Note what goes in the bin: the entire ${fmt(M.unet.extra.decoder_params)}-parameter
+      decoder. Going from a map to a label is throwing capability away.`;
+  }
+  else if(tk==="seg_img"){
+    build=[{n:"a decoder (U-Net's, measured)", v:M.unet.extra.decoder_params},
+           {n:"1×1 per-pixel head", v:M.unet.stages[M.unet.stages.length-1].params}];
+    head="Not a head swap. You are building a decoder.";
+    const ratio=SEG/headCost(m.body_width);
+    note=`The output is a map, so something has to rebuild resolution: <b>${fmt(SEG)}</b> new parameters,
+      about <b>${Math.round(ratio).toLocaleString("en-US")}×</b> what the damaged/intact head cost.
+      The comfortable “the body is 92%, the head is 8%” arithmetic does not survive this move — and the
+      labelling does not either, because someone now has to outline the flooding, not tick a box.`;
+  }
+  else if(tk==="det_img"){
+    build=[{n:"FPN neck", v:M.fasterrcnn.role_totals.neck},
+           {n:"RPN + RoI heads", v:M.fasterrcnn.role_totals.head}];
+    head="Body kept. Neck and heads built.";
+    note=`Detection needs resolution back before it needs an answer, so a neck goes in first:
+      <b>${fmt(DET)}</b> new parameters. Every box also needs a labelled box to learn from — the
+      annotation cost rises faster than the parameter count does.`;
+  }
+  else if(tk==="ret_img"){
+    build=[{n:"a second tower for the other modality", v:M.clip.role_totals.encoder-M.vit_b16.body_params},
+           {n:"a contrastive objective (no new layers)", v:0}];
+    head="You need a partner, not a head.";
+    note=`Retrieval compares two things, so a picture-only network is half a system. The missing half is a
+      text tower landing in the same space, and the thing that puts them in the same space is the training
+      objective — contrastive learning — not a layer you can bolt on.`;
+  }
+  else if(tk==="gen_txt"){
+    if(mk==="bert"){ return {cls:"no", h:"This one is impossible, and it is worth knowing why.",
+      body:`BERT's attention is <b>bidirectional</b> — every token sees every other token, including the ones
+        after it. That is exactly what makes it good at classification and exactly what makes it useless for
+        generation: at training time it has already seen the word it would be asked to predict. You cannot fix
+        that with a head. GPT-2 has nearly the same body and nearly the same parameter count; the one
+        difference is a mask.`}; }
+    build=[{n:"LM head, weight-tied to the embeddings", v:0}];
+    head="Free head, different training.";
+    note=`The exit is one linear layer that reuses the embedding table, so it costs nothing.
+      What it costs instead is the objective and the mask.`;
+  }
+  else if(tk==="cmp_grid"){
+    build=[{n:"a decoder back to the grid", v:M.vae.extra.decoder_params}];
+    head="You are building a decoder.";
+    note=`Output space equals input space, so a decoder it is — ${fmt(M.vae.extra.decoder_params)} parameters
+      at this scale.`;
+  }
+  return {cls: same?"ok":"ok", h:head, keep, build, drop, note};
+}
+
+function renderPlan(){
+  const mk=document.getElementById("selModel").value, tk=document.getElementById("selTask").value;
+  const p=plan(mk,tk), box=document.getElementById("planout");
+  if(p.body){ box.innerHTML=`<div class="verdict no"><h4 class="raw">✗ &nbsp;${p.h}</h4><div>${p.body}</div></div>`; return; }
+  const bt=p.build.reduce((a,b)=>a+b.v,0), body=p.keep[0].v, tot=body+bt||1;
+  box.innerHTML=`<div class="verdict ok"><h4 class="raw">${p.h}</h4>
+    <div class="keepbar">
+      <div style="flex:${Math.max(body,1)};min-width:112px;background:#006747">kept &amp; frozen</div>
+      <div style="flex:${Math.max(bt,tot*0.10)};min-width:112px;background:#B79F4D;color:#003E2A">${p.build.some(b=>b.n!=="nothing to build")?"built &amp; trained":"nothing rebuilt"}</div>
+    </div>
+    <div class="dnums" style="display:flex;gap:18px;flex-wrap:wrap;margin:8px 0 10px;font-size:12.6px;color:#5b6b66">
+      <span>kept &amp; frozen: <b class="mono">${fmt(body)}</b></span>
+      <span>trained: <b class="mono">${fmt(bt)}</b></span>
+      ${p.build.filter(b=>b.n!=="nothing to build").map(b=>`<span>${b.n}: <b class="mono">${fmt(b.v)}</b></span>`).join("")}
+      ${p.drop?`<span>discarded from the original: <b class="mono">${fmt(p.drop)}</b></span>`:""}
+    </div>
+    <div>${p.note}</div></div>`;
+}
+document.getElementById("selModel").innerHTML=KEYS.map(k=>
+  `<option value="${k}">${M[k].name} — takes ${M[k].modality}</option>`).join("");
+document.getElementById("selTask").innerHTML=Object.entries(TASKS).map(([k,t])=>
+  `<option value="${k}">${t.l}</option>`).join("");
+document.getElementById("selModel").addEventListener("change",renderPlan);
+document.getElementById("selTask").addEventListener("change",renderPlan);
+
+
+/* ══════════════ tab 4 — where the body comes from ══════════════ */
+const F = ZOO.finding;
+document.querySelector("#objtable tbody").innerHTML =
+  F.ranking.map(([name]) => {
+    const k = KEYS.find(x => M[x].name === name), t = M[k].training;
+    const badge = t.labels
+      ? `<b style="color:#c0392b">Yes</b> — ${t.cost}`
+      : `<b style="color:#006747">No</b> — ${t.cost}`;
+    return `<tr${t.labels?"":' class="hl"'}><td>${name}</td>
+      <td>${t.objective}<br><span class="small">${t.corpus} · ${t.cite}</span></td>
+      <td>${badge}</td><td class="num">${fmt(M[k].body_params)}</td></tr>`;
+  }).join("");
+
+document.getElementById("findstats").innerHTML = [
+  [fmt(F.params), "parameters in the top " + F.n + " bodies"],
+  ["0", "hand labels between them"],
+  [fmt(F.unlabelled_total), "label-free total, all eight"],
+  [fmt(F.labelled_total), "hand-labelled total, all eight"]
+].map(([v, l]) => `<div class="stat"><div class="n sm">${v}</div><div class="l raw">${l}</div></div>`).join("");
+
+document.getElementById("findtext").innerHTML =
+  `<b>The ${F.n} largest bodies on this page — ${F.names.join(", ")} — were trained without a single
+   hand-drawn label between them.</b> That is ${fmt(F.params)} parameters before you reach the first
+   network that needed a person to annotate anything (${F.first_labelled}). Across all eight, the
+   label-free bodies outweigh the hand-labelled ones by
+   ${(F.unlabelled_total / F.labelled_total).toFixed(1)}× —
+   ${fmt(F.unlabelled_total)} against ${fmt(F.labelled_total)}.`;
+
+/* ══════════════ tabs + boot ══════════════ */
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("nav.tabs button").forEach(o=>o.classList.toggle("active",o===b));
+  document.querySelectorAll("section.page").forEach(s=>s.classList.toggle("active",s.id===b.dataset.tab));
+  window.scrollTo({top:0,behavior:"instant"}); }));
+
+document.getElementById("provenance").textContent=
+  ` Architectures built and measured with PyTorch ${ZOO.meta.torch}, torchvision ${ZOO.meta.torchvision}, transformers ${ZOO.meta.transformers}. ${ZOO.meta.note}`;
+
+stats(); drawArch(); detail(); renderPlan();
+window.__ready = true;
+})();
+
+</script>
+</body>
+</html>

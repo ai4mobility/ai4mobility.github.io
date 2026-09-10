@@ -225,6 +225,38 @@ items:
       a car-following regression on the last tab. Every figure computed live from a
       fixed seed; analytic gradients checked against finite differences in the page.
 
+  - id: m1-loss-reward-companion
+    file: Loss_Reward_Design_Companion.html
+    kind: companion
+    module: 1
+    session: 2026-09-03
+    status: integrated
+    dest: site/module1/notes2-learning.md#the-same-machinery-a-different-question
+    mounted: site/_static/companions/Loss_Reward_Design_Companion.html
+    notes: >-
+      Five tabs on objective design: the influence function psi(r) as the real
+      mechanism; the Huber knee on a dirty detector archive; the class weight and
+      the confusion matrix; three objectives picking three different green splits
+      at one intersection; REINFORCE learning from a 0/1 reward. Assembled from
+      loss_reward_companion_template.html + loss_reward_companion_data.js. Every
+      value is precomputed in numpy by loss_reward_companion_data.py, which
+      asserts against loss_reward_design_numbers.json and refuses to write the
+      data file if the companion and the slides disagree.
+
+  - id: m1-loss-reward-slides
+    file: Loss_Reward_Design_Slides.md
+    kind: deck
+    module: 1
+    session: 2026-09-03
+    status: raw
+    notes: >-
+      11 slides + 1 backup, ~17 min, Module 1 extension hooked to the "exactly two
+      things changed" close of notes2-learning. Supervised loss design then RL
+      reward design, answering why a non-differentiable reward is not a
+      differentiability problem. Figure: Loss_Reward_Where_The_Signal_Enters.svg
+      (_1 = supervised half, _2 = both). Numbers: loss_reward_design_numbers.py.
+      Notes prose for this segment is not written yet.
+
   - id: m1-conv-kernels
     file: Convolution_Kernels_Companion.html
     kind: companion
@@ -999,3 +1031,52 @@ items:
       document counts (274 pp, 711,331 chars, 103,673 words, 145,220 o200k tokens =
       1.401 tok/word, 530 tok/page; 78.7% of 5,131 word types are single tokens,
       covering 96.0% of occurrences). Skips that section if the PDF is absent.
+
+  - id: m1-deep-net-anatomy
+    file: Deep_Net_Anatomy_Companion.html
+    kind: companion
+    module: 1
+    session: 2026-09-10
+    status: integrated
+    dest: site/module1/notes5-embeddings.md#deep-net-anatomy
+    mounted: site/_static/companions/Deep_Net_Anatomy_Companion.html
+    notes: >-
+      Four tabs. Eight architectures (ResNet-50, ViT-B/16, Faster R-CNN+FPN, U-Net,
+      the course CTM VAE, BERT-base, GPT-2 small, CLIP ViT-B/32) built from their
+      architecture definitions with random weights and measured, so no checkpoints
+      are downloaded and the counts are still exact. Drawn with the same encoding as
+      the CNN architectures companion (height = feature-map size, width = channels),
+      so cliff = a head follows, V = a decoder, flat = the representation is the
+      product. Mounted at the TOP of 1.5 on purpose - it introduces representation
+      learning rather than following it. Tab 4 is the hinge: what objective trained
+      each body, and the computed finding that the three largest bodies here
+      (385,199,361 params) needed zero hand labels, which motivates word2vec and
+      contrastive learning directly.
+
+  - id: m1-deep-net-anatomy-repro
+    file: deep_net_anatomy_companion/
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: integrated
+    notes: >-
+      Reproducer for m1-deep-net-anatomy. measure.py builds every model and writes
+      arch_zoo.json, spot-checking five totals against published figures so a silent
+      torchvision/transformers change fails the build. assemble.py splices the house
+      style out of Neural_Networks_and_Backprop_Companion.html and runs data, id and
+      tag checks; verify.py runs 114 live Playwright checks. Both must pass.
+
+  - id: m1-backbone-head-slides
+    file: Backbone_And_Head_Slides.md
+    kind: deck
+    module: 1
+    session: 2026-09-10
+    status: raw
+    notes: >-
+      5 slides opening Sept 10, before the embeddings block. Figures
+      Transfer_Label_Gap, Backbone_And_Head, Pretrain_Then_Transfer, Transfer_Dial
+      (SVG + 2x PNG). Establishes the backbone/head split on ONE architecture; the
+      anatomy companion then generalises it across eight. Numbers from
+      transfer_learning_numbers.py, which walks ResNet-50 layer by layer and asserts
+      its own total against torchvision's published 25,557,032. Notes prose for this
+      segment is folded into notes5-embeddings.md 1.5 rather than written separately.

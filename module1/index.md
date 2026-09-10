@@ -66,7 +66,7 @@ is operations material and lives in {doc}`Module 7 §7.1 <../module7/notes>`. Th
 <tr>
   <td><a href="notes2-learning.html"><strong>1.2 How a network learns</strong></a><br><em>Sept 3</em></td>
   <td>Weights, biases and activations one at a time; when one boundary is not enough; backpropagation traced number by number; where training goes wrong, measured.</td>
-  <td><a href="../_static/companions/Neural_Networks_and_Backprop_Companion.html" target="_blank" rel="noopener">Network basics and backprop &#8599;</a><br><a href="lab1.html">Lab 1</a></td>
+  <td><a href="../_static/companions/Neural_Networks_and_Backprop_Companion.html" target="_blank" rel="noopener">Network basics and backprop &#8599;</a><br><a href="../_static/companions/Loss_Reward_Design_Companion.html" target="_blank" rel="noopener">Loss and reward design &#8599;</a><br><a href="lab1.html">Lab 1</a></td>
 </tr>
 <tr>
   <td><a href="notes3-cnn.html"><strong>1.3 Convolution, and a network that sees</strong></a><br><em>Sept 3</em></td>
@@ -81,7 +81,7 @@ is operations material and lives in {doc}`Module 7 §7.1 <../module7/notes>`. Th
 <tr>
   <td><a href="notes5-embeddings.html"><strong>1.5 Representation learning and embeddings</strong></a><br><em>Sept 10</em></td>
   <td>One-hot and its three failures; embeddings as geometry; Word2Vec &rarr; Road2Vec; transfer learning; contrastive learning; CLIP; how to check a representation.</td>
-  <td><em>No companion &mdash; the work is in the notebooks</em><br><a href="lab2_word_embeddings.html">Lab 2</a>, <a href="lab3_image_embeddings.html">Lab 3</a>, <a href="lab4_clip_vs_traditional_cv.html">Lab 4</a></td>
+  <td><a href="../_static/companions/Deep_Net_Anatomy_Companion.html" target="_blank" rel="noopener">The anatomy of a deep network &#8599;</a><br><a href="lab2_word_embeddings.html">Lab 2</a>, <a href="lab3_image_embeddings.html">Lab 3</a>, <a href="lab4_clip_vs_traditional_cv.html">Lab 4</a></td>
 </tr>
 <tr>
   <td><a href="notes6-labs.html"><strong>Practice, exercises, and further reading</strong></a><br><em>Both sessions</em></td>
@@ -199,7 +199,7 @@ bridge into multimodal models.
 
 ## Interactive companions
 
-Seven interactive companions support the Sept 3 and Sept 10 sessions. Each is
+Nine interactive companions support the Sept 3 and Sept 10 sessions. Each is
 embedded in the section it belongs to and is also linked here: one walks the sigmoid, tanh and softmax activations
 from the binary-logit starting point; one works through the learned-versus-fixed basis
 comparison and the point where a multilayer network becomes the cheaper option; one takes
@@ -221,10 +221,12 @@ reading completely different things.
 - <a href="../_static/companions/Sigmoid_Tanh_Companion.html" target="_blank" rel="noopener">Sigmoid, tanh and softmax from the logit</a> &mdash; embedded in <a href="notes1-networks.html">1.1 From the logit to the network</a>
 - <a href="../_static/companions/Multilayer_Networks_Companion.html" target="_blank" rel="noopener">Multilayer networks and learnable basis functions</a> &mdash; embedded in <a href="notes1-networks.html">1.1 From the logit to the network</a>
 - <a href="../_static/companions/Neural_Networks_and_Backprop_Companion.html" target="_blank" rel="noopener">What a neural network is, and how it learns</a> &mdash; embedded in <a href="notes2-learning.html">1.2 How a network learns</a>
+- <a href="../_static/companions/Loss_Reward_Design_Companion.html" target="_blank" rel="noopener">Loss and reward design: how you tell a model what you want</a> &mdash; embedded in <a href="notes2-learning.html">1.2 How a network learns</a>
 - <a href="../_static/companions/Convolution_Kernels_Companion.html" target="_blank" rel="noopener">Convolution kernels: how a network learns to see shape</a> &mdash; embedded in <a href="notes3-cnn.html">1.3 Convolution, and a network that sees</a>
 - <a href="../_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">A child on a scooter, seen by a stock CNN detector</a> &mdash; embedded in <a href="notes3-cnn.html">1.3 Convolution, and a network that sees</a>
 - <a href="../_static/companions/CNN_Architectures_Companion.html" target="_blank" rel="noopener">CNN architectures: LeNet to ResNet, and how to choose</a> &mdash; embedded in <a href="notes4-cnn-in-practice.html">1.4 Choosing a network, and interrogating it</a>
 - <a href="../_static/companions/Saliency_Maps_Companion.html" target="_blank" rel="noopener">Saliency maps: what is the network actually looking at?</a> &mdash; embedded in <a href="notes4-cnn-in-practice.html">1.4 Choosing a network, and interrogating it</a>
+- <a href="../_static/companions/Deep_Net_Anatomy_Companion.html" target="_blank" rel="noopener">The anatomy of a deep network: eight architectures, measured</a> &mdash; embedded in <a href="notes5-embeddings.html">1.5 Representation learning and embeddings</a>
 
 The scooter-kid case uses video recorded by the instructor on a public road. It is used with the
 consent of the person who recorded it, the footage is not redistributed as a file, and the frames

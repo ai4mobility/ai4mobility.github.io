@@ -19,6 +19,63 @@
 </div>
 
 
+(deep-net-anatomy)=
+## What every one of these networks has in common
+
+Section 1.4 asked which convolutional network to use and what it costs. Widen the
+question — set a vision transformer, an object detector, a segmentation network, a
+variational autoencoder and three language models alongside it — and something more
+useful than a ranking appears.
+
+The companion below opens eight real architectures, every one of them built in PyTorch
+and measured rather than quoted from a paper. Read across them and the *exit* changes
+every single time: a 1000-way classifier on ResNet-50, a pyramid of convolutional heads
+on Faster R-CNN, a decoder that rebuilds the image pixel by pixel on U-Net, a 512-number
+vector and no classifier at all on CLIP. What does not change is everything before the
+exit. Each of these networks spends between **92% and 100% of its parameters** turning
+raw input into a representation, and then a comparatively tiny amount of machinery
+turning that representation into an answer.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — The anatomy of a deep network</span>
+    <a href="../_static/companions/Deep_Net_Anatomy_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Deep_Net_Anatomy_Companion.html"
+          title="The anatomy of a deep network — eight architectures, measured" loading="lazy"></iframe>
+</div>
+
+Two consequences follow, and between them they are what the rest of this section is for.
+
+**The representation, not the answer, is the durable asset.** You met one version of this
+in 1.4: ResNet-50's ImageNet head is 2,049,000 of its 25,557,032 parameters — 8% — and it
+is the only part of the network that knows anything about ImageNet's thousand categories.
+Change the question and you rebuild that 8%. The other 92% is indexed by the *input*, not
+by the task, which is why it survives the change. Tab 3 of the companion lets you try the
+swap on any of the eight and shows you the bill.
+
+**So the question worth asking is where a good body comes from** — and the eight answer it
+in a way that is easy to walk past. Sort them by the size of their body and look at what
+each one was actually trained to do. The three largest — CLIP, GPT-2 and BERT,
+**385,199,361 parameters between them** — were trained without a single hand-drawn label.
+They manufactured their own supervision out of the structure of the data, in one of two
+ways: *hide part of the data and predict it* (BERT blanks out 15% of its tokens; GPT-2
+hides everything after the current word), or *use pairs that already occur together*
+(CLIP uses each image and its own caption, which were already attached).
+
+Those two tricks are the spine of everything below. Word2Vec is the first one, applied to
+words, and then to road segments. Contrastive learning is the second one stated in
+general. CLIP is the second one run across two modalities at once. Learning a body on a
+task you do not care about, so you can use it on the task you do, is what
+**representation learning** means, and the throwaway task has a name — a *pretext* task.
+
+One reason this matters more in transportation than in computer vision generally:
+ImageNet was affordable because a person can label a photograph in a few seconds. Nobody
+labels a crash in a few seconds, and there are only ever forty of them at your
+intersection. Objectives that need no hand labels are frequently not an elegance here but
+the only route to a model at all.
+
+
 ## One-hot, and its three failures
 
 A neural network is a function from vectors of numbers to vectors of numbers. It
