@@ -720,6 +720,53 @@ items:
       image data'' / ''END image data'' markers -- re-inline it if the script is rerun.'
 
 # -----------------------------------------------------------------------------
+  - id: m2-transformer-as-architecture-companion
+    file: Transformer_As_Architecture_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    dest: module2/index.md
+    mounted: site/_static/companions/Transformer_As_Architecture_Companion.html
+    notes: '"Your own tokens: the transformer as a research architecture." Six tabs, 264 KB, SINGLE FILE
+      (data inlined at build time, no sidecar). The THIRD module-2 embed, after tokenization and word2vec->BERT.
+      Purpose: the LLM/VLM thread teaches what a transformer does with language; this one teaches PhD students
+      that the encoder stack is domain-agnostic and can be pointed at their own data. Spine: a transformer
+      is a learned, input-dependent adjacency matrix over whatever you call a token. Tab 1 splits BERT into
+      the replaceable gold column (tokenizer + 23,837,184 embedding weights + head) and the kept green column
+      (85,054,464 encoder weights). Tab 2 is the interactive core: all 207 METR-LA detectors on a clickable
+      map, toggling between the DCRNN road-network adjacency (Gaussian kernel, sigma=2435.3 m, kappa=0.1,
+      1,349 edges, mean degree 6.52) and the measured correlation neighbourhood in three time bands -- the
+      two agree only 44.4% and the AM/PM neighbourhoods agree only 48.4%, which IS the argument for computing
+      A from the input. Tab 3 gives three token designs at equal depth (traffic flow / multimodal car-following
+      / infrastructure interdependency), each with a full fit-card row set. Tab 4 is a live permutation-equivariance
+      demo (real 8-dim attention head in JS) plus the ViT PE ablation and the measured 97.4% window-indistinguishability
+      result. Tab 5 is the evaluation close. Tab 6 is the fit card + four judgment questions. Opens on detector
+      768066, chosen BY RULE (closest to the fleet-mean overlaps among detectors that congest) rather than
+      hand-picked -- do not swap it for a more dramatic one. Move to module2/notes.md with the other two
+      embeds when the weekly pass creates it.'
+
+  - id: m2-transformer-as-architecture-repro
+    file: research_transformer_numbers.py + build_research_transformer_companion.py + verify_research_transformer.py
+    kind: internal
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    notes: 'Reproducer chain for m2-transformer-as-architecture-companion. research_transformer_numbers.py
+      downloads METR-LA (207 detectors, 34,272 five-minute bins, 1 Mar - 27 Jun 2012, 8.1% missing) plus
+      the DCRNN sensor graph into ./cache/ and recomputes EVERY measured number: persistence MAE 4.02/5.09/6.80
+      and weekly-HA MAE 4.19 on the standard 70/10/20 chronological split with zeros masked; the road graph;
+      the correlation neighbourhoods and their overlaps; temporal autocorrelation 0.84/0.76/0.67/0.53 against
+      spatial 0.44 road-adjacent and 0.20 all-pairs; the 97.4% window-matching result; and the 2,484-token
+      factorisation arithmetic (6,170,256 joint vs 543,996 factorised, 11.34x). TWO INDEPENDENT CROSS-CHECKS
+      confirm the split and masking are the standard ones: weekly HA computes to 4.19 against DCRNN''s published
+      4.16, and persistence at 60 min computes to 6.80 against the published Historical Inertia baseline
+      of 6.80. It writes research_transformer_numbers.json and research_transformer_data.js; build_research_transformer_companion.py
+      inlines both into the HTML and also holds the LIT dict of published numbers (STAEformer CIKM-23 Table
+      1, the ViT D.4 ablation, the FollowNet Table II MSE AND collision columns), each with its source.
+      verify_research_transformer.py runs 34 headless checks including one that re-derives the 44.4% and
+      48.4% claims from the data the page actually ships -- run it after any edit.'
+
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)
 # -----------------------------------------------------------------------------
 

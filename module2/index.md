@@ -53,8 +53,9 @@ By the end of this module you will be able to:
 
 ## Interactive companions
 
-Two companions this week: the first is about what goes *into* a transformer, the
-second about what comes out the other side.
+Three companions this week. The first is about what goes *into* a transformer and
+the second about what comes out the other side; the third takes the language out
+altogether and asks what the architecture is good for in your own research.
 
 The first topic on that list — what a token is, and what it costs — decides whether
 everything after it is affordable. Work through this companion before class. The
@@ -91,6 +92,33 @@ one to win.
   </div>
   <iframe src="../_static/companions/Word2Vec_to_BERT_Companion.html"
           title="From word2vec to BERT: what a contextual vector buys you" loading="lazy"></iframe>
+</div>
+
+The first two companions use a transformer the way it was built, on language. The third
+takes the language out. The encoder stack does not know what a word is — it knows how to
+let a set of vectors exchange information — so the three modelling decisions that matter
+are yours: what is one token, what may attend to what, and what "position" means in your
+problem. The page works that through on three research problems at once: network-wide
+traffic prediction, multimodal car-following, and infrastructure interdependency.
+
+Everything measured on it runs on **METR-LA** — 207 real loop detectors on Los Angeles
+freeways, five-minute speeds, March to June 2012. Tab 2 is the one to spend time in: pick
+a detector and compare the neighbours you would *declare* from the road network against
+the ones the data actually shows, separately in the morning peak, the evening peak, and
+overnight. Across all 207 detectors those two sets agree only 44% of the time, and the
+measured set is only 48% stable between the two peaks — which is the argument for letting
+a model compute the adjacency rather than fixing it. Then read tab 5 before you propose a
+transformer for your project: the naive baselines there were computed from scratch, and the
+gap between *no model* and *a model* turns out to be four times the gap between the 2018
+graph model and the 2023 state of the art.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — Your own tokens: the transformer as a research architecture</span>
+    <a href="../_static/companions/Transformer_As_Architecture_Companion.html" target="_blank" rel="noopener">Open full screen ↗</a>
+  </div>
+  <iframe src="../_static/companions/Transformer_As_Architecture_Companion.html"
+          title="Your own tokens: the transformer as a research architecture" loading="lazy"></iframe>
 </div>
 
 ## Video lectures
