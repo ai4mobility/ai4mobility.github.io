@@ -701,6 +701,24 @@ items:
       Chromium and reports console errors -- run it after any edit. Also produces Word2Vec_vs_Transformer_Spaces
       and _Downstream figures via make_word2vec_vs_transformer_figures.py.
 
+  - id: m2-image-tokenization-numbers
+    file: image_tokenization_numbers.py + image_tokenization_data.js
+    kind: internal
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    notes: 'Reproducer for tab 5 of m2-tokenization-companion ("Images"), added Sept 15 2026. Runs google/vit-base-patch16-224
+      over data/driving_example1.jpeg -- the instructor''s own photo of a signalised approach at sunset
+      (standing queue, mast arm with four red heads, a lot of sky). Detects the four heads by saturated
+      red in the mast-arm band rather than hand-drawing them, maps them into the 224x224 the model sees,
+      and counts which patches they overlap. Key measured results: the squash is 4032x3024 -> 224x224 with
+      NO aspect preservation; patch 32/16/8 give 50/197/785 tokens flattening 3072/768/192 numbers; all
+      four heads occupy 17.7 x 6.6 px and land in 4 of 196 patches (2.04%); the busiest quarter of patches
+      holds 72.3% of the frame''s variance; 196 patch vectors with 0 identical pairs and the two most alike
+      (two pieces of sky) at cos 0.9739; one frame = 197 tokens so the 274-page manual costs the same as
+      737.2 frames = 24.6 s of 30 fps video. The data file is INLINED into the companion HTML between ''BEGIN
+      image data'' / ''END image data'' markers -- re-inline it if the script is rerun.'
+
 # -----------------------------------------------------------------------------
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)
 # -----------------------------------------------------------------------------
