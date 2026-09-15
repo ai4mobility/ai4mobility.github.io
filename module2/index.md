@@ -51,7 +51,10 @@ By the end of this module you will be able to:
 - Hallucination, grounding, and why fluent output is not evidence of correctness
 - Latency, cost, and deployment constraints for transformer inference
 
-## Interactive companion
+## Interactive companions
+
+Two companions this week: the first is about what goes *into* a transformer, the
+second about what comes out the other side.
 
 The first topic on that list — what a token is, and what it costs — decides whether
 everything after it is affordable. Work through this companion before class. The
@@ -68,6 +71,26 @@ fragment into three or more tokens.
   </div>
   <iframe src="../_static/companions/Tokenization_Companion.html"
           title="Tokens: the unit a language model actually reads" loading="lazy"></iframe>
+</div>
+
+Module 1 left every word with one vector, for ever. The second companion is the model that
+stops doing that, opened up: the wordpiece table that *is* word2vec, the twelve encoder
+blocks stacked on top of it, and the fill-in-the-blank training task that forces the model
+to read context in the first place. It then measures what that buys, on 42,956 real NHTSA
+complaint narratives in which `light` genuinely means three different things — a dashboard
+warning light, a lamp on the vehicle, and a traffic signal. Drag the layer slider on tab 4
+and watch the three senses pull apart. Then settle tab 5 for yourself: three representations
+are measured on the same occurrences, two of them fail, and they fail at *different* things.
+Decide which one you would deploy — and say what the task would have to be for the cheaper
+one to win.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — From word2vec to BERT: what a contextual vector buys you</span>
+    <a href="../_static/companions/Word2Vec_to_BERT_Companion.html" target="_blank" rel="noopener">Open full screen ↗</a>
+  </div>
+  <iframe src="../_static/companions/Word2Vec_to_BERT_Companion.html"
+          title="From word2vec to BERT: what a contextual vector buys you" loading="lazy"></iframe>
 </div>
 
 ## Video lectures

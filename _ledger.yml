@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-09-05
+  updated: 2026-09-15
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -527,6 +527,82 @@ items:
     status: debt
     notes: Slides/ folder is empty. Decks are the intended input to every chapter.
 
+  - id: m1-word2vec-cost-figures
+    file: Word2Vec_Vocabulary_Cost.svg
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    dest: site/module1/notes.md#word2vec
+    notes: 'Slide 3b (SVG + PNG 3200x1800, plus _1/_2/_3 build reveals): why a huge vocabulary breaks two
+      of word2vec''s three cost sites and not the third. The architecture spine carries three numbered cost
+      badges; one row per site. (1) the input one-hot is NOT a real cost -- a one-hot matmul is a row lookup,
+      O(d) independent of V, 99.9973% of the multiplications would be times zero. (2) the output softmax
+      IS -- d*V = 3,674,100 per pair, 60.5 T per epoch, fixed 6,124x by negative sampling or 2,423x by hierarchical
+      softmax. (3) the two tables ARE -- 1.8 B parameters and a 3.4 GB file at Google-News scale, trimmed
+      but not fixed by Zipf. Instance is text8 (V=36,741, d=100, k=5), NOT Lab 2''s toy, because V=81 is
+      the regime where the question does not arise. Numbers: word2vec_cost_numbers.py.
+
+      '
+
+  - id: m1-word2vec-cost-numbers
+    file: word2vec_cost_numbers.py
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    notes: 'Reproducer for slide 3b. Asserts that a one-hot matmul equals a row lookup; computes the three
+      output-layer costs and their ratios; builds a REAL Huffman tree over the NHTSA vocabulary (8.97 average
+      levels vs a 13.34 balanced bound) and asserts the textbook bracket H <= avg < H+1; measures the Zipf
+      type/token split on that corpus; tabulates 2*V*d memory across five vocabularies including GPT-2''s
+      tied table.
+
+      '
+
+  - id: m1-tokenization-bridge-figures
+    file: Tokenization_Motivation.svg
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    dest: site/module1/notes.md#word2vec
+    notes: 'Slides 3c and 3d, the Module 1 -> Module 2 hinge (three SVG + PNG: Tokenization_Motivation,
+      Tokenization_BPE_Design with _1/_2 reveals, Word2Vec_vs_GPT2). Motivation figure: the three failures
+      of a WORD vocabulary (OOV, no sharing between forms, unbounded V) against subword pieces answering
+      all three, closing on the course-native line "tokenization is discretization" (CTM cell length, 5-
+      vs 15-minute bin, link vs lane). Design figure: the four-step BPE merge loop, trained live on the
+      NHTSA complaints -- first six merges with counts, the "cruise" trace, and which ADAS terms are whole
+      at 500 merges. Comparison figure: GPT-2''s wte IS W_in, with the four changes around it (unit, tied
+      tables, 12 blocks, and who pays the output softmax). Deliberately stops at the mechanism -- the Sept
+      17 Tokenization_Companion.html owns the hands-on.
+
+      '
+
+  - id: m1-tokenization-design-numbers
+    file: tokenization_design_numbers.py
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    notes: 'Reproducer for slides 3c/3d. Contains a working BPE trainer run on Labs/data/nhtsa_adas_complaints.txt.gz
+      (10,343 types, 4,498,502 tokens): merge trace, per-term "whole at merge N", and the misspellings that
+      never merge. Also rebuilds GPT-2 small''s parameter budget from the architecture and asserts the published
+      124,439,808 total. Tokenizer vocabulary sizes and the transportation splits are QUOTED from tokenization_numbers.py,
+      not re-derived.
+
+      '
+
+  - id: m1-word2vec-cost-builders
+    file: make_word2vec_cost_figures.py
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: drafted
+    notes: 'Regenerates all four figures above and their build reveals. PNGs render through the pedagogy
+      skill''s render_svg.py --scale 2 (3200x1800).
+
+      '
+
 # -----------------------------------------------------------------------------
 # MODULE 2 — Transformers, LLMs, Multimodal (Sept 17)
 # -----------------------------------------------------------------------------
@@ -585,6 +661,45 @@ items:
       Needs a home — Sept 17 (masked modeling on a road network) or Nov 5.
       Closest thing the course has to GNNs on road networks, flagged in the
       structure review as the most conspicuous content gap.
+
+  - id: m2-word2vec-to-bert-companion
+    file: Word2Vec_to_BERT_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    dest: module2/index.md
+    mounted: site/_static/companions/Word2Vec_to_BERT_Companion.html
+    notes: '"From word2vec to BERT." Six tabs, 277 KB, SINGLE FILE -- the data is inlined at build time,
+      so unlike m2-tokenization-companion there is no sidecar to copy. Introduces BERT as anatomy (30,522
+      wordpieces x 768, 12 blocks, 109,482,240 params = 23.8M table + 85.1M encoder), then masked language
+      modelling, then measures what context buys on 1,350 occurrences drawn from 42,956 NHTSA complaint
+      narratives where `light` carries three real senses (dashboard warning / exterior lamp / traffic signal).
+      Tab 3 scatter is clickable -- every dot opens the complaint it came from. Tab 4 is the layer slider:
+      per-layer PCA Procrustes-aligned to the previous layer so the cloud morphs instead of flipping; sense
+      margin runs +0.005 at L0 to +0.145 at L10 and back to +0.126 at L12, and that dip is taught. Tab 5
+      is the probe: GloVe-token-only is EXACTLY at the 0.333 floor on the sense task (identical inputs,
+      different labels -- a ceiling, not a weak model), GloVe-context-mean gets sense 0.86 but only 0.62
+      at naming the word, BERT 1.00/0.96/0.92-with-cue-deleted. Two of six masked-LM predictions MISS on
+      purpose (porch/overhead for a truck tail light) -- bert-base read Wikipedia, not complaints; that
+      is the hand-off to Module 4 adaptation. MOUNTED Sept 15 2026 as the SECOND embed on module2/index.md;
+      heading pluralised to "## Interactive companions". Move both embeds to module2/notes.md when the weekly
+      pass creates it.'
+
+  - id: m2-word2vec-to-bert-repro
+    file: word2vec_vs_transformer_numbers.py + companion_bert_data.py + build_bert_companion.py
+    kind: internal
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    notes: Reproducer chain for m2-word2vec-to-bert-companion. word2vec_vs_transformer_numbers.py harvests
+      and auto-labels the occurrences, embeds them three ways (GloVe-300 token, GloVe-300 context mean,
+      BERT layer 12) and runs the probes; it caches embeddings to word2vec_vs_transformer_cache.npz -- delete
+      that to recompute (~6 min CPU + a 376 MB GloVe download). companion_bert_data.py imports it as a module
+      to reuse the row set, adds per-layer PCA and masked-LM predictions, writes bert_companion_data.js.
+      build_bert_companion.py inlines that into the HTML. verify_companion.py drives every control in headless
+      Chromium and reports console errors -- run it after any edit. Also produces Word2Vec_vs_Transformer_Spaces
+      and _Downstream figures via make_word2vec_vs_transformer_figures.py.
 
 # -----------------------------------------------------------------------------
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)
