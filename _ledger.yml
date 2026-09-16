@@ -719,7 +719,6 @@ items:
       737.2 frames = 24.6 s of 30 fps video. The data file is INLINED into the companion HTML between ''BEGIN
       image data'' / ''END image data'' markers -- re-inline it if the script is rerun.'
 
-# -----------------------------------------------------------------------------
   - id: m2-transformer-as-architecture-companion
     file: Transformer_As_Architecture_Companion.html
     kind: companion
@@ -767,6 +766,53 @@ items:
       verify_research_transformer.py runs 34 headless checks including one that re-derives the 44.4% and
       48.4% claims from the data the page actually ships -- run it after any edit.'
 
+  - id: m2-vit-attention-companion
+    file: ViT_Attention_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    dest: module2/index.md
+    mounted: site/_static/companions/ViT_Attention_Companion.html
+    notes: '"Where is it looking? Attention in a Vision Transformer." Six tabs, 697 KB, single file. Teaches
+      how one attention weight is computed, then reads the ViT paper''s two diagnostics (Appendix D.7 attention
+      distance, D.8 attention rollout) on three road frames -- frame_stopbar (the same one the convolution
+      slides, the detection block and m1-saliency-maps use), night_crossing, work_zone. PRIMARY MODEL is
+      timm vit_base_patch16_224.orig_in21k_ft_in1k, the ViT authors'' own JAX checkpoint; torchvision vit_b_16
+      IMAGENET1K_V1 is the small-data contrast. Headline results: block 1 head 5 is an identity head (attention
+      distance 0.02 px, 99.88% self-mass, 0% on [class]) and block 1 spans 0.02-116.2 px, reproducing Figure
+      11 -- while the ImageNet-1k-only checkpoint has NO head under 98.8 px in block 1, which is the paper''s
+      data-scale claim in a table. Head to head at a matched 224x224 input on the stop-bar frame: asked
+      "traffic light", ViT class relevance 2.09x lift on the five signal heads vs ResNet-50 Grad-CAM 0.56x
+      (the same ResNet scored 4.66x at 672x416 in m1-saliency-maps -- input size, not the model); asked
+      "sports car", 0.91x/0.05x on the heads and 2.59x/3.81x on the lead car. Tab 6 runs a deletion test:
+      class-free rollout is WORSE than random for a non-top class, raising p(traffic light) to 4.28x. Tab
+      2 ships real int16 q/k/v for block 2 heads 5 and 11 so the browser recomputes softmax(qk^T/sqrt(64))
+      live -- verified against PyTorch to 3e-05 by page/verify.py. Maps ship as 14x14 (ViT) and 7x7 (Grad-CAM)
+      raw-resolution PNGs, so the true-cell / smoothed toggle is free and the resolution argument is visible.
+      MOUNTED Sept 16 2026 as the FOURTH embed on module2/index.md; the counting sentence was updated three
+      -> four. Move all four embeds to module2/notes.md when the weekly pass creates it. Pairs with m1-saliency-maps:
+      same frame, same lift metric, other model family.'
+
+  - id: m2-vit-attention-repro
+    file: vit_attention/
+    kind: internal
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    notes: 'Reproducer for m2-vit-attention-companion, in the class-folder root. Run order in its README.md:
+      fetch.py (loop the checkpoint downloads until the hashes pass) -> analyze2.py (~4 min, writes numbers.json
+      + maps.npz) -> addenda.py -> perturb.py (~6 min, the deletion curves) -> finalize.py -> export.py
+      (payload.json: photos, the tiny map PNGs, int16 q/k/v) -> page/check.py, page/assemble.py, page/verify.py.
+      vitcore.py and timmcore.py re-implement the attention block by hand to expose q/k/v and per-head weights;
+      both selfcheck against the library forward pass. addist.py is the standalone three-checkpoint attention-distance
+      sweep that found the ImageNet-1k result. TRAPS: json.dump needs default=float or numpy float32 kills
+      it four minutes in; the receptive-field measurement must swap MaxPool for AvgPool as well as ReLU
+      for Identity, or every stage comes out 4 px short (with both swapped it reproduces the published 7/11/35/91/267/427);
+      the .fr canvas.heat overlay needs background:transparent or the stylesheet''s global canvas{background:#fff}
+      hides the photo underneath."'
+
+# -----------------------------------------------------------------------------
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)
 # -----------------------------------------------------------------------------
 

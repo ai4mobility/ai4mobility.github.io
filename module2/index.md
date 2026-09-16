@@ -53,9 +53,11 @@ By the end of this module you will be able to:
 
 ## Interactive companions
 
-Three companions this week. The first is about what goes *into* a transformer and
+Four companions this week. The first is about what goes *into* a transformer and
 the second about what comes out the other side; the third takes the language out
-altogether and asks what the architecture is good for in your own research.
+altogether and asks what the architecture is good for in your own research. The
+fourth opens the machine up mid-run and reads the attention weights themselves, on
+road scenes, against the Grad-CAM you already built in Module 1.
 
 The first topic on that list — what a token is, and what it costs — decides whether
 everything after it is affordable. Work through this companion before class. The
@@ -119,6 +121,38 @@ graph model and the 2023 state of the art.
   </div>
   <iframe src="../_static/companions/Transformer_As_Architecture_Companion.html"
           title="Your own tokens: the transformer as a research architecture" loading="lazy"></iframe>
+</div>
+
+The first three companions treat attention as machinery you configure. The fourth reads it
+as evidence. *An image is worth 16×16 words* is the paper that made the transformer a vision
+architecture, and it had to prove its own case: with a CNN's built-in locality removed, does
+the model actually learn to look in sensible places? The paper answers with two measurements —
+how far each attention head reaches, and a picture of what the class token drew from — and both
+are reproduced here on three road scenes, one of them the same Florida stop-bar frame the
+convolution slides and the Grad-CAM companion use.
+
+Spend your time in three places. **Tab 2** ships the model's real query and key vectors, so
+clicking a patch computes the attention weight in front of you; switch between a head that
+reaches 17.7 px and one that reaches 107.3 px in the same block, and turn off the ÷√d scaling
+to watch the softmax saturate. **Tab 3** is the paper's Figure 11 on our frames, run twice: the
+authors' released weights give block 1 a head with an attention distance of 0.02 px and another
+at 116.2 px, while the *same architecture* trained on ImageNet-1k alone has no local head in
+block 1 at all. That single table is the paper's central claim — remove a CNN's inductive bias
+and data is what puts it back — and it is the reason to think hard before fine-tuning a ViT on
+four thousand of your own frames from a small-data checkpoint. **Tab 5** puts the ViT's map
+beside a ResNet-50 Grad-CAM on the same pixels, same classes, same score: asked about the
+traffic light, the ViT lands 2.09× its fair share of heat on the five signal heads and the CNN
+lands 0.56×, below what random heat would give. Before you believe any of it, run tab 6's
+deletion test — where you will find that the paper's own class-free rollout is *worse* than
+random for a class the model does not already favour.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — Where is it looking? Attention in a Vision Transformer</span>
+    <a href="../_static/companions/ViT_Attention_Companion.html" target="_blank" rel="noopener">Open full screen ↗</a>
+  </div>
+  <iframe src="../_static/companions/ViT_Attention_Companion.html"
+          title="Where is it looking? Attention in a Vision Transformer" loading="lazy"></iframe>
 </div>
 
 ## Video lectures
