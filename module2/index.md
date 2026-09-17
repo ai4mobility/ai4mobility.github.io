@@ -53,11 +53,13 @@ By the end of this module you will be able to:
 
 ## Interactive companions
 
-Four companions this week. The first is about what goes *into* a transformer and
+Five companions this week. The first is about what goes *into* a transformer and
 the second about what comes out the other side; the third takes the language out
 altogether and asks what the architecture is good for in your own research. The
 fourth opens the machine up mid-run and reads the attention weights themselves, on
-road scenes, against the Grad-CAM you already built in Module 1.
+road scenes, against the Grad-CAM you already built in Module 1. The fifth stops
+asking how the machine works and asks whether it is worth using — on 399 real
+Florida crash reports, against the classical method each task would otherwise use.
 
 The first topic on that list — what a token is, and what it costs — decides whether
 everything after it is affordable. Work through this companion before class. The
@@ -153,6 +155,40 @@ random for a class the model does not already favour.
   </div>
   <iframe src="../_static/companions/ViT_Attention_Companion.html"
           title="Where is it looking? Attention in a Vision Transformer" loading="lazy"></iframe>
+</div>
+
+The first four companions are about the machine. The fifth is about the decision. Eight
+things people routinely claim a BERT-style encoder can do with crash reports — contextual
+representations, entity extraction, relation extraction, contributing-factor identification,
+classification, semantic search, clustering, extractive question answering — run one at a
+time against **399 real Florida long-form crash narratives** from twenty corridors in Pasco,
+Hernando and Pinellas counties, de-identified first, then joined back to the coded crash
+record so every claim can be scored against a field a human already filled in. Each task is
+also run with the classical method it would replace, on a five-fold split grouped by
+corridor, because a random split puts crashes from the same intersection — often the same
+trooper, the same template — on both sides of the line.
+
+The results do not all go the way the diagram implies, and that is the point. **TF-IDF with
+logistic regression beats every frozen-BERT probe on all four classification targets**, and a
+fine-tuned DistilBERT does not close the gap either (0.488 average precision against 0.619,
+for 35 minutes of training instead of under a second). Raw `bert-base` embeddings are *worse
+than guessing* as a search index. The k-means clusters split on whether the trooper writes
+`V01` or `V1`. And the question "what was the weather?" has a recall ceiling of 12.5% before
+any model is chosen, because the officer already recorded it in a checkbox and had no reason
+to write it again.
+
+Read panel 6 with the search box open — type your own words, then click a prepared query and
+compare what each one surfaces. Then bring one answer to class: **name the one task on this
+page where you would actually deploy the encoder in an agency workflow, and say what number
+on the page convinced you.**
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — Does BERT earn its keep on crash narratives?</span>
+    <a href="../_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Open full screen ↗</a>
+  </div>
+  <iframe src="../_static/companions/Crash_Narrative_BERT_Companion.html"
+          title="Does BERT earn its keep on crash narratives?" loading="lazy"></iframe>
 </div>
 
 ## Video lectures

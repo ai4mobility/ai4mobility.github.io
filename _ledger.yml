@@ -812,6 +812,50 @@ items:
       the .fr canvas.heat overlay needs background:transparent or the stylesheet''s global canvas{background:#fff}
       hides the photo underneath."'
 
+  - id: m2-crash-bert-companion
+    file: Crash_Narrative_BERT_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    dest: site/_static/companions/Crash_Narrative_BERT_Companion.html
+    notes: 'Does BERT earn its keep on crash narratives? Eight panels mirroring the standard BERT-for-crash-analysis
+      diagram, each run on 399 de-identified Florida long-form narratives (HSMV 90010) from 20 Pasco/Hernando/Pinellas
+      corridors, 2021-2025, joined to the coded record by report number. HEADLINE RESULTS, all corridor-grouped
+      5-fold CV: TF-IDF+LR beats every frozen-BERT probe on all four targets (distraction .619 vs .386-.442;
+      pedestrian .943 vs .873-.886; left-turn .902 vs .745-.877; injury .795 vs .686-.772) and fine-tuned
+      DistilBERT reaches only .488 on distraction for 35 min CPU. Retrieval P@10: raw bert-base 0.1-0.2
+      at base rates 0.06-0.22 (at or below guessing) because random narrative pairs already sit at cosine
+      0.929 mean-pooled / 0.842 CLS vs 0.677 MiniLM. MiniLM wins only the distraction query (0.5 vs 0.4
+      TF-IDF); everything scores 0.0 on lane departure because that flag does not mean what its name says
+      in an intersection corpus. k-means k=6 ARI 0.037, purity 0.639 vs 0.614 majority; clusters #1/#2 are
+      the V01-vs-V1 typing convention (85.7%/84.0%) and #3 is 100% one corridor. dslim/bert-base-NER de-id
+      recall 85.2% (104/122 names) with 29 stray PER spans and an entity mix of MISC 820 / LOC 620 / ORG
+      548 / PER 18. QA: ''who was struck'' 80.6% recall 0% false alarms, but only 3.3% of narratives mention
+      weather at all and 2 of 16 coded-Rain crashes say rain -> 12.5% recall ceiling, while 12.3% of answers
+      to that unanswerable question cleared score 0.5. Contextual: three senses of ''right'' (maneuver/vehicle
+      part/right-of-way) margin +0.001 at L0 -> +0.279 at L8 -> +0.210 at L12; ''signal'' has only ONE sense
+      here (1 turn-indicator sentence in 3,436). MOUNTED Sept 17 2026 as the FIFTH embed on module2/index.md;
+      the counting sentence was updated four -> five. Ships the de-identified corpus and int8 MiniLM embeddings
+      for live search -- quantisation scale is 127/max|component| (~575), NOT 127, or the live P@10 disagrees
+      with the scored table.'
+
+  - id: m2-crash-bert-repro
+    file: crash_bert_experiments/
+    kind: internal
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    notes: 'Reproducer for m2-crash-bert-companion, in the class-folder root. Extraction and de-identification
+      run separately in FDOT-crash/redact_narratives.py (that folder holds the source PDFs and the two files
+      that still contain PII -- narratives_extracted_raw.json and deid_gold_names.json -- which are inputs
+      to stage_d only). Run order: stage_a_embed -> stage_b_retrieve -> stage_c_classify -> stage_d_ner
+      -> stage_e_qa -> stage_f2_right -> stage_g_finetune (~35 min/task on 2 CPU cores) -> stage_h_extras
+      -> make_bundle -> build_companion. TRAPS: transformers 5.x removed the question-answering pipeline,
+      so stage_e implements extractive QA by hand; the page builder uses f-strings, so figure placeholders
+      are module attributes set before the call rather than str.replace; the corpus is purposive (61% left
+      turn) and must never be presented as representative of Florida.'
+
 # -----------------------------------------------------------------------------
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)
 # -----------------------------------------------------------------------------
