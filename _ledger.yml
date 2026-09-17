@@ -607,12 +607,88 @@ items:
 # MODULE 2 — Transformers, LLMs, Multimodal (Sept 17)
 # -----------------------------------------------------------------------------
 
-  - id: m2-notes
-    file: site/module2/notes.md
+  - id: m2-notes-1-tokens
+    file: site/module2/notes1-tokens.md
     kind: notes
     module: 2
-    session: 2026-09-17
+    session: '2026-09-17'
     status: debt
+    notes: '2.1 Tokens: the unit a model actually reads. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
+      flat shape -- sections directly under module2/index in _toc.yml, no "Notes" wrapper level.
+      SKELETON ONLY: header .notes-card, a "What this section covers" list, the companion embed and its
+      lead prose moved verbatim off module2/index.md, and the standing evaluation close. The body prose
+      is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-tokenization-companion.'
+
+  - id: m2-notes-2-contextual
+    file: site/module2/notes2-contextual.md
+    kind: notes
+    module: 2
+    session: '2026-09-17'
+    status: debt
+    notes: '2.2 From static to contextual vectors. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
+      flat shape -- sections directly under module2/index in _toc.yml, no "Notes" wrapper level.
+      SKELETON ONLY: header .notes-card, a "What this section covers" list, the companion embed and its
+      lead prose moved verbatim off module2/index.md, and the standing evaluation close. The body prose
+      is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-word2vec-to-bert-companion.'
+
+  - id: m2-notes-3-attention
+    file: site/module2/notes3-attention.md
+    kind: notes
+    module: 2
+    session: '2026-09-17'
+    status: debt
+    notes: '2.3 Attention: the mechanism. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
+      flat shape -- sections directly under module2/index in _toc.yml, no "Notes" wrapper level.
+      SKELETON ONLY: header .notes-card, a "What this section covers" list, the companion embed and its
+      lead prose moved verbatim off module2/index.md, and the standing evaluation close. The body prose
+      is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-attention-query-companion.'
+
+  - id: m2-notes-4-architecture
+    file: site/module2/notes4-architecture.md
+    kind: notes
+    module: 2
+    session: '2026-09-17'
+    status: debt
+    notes: '2.4 The transformer as a research architecture. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
+      flat shape -- sections directly under module2/index in _toc.yml, no "Notes" wrapper level.
+      SKELETON ONLY: header .notes-card, a "What this section covers" list, the companion embed and its
+      lead prose moved verbatim off module2/index.md, and the standing evaluation close. The body prose
+      is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-transformer-as-architecture-companion.'
+
+  - id: m2-notes-5-vision
+    file: site/module2/notes5-vision.md
+    kind: notes
+    module: 2
+    session: '2026-09-17'
+    status: debt
+    notes: '2.5 Transformers that see: ViT and multimodal. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
+      flat shape -- sections directly under module2/index in _toc.yml, no "Notes" wrapper level.
+      SKELETON ONLY: header .notes-card, a "What this section covers" list, the companion embed and its
+      lead prose moved verbatim off module2/index.md, and the standing evaluation close. The body prose
+      is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-vit-attention-companion.'
+
+  - id: m2-notes-6-evaluation
+    file: site/module2/notes6-evaluation.md
+    kind: notes
+    module: 2
+    session: '2026-09-17'
+    status: debt
+    notes: '2.6 Does it earn its keep?. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
+      flat shape -- sections directly under module2/index in _toc.yml, no "Notes" wrapper level.
+      SKELETON ONLY: header .notes-card, a "What this section covers" list, the companion embed and its
+      lead prose moved verbatim off module2/index.md, and the standing evaluation close. The body prose
+      is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-crash-bert-companion.'
+
+  - id: m2-notes-7-practice
+    file: site/module2/notes7-labs.md
+    kind: notes
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    notes: 'Practice, exercises, and further reading -- the unnumbered close of Module 2, same role as
+      module1/notes6-labs.md. What the cross-attention lab proves, the Lab 4 bridge, the three vendor
+      questions each pointing at a section, and where transformers go in Modules 3 and 4. Complete as
+      written; add exercises when the Sept 17 assignment is set.'
 
   - id: m2-cross-attention-companion
     file: Cross_Attention_Sanity_Check_Companion.html
@@ -668,9 +744,10 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    dest: module2/index.md
+    dest: site/module2/notes2-contextual.md
     mounted: site/_static/companions/Word2Vec_to_BERT_Companion.html
-    notes: '"From word2vec to BERT." Six tabs, 277 KB, SINGLE FILE -- the data is inlined at build time,
+    notes: '"From word2vec to BERT -- and then to a working classifier." REBUILT Sept 17 2026 around
+      pretrain-then-fine-tune: seven tabs, 741 KB, SINGLE FILE -- the data is inlined at build time,
       so unlike m2-tokenization-companion there is no sidecar to copy. Introduces BERT as anatomy (30,522
       wordpieces x 768, 12 blocks, 109,482,240 params = 23.8M table + 85.1M encoder), then masked language
       modelling, then measures what context buys on 1,350 occurrences drawn from 42,956 NHTSA complaint
@@ -682,9 +759,13 @@ items:
       different labels -- a ceiling, not a weak model), GloVe-context-mean gets sense 0.86 but only 0.62
       at naming the word, BERT 1.00/0.96/0.92-with-cue-deleted. Two of six masked-LM predictions MISS on
       purpose (porch/overhead for a truck tail light) -- bert-base read Wikipedia, not complaints; that
-      is the hand-off to Module 4 adaptation. MOUNTED Sept 15 2026 as the SECOND embed on module2/index.md;
-      heading pluralised to "## Interactive companions". Move both embeds to module2/notes.md when the weekly
-      pass creates it.'
+      is the hand-off to Module 4 adaptation. THE REBUILD dropped the old tabs 3 and 5 (the two static/
+      contextual spaces and the probe, both now carried by the Word2Vec_vs_Transformer figures) and added
+      four: the pivot to a downstream task, the four-rung comparison, an in-browser trainer for the frozen
+      head, and a rewritten fit card. Tab numbering therefore MOVED -- the layer slider is now tab 3, not 4.
+      MOUNTED Sept 15 2026 as the SECOND embed on module2/index.md; heading pluralised to "## Interactive
+      companions"; lead paragraph rewritten Sept 17 for the new tab numbers and the fine-tuning half. Move
+      both embeds to module2/notes.md when the weekly pass creates it.'
 
   - id: m2-word2vec-to-bert-repro
     file: word2vec_vs_transformer_numbers.py + companion_bert_data.py + build_bert_companion.py
@@ -692,14 +773,25 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    notes: Reproducer chain for m2-word2vec-to-bert-companion. word2vec_vs_transformer_numbers.py harvests
-      and auto-labels the occurrences, embeds them three ways (GloVe-300 token, GloVe-300 context mean,
-      BERT layer 12) and runs the probes; it caches embeddings to word2vec_vs_transformer_cache.npz -- delete
-      that to recompute (~6 min CPU + a 376 MB GloVe download). companion_bert_data.py imports it as a module
-      to reuse the row set, adds per-layer PCA and masked-LM predictions, writes bert_companion_data.js.
-      build_bert_companion.py inlines that into the HTML. verify_companion.py drives every control in headless
-      Chromium and reports console errors -- run it after any edit. Also produces Word2Vec_vs_Transformer_Spaces
-      and _Downstream figures via make_word2vec_vs_transformer_figures.py.
+    notes: 'Reproducer chain for m2-word2vec-to-bert-companion. word2vec_vs_transformer_numbers.py
+      harvests and auto-labels the occurrences, embeds them three ways (GloVe-300 token, GloVe-300
+      context mean, BERT layer 12) and runs the probes; it caches embeddings to
+      word2vec_vs_transformer_cache.npz -- delete that to recompute (~6 min CPU + a 376 MB GloVe
+      download). companion_bert_data.py imports it as a module to reuse the row set, adds per-layer PCA
+      and masked-LM predictions, writes bert_companion_data.js. build_bert_companion.py inlines that
+      into the HTML. verify_companion.py drives every control in headless Chromium and reports console
+      errors -- run it after any edit; it now also asserts on screen every accuracy, every
+      confusion-matrix total and every fit-card figure against complaint_finetune_numbers.json (64
+      checks). Also produces Word2Vec_vs_Transformer_Spaces and _Downstream figures via
+      make_word2vec_vs_transformer_figures.py. SECOND CHAIN, added Sept 17 2026 for tabs 4-7:
+      build_complaint_dataset.py reads NHTSA''s own labelled flat file (COMPLAINTS_RECEIVED_2020-2024,
+      76 MB from static.nhtsa.gov/odi/ffdd/cmpl/, not committed) and writes
+      Labs/data/nhtsa_component_complaints.jsonl.gz -- 4,200 complaints, six components, 700 each, split
+      70/15/15 by complaint id. complaint_finetune_numbers.py then measures four rungs twice (real text
+      and the cue-deleted control) and writes finetune_data.js plus complaint_finetune_numbers.json; it
+      is RESUMABLE -- each rung is cached in the JSON and skipped on a re-run, so delete a key to
+      recompute just that one. Full cold run ~95 min on 2 CPU cores, of which the two fine-tuning runs
+      are 35 min each.'
 
   - id: m2-image-tokenization-numbers
     file: image_tokenization_numbers.py + image_tokenization_data.js
@@ -725,7 +817,7 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    dest: module2/index.md
+    dest: site/module2/notes4-architecture.md
     mounted: site/_static/companions/Transformer_As_Architecture_Companion.html
     notes: '"Your own tokens: the transformer as a research architecture." Six tabs, 264 KB, SINGLE FILE
       (data inlined at build time, no sidecar). The THIRD module-2 embed, after tokenization and word2vec->BERT.
@@ -772,7 +864,7 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    dest: module2/index.md
+    dest: site/module2/notes5-vision.md
     mounted: site/_static/companions/ViT_Attention_Companion.html
     notes: '"Where is it looking? Attention in a Vision Transformer." Six tabs, 697 KB, single file. Teaches
       how one attention weight is computed, then reads the ViT paper''s two diagnostics (Appendix D.7 attention
@@ -818,7 +910,7 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    dest: site/_static/companions/Crash_Narrative_BERT_Companion.html
+    dest: site/module2/notes6-evaluation.md
     notes: 'Does BERT earn its keep on crash narratives? Eight panels mirroring the standard BERT-for-crash-analysis
       diagram, each run on 399 de-identified Florida long-form narratives (HSMV 90010) from 20 Pasco/Hernando/Pinellas
       corridors, 2021-2025, joined to the coded record by report number. HEADLINE RESULTS, all corridor-grouped
@@ -855,6 +947,30 @@ items:
       so stage_e implements extractive QA by hand; the page builder uses f-strings, so figure placeholders
       are module attributes set before the call rather than str.replace; the corpus is purposive (61% left
       turn) and must never be presented as representative of Florida.'
+
+  - id: m2-attention-query-companion
+    file: Attention_Query_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    dest: site/module2/notes3-attention.md
+    mounted: site/_static/companions/Attention_Query_Companion.html
+    notes: 'The transportation replacement for Bishop''s "The Law will never be perfect" attention arc
+      figure. Sentence -- "The stalled bus blocked the curb lane, and passengers walked onto the roadway
+      to reach the sidewalk", bert-base-uncased, 21 tokens, head L01H09 (reach 0.658, variety 0.80, sink
+      0.031). Four tabs: pick a word / the swap control (reach->roadway 0.148->0.363 while the bus and
+      lane rows move at most 0.006) / where the weights come from (q.k / sqrt(d) -> softmax, reproduced
+      to 0.0 error) / reading a map honestly. MOUNTED Sept 17 2026 as the only embed on
+      module2/notes3-attention.md -- it had been built Sept 16 and left unmounted because no deck had
+      claimed it. Build chain: attention_query_numbers.py -> attention_query_data.js +
+      attention_companion_template.html -> build_attention_companion.py; verify_attention_companion.py
+      runs 72 headless checks and MUST be run after any edit. TRAPS: never rank heads without the
+      CLS/SEP sink and locality filters (72/144 heads are sinks, 0.429 of all attention lands there;
+      13/144 are pure next-word heads); never plot head-averaged attention; row weights are a positional
+      list, not a token-to-weight dict. Static figures Attention_Depends_On_Query.{svg,png} (+_1.._4)
+      and Attention_Same_Word_Two_Roles.* are built but not on the site.
+      Attention_Coreference_Control.* are superseded.'
 
 # -----------------------------------------------------------------------------
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)
@@ -1253,7 +1369,7 @@ items:
     module: 2
     session: 2026-09-17
     status: integrated
-    dest: module2/index.md
+    dest: site/module2/notes1-tokens.md
     notes: >
       "Tokens: the unit a language model actually reads." Six tabs. Ships a REAL
       tokenizer: the ASCII portions of o200k_base (128,803 of 199,998 merges) and

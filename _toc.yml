@@ -31,6 +31,23 @@ parts:
           - file: module1/notes6-labs
             title: "Practice, exercises, and further reading"
       - file: module2/index
+        sections:
+          # Same flat shape as Module 1 -- section pages sit directly under the
+          # module index, which carries the map. See NOTES_GUIDE.md.
+          - file: module2/notes1-tokens
+            title: "2.1 Tokens: the unit a model reads"
+          - file: module2/notes2-contextual
+            title: "2.2 From static to contextual vectors"
+          - file: module2/notes3-attention
+            title: "2.3 Attention: the mechanism"
+          - file: module2/notes4-architecture
+            title: "2.4 The transformer as a research architecture"
+          - file: module2/notes5-vision
+            title: "2.5 Transformers that see: ViT and multimodal"
+          - file: module2/notes6-evaluation
+            title: "2.6 Does it earn its keep?"
+          - file: module2/notes7-labs
+            title: "Practice, exercises, and further reading"
       - file: module3/index
       - file: module4/index
 
