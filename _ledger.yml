@@ -747,7 +747,7 @@ items:
     dest: site/module2/notes2-contextual.md
     mounted: site/_static/companions/Word2Vec_to_BERT_Companion.html
     notes: '"From word2vec to BERT -- and then to a working classifier." REBUILT Sept 17 2026 around
-      pretrain-then-fine-tune: seven tabs, 741 KB, SINGLE FILE -- the data is inlined at build time,
+      pretrain-then-fine-tune: eight tabs, 802 KB, SINGLE FILE -- the data is inlined at build time,
       so unlike m2-tokenization-companion there is no sidecar to copy. Introduces BERT as anatomy (30,522
       wordpieces x 768, 12 blocks, 109,482,240 params = 23.8M table + 85.1M encoder), then masked language
       modelling, then measures what context buys on 1,350 occurrences drawn from 42,956 NHTSA complaint
@@ -761,8 +761,11 @@ items:
       purpose (porch/overhead for a truck tail light) -- bert-base read Wikipedia, not complaints; that
       is the hand-off to Module 4 adaptation. THE REBUILD dropped the old tabs 3 and 5 (the two static/
       contextual spaces and the probe, both now carried by the Word2Vec_vs_Transformer figures) and added
-      four: the pivot to a downstream task, the four-rung comparison, an in-browser trainer for the frozen
-      head, and a rewritten fit card. Tab numbering therefore MOVED -- the layer slider is now tab 3, not 4.
+      five: the pivot to a downstream task, "Inside one training step" (added Sept 17 on Hao''s follow-up --
+      the loss, the p-y gradient and the real 368-step trace), the four-rung comparison, an in-browser trainer
+      for the frozen head, and a rewritten fit card. Tab numbering therefore MOVED TWICE -- layer slider is
+      tab 3, four rungs is tab 6, the in-browser trainer is tab 7, the fit card is tab 8.
+      module2/notes2-contextual.md carries the prose and its tab references; re-check them after any tab moves.
       MOUNTED Sept 15 2026 as the SECOND embed on module2/index.md; heading pluralised to "## Interactive
       companions"; lead paragraph rewritten Sept 17 for the new tab numbers and the fine-tuning half. Move
       both embeds to module2/notes.md when the weekly pass creates it.'
@@ -791,7 +794,14 @@ items:
       and the cue-deleted control) and writes finetune_data.js plus complaint_finetune_numbers.json; it
       is RESUMABLE -- each rung is cached in the JSON and skipped on a re-run, so delete a key to
       recompute just that one. Full cold run ~95 min on 2 CPU cores, of which the two fine-tuning runs
-      are 35 min each.'
+      are 35 min each. THIRD CHAIN, for tab 5: learning_mechanics_numbers.py re-runs the SAME fine-tuning
+      recipe with instrumentation -- loss, learning rate and gradient norm at every one of the 368 steps, plus
+      logits/softmax/loss/(p-y) on six held-out complaints before and after training, and the same skeleton on
+      the masked-LM objective; writes learning_data.js + learning_mechanics_numbers.json (~36 min). It is a
+      SECOND run, not a replay: the seed sits at a different point relative to the head''s initialisation, so
+      it lands at 92.4% against the first run''s 93.0%. That 0.6-point gap is DELIBERATELY taught on tabs 5
+      and 6 as the scale of run-to-run noise -- do not "fix" it by aligning the seeds; verify_companion.py
+      (now 134 checks) asserts only that the two land within 2 points and that the page reports both.'
 
   - id: m2-image-tokenization-numbers
     file: image_tokenization_numbers.py + image_tokenization_data.js

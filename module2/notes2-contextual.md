@@ -45,14 +45,18 @@ to read context in the first place. Drag the layer slider on tab 3 and watch the
 of `light` &mdash; a dashboard warning light, a lamp on the vehicle, a traffic signal &mdash; pull apart
 across 42,956 real NHTSA complaint narratives.
 
-Then the page changes the question. Tabs 4&ndash;7 stop asking how good the description is and give
+Then the page changes the question. Tabs 4&ndash;8 stop asking how good the description is and give
 the model a job: route a complaint to one of six component codes that NHTSA analysts have
-already assigned. Four rungs are measured on one honest split &mdash; word counts, averaged GloVe,
-frozen BERT, fine-tuned BERT &mdash; and **the frozen pretrained model loses to counting words**,
-80.6% against 91.4%. Only fine-tuning, which lets all twelve blocks move, gets past it, at
-93.0% and about 880 times the training cost. Train the last layer yourself on tab 6 and see
-how little of the model has to move; then look at what the control column does to that 93%
-before you believe anyone's benchmark, including this one.
+already assigned. Tab 5 opens the training loop itself &mdash; the loss computed on a real
+complaint, the gradient that falls out of it, and the loss at every one of the 368 steps the run
+actually took &mdash; and shows that pretraining and fine-tuning are the same algorithm with a
+different answer in the answer slot. Then four rungs are measured on one honest split &mdash;
+word counts, averaged GloVe, frozen BERT, fine-tuned BERT &mdash; and **the frozen pretrained
+model loses to counting words**, 80.6% against 91.4%. Only fine-tuning, which lets all twelve
+blocks move, gets past it, at 93.0% and about 880 times the training cost. Train the last layer
+yourself on tab 7 and see how little of the model has to move; then look at what the control
+column, and a second run of the same recipe, do to that 93% before you believe anyone's
+benchmark, including this one.
 
 <div class="companion-embed">
   <div class="companion-embed-bar">
@@ -72,8 +76,9 @@ baseline before you report the neural number, not after.
 
 **How was the data split, and why is that honest?** Complaints about the same vehicle,
 written from the same template, are not independent observations. Check what the control
-column on tab 7 does to the 93% before treating that number as the model's performance on
-text it has never seen.
+column on tab 6 does to the 93% before treating that number as the model's performance on
+text it has never seen &mdash; and note that tab 5 re-runs the identical recipe and lands 0.6
+points away, which is how much of any small margin is noise.
 
 **What does it do on the ugly cases?** The senses that separate here &mdash; a dashboard light
 against a traffic signal &mdash; live in different topical neighbourhoods. Two senses that both
