@@ -80,8 +80,8 @@ is operations material and lives in {doc}`Module 7 §7.1 <../module7/notes>`. Th
 </tr>
 <tr>
   <td><a href="notes5-embeddings.html"><strong>1.5 Representation learning and embeddings</strong></a><br><em>Sept 10</em></td>
-  <td>One-hot and its three failures; embeddings as geometry; Word2Vec &rarr; Road2Vec; transfer learning; contrastive learning; CLIP; how to check a representation.</td>
-  <td><a href="../_static/companions/Deep_Net_Anatomy_Companion.html" target="_blank" rel="noopener">The anatomy of a deep network &#8599;</a><br><a href="lab2_word_embeddings.html">Lab 2</a>, <a href="lab3_image_embeddings.html">Lab 3</a>, <a href="lab4_clip_vs_traditional_cv.html">Lab 4</a></td>
+  <td>One-hot and its three failures; embeddings as geometry; Word2Vec &rarr; Road2Vec; transfer learning; contrastive learning; CLIP; how to check a representation; what the backbone owes the head.</td>
+  <td><a href="../_static/companions/Deep_Net_Anatomy_Companion.html" target="_blank" rel="noopener">The anatomy of a deep network &#8599;</a><br><a href="../_static/companions/Linear_Head_Companion.html" target="_blank" rel="noopener">What the backbone owes the head &#8599;</a><br><a href="lab2_word_embeddings.html">Lab 2</a>, <a href="lab3_image_embeddings.html">Lab 3</a>, <a href="lab4_clip_vs_traditional_cv.html">Lab 4</a></td>
 </tr>
 <tr>
   <td><a href="notes6-labs.html"><strong>Practice, exercises, and further reading</strong></a><br><em>Both sessions</em></td>
@@ -199,7 +199,7 @@ bridge into multimodal models.
 
 ## Interactive companions
 
-Nine interactive companions support the Sept 3 and Sept 10 sessions. Each is
+Ten interactive companions support the Sept 3 and Sept 10 sessions. Each is
 embedded in the section it belongs to and is also linked here: one walks the sigmoid, tanh and softmax activations
 from the binary-logit starting point; one works through the learned-versus-fixed basis
 comparison and the point where a multilayer network becomes the cheaper option; one takes
@@ -214,9 +214,11 @@ child on a scooter approaches the car, then takes apart what the model does and 
 one walks the architectures themselves — LeNet, AlexNet, VGG, GoogLeNet, ResNet and
 MobileNet — drawing every layer of each to scale, pricing them against one another in parameters,
 arithmetic and latency, and closing with a chooser that turns four questions about a deployment into
-a recommendation; and the last asks what a network is actually looking at, running saliency maps on
+a recommendation; one asks what a network is actually looking at, running saliency maps on
 that same dashcam frame and then on two lane-offset models that agree to within a centimetre and are
-reading completely different things.
+reading completely different things; and the last asks what a linear head can actually do and what the
+backbone has to hand it, measured layer by layer, across 200 epochs and against a second task, on a small
+text backbone trained from scratch on 4,200 NHTSA complaints.
 
 - <a href="../_static/companions/Sigmoid_Tanh_Companion.html" target="_blank" rel="noopener">Sigmoid, tanh and softmax from the logit</a> &mdash; embedded in <a href="notes1-networks.html">1.1 From the logit to the network</a>
 - <a href="../_static/companions/Multilayer_Networks_Companion.html" target="_blank" rel="noopener">Multilayer networks and learnable basis functions</a> &mdash; embedded in <a href="notes1-networks.html">1.1 From the logit to the network</a>
@@ -227,6 +229,7 @@ reading completely different things.
 - <a href="../_static/companions/CNN_Architectures_Companion.html" target="_blank" rel="noopener">CNN architectures: LeNet to ResNet, and how to choose</a> &mdash; embedded in <a href="notes4-cnn-in-practice.html">1.4 Choosing a network, and interrogating it</a>
 - <a href="../_static/companions/Saliency_Maps_Companion.html" target="_blank" rel="noopener">Saliency maps: what is the network actually looking at?</a> &mdash; embedded in <a href="notes4-cnn-in-practice.html">1.4 Choosing a network, and interrogating it</a>
 - <a href="../_static/companions/Deep_Net_Anatomy_Companion.html" target="_blank" rel="noopener">The anatomy of a deep network: eight architectures, measured</a> &mdash; embedded in <a href="notes5-embeddings.html">1.5 Representation learning and embeddings</a>
+- <a href="../_static/companions/Linear_Head_Companion.html" target="_blank" rel="noopener">What the backbone owes the head: what a linear head can do, and what the embedding must look like for it</a> &mdash; embedded in <a href="notes5-embeddings.html">1.5 Representation learning and embeddings</a>
 
 The scooter-kid case uses video recorded by the instructor on a public road. It is used with the
 consent of the person who recorded it, the footage is not redistributed as a file, and the frames

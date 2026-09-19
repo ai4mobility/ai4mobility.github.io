@@ -603,6 +603,73 @@ items:
 
       '
 
+  - id: m1-linear-head-companion
+    file: Linear_Head_Companion.html
+    kind: companion
+    module: 1
+    session: 2026-09-10
+    status: published
+    dest: site/module1/notes5-embeddings.md#linear-head
+    mounted: site/_static/companions/Linear_Head_Companion.html
+    notes: >-
+      "What the backbone owes the head." Built Sept 19 2026 from Hao's question: what kind of
+      embedding at the end of a backbone makes a linear head's job easy, how do you describe
+      the head's capability, and how exactly must the input be transformed. Seven tabs, 335 KB,
+      single file, every number filled at load from an embedded payload (216 data-num spans;
+      the build refuses on any unresolved path). Specimen: a 432,710-parameter 1-D CNN text
+      backbone with a 390-parameter head trained from scratch on the SAME 4,200-complaint NHTSA
+      extract, split and 630 held-out complaints as m2-word2vec-to-bert-companion, routing
+      complaints to six component codes; lands at 83.8% against the classical TF-IDF + logistic
+      regression at 91.4% (replicated exactly from that companion's rung 0) -- the classical
+      method wins and the page says so on tab 0. Tab 1: a softmax head owns convex, flat-bordered
+      regions (K=3 wedges, K=4 bounded middle, ring impossible); the wrong-way-driving XOR is
+      interactive (brute force over 577,521 lines: 3/4 max in the raw plane; a learned 2-unit
+      lift puts both wrong-way cases on the origin and a line gets 4/4); the middle band
+      (synthetic, labelled) 66.7% with one threshold, 99.2% with two. Tab 2: Cover's theorem,
+      theory + LP separability of fair-coin labels measured on the page's own z -- the points
+      land on the theory at the EFFECTIVE rank 48 (16 dead ReLU units), not 64; the shuffled-label
+      trap in TF-IDF space (31,475 features, N/d 0.093: train 99.6%, test 13.9%) vs z (all 2,940:
+      train 24.7%; 64 complaints: 100%); true labels on 64 complaints score 83.6% held out.
+      Tab 3: linear / MLP / k-NN probes per tap L0..L4 (71.0 -> 84.1 linear; Fisher 0.06 -> 1.59;
+      MLP never beats linear by more than 0.8 pts; k-NN trails linear by 9.6 at L0 and matches
+      at z), random-init floor (L0 62.4% because the mean of random word vectors is a random
+      projection of the counts; z 22.4%), cue-deleted control (z 74.3%, TF-IDF 87.0%). Tab 4:
+      neural collapse (Papyan, Han & Donoho 2020) over 14 checkpoints -- NC1 105 -> 0.312 on train
+      (336x; held-out 0.629), NC3 cos 0.82, NC4 100% train / 97.1% held-out, nearest-class-mean
+      alone scores 83.7%; NC2 is WEAK and the page says so: the mean pairwise cosine lands at
+      -0.198 (target -0.2) but that is nearly automatic for centred means summing to zero, the
+      cosine SPREAD 0.387 -> 0.338 is the evidence and it barely moves; Engine~Power train +0.38,
+      Brakes~AEB +0.45 stay semantic. A weight-decay 0.05 re-run leaves the plateau unchanged
+      (NC1 0.305, cos std 0.311): the plateau is the specimen's, not the optimiser's. Tab 5: the
+      crash flag (116 of 4,200; probes scored on val+test pooled, 42 positives, C by 5-fold CV in
+      train) reads at AUC 0.908 from TF-IDF, 0.664 from the component label alone, 0.716 from z at
+      epoch 200 [0.639, 0.787], peak 0.774 at epoch 2 (paired drop [0.002, 0.116]); the regex
+      "highway" attribute reads 0.972 from TF-IDF and 0.674 from z against 0.671 label-only.
+      Lab 8 callback (VAE hidden kept bottleneck 0.753 vs raw 0.653). Tab 6: five properties with
+      their instruments, fit card, four applications, three judgment questions, sources. Mounted
+      Sept 19 2026 as a new section at the END of module1/notes5-embeddings.md (anchor
+      (linear-head)=, after "How to know a representation is any good"); module1/index.md
+      count nine -> ten, bullet + 1.5 table cell added.
+
+  - id: m1-linear-head-repro
+    file: linear_head_experiments/
+    kind: internal
+    module: 1
+    session: 2026-09-10
+    status: integrated
+    notes: >-
+      Reproducer behind m1-linear-head-companion, in the class folder: common.py (data, probes,
+      NC metrics), stage_a_tfidf.py (rung-0 replica, shuffled labels, crash/highway probes),
+      stage_b_train.py (backbone + head, features at 14 checkpoints; args: field seed [wd]),
+      stage_c_probes.py, stage_d_collapse.py, stage_e_transfer.py, stage_f_cover.py,
+      stage_g_xor.py, make_payload.py (rounds to 5 dp), build_companion.py (splices the house
+      CSS from Neural_Networks_and_Backprop_Companion.html; refuses on unresolved data-num, tag
+      imbalance, duplicate ids, banned phrases), verify_companion.py (35 Playwright checks incl.
+      the XOR sweep and slider readouts vs payload, screenshots per tab), run_rest.sh, README.md
+      with every verified number and the traps. out/ carries the stage JSONs, logs and
+      payload.json; the ~75 MB feats_*.npz per run are NOT shipped. Three runs: text (main),
+      text_nocue (control), text_wd (AdamW weight decay 0.05). ~45 min cold on 2 cores.
+
 # -----------------------------------------------------------------------------
 # MODULE 2 — Transformers, LLMs, Multimodal (Sept 17)
 # -----------------------------------------------------------------------------

@@ -231,8 +231,9 @@ anything on top of one, check it:
 - **Does it transfer?** The real test is whether the representation helps on a
   task it was not trained for.
 
-We come back to this with real measurements later in the course, on a
-representation trained on traffic states rather than images.
+The next section does exactly that, on a text backbone small enough to probe
+at every layer; Lab 8 does it again on a representation trained on traffic
+states rather than images.
 
 :::{admonition} Before you trust this result
 :class: important
@@ -247,6 +248,111 @@ number is meaningless.
 **What does it do on the ugly cases?** Night, rain, glare, occlusion,
 construction, and the classes that appear twice in the whole dataset. Aggregate
 accuracy hides exactly the cases that matter in safety work.
+:::
+
+(linear-head)=
+## What the backbone owes the head
+
+Nearly every classifier and regressor in this module ends the same way: a large
+backbone, then one linear layer that reads the answer off (the detection and
+segmentation heads of 1.4 are the exception, and they are not linear). ResNet-50 keeps 92% of its weights in the
+backbone and a 2,048 → 1,000 linear head does the rest; the damage/intact head we
+priced in 1.4 was 4,098 numbers. That structure raises a question the checklist
+above does not answer: *a linear head can only draw flat cuts, so what exactly must
+the backbone hand it?* Which shape of embedding makes a flat cut enough, how would
+you measure whether you have it, and what does that shape cost when you want to
+reuse the backbone for something else?
+
+The companion below answers with measurements rather than assertions, on a
+specimen small enough to measure everywhere: a 432,710-parameter convolutional
+text backbone with a 390-parameter head, trained from scratch on the same 4,200
+NHTSA complaints, the same split and the same 630 held-out complaints as the
+Sept 17 BERT companion, routing each complaint to one of six component codes.
+It lands at 83.8%; TF-IDF word counts with a logistic regression score 91.4% on
+the same complaints, and the page says so on its first tab. The classical method
+wins this task. The network is there to be looked at, not to win.
+
+Six things it establishes, in the order the tabs make them.
+
+**What a flat cut can do, exactly.** A softmax head assigns each class the region
+where its logit is largest — an intersection of half-spaces, hence convex, with
+flat borders. Two classes get one hyperplane. That rules out three kinds of task
+outright: a rule of the form "different from" (wrong-way driving is heading ≠ lane
+direction, and no line in the raw heading–lane plane gets more than 3 of the 4
+cases right — you can try), a class that is the middle band of one feature
+(stop-and-go between jam and free flow needs its own logit), and any class that
+is not convex. One hidden layer of two units lifts the wrong-way cases into a
+plane where a line gets 4 of 4 — by making the two wrong-way cases land on the
+*same point*. Invariance is the whole idea: make the cases the head should treat
+alike indistinguishable, and the ones it should separate far apart.
+
+**Capacity has a number.** Cover's theorem: a linear head in *d* dimensions can
+fit essentially any labelling of up to about 2*d* points. Measured on the trained
+embedding, the transition sits where the theorem says — at the embedding's
+*effective* rank of 48, not its nominal 64, because 16 units died. The trap this
+sets is the one to remember: with 31,475 TF-IDF features for 2,940 complaints, a
+logistic regression fits *shuffled* labels at 99.6% training accuracy and scores
+chance held out. A linear probe measures something only on a held-out fold, and
+its dimension is part of the instrument.
+
+**Untangling is gradual and monotone.** Probed layer by layer, the linear probe
+climbs from 71.0% at the word-vector mean to 84.1% at the embedding the head
+reads, and the Fisher ratio — between-class spread over within-class spread, the
+LDA criterion — climbs with it. An MLP probe never beats the linear one by more
+than a point at any layer: where the backbone falls short of the word counts, the
+information is not tangled, it is absent from the 64 numbers.
+
+**Training converges to a specific shape.** In the terminal phase, after training
+accuracy reaches 100%, the within-class spread of the embedding contracts 336-fold
+relative to the between-class spread, the head's rows align with the class means,
+and on 100% of training complaints the head's answer equals nearest-class-mean.
+That is the neural-collapse prediction (Papyan, Han & Donoho 2020), and it is the
+precise answer to "what does the head need": tight clusters, one per class, and a
+head whose rows are the arrows to them. The page is equally clear about the part
+that does *not* happen at this training budget: the class means never become
+equiangular — Engine stays aligned with Power train, Brakes with AEB — and it
+explains why the mean cosine landing on the textbook value is not evidence.
+
+**Collapse has a price.** Ask the same frozen backbone a question it was never
+trained on — did this complaint involve a crash, NHTSA's own flag — and the
+embedding reads it at AUC 0.716, barely above what the component label alone
+gives (0.664), while TF-IDF, with no training on any label, reads it at 0.908.
+Every convolution layer was trained by the component loss alone and every one of
+them kept only what that loss needed. A backbone you intend to reuse has to be
+given a reason to keep more: a label-free objective, several heads at once, or a
+linear probe fit before any fine-tuning.
+
+**And the checklist.** The last tab turns all of it into the five properties a
+linear head needs, each with its instrument, a fit card, four applications and
+three judgment questions.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — What the backbone owes the head</span>
+    <a href="../_static/companions/Linear_Head_Companion.html" target="_blank" rel="noopener">Open full screen ↗</a>
+  </div>
+  <iframe src="../_static/companions/Linear_Head_Companion.html" title="What the backbone owes the head" loading="lazy"></iframe>
+</div>
+
+:::{admonition} Before you trust this result
+:class: important
+**What is the baseline?** TF-IDF + logistic regression at 91.4%, and it wins;
+for the crash flag, the same classical features at AUC 0.908 and the
+component-only reference at 0.664. Chance is 16.7% only because the six classes
+were balanced on purpose.
+
+**How was the data split, and why is that honest?** The dataset's own split,
+keyed on complaint ID so no narrative appears on both sides. Every probe is fit on
+the training complaints, its penalty chosen on validation, and scored once on
+test; probe accuracy on the training fold is 100% from epoch 20 on and is the
+memorised geometry, reported nowhere.
+
+**What does it do on the ugly cases?** One seed, one architecture — the Sept 17
+companion's two BERT runs differed by 0.6 points on this split, so read
+differences under a point as noise. 42 held-out crashes make every AUC ± 0.07;
+only paired differences whose interval excludes zero are repeated as findings.
+And a label's own vocabulary counts as "untangling" here, which is what the
+cue-deleted control column is for.
 :::
 
 ---
