@@ -87,8 +87,10 @@ By the end of this module you will be able to:
 
 ## Interactive companions
 
-Two more sit inside {doc}`notes` §7.1 — the anatomy of an AI workflow, and the Traffic
-Incident Management case worked end to end.
+Three more sit inside {doc}`notes` — the anatomy of an AI workflow and the Traffic
+Incident Management case worked end to end in §7.1, and a graph neural network running on a
+freshly generated road network in §7.2, which is the network-scale counterpart to the corridor
+companion below.
 
 Before the neural car-following and surrogate-model topics below, work through this page. It makes the
 case for learned traffic dynamics in the most concrete way available: Newell's car-following model and

@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A GNN on a road network — how one shared rule covers a whole city | AI for Mobility</title>
+<style>
+  :root{
+    --usf-green:#006747;--usf-green-d:#00543a;--usf-gold:#CFC493;--gold-deep:#b9a96a;
+    --ink:#1c2422;--muted:#5b6b66;--paper:#f6f8f7;--card:#fff;--line:#e2e8e5;
+    --s1:#00785A;--s2:#8E44AD;--s3:#B5581E;--s4:#0E6E9E;
+    --dn:#0E6E9E;--dp:#B5581E;--dz:#c8d0cd;
+    --warn:#c0392b;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 6px 22px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--paper);line-height:1.58}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding:32px 0 26px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--usf-gold);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:28px;font-weight:780}
+  header.hero p{margin:0;max-width:880px;color:#e7efeb;font-size:15px}
+  nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:4px;flex-wrap:wrap;padding-top:7px;padding-bottom:7px}
+  nav.tabs button{border:none;background:transparent;font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 13px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  section.page{display:none;padding:24px 0 10px}
+  section.page.active{display:block}
+  h2.sec{font-size:23px;margin:4px 0 2px;color:var(--usf-green-d)}
+  h3{font-size:16px;margin:20px 0 6px;color:var(--ink)}
+  h4{font-size:13.5px;margin:14px 0 4px;color:var(--usf-green-d);text-transform:uppercase;letter-spacing:.05em}
+  h4.raw{text-transform:none;letter-spacing:.01em;font-size:15px}
+  .lead{color:var(--muted);max-width:880px;margin:0 0 16px;font-size:15px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+  .card.tight{padding:15px 18px}
+  .eq{background:#0f1c18;color:#eafff5;border-radius:10px;padding:14px 18px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14.5px;line-height:1.95;white-space:pre-wrap}
+  .eq b{color:var(--usf-gold)}.eq .g{color:#7fd8b0}.eq .bl{color:#6fc3e0}.eq .rd{color:#ff9b8f}.eq .dim{color:#7f948d}.eq .yl{color:#ffd98a}
+  .callout{border-left:4px solid var(--usf-gold);background:#fffdf3;padding:11px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:13.8px}
+  .callout.good{border-left-color:#1e9e57;background:#f3fbf6}
+  .callout.sig{border-left-color:var(--s4);background:#f1f8fb}
+  .callout.warn{border-left-color:var(--warn);background:#fdf4f2}
+  .callout b{color:var(--usf-green-d)}
+  .callout.warn b{color:var(--warn)}
+  .small{font-size:12px;color:var(--muted)}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin:6px 0 14px}
+  .ctrl{display:flex;flex-direction:column;gap:5px;min-width:140px}
+  .ctrl label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .ctrl label.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  .ctrl input[type=range]{width:210px;accent-color:var(--usf-green)}
+  .ctrl select{font:inherit;font-size:13.5px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .ctrl .val{font-family:ui-monospace,monospace;font-size:13px;color:var(--usf-green-d);font-weight:700}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 4px}
+  button.act{border:1px solid var(--usf-green);background:var(--usf-green);color:#fff;font-weight:700;font-size:13.5px;padding:9px 15px;border-radius:9px;cursor:pointer}
+  button.act:hover{background:var(--usf-green-d)}
+  button.act:disabled{opacity:.45;cursor:not-allowed}
+  button.ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:13.5px;padding:9px 14px;border-radius:9px;cursor:pointer}
+  button.ghost:hover{background:var(--paper)}
+  button.ghost.on{border-color:var(--usf-green);background:#eef7f3;color:var(--usf-green-d)}
+  .readout{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+  .stat{background:#fbfdfc;border:1px solid var(--line);border-radius:11px;padding:9px 13px;min-width:104px;text-align:center}
+  .stat .n{font-size:18px;font-weight:780;font-family:ui-monospace,monospace;color:var(--usf-green-d)}
+  .stat .n.t{color:var(--s2)}.stat .n.w{color:var(--warn)}.stat .n.r{color:var(--s3)}.stat .n.b{color:var(--s4)}
+  .stat .n.sm{font-size:15px}
+  .stat .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+  .stat .l.raw{text-transform:none;letter-spacing:.02em;font-size:11px}
+  figure{margin:0}
+  figcaption{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;text-align:center;max-width:560px}
+  table.map{width:100%;border-collapse:collapse;font-size:13.4px;margin-top:8px}
+  table.map th,table.map td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.map th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--line)}
+  table.map th.raw{text-transform:none;letter-spacing:.01em;font-size:12.5px}
+  table.map td:first-child{font-weight:700;color:var(--usf-green-d)}
+  table.map td.num,table.map th.num{text-align:right;font-family:ui-monospace,monospace;font-size:12.8px}
+  table.map tr.hl td{background:#f3fbf6}
+  table.map td.best{background:#eaf6ef;font-weight:700;color:var(--usf-green-d)}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);font-weight:600;margin:4px 0 10px;align-items:center}
+  .legend i{display:inline-block;width:22px;height:0;border-top-width:3px;border-top-style:solid;margin-right:6px;vertical-align:middle}
+  .legend .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .gridnet{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;align-items:start}
+  @media(max-width:860px){.grid2,.gridnet{grid-template-columns:1fr}}
+  .narr{background:#f3fbf6;border:1px solid #cfe8dc;border-radius:10px;padding:12px 15px;font-size:13.6px;min-height:74px}
+  .narr b{color:var(--usf-green-d)}
+  .netbox{background:#fbfdfc;border:1px solid var(--line);border-radius:12px;padding:6px}
+  .netbox svg{display:block;width:100%;height:auto}
+  .netbox svg circle.nd{cursor:pointer}
+  ul.tight{margin:8px 0 0;padding-left:20px}ul.tight li{margin-bottom:5px;font-size:13.8px}
+  ol.tight{margin:8px 0 0;padding-left:20px}ol.tight li{margin-bottom:5px;font-size:13.8px}
+  footer{padding:26px 0;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);margin-top:18px}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#eef7f3;color:var(--usf-green-d);margin-left:6px}
+  .pill.w{background:#fdf1ee;color:var(--warn)}
+  details.deeper{border:1px solid var(--line);border-radius:11px;background:#fbfdfc;padding:0;margin:16px 0}
+  details.deeper>summary{cursor:pointer;padding:11px 16px;font-weight:700;font-size:13.5px;color:var(--usf-green-d);list-style:none;border-radius:11px}
+  details.deeper>summary::-webkit-details-marker{display:none}
+  details.deeper>summary::before{content:"▸ ";color:var(--gold-deep)}
+  details.deeper[open]>summary::before{content:"▾ "}
+  details.deeper[open]>summary{border-bottom:1px solid var(--line);border-radius:11px 11px 0 0}
+  details.deeper>p,details.deeper>ul,details.deeper>div{margin:12px 16px;font-size:13.6px}
+  .fitcard{background:#fbfdfc;border:1px solid var(--line);border-radius:12px;padding:4px 0}
+  .fitcard .row{display:grid;grid-template-columns:190px 1fr;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);font-size:13.7px}
+  .fitcard .row:last-child{border-bottom:none}
+  .fitcard .row .k{font-weight:700;color:var(--usf-green-d);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em}
+  @media(max-width:700px){.fitcard .row{grid-template-columns:1fr;gap:2px}.ctrl input[type=range]{width:min(72vw,210px)}}
+  .msgtab{font-size:12.8px}
+  .msgtab td,.msgtab th{padding:6px 8px}
+  .bar{display:inline-block;height:9px;border-radius:3px;background:var(--usf-green);vertical-align:middle}
+  .scaleramp{height:12px;border-radius:4px;background:linear-gradient(90deg,#1e9e57,#CFC493,#c0392b);width:180px;display:inline-block;vertical-align:middle;margin:0 8px}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · CGN 6933 · Graph neural networks</div>
+  <h1>A GNN on a road network: one shared rule, any number of intersections</h1>
+  <p>Every network on this page is generated in your browser, and every number is computed live from it.
+     Press <b>New network</b> as often as you like — the intersections change, the degrees change, the size
+     changes, and the <em>same</em> rule keeps running. The point of the page is to show you exactly where
+     the structure of the city enters the computation, and how a one-hop rule ends up modelling a
+     disturbance that travels for miles.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap">
+  <button data-tab="p1" class="active">1 · The network and one step</button>
+  <button data-tab="p2">2 · Where structure comes from</button>
+  <button data-tab="p3">3 · Cascading: layers compose</button>
+  <button data-tab="p4">4 · Does it actually learn it?</button>
+  <button data-tab="p5">5 · Fit card &amp; where it breaks</button>
+</div></nav>
+
+<!-- ==================== PAGE 1 ==================== -->
+<section class="page active" id="p1"><div class="wrap">
+  <h2 class="sec">A random city, and one message-passing step inside it</h2>
+  <p class="lead">Below is an irregular street network — a perturbed lattice with segments removed and a few
+     diagonals added, so intersections end up with anywhere from 1 to 5 connections, the way a real city
+     does. The arrows show the dominant peak-period flow, heading toward the CBD (the gold ring).
+     <b>Click any intersection</b> to explode one message-passing step at that node.</p>
+
+  <div class="btnrow">
+    <button class="act" id="p1new">New network</button>
+    <button class="ghost" id="p1max">Jump to the busiest intersection</button>
+    <span class="small">Click any node in the map.</span>
+  </div>
+
+  <div class="gridnet">
+    <div>
+      <figure>
+        <div class="netbox"><svg id="svg1" viewBox="0 0 560 440"></svg></div>
+        <figcaption id="cap1">Node colour is congestion c (green = free flow, red = jammed). Arrowheads point
+          the way traffic is travelling; queues back up the other way.</figcaption>
+      </figure>
+      <div class="legend" style="margin-top:10px">
+        <span><span class="dot" style="background:#1e9e57"></span>free flow</span>
+        <span><span class="scaleramp"></span></span>
+        <span><span class="dot" style="background:#c0392b"></span>jam</span>
+        <span><span class="dot" style="background:#fff;border:3px solid #b9a96a"></span>CBD</span>
+        <span><span class="dot" style="background:#8E44AD"></span>selected</span>
+      </div>
+    </div>
+    <div>
+      <div class="readout">
+        <div class="stat"><div class="n" id="s1n">–</div><div class="l">intersections</div></div>
+        <div class="stat"><div class="n" id="s1e">–</div><div class="l">street segments</div></div>
+        <div class="stat"><div class="n t" id="s1d">–</div><div class="l raw">degree of selected node</div></div>
+      </div>
+      <div class="card tight" style="margin-top:14px">
+        <h4 class="raw" style="margin-top:2px">One step at node <span id="selname" class="mono">–</span></h4>
+        <p class="small" style="margin:2px 0 8px">Every row is one call to the <b>same</b> function ψ, with
+          different arguments. Nothing below knows how many rows there are.</p>
+        <table class="map msgtab" id="msgtab"></table>
+        <div class="narr" id="p1narr" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">The rule, written once</h3>
+    <div class="eq">   <span class="dim">for every directed street segment v → u  (however many that is):</span>
+   <b>m</b><span class="g">(v→u)</span>  =  tanh( <b>W</b><span class="yl">m</span> · [ <span class="bl">h_v</span> ‖ <span class="bl">h_u</span> ‖ <span class="rd">e_(v→u)</span> ] + <b>b</b><span class="yl">m</span> )
+
+   <span class="dim">then at each intersection u, collapse however many arrived:</span>
+   <b>a</b><span class="g">(u)</span>  =  mean over v ∈ N(u) of <b>m</b><span class="g">(v→u)</span>
+
+   <span class="dim">and update:</span>
+   <span class="bl">h_u'</span> =  tanh( <b>W</b><span class="yl">u</span> · [ <span class="bl">h_u</span> ‖ <b>a</b><span class="g">(u)</span> ] + <b>b</b><span class="yl">u</span> )</div>
+    <table class="map" style="margin-top:14px">
+      <tr><th class="raw">Symbol</th><th class="raw">In transportation terms</th></tr>
+      <tr><td>h_u</td><td>the state vector the model is carrying for intersection u. On the first layer it is just the measured congestion c_u; after that it is whatever the model has worked out about u and its surroundings.</td></tr>
+      <tr><td>e_(v→u)</td><td>what this connection <em>is</em>: here, +1 if v lies downstream of u (between u and the CBD, so a queue at v can back up into u), −1 if v is upstream, 0 if neither.</td></tr>
+      <tr><td>m_(v→u)</td><td>the message — what v's condition means <em>for u specifically</em>, given the kind of connection between them.</td></tr>
+      <tr><td>W_m, b_m</td><td>the message weights. One set, shared by every segment in the city. This is the whole model.</td></tr>
+      <tr><td>N(u)</td><td>u's neighbours. Its size is the node's degree: 1, 2, 3, 4 or 5 in this network. Nothing in W_m or W_u knows or cares.</td></tr>
+    </table>
+    <p style="margin:14px 0 0;font-size:13.8px"><b>In words:</b> for each street touching this intersection,
+      work out what the far end's condition means for this end; then average those meanings, whatever their
+      number; then use the average to update what you believe about this intersection.</p>
+    <div class="callout good"><b>The arity problem never appears.</b> ψ always takes exactly two nodes and
+      one connection. A 5-leg intersection calls it five times and a dead end calls it once. The variable
+      part of the city is absorbed by <em>how many times you call</em>, not by the function you call — the same
+      way conservation of flow at a node is one equation summed over however many approaches, not a different
+      equation for 3-leg and 4-leg intersections.</div>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 2 ==================== -->
+<section class="page" id="p2"><div class="wrap">
+  <h2 class="sec">Structure is not something the GNN "figures out" — it is the wiring</h2>
+  <p class="lead">This is the part that is hard to see from the equation. The model has one set of weights,
+     so how can it possibly treat a downtown five-leg intersection differently from a cul-de-sac? The answer is
+     that <em>the same function gets different arguments</em>, because the neighbourhoods differ. To make that
+     unmistakable, the demo below wipes out every difference in the input: <b>every intersection is given
+     exactly the same feature value</b>. Any variation you see in the output came from the graph alone.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="ctrl"><label class="raw">Layers L</label>
+        <input type="range" id="p2L" min="0" max="4" step="1" value="0">
+        <span class="val" id="p2Lv">0 — the raw input</span></div>
+      <div class="ctrl"><label class="raw">Aggregator</label>
+        <select id="p2agg"><option value="mean">mean</option><option value="sum">sum</option><option value="max">max</option></select></div>
+      <div class="ctrl"><label class="raw">Edge feature</label>
+        <select id="p2edge"><option value="on">on (upstream / downstream)</option><option value="off">off (all streets alike)</option></select></div>
+    </div>
+    <div class="gridnet">
+      <div><figure>
+        <div class="netbox"><svg id="svg2" viewBox="0 0 560 440"></svg></div>
+        <figcaption>Colour is the first component of each node's hidden state, on a common scale.
+          At L = 0 every node is identical by construction.</figcaption>
+      </figure></div>
+      <div>
+        <div class="readout">
+          <div class="stat"><div class="n sm" id="s2distinct">–</div><div class="l raw">distinct node states</div></div>
+          <div class="stat"><div class="n sm t" id="s2spread">–</div><div class="l raw">spread (max − min)</div></div>
+        </div>
+        <div class="narr" id="p2narr" style="margin-top:14px"></div>
+        <div class="callout sig" style="margin-top:14px"><b>Watch the counter.</b> At L = 0 there is one
+          distinct state in the whole city. Turn on one layer and the count jumps: nodes that differ in
+          <em>degree</em>, or in the mix of upstream and downstream streets touching them, now hold different
+          vectors. Turn on a second layer and nodes that are themselves alike but whose <em>neighbours</em>
+          differ split apart too. Structure enters the arithmetic through who sends to whom, and it enters one
+          hop per layer.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">The whole sweep at once</h3>
+    <p class="small">The same experiment — identical inputs everywhere — run across every aggregator, with
+       the edge feature on and off. Each cell is how many distinct states survive in a city of
+       <span id="swn">–</span> intersections. Press the button; it computes on the network you are looking at.</p>
+    <div class="btnrow"><button class="act" id="p2sweep">Run the sweep on this network</button></div>
+    <table class="map" id="sweeptab"></table>
+    <div class="callout warn" id="sweepnarr" style="display:none"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">The reach of one node, layer by layer</h3>
+      <p class="small">A node's prediction can only depend on what is inside its L-hop ball. Move the slider
+         and watch the ball grow. This is the entire story of how a local rule becomes a wide-area model.</p>
+      <div class="controls" style="margin-bottom:8px">
+        <div class="ctrl"><label class="raw">Layers L</label>
+          <input type="range" id="p2rL" min="1" max="5" step="1" value="1">
+          <span class="val" id="p2rLv">1</span></div>
+      </div>
+      <div class="netbox"><svg id="svg2r" viewBox="0 0 560 440"></svg></div>
+      <div class="readout">
+        <div class="stat"><div class="n" id="s2reach">–</div><div class="l raw">nodes in reach</div></div>
+        <div class="stat"><div class="n b" id="s2pct">–</div><div class="l raw">share of the city</div></div>
+      </div>
+      <p class="small" style="margin-top:8px">Click a node on the tab-1 map to move the centre.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">The blind spot worth knowing about</h3>
+      <p style="font-size:13.8px;margin-top:4px">Plain message passing sees a node only through the shape of
+         its surroundings. If two intersections have the same degree, and their neighbours have the same
+         degrees, and so on out to L hops, then <b>no number of layers will separate them</b> — they receive
+         identical messages forever. Press the button to find such a pair in the current network.</p>
+      <div class="btnrow"><button class="act" id="p2twins">Find two nodes the GNN cannot tell apart</button></div>
+      <div class="narr" id="p2twinnarr">—</div>
+      <div class="callout warn" style="margin-top:12px"><b>Why you should care.</b> Two intersections can be
+        structurally identical and operationally nothing alike — one is a school crossing, one is a freeway
+        ramp terminal. The fix is not more layers; it is to <em>put the difference in the features</em>:
+        lanes, control type, speed limit, distance to the nearest ramp, betweenness. Notice that all of those
+        are computable in any city, so unlike a learned per-sensor embedding they cost you nothing in
+        transferability.</div>
+    </div>
+  </div>
+
+  <details class="deeper">
+    <summary>Going deeper — the name for this ceiling</summary>
+    <p>What the demo shows by hand is a known limit: message-passing GNNs distinguish nodes exactly as far as
+       the 1-dimensional Weisfeiler–Leman colour-refinement test does, and no further. Each layer is one round
+       of refinement — a node's new colour is a function of its old colour and the multiset of its neighbours'
+       colours. Two nodes WL never separates, a GNN never separates.</p>
+    <p>The practical consequences are the ones above: add structural or positional features to the input
+       (degree, centrality, Laplacian eigenvector coordinates) rather than adding depth. See Xu et al.,
+       <em>How Powerful are Graph Neural Networks?</em> (ICLR 2019) for the equivalence and for why a sum
+       aggregator with an MLP reaches the ceiling while mean and max fall short of it.</p>
+  </details>
+</div></section>
+
+<!-- ==================== PAGE 3 ==================== -->
+<section class="page" id="p3"><div class="wrap">
+  <h2 class="sec">Cascading: a one-hop rule, applied L times, is an L-hop model</h2>
+  <p class="lead">Here is the ground truth this page uses — a queue spillback rule, and deliberately a
+     <em>local</em> one. A bottleneck pins one intersection at full congestion; every other intersection is
+     pulled toward the worst of its <b>downstream</b> neighbours and otherwise recovers. Nothing in the rule
+     mentions anything beyond one hop. Press play and watch a wide-area jam emerge from it anyway.</p>
+
+  <div class="card">
+    <div class="eq">   c_u(t+1) = clip( c_u(t) + <b>β</b>·( max over downstream v of c_v(t) − c_u(t) ) − <b>γ</b> ,  0, 1 )
+   <span class="dim">β = 0.70 spillback rate   γ = 0.05 recovery per step   bottleneck node held at c = 1</span></div>
+    <p style="font-size:13.8px;margin:12px 0 0"><b>In words:</b> if the road you are feeding into is jammed,
+       you become jammed; otherwise you clear. That is the whole rule, and it is exactly the shape a single
+       GNN layer can express — a pairwise message from each downstream neighbour, a max, an update.</p>
+
+    <div class="btnrow" style="margin-top:14px">
+      <button class="act" id="p3play">▶ Play the spillback</button>
+      <button class="ghost" id="p3step">Step</button>
+      <button class="ghost" id="p3reset">Reset</button>
+      <button class="ghost" id="p3new">New bottleneck</button>
+    </div>
+    <div class="controls">
+      <div class="ctrl"><label class="raw">A model with L layers, sitting at the purple node, can see:</label>
+        <input type="range" id="p3L" min="1" max="5" step="1" value="1">
+        <span class="val" id="p3Lv">L = 1 → 1 hop</span></div>
+    </div>
+
+    <div class="gridnet">
+      <div><figure>
+        <div class="netbox"><svg id="svg3" viewBox="0 0 560 440"></svg></div>
+        <figcaption>Red = congestion, spreading upstream from the bottleneck (ringed in red). The dashed
+          outline is the L-hop ball around the purple node — everything the model is allowed to use.</figcaption>
+      </figure></div>
+      <div>
+        <div class="readout">
+          <div class="stat"><div class="n" id="s3t">0</div><div class="l raw">time step</div></div>
+          <div class="stat"><div class="n w" id="s3hops">–</div><div class="l raw">hops to bottleneck</div></div>
+          <div class="stat"><div class="n b" id="s3see">–</div><div class="l raw">bottleneck visible?</div></div>
+        </div>
+        <div class="narr" id="p3narr" style="margin-top:14px"></div>
+        <div class="callout" style="margin-top:14px"><b>The design rule this gives you.</b> Congestion here
+          travels about one hop per time step. So to predict <b>K</b> steps ahead you need the bottleneck
+          inside your receptive field, which means roughly <b>L ≥ K</b> layers. In a real network, substitute
+          the backward wave speed w and your forecast horizon T: the disturbance travels about w·T, so the
+          hops you need is w·T divided by your mean link length. Pick depth from the traffic, then check
+          whether your architecture can actually reach that far.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout sig"><b>This is the answer to "how does it learn cascading relationships".</b> It does
+    not learn a cascade. It learns a one-hop rule, and the cascade is what you get when you <em>compose</em>
+    that rule L times. Exactly like running the cell transmission model for L time steps: no step of it ever
+    looked further than the next cell, but a shockwave crosses the whole corridor.</div>
+</div></section>
+
+<!-- ==================== PAGE 4 ==================== -->
+<section class="page" id="p4"><div class="wrap">
+  <h2 class="sec">Does it actually learn it? The measured version</h2>
+  <p class="lead">Everything so far has been mechanism. This tab is the experiment: a GNN of the shape on
+     tab 1 was trained in PyTorch on the spillback dynamics of tab 3, then tested on
+     <b>networks it had never seen, of sizes it had never seen</b>. The reproducer sits next to this page as
+     <span class="mono">gnn_roadnet.py</span> (model and dynamics) and <span class="mono">sweep.py</span>
+     (the seeded runs); every number below comes out of them.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">The split, and why it is honest</h3>
+    <table class="map" id="nettab"></table>
+    <p style="font-size:13.7px;margin:12px 0 0">Training and test are <b>different networks</b>, not different
+       time slices of one network. That matters: a model with per-node parameters would score beautifully on a
+       random time split of a single city and could not be run on any other, so a time split would not have
+       tested the thing we care about. Nothing here is per-node, so the trained weights load straight onto a
+       bigger unseen city.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Depth versus horizon</h3>
+    <p class="small">Test RMSE on the unseen networks, averaged over 3 training seeds. Lower is better; the
+       best depth in each column is shaded. K is how many steps ahead the model must predict. The small
+       figures are the best and worst of the three seeds — read them before believing any single cell.</p>
+    <table class="map" id="dhtab"></table>
+    <div class="callout good" id="dhnarr"></div>
+    <p style="font-size:13.7px;margin-top:12px">Read across a row and you see depth barely matters for the
+       one-step problem — one hop of reach is all a one-step prediction needs. Read down a column at K = 3 and
+       the picture changes completely: a single layer simply cannot see where the disturbance is coming from,
+       and no amount of training fixes it. <b>Depth buys reach, and you need exactly as much reach as the
+       physics of your horizon demands.</b></p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">The aggregator is a modelling choice, not a hyperparameter</h3>
+    <p class="small">Same architecture, same depth (L = 3), same data, K = 3. Only ⊕ changes.
+       3 seeds each.</p>
+    <table class="map" id="aggtab"></table>
+    <div class="callout good" id="aggnarr"></div>
+    <p style="font-size:13.7px;margin-top:12px">The ground-truth rule takes a <b>max</b> over downstream
+       neighbours — a queue backs up from the <em>worst</em> road you feed into, not the average one. The max
+       aggregator can represent that exactly; mean and sum have to approximate it. Pick ⊕ from what the
+       quantity does: <b>sum</b> when it is conserved (flows into a node), <b>mean</b> when it is an intensive
+       state (prevailing speed), <b>max</b> when a bottleneck governs, <b>attention</b> when the weighting is
+       the thing you do not know.</p>
+  </div>
+
+  <div class="card tight">
+    <h4 class="raw" style="margin-top:2px">Parameter counts — the litmus test</h4>
+    <table class="map" id="ptab"></table>
+    <p style="font-size:13.7px;margin:10px 0 0">None of these contain N. That is the whole claim of
+       size-independence, and it is checkable in ten seconds on any paper you read: <b>if the parameter count
+       mentions the number of nodes, the model cannot be moved to another city.</b> Learned per-sensor
+       embeddings and learned adjacency matrices both fail this test.</p>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 5 ==================== -->
+<section class="page" id="p5"><div class="wrap">
+  <h2 class="sec">Fit card, failure modes, and what to check</h2>
+
+  <div class="fitcard" style="margin-bottom:20px">
+    <div class="row"><div class="k">Method</div><div><b>Message-passing graph neural network</b></div></div>
+    <div class="row"><div class="k">Idea in one sentence</div><div>Learn one rule for what a single connection means, apply it to every connection in the network, collapse whatever arrives at each node, and repeat — so the size and shape of the network live in the wiring rather than in the weights.</div></div>
+    <div class="row"><div class="k">Why it works (the logic)</div><div>Pairwise messages have fixed arity, so a shared function covers 3-leg and 5-leg intersections alike; a permutation-invariant reduction absorbs the varying degree; stacking L layers composes a one-hop rule into an L-hop model, which is how a local rule reproduces a wide-area cascade.</div></div>
+    <div class="row"><div class="k">Fits these tasks</div><div>Link speed and travel-time forecasting, sensor imputation, incident impact propagation, signal-network state estimation, resilience and cascading-failure analysis on any infrastructure network. <span class="pill">prediction</span> <span class="pill">classification</span></div></div>
+    <div class="row"><div class="k">Needs this data</div><div>A network with node and edge attributes that describe <em>what things are</em> (lanes, control type, capacity, turn geometry, distance) plus a time series of node or link states. Volume: enough rollouts to cover the regimes you care about, and — critically — <b>more than one network</b> if you ever want to transfer. Labels come free when the target is a future measured state. Agencies hold all of it: detector and probe feeds, signal logs, an OSM or HPMS network.</div></div>
+    <div class="row"><div class="k">Breaks when</div><div>The parameter count contains N (per-sensor embeddings, learned adjacency) — then it cannot leave its training city at all. Neighbours are non-interchangeable but nothing in the edge features says so. Degree distribution shifts and the aggregator was a sum. The horizon needs more hops than the depth provides. Two nodes are structurally identical but operationally different and the features do not distinguish them. The real coupling is not along the network — a detour, a special event, weather.</div></div>
+    <div class="row"><div class="k">Keep the classical method when</div><div>The network is small enough to fit per-location models (a dozen intersections on one corridor: fit a dozen models and skip all of this). The dynamics you need are already a known conservation law — CTM and LWR are derived, correct everywhere, and need four parameters, not three thousand. You have one city and no intention of moving. Or a per-sensor historical average by time-of-day already meets the accuracy the decision needs, which on quiet days it very often does.</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">Applications, with the baseline named</h3>
+      <table class="map">
+        <tr><th class="raw">Where</th><th class="raw">Task, data, and what it has to beat</th></tr>
+        <tr><td>Traffic operations</td><td>Network-wide speed and queue forecasting over a 15–60 min horizon from detector and probe feeds. Baseline to beat: per-sensor historical average by time-of-day, then a per-sensor time-series model with no graph at all. Report both or the result means nothing.</td></tr>
+        <tr><td>Incident management</td><td>Predicting the spatial extent of an incident's impact for responder and message-sign decisions. Data: incident logs plus link speeds. Baseline: a fixed-radius impact zone, which is what many agencies use today and is surprisingly hard to beat.</td></tr>
+        <tr><td>Road safety</td><td>Crash risk on links where each link has few crashes but the network has many — the graph lets a link borrow strength from similar, connected links. Baseline: a negative-binomial SPF with the same covariates. If the GNN does not beat the SPF, the SPF wins on interpretability.</td></tr>
+        <tr><td>Resilience &amp; infrastructure</td><td>Cascading failure under flooding or a power loss, across heterogeneous subsystems with typed edges. Baseline: percolation or max-flow analysis on the same network.</td></tr>
+        <tr><td>Air mobility</td><td>Airspace sector or vertiport congestion propagation, where sectors have varying numbers of neighbours — the same arity problem with different units.</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">How this result was evaluated</h3>
+      <p style="font-size:13.7px;margin-top:4px"><b>The baseline.</b> Persistence — predict that nothing changes — plus the comparison across depths, so no depth gets credit for what one hop already achieves.</p>
+      <p style="font-size:13.7px"><b>The split, and why it is honest.</b> Train and test are disjoint <em>networks</em> of different sizes, not time slices of one network. A time split would have let a model memorise locations and still look good, which is the failure mode we are trying to detect.</p>
+      <p style="font-size:13.7px"><b>The ugly cases.</b> Nodes whose bottleneck lies further away than the model's depth — these are the errors that dominate the K = 3 column and they do not go away with more data. Dead-end nodes with a single neighbour, where a mean over one message carries no smoothing. And the step right as the bottleneck clears, when the model's learned bias toward persistence is exactly wrong.</p>
+      <div class="callout warn"><b>One honest caveat about this page.</b> The ground truth here is a rule we
+        wrote down, so a model that reaches far enough can nail it. Real traffic is not generated by a tidy
+        one-hop rule, and the gains reported in the cross-city forecasting literature are far smaller than the
+        ones in the table on tab 4. Take the <em>shape</em> of the result — depth buys reach; the aggregator
+        should match the physics — not the magnitude.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Check yourself</h3>
+    <ol class="tight">
+      <li>You are handed a traffic-forecasting model that scored best-in-class on a single-city benchmark, and asked whether your agency can use it on your network. What is the first thing you look at, and what would disqualify it in one glance?</li>
+      <li>Your forecast horizon is 45 minutes, your mean link length is 0.4 miles, and the backward wave speed in your corridor is about 12 mph. Roughly how many hops of receptive field does that imply, and what does that tell you about a 2-layer architecture?</li>
+      <li>You are modelling queue spillback at signalised intersections and your colleague has used a mean aggregator over neighbours. What argument would you make for changing it, and what would you expect to see in the errors if you are right?</li>
+      <li>Two intersections in your network have identical degree and identical neighbour degrees, but one is a freeway ramp terminal and one is a residential crossing. Your model predicts the same thing for both. Name two fixes, and say which one costs you the ability to transfer the model to another city.</li>
+      <li>You have three years of detector data for one city and forty crashes at the intersection you care about. Which of the methods on this page would you consider, and at what point would you tell your client that a safety performance function is the better answer?</li>
+    </ol>
+  </div>
+
+  <footer><div>AI for Mobility · CGN 6933 · University of South Florida. Networks, dynamics and message passing
+    on this page are generated and computed in your browser. The trained results on tab 4 come from
+    <span class="mono">gnn_roadnet.py</span> and <span class="mono">sweep.py</span>, which sit beside this file.</div></footer>
+</div></section>
+
+<script>
+/* =======================================================================
+   RESULTS — pasted from gnn_roadnet.py / sweep.py. Nothing here is typed by hand.
+   ======================================================================= */
+const RESULTS = {"cells":{"L1K1":{"mean":0.0281,"min":0.0252,"max":0.0333},"L2K1":{"mean":0.0208,"min":0.0197,"max":0.0228},"L3K1":{"mean":0.0174,"min":0.0141,"max":0.0214},"L4K1":{"mean":0.0183,"min":0.0145,"max":0.0218},"L1K2":{"mean":0.0462,"min":0.0452,"max":0.0471},"L2K2":{"mean":0.0329,"min":0.0316,"max":0.0339},"L3K2":{"mean":0.0254,"min":0.0208,"max":0.0303},"L4K2":{"mean":0.0266,"min":0.0206,"max":0.0341},"L1K3":{"mean":0.0808,"min":0.0804,"max":0.0814},"L2K3":{"mean":0.0418,"min":0.0406,"max":0.0428},"L3K3":{"mean":0.0435,"min":0.0274,"max":0.069},"L4K3":{"mean":0.0332,"min":0.0261,"max":0.0387}},"agg":{"mean":{"mean":0.0435,"min":0.0274,"max":0.069},"sum":{"mean":0.0228,"min":0.0176,"max":0.0288},"max":{"mean":0.0101,"min":0.0073,"max":0.0129}},"base":{"K1":0.0655,"K2":0.1118,"K3":0.1509},"nets":{"train":[{"n":25,"e":32,"deg":[4,8,9,3,1]},{"n":30,"e":36,"deg":[3,15,9,3,0]},{"n":30,"e":37,"deg":[4,11,12,3,0]}],"test":[{"n":42,"e":54,"deg":[5,15,16,5,1]},{"n":49,"e":65,"deg":[5,20,15,5,4]},{"n":36,"e":46,"deg":[4,14,12,6,0]}]},"params":{"L1":1121,"L2":2193,"L3":3265,"L4":4337}};
+
+/* =======================================================================
+   Small deterministic PRNG so "New network" is reproducible and cheap.
+   ======================================================================= */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function gauss(rnd){let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+/* =======================================================================
+   Network generation — perturbed lattice, edges dropped (connectivity kept),
+   a few diagonals. Mirrors make_network() in gnn_roadnet.py.
+   ======================================================================= */
+function connected(n,adj){const seen=new Set([0]),q=[0];
+  while(q.length){const u=q.pop();for(const v of adj[u])if(!seen.has(v)){seen.add(v);q.push(v);}}
+  return seen.size===n;}
+
+function makeNetwork(rows,cols,seed,drop=0.28,diag=0.10,jit=0.20){
+  const rnd=mulberry32(seed), n=rows*cols, id=(r,c)=>r*cols+c, pos=[];
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)
+    pos[id(r,c)]=[c+gauss(rnd)*jit, r+gauss(rnd)*jit];
+  const eset=new Set();
+  const key=(a,b)=>a<b?a+','+b:b+','+a;
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+    if(c+1<cols)eset.add(key(id(r,c),id(r,c+1)));
+    if(r+1<rows)eset.add(key(id(r,c),id(r+1,c)));}
+  for(let r=0;r<rows-1;r++)for(let c=0;c<cols-1;c++)
+    if(rnd()<diag)eset.add(key(id(r,c),id(r+1,c+1)));
+  let edges=[...eset].map(s=>s.split(',').map(Number));
+  for(let i=edges.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[edges[i],edges[j]]=[edges[j],edges[i]];}
+  const adj=Array.from({length:n},()=>new Set());
+  edges.forEach(([a,b])=>{adj[a].add(b);adj[b].add(a);});
+  const keep=new Set(edges.map(([a,b])=>key(a,b)));
+  let target=Math.floor(edges.length*drop), dropped=0;
+  for(const [a,b] of edges){
+    if(dropped>=target)break;
+    adj[a].delete(b);adj[b].delete(a);
+    if(connected(n,adj)&&adj[a].size>=1&&adj[b].size>=1){keep.delete(key(a,b));dropped++;}
+    else{adj[a].add(b);adj[b].add(a);}
+  }
+  const E=[...keep].map(s=>s.split(',').map(Number));
+  const deg=adj.map(s=>s.size);
+  // CBD = node nearest the centroid; BFS distance from it defines the flow field
+  const cx=pos.reduce((s,p)=>s+p[0],0)/n, cy=pos.reduce((s,p)=>s+p[1],0)/n;
+  let cbd=0,bd=1e9;
+  pos.forEach((p,i)=>{const d=(p[0]-cx)**2+(p[1]-cy)**2;if(d<bd){bd=d;cbd=i;}});
+  const dist=Array(n).fill(-1);dist[cbd]=0;const q=[cbd];
+  while(q.length){const u=q.shift();for(const v of adj[u])if(dist[v]<0){dist[v]=dist[u]+1;q.push(v);}}
+  // directed message list  v -> u, with e = +1 when v is downstream of u
+  const src=[],dst=[],ea=[],down=Array.from({length:n},()=>[]);
+  E.forEach(([a,b])=>{
+    [[a,b],[b,a]].forEach(([v,u])=>{
+      src.push(v);dst.push(u);
+      const e=dist[v]<dist[u]?1:(dist[v]>dist[u]?-1:0);
+      ea.push(e); if(e>0)down[u].push(v);
+    });
+  });
+  return {n,pos,edges:E,adj:adj.map(s=>[...s].sort((x,y)=>x-y)),deg,cbd,dist,src,dst,ea,down};
+}
+
+/* =======================================================================
+   Ground-truth spillback — mirrors rollout() in gnn_roadnet.py
+   ======================================================================= */
+const BETA=0.70, GAMMA=0.05;
+function stepDynamics(net,c,bn){
+  const out=c.slice(); out[bn]=1.0;
+  const nx=new Array(net.n);
+  for(let u=0;u<net.n;u++){
+    let md=0; for(const v of net.down[u]) md=Math.max(md,out[v]);
+    nx[u]=Math.min(1,Math.max(0,out[u]+BETA*(md-out[u])-GAMMA));
+  }
+  nx[bn]=1.0; return nx;
+}
+
+/* =======================================================================
+   GNN forward pass with fixed (untrained) weights — this page uses it to show
+   the MECHANISM, not to make predictions. d is small so the numbers are readable.
+   ======================================================================= */
+function makeWeights(d,seed){
+  const rnd=mulberry32(seed), sc=1/Math.sqrt(2*d+1);
+  const mat=(r,c,s)=>Array.from({length:r},()=>Array.from({length:c},()=>gauss(rnd)*s));
+  return {d, Wm:mat(d,2*d+1,sc), bm:Array.from({length:d},()=>0),
+             Wu:mat(d,2*d,1/Math.sqrt(2*d)), bu:Array.from({length:d},()=>0),
+             We:Array.from({length:d},()=>gauss(rnd)*0.6)};
+}
+const mv=(M,x)=>M.map(row=>row.reduce((s,w,i)=>s+w*x[i],0));
+const tanhv=x=>x.map(Math.tanh);
+
+function gnnForward(net,c,W,L,agg,useEdge){
+  const d=W.d;
+  let h=c.map(ci=>tanhv(Array.from({length:d},(_,k)=>ci*W.We[k])));
+  const trace=[];
+  for(let l=0;l<L;l++){
+    const msgs=net.src.map((v,i)=>{
+      const u=net.dst[i], e=useEdge?net.ea[i]:0;
+      return tanhv(mv(W.Wm,[...h[v],...h[u],e]).map((z,k)=>z+W.bm[k]));
+    });
+    const acc=Array.from({length:net.n},()=>agg==='max'?Array(d).fill(-1e9):Array(d).fill(0));
+    const cnt=Array(net.n).fill(0);
+    msgs.forEach((m,i)=>{const u=net.dst[i];cnt[u]++;
+      for(let k=0;k<d;k++)acc[u][k]=agg==='max'?Math.max(acc[u][k],m[k]):acc[u][k]+m[k];});
+    const a=acc.map((v,u)=>v.map(x=>{
+      if(agg==='max')return cnt[u]?x:0;
+      return agg==='mean'?(cnt[u]?x/cnt[u]:0):x;}));
+    if(l===0)trace.push({msgs,a});
+    h=h.map((hu,u)=>tanhv(mv(W.Wu,[...hu,...a[u]]).map((z,k)=>z+W.bu[k])));
+  }
+  return {h,trace};
+}
+
+function ballAround(net,s,L){
+  const d=Array(net.n).fill(-1);d[s]=0;const q=[s];
+  while(q.length){const u=q.shift();if(d[u]>=L)continue;
+    for(const v of net.adj[u])if(d[v]<0){d[v]=d[u]+1;q.push(v);}}
+  return d;
+}
+function hopDist(net,s){
+  const d=Array(net.n).fill(-1);d[s]=0;const q=[s];
+  while(q.length){const u=q.shift();for(const v of net.adj[u])if(d[v]<0){d[v]=d[u]+1;q.push(v);}}
+  return d;
+}
+
+/* =======================================================================
+   Drawing
+   ======================================================================= */
+const NS='http://www.w3.org/2000/svg';
+function congColor(c){
+  const stops=[[0,[30,158,87]],[0.5,[207,196,147]],[1,[192,57,43]]];
+  c=Math.max(0,Math.min(1,c));
+  for(let i=0;i<stops.length-1;i++){
+    const [p0,c0]=stops[i],[p1,c1]=stops[i+1];
+    if(c<=p1){const t=(c-p0)/(p1-p0);
+      return `rgb(${c0.map((v,k)=>Math.round(v+t*(c1[k]-v))).join(',')})`;}
+  }
+  return 'rgb(192,57,43)';
+}
+function layout(net,W,H,pad){
+  const xs=net.pos.map(p=>p[0]), ys=net.pos.map(p=>p[1]);
+  const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  const sx=(W-2*pad)/Math.max(1e-6,x1-x0), sy=(H-2*pad)/Math.max(1e-6,y1-y0);
+  const s=Math.min(sx,sy);
+  const ox=pad+((W-2*pad)-s*(x1-x0))/2, oy=pad+((H-2*pad)-s*(y1-y0))/2;
+  return net.pos.map(p=>[ox+s*(p[0]-x0), H-(oy+s*(p[1]-y0))]);
+}
+function el(tag,attrs){const e=document.createElementNS(NS,tag);
+  for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+function drawNet(svg,net,opt){
+  opt=opt||{};
+  const W=560,H=440,P=window.innerWidth<620?22:30;
+  svg.innerHTML='';
+  const XY=layout(net,W,H,P);
+  // marker ids must be unique per <svg>: duplicate ids in one document all
+  // resolve to the first occurrence, which silently kills arrowheads elsewhere
+  const uid=svg.id, AH='ah_'+uid, AHH='ahh_'+uid;
+  const defs=el('defs',{});
+  const mk=(id,col)=>{const m=el('marker',{id,viewBox:'0 0 10 10',refX:'9',refY:'5',
+      markerWidth:'5',markerHeight:'5',orient:'auto-start-reverse'});
+    m.appendChild(el('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:col}));return m;};
+  defs.appendChild(mk(AH,'#9bb0a8')); defs.appendChild(mk(AHH,'#8E44AD'));
+  svg.appendChild(defs);
+
+  // edges
+  net.edges.forEach(([a,b])=>{
+    const hi=opt.hiEdges&&(opt.hiEdges.has(a+','+b)||opt.hiEdges.has(b+','+a));
+    // draw pointing the way traffic travels: toward the lower BFS distance
+    let p=a,q=b;
+    if(net.dist[a]<net.dist[b]){p=b;q=a;}
+    const [x1,y1]=XY[p],[x2,y2]=XY[q];
+    const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy)||1, tr=11;
+    svg.appendChild(el('line',{x1,y1,
+      x2:x2-dx/len*tr, y2:y2-dy/len*tr,
+      stroke:hi?'#8E44AD':'#c3d2cb', 'stroke-width':hi?3.4:2,
+      'marker-end':hi?`url(#${AHH})`:`url(#${AH})`, opacity:hi?1:.85}));
+  });
+
+  // ball outline
+  if(opt.ball){
+    net.pos.forEach((_,i)=>{ if(opt.ball[i]>=0&&opt.ball[i]<=opt.ballL){
+      svg.appendChild(el('circle',{cx:XY[i][0],cy:XY[i][1],r:15,fill:'none',
+        stroke:'#0E6E9E','stroke-width':1.6,'stroke-dasharray':'3 3',opacity:.75}));}});
+  }
+
+  // nodes
+  net.pos.forEach((_,i)=>{
+    const [x,y]=XY[i];
+    const r=opt.sel===i?10.5:(net.deg[i]>=4?8.5:7.2);
+    const c=opt.values?opt.values[i]:0;
+    const g=el('g',{});
+    if(i===net.cbd) g.appendChild(el('circle',{cx:x,cy:y,r:r+5,fill:'none',stroke:'#b9a96a','stroke-width':3}));
+    if(opt.bn===i)  g.appendChild(el('circle',{cx:x,cy:y,r:r+5,fill:'none',stroke:'#c0392b','stroke-width':3}));
+    if(opt.twins&&opt.twins.includes(i))
+      g.appendChild(el('circle',{cx:x,cy:y,r:r+6,fill:'none',stroke:'#B5581E','stroke-width':3.2}));
+    g.appendChild(el('circle',{cx:x,cy:y,r,'class':'nd',
+      fill:opt.sel===i?'#8E44AD':(opt.colorFn?opt.colorFn(c):congColor(c)),
+      stroke:opt.sel===i?'#5b2d73':'#ffffff','stroke-width':opt.sel===i?2.5:1.8,
+      'data-i':i}));
+    if(opt.labels){
+      g.appendChild(el('text',{x,y:y+3.5,'text-anchor':'middle','font-size':'8.5',
+        'font-family':'ui-monospace,monospace','font-weight':'700',
+        fill:(opt.sel===i)?'#fff':'#20302b','pointer-events':'none'},''));
+      g.lastChild.textContent=i;
+    }
+    svg.appendChild(g);
+  });
+  if(opt.onClick){
+    svg.querySelectorAll('circle.nd').forEach(c=>c.addEventListener('click',
+      ()=>opt.onClick(+c.getAttribute('data-i'))));
+  }
+  return XY;
+}
+
+/* =======================================================================
+   Tabs
+   ======================================================================= */
+document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section.page').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById(b.dataset.tab).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+  if(b.dataset.tab==='p2')renderP2();
+  if(b.dataset.tab==='p3')renderP3();
+}));
+
+/* =======================================================================
+   Shared state
+   ======================================================================= */
+let NET=null, SEED=7, SEL=0, TWINS=[], W4=makeWeights(4,3), W8=makeWeights(8,5);
+let P3={c:null,bn:0,t:0,timer:null};
+
+function pickInteresting(net){
+  // highest-degree node that has at least one downstream AND one upstream street,
+  // so the first message table shows the edge feature doing something
+  let best=-1,bs=-1;
+  for(let u=0;u<net.n;u++){
+    let up=0,dn=0;
+    net.src.forEach((v,i)=>{ if(net.dst[i]!==u)return; net.ea[i]>0?dn++:net.ea[i]<0?up++:0; });
+    const score=net.deg[u]+(up>0&&dn>0?10:0);
+    if(score>bs){bs=score;best=u;}
+  }
+  return best;
+}
+function newNetwork(seed){
+  SEED=seed; TWINS=[];
+  const rnd=mulberry32(seed*977+13);
+  const rows=5+Math.floor(rnd()*3), cols=5+Math.floor(rnd()*3);
+  NET=makeNetwork(rows,cols,seed);
+  SEL=pickInteresting(NET);
+  resetP3();
+}
+
+/* ---------------------- PAGE 1 ---------------------- */
+function renderP1(){
+  const c=currentCong();
+  drawNet(document.getElementById('svg1'),NET,{values:c,sel:SEL,labels:true,
+    hiEdges:new Set(NET.adj[SEL].map(v=>SEL+','+v)),
+    onClick:i=>{SEL=i;renderP1();}});
+  document.getElementById('s1n').textContent=NET.n;
+  document.getElementById('s1e').textContent=NET.edges.length;
+  document.getElementById('s1d').textContent=NET.deg[SEL];
+  document.getElementById('selname').textContent='#'+SEL;
+
+  const {trace}=gnnForward(NET,c,W4,1,'mean',true);
+  const {msgs}=trace[0];
+  const rows=[];
+  NET.src.forEach((v,i)=>{ if(NET.dst[i]!==SEL)return;
+    const role=NET.ea[i]>0?'downstream':(NET.ea[i]<0?'upstream':'same ring');
+    rows.push({v,role,e:NET.ea[i],c:c[v],m:msgs[i]});});
+  const d=W4.d;
+  const agg=Array(d).fill(0);
+  rows.forEach(r=>r.m.forEach((x,k)=>agg[k]+=x));
+  for(let k=0;k<d;k++)agg[k]/=Math.max(1,rows.length);
+  const f=x=>(x>=0?' ':'')+x.toFixed(2);
+
+  let html='<tr><th class="raw">From</th><th class="raw">Relation e</th><th class="num">c<sub>v</sub></th>'
+          +'<th class="num">message m(v→u), 4 components</th></tr>';
+  rows.forEach(r=>{html+=`<tr><td>#${r.v}</td><td>${r.role} <span class="mono small">(${r.e>0?'+1':r.e<0?'−1':'0'})</span></td>`
+    +`<td class="num">${r.c.toFixed(2)}</td><td class="num">[${r.m.map(f).join(', ')}]</td></tr>`;});
+  html+=`<tr class="hl"><td>⊕ mean</td><td><b>collapses ${rows.length} message${rows.length===1?'':'s'} → 1 vector</b></td>`
+    +`<td class="num">—</td><td class="num">[${agg.map(f).join(', ')}]</td></tr>`;
+  document.getElementById('msgtab').innerHTML=html;
+
+  const nDown=rows.filter(r=>r.e>0).length, nUp=rows.filter(r=>r.e<0).length;
+  document.getElementById('p1narr').innerHTML=
+    `Intersection <b>#${SEL}</b> has degree <b>${NET.deg[SEL]}</b> — ${nDown} downstream neighbour${nDown===1?'':'s'} `
+   +`(a queue there can back up into #${SEL}) and ${nUp} upstream. The table above is <b>${rows.length} call${rows.length===1?'':'s'} `
+   +`to one function</b> with ${W4.d*(2*W4.d+1)+W4.d} message weights, followed by one average. `
+   +`Click a node with a different degree: the number of rows changes, the weights do not.`;
+}
+function currentCong(){
+  if(!P3.c) resetP3();
+  return P3.c;
+}
+
+/* ---------------------- PAGE 2 ---------------------- */
+function renderP2(){
+  const L=+document.getElementById('p2L').value;
+  const agg=document.getElementById('p2agg').value;
+  const useEdge=document.getElementById('p2edge').value==='on';
+  document.getElementById('p2Lv').textContent=L===0?'0 — the raw input':L;
+
+  // EVERY node gets the identical input feature. Any variation is structural.
+  const flat=Array(NET.n).fill(0.5);
+  const {h}=gnnForward(NET,flat,W8,L,agg,useEdge);
+  const v=h.map(x=>x[0]);
+  const mn=Math.min(...v), mx=Math.max(...v), rng=(mx-mn)||1;
+  const norm=v.map(x=>(x-mn)/rng);
+  const distinct=new Set(v.map(x=>x.toFixed(6))).size;
+
+  drawNet(document.getElementById('svg2'),NET,{values:norm,sel:-1,labels:false,twins:TWINS,
+    colorFn:t=>`rgb(${Math.round(20+t*200)},${Math.round(90+t*60)},${Math.round(140-t*70)})`});
+  document.getElementById('s2distinct').textContent=distinct+' / '+NET.n;
+  document.getElementById('s2spread').textContent=(mx-mn).toExponential(2);
+
+  let msg;
+  if(L===0) msg=`Every intersection holds the same vector, because we gave them all the same input. `
+    +`<b>1 distinct state</b> in a city of ${NET.n}. The graph has not been consulted yet.`;
+  else{
+    msg=`After <b>${L} layer${L===1?'':'s'}</b> there ${distinct===1?'is':'are'} <b>${distinct}</b> `
+      +`distinct state${distinct===1?'':'s'} among ${NET.n} `
+      +`intersections — and the inputs were all identical, so every bit of that came from the wiring. `;
+    if(distinct===1){
+      msg+=`<b>Except here there is still just one.</b> With identical inputs, a <b>${agg}</b> of identical `
+        +`messages is the same number whether two streets meet or five — so with the edge feature off, this `
+        +`aggregator cannot see degree at all, and no amount of depth rescues it. Switch the aggregator to `
+        +`<b>sum</b>, or turn the edge feature back on, and watch the count jump on the very first layer.`;
+    } else if(agg==='sum'&&!useEdge){
+      msg+=`Sum encodes degree directly — five neighbours accumulate more than two — so nodes separate on `
+        +`layer 1 with nothing but the graph. This is also precisely why sum breaks when you move to a city `
+        +`with a different degree distribution: the same structure lands at a different magnitude.`;
+    } else if(useEdge){
+      msg+=`The edge feature is carrying the structure here: an intersection with three downstream streets `
+        +`receives a different mix from one with three upstream streets, even at identical degree. Note this `
+        +`works for <b>mean</b> too, which cannot see degree on its own — the asymmetry of the city is enough.`;
+    }
+  }
+  document.getElementById('p2narr').innerHTML=msg;
+  renderP2reach();
+}
+function runSweep(){
+  const rows=[['mean','off'],['sum','off'],['max','off'],['mean','on'],['sum','on'],['max','on']];
+  const flat=Array(NET.n).fill(0.5);
+  let h='<tr><th class="raw">Aggregator ⊕</th><th class="raw">Edge feature</th>'
+       +'<th class="num">L = 1</th><th class="num">L = 2</th><th class="num">L = 3</th></tr>';
+  let blind=[];
+  rows.forEach(([agg,edge])=>{
+    const cells=[1,2,3].map(L=>{
+      const {h:hh}=gnnForward(NET,flat,W8,L,agg,edge==='on');
+      return new Set(hh.map(x=>x[0].toFixed(6))).size;});
+    if(cells[2]===1) blind.push(agg);
+    h+=`<tr${cells[2]===1?' class="hl"':''}><td>${agg}</td><td>${edge}</td>`
+      +cells.map(c=>`<td class="num"${c===1?' style="color:#c0392b;font-weight:700"':''}>${c}</td>`).join('')+'</tr>';
+  });
+  document.getElementById('sweeptab').innerHTML=h;
+  document.getElementById('swn').textContent=NET.n;
+  const nn=document.getElementById('sweepnarr');
+  nn.style.display='block';
+  nn.innerHTML=blind.length
+    ? `<b>Look at the rows stuck on 1.</b> With the edge feature off, <b>${blind.join(' and ')}</b> `
+      +`aggregation leaves all ${NET.n} intersections holding the identical vector at every depth. Both collapse a set of `
+      +`identical messages to that same value, whether the set has two members or five, so degree never `
+      +`enters the arithmetic at all. <b>Sum</b> is the only one of the three that sees degree unaided — which is the `
+      +`expressiveness gap between sum, mean and max, appearing in a street network you can point at. `
+      +`Turn the edge feature on and every row recovers, because the asymmetry of the city now arrives `
+      +`through e instead.`
+    : `Every configuration separates nodes on this network. Press <b>New network</b> on tab 1 for a sparser `
+      +`one and run it again.`;
+}
+
+function renderP2reach(){
+  const L=+document.getElementById('p2rL').value;
+  document.getElementById('p2rLv').textContent=L;
+  const ball=ballAround(NET,SEL,L);
+  const inb=ball.filter(x=>x>=0&&x<=L).length;
+  drawNet(document.getElementById('svg2r'),NET,{values:Array(NET.n).fill(0.12),sel:SEL,
+    ball,ballL:L,labels:false,
+    colorFn:()=> '#dfe9e4'});
+  document.getElementById('s2reach').textContent=inb;
+  document.getElementById('s2pct').textContent=Math.round(100*inb/NET.n)+'%';
+}
+function wlClasses(net){
+  let col=net.deg.slice();
+  for(let it=0;it<net.n;it++){
+    const sig=col.map((c,u)=>c+'|'+net.adj[u].map(v=>col[v]).sort((a,b)=>a-b).join(','));
+    const uniq=[...new Set(sig)].sort();
+    const nc=sig.map(s=>uniq.indexOf(s));
+    if(nc.join()===col.join())break;
+    col=nc;
+  }
+  const buckets={};
+  col.forEach((c,u)=>{(buckets[c]=buckets[c]||[]).push(u);});
+  return Object.values(buckets).filter(b=>b.length>1);
+}
+function findTwins(){
+  const out=document.getElementById('p2twinnarr');
+  let pairs=wlClasses(NET), hopped=0;
+  // most irregular networks have a twin class; if this one doesn't, roll forward
+  while(pairs.length===0 && hopped<25){ newNetwork(SEED+1); hopped++; pairs=wlClasses(NET); }
+  if(pairs.length===0){ out.innerHTML='No twins found in 25 networks — unusual. Press '
+    +'<b>New network</b> on tab 1 and try again.'; return; }
+  const sc=b=>NET.deg[b[0]]*100+b.length;   // prefer real intersections over dead ends
+  const pair=pairs.sort((a,b)=>sc(b)-sc(a))[0];
+  TWINS=pair;
+  out.innerHTML=`Intersections <b>#${pair[0]}</b> and <b>#${pair[1]}</b>`
+    +(pair.length>2?` (and ${pair.length-2} more)`:'')
+    +` &mdash; ringed in orange on the map above &mdash; are indistinguishable to message passing: both have `
+    +`degree ${NET.deg[pair[0]]}, their neighbours have matching degrees, and so on all the way out. `
+    +`<b>They hold identical vectors at every layer, forever.</b> If they need different predictions, the `
+    +`difference has to arrive as a feature, not as depth.`
+    +(hopped?` <span class="small">(The previous network had no twins, so this is a fresh one &mdash; `
+      +`irregularity is itself information, and the sparser and more broken-up a network is, the more ties `
+      +`it breaks. A perfect grid is the worst case: nearly every interior intersection has twins.)</span>`:'');
+  renderP2(); if(document.getElementById('p1').classList.contains('active'))renderP1();
+}
+
+/* ---------------------- PAGE 3 ---------------------- */
+function resetP3(){
+  const rnd=mulberry32(SEED*31+5);
+  const cand=[];NET.dist.forEach((d,i)=>{if(d<=Math.max(1,Math.floor(Math.max(...NET.dist)/2)))cand.push(i);});
+  P3.bn=cand[Math.floor(rnd()*cand.length)];
+  P3.c=Array.from({length:NET.n},()=>Math.max(0,0.08+gauss(rnd)*0.05));
+  P3.c[P3.bn]=1.0; P3.t=0;
+}
+function renderP3(){
+  const L=+document.getElementById('p3L').value;
+  document.getElementById('p3Lv').textContent=`L = ${L} → ${L} hop${L===1?'':'s'}`;
+  const ball=ballAround(NET,SEL,L);
+  drawNet(document.getElementById('svg3'),NET,{values:P3.c,sel:SEL,bn:P3.bn,
+    ball,ballL:L,labels:false});
+  const hd=hopDist(NET,SEL)[P3.bn];
+  const visible=hd<=L;
+  document.getElementById('s3t').textContent=P3.t;
+  document.getElementById('s3hops').textContent=hd;
+  const see=document.getElementById('s3see');
+  see.textContent=visible?'yes':'no';
+  see.className='n '+(visible?'':'w');
+  document.getElementById('p3narr').innerHTML= visible
+    ? `The bottleneck is <b>${hd} hop${hd===1?'':'s'}</b> from the purple node, and an <b>L = ${L}</b> model reaches `
+      +`${L}. It is inside the receptive field, so the model has the information it needs — whether it uses it well `
+      +`is now a question of training, not of architecture.`
+    : `The bottleneck is <b>${hd} hops</b> away but an <b>L = ${L}</b> model reaches only ${L}. The cause of the `
+      +`congestion that is about to arrive is <b>outside the receptive field</b>: the model is being asked to `
+      +`predict something it cannot see. More data will not fix this. More layers will.`;
+}
+function tickP3(){
+  P3.c=stepDynamics(NET,P3.c,P3.bn); P3.t++;
+  renderP3(); if(document.getElementById('p1').classList.contains('active'))renderP1();
+}
+
+/* ---------------------- PAGE 4 ---------------------- */
+function renderP4(){
+  const R=RESULTS;
+  // networks table
+  let h='<tr><th class="raw">Role</th><th class="num">N</th><th class="num">segments</th>'
+       +'<th class="raw">degree 1 / 2 / 3 / 4 / 5</th></tr>';
+  R.nets.train.forEach((x,i)=>{h+=`<tr><td>${i===0?'trained on':''}</td><td class="num">${x.n}</td>`
+    +`<td class="num">${x.e}</td><td class="mono">${x.deg.join(' / ')}</td></tr>`;});
+  R.nets.test.forEach((x,i)=>{h+=`<tr class="hl"><td>${i===0?'tested on':''}</td><td class="num">${x.n}</td>`
+    +`<td class="num">${x.e}</td><td class="mono">${x.deg.join(' / ')}</td></tr>`;});
+  document.getElementById('nettab').innerHTML=h;
+
+  // depth vs horizon
+  const Ks=[1,2,3], Ls=[1,2,3,4];
+  let t='<tr><th class="raw">Layers L</th>'+Ks.map(k=>`<th class="num">K = ${k}</th>`).join('')+'</tr>';
+  const best={};
+  Ks.forEach(k=>{best[k]=Math.min(...Ls.map(l=>R.cells[`L${l}K${k}`].mean));});
+  Ls.forEach(l=>{
+    t+=`<tr><td>L = ${l}</td>`+Ks.map(k=>{
+      const c=R.cells[`L${l}K${k}`];
+      return `<td class="num ${c.mean===best[k]?'best':''}">${c.mean.toFixed(4)}`
+            +`<br><span class="small mono">${c.min.toFixed(4)}–${c.max.toFixed(4)}</span></td>`;}).join('')+'</tr>';});
+  t+='<tr><td>persistence baseline</td>'+Ks.map(k=>`<td class="num">${R.base['K'+k].toFixed(4)}</td>`).join('')+'</tr>';
+  document.getElementById('dhtab').innerHTML=t;
+
+  const r1=R.cells.L1K1.mean/best[1], r3=R.cells.L1K3.mean/best[3];
+  document.getElementById('dhnarr').innerHTML=
+    `<b>The pattern to read.</b> At a one-step horizon a single layer is already within `
+   +`<b>${r1.toFixed(1)}×</b> of the best depth — one hop of reach is all the problem needs. At a three-step `
+   +`horizon that same single layer is <b>${r3.toFixed(1)}×</b> worse than the best depth. The deficit of a `
+   +`shallow model grows with how far the disturbance has to travel, which is exactly what "depth buys reach" `
+   +`predicts. Every model here also beats persistence, which is the floor any forecast has to clear.`
+   +`<br><br><b>And one piece of honesty.</b> Look at the seed ranges. At K = 3 the L = 3 cell spans `
+   +`${R.cells.L3K3.min.toFixed(4)}–${R.cells.L3K3.max.toFixed(4)}: one unlucky seed lands it above L = 2, `
+   +`which is why it is not shaded despite being the deeper model. Three seeds is not many. The <em>trend</em> `
+   +`down each column is real and repeats; any single cell is worth about as much as any single training run, `
+   +`which is to say not much. Report the spread when you do this for your own project.`;
+
+  // aggregator
+  let a='<tr><th class="raw">Aggregator ⊕</th><th class="num">test RMSE</th><th class="num">best / worst seed</th><th class="raw">why</th></tr>';
+  const why={mean:'degree-robust, but averages away the worst case',
+             sum:'keeps the count, so it shifts when degree distribution shifts',
+             max:'matches the ground-truth rule exactly — a queue backs up from the worst downstream road'};
+  const bestAgg=Math.min(...Object.values(R.agg).map(x=>x.mean));
+  ['mean','sum','max'].forEach(k=>{const x=R.agg[k];
+    a+=`<tr><td>${k}</td><td class="num ${x.mean===bestAgg?'best':''}">${x.mean.toFixed(4)}</td>`
+      +`<td class="num">${x.min.toFixed(4)} / ${x.max.toFixed(4)}</td><td>${why[k]}</td></tr>`;});
+  document.getElementById('aggtab').innerHTML=a;
+  const ratio=R.agg.mean.mean/R.agg.max.mean;
+  document.getElementById('aggnarr').innerHTML=
+    `<b>Matching ⊕ to the physics was worth ${ratio.toFixed(1)}× here</b> — a larger gain than going from `
+   +`1 layer to 4 at the same horizon. Choosing the aggregator is modelling, not tuning.`;
+
+  // params
+  let p='<tr><th class="raw">Depth</th><th class="num">parameters (d = 16)</th><th class="raw">contains N?</th></tr>';
+  [1,2,3,4].forEach(l=>{p+=`<tr><td>L = ${l}</td><td class="num">${R.params['L'+l].toLocaleString()}</td>`
+    +`<td>no</td></tr>`;});
+  document.getElementById('ptab').innerHTML=p;
+}
+
+/* ---------------------- wiring ---------------------- */
+document.getElementById('p1new').addEventListener('click',()=>{newNetwork(SEED+1);renderP1();});
+document.getElementById('p1max').addEventListener('click',()=>{
+  SEL=NET.deg.indexOf(Math.max(...NET.deg));renderP1();});
+['p2L','p2agg','p2edge'].forEach(id=>document.getElementById(id).addEventListener('input',renderP2));
+document.getElementById('p2rL').addEventListener('input',renderP2reach);
+document.getElementById('p2twins').addEventListener('click',findTwins);
+document.getElementById('p2sweep').addEventListener('click',runSweep);
+document.getElementById('p3L').addEventListener('input',renderP3);
+document.getElementById('p3step').addEventListener('click',tickP3);
+document.getElementById('p3reset').addEventListener('click',()=>{resetP3();renderP3();});
+document.getElementById('p3new').addEventListener('click',()=>{SEED++;resetP3();renderP3();});
+document.getElementById('p3play').addEventListener('click',function(){
+  if(P3.timer){clearInterval(P3.timer);P3.timer=null;this.textContent='▶ Play the spillback';return;}
+  this.textContent='❚❚ Pause';
+  P3.timer=setInterval(()=>{ if(P3.t>=14){resetP3();} tickP3(); },700);
+});
+
+newNetwork(7);
+renderP1(); renderP4();
+</script>
+</body>
+</html>
