@@ -133,6 +133,11 @@ The three results worth carrying into the rest of the module:
 
 ## Labs
 
+- **{doc}`Lab 5 — Attention on a Road Network <lab5_graph_attention>`.** Six aggregators, two traffic
+  rules, one controlled comparison. Find out where a learned weighting beats a fixed one — and where
+  a one-line aggregator carrying your own domain knowledge beats them both. Runs in about three
+  minutes with nothing to install.
+
 - **Learning the CTM update (companion, above).** Fit a convolution kernel to a Newell platoon and read
   the reaction time off its peak; then train a residual conv block on CTM fields and measure the wave
   speeds it learned. Runs entirely in the browser — nothing to install.

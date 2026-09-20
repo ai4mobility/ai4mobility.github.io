@@ -76,6 +76,8 @@ parts:
             title: "Lab 3 — Image Embeddings with a Deep CNN"
           - file: module1/lab4_clip_vs_traditional_cv
             title: "Lab 4 — CLIP vs. Traditional Computer Vision"
+          - file: module7/lab5_graph_attention
+            title: "Lab 5 — Attention on a Road Network"
 
   - caption: Capstone
     chapters:

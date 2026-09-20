@@ -5,7 +5,7 @@
   <h2>Hands-On Labs <span>Every Notebook in the Course</span></h2>
   <p>One page for all the labs &mdash; what each one builds, what it actually proves, and what to compare it against before you believe the result. Everything runs in Google Colab; nothing needs a local install.</p>
   <div class="resource-meta">
-    <span>4 notebooks available now</span>
+    <span>5 notebooks available now</span>
     <span>15 more planned for Modules 2&ndash;8</span>
     <span>Open data throughout</span>
   </div>
@@ -45,6 +45,7 @@
         <tr><td>Deploy it to the edge <em>(hardware)</em></td><td>M5 &middot; Oct 22</td><td>What quantization costs in accuracy and buys in latency and power</td><td>In development</td></tr>
         <tr><td>Reading a production driving stack <em>(hardware)</em></td><td>M6 &middot; Oct 29</td><td>What a deployed ADAS is doing, and how you would know if it were doing it badly</td><td>In development</td></tr>
         <tr><td>A lane-keeping policy from camera images</td><td>M6 &middot; Oct 29</td><td>The failure cases that look fine on aggregate metrics</td><td>In development</td></tr>
+        <tr><td><a href="module7/lab5_graph_attention.html">5 &mdash; Attention on a road network</a></td><td>M7 &middot; Nov 5</td><td>Attention earns its parameters only where the weighting is unknown &mdash; and structure beats weighting</td><td>Available</td></tr>
         <tr><td>Learning the CTM update</td><td>M7 &middot; Nov 5</td><td>A convolution kernel carries a reaction time and a wave speed</td><td>Companion available</td></tr>
         <tr><td>RL signal control in SUMO</td><td>M7 &middot; Nov 5</td><td>The tuned actuated baseline is the comparison that deflates the result</td><td>In development</td></tr>
         <tr><td>Sensor simulation in CARLA</td><td>M7 &middot; Nov 5</td><td>What a simulator systematically fails to represent</td><td>In development</td></tr>
@@ -58,9 +59,9 @@
 <section class="resource-section" id="module1-labs">
   <div class="resource-section-header">
     <h2>Available Now</h2>
-    <span>Module 1 &middot; Foundations and Representation Learning</span>
+    <span>Modules 1 and 7</span>
   </div>
-  <p class="section-intro">Four notebooks, all runnable in Colab on open or synthetic data. Read them alongside the Module 1 sections named on each card &mdash; the notebook shows the thing working, the section says why it works and where it stops working.</p>
+  <p class="section-intro">Five notebooks, all runnable in Colab on open or synthetic data. Read each one alongside the notes section named on its card &mdash; the notebook shows the thing working, the section says why it works and where it stops working.</p>
   <div class="resource-grid">
     <article class="resource-card">
       <div class="resource-card-top"><p class="resource-category">Module 1 &middot; Sept 3</p><span class="level-badge level-beginner">Beginner</span></div>
@@ -93,6 +94,14 @@
       <p><strong>Proves:</strong> why open-vocabulary perception matters for long-tail safety scenarios that never appear in an ImageNet-style label set &mdash; and how brittle prompt phrasing can be. <strong>Check it against:</strong> the closed-set classifier on the same images, including the scenes neither model has a label for.</p>
       <div class="tag-row"><span>Reads with 1.5</span><span>torch &middot; transformers</span><span>Bridge into Module 2</span></div>
       <a class="resource-link" href="module1/lab4_clip_vs_traditional_cv.html">Open Lab 4</a>
+    </article>
+    <article class="resource-card">
+      <div class="resource-card-top"><p class="resource-category">Module 7 &middot; Nov 5</p><span class="level-badge level-advanced">Advanced</span></div>
+      <h3>Lab 5 &mdash; Attention on a Road Network</h3>
+      <p>Build one message-passing layer with six interchangeable aggregators and run it against two ground-truth traffic rules taken from flow theory. Four aggregators are generic; two of them encode what a traffic engineer already knows &mdash; that a queue backs up from downstream, that arriving flow comes from upstream. Those two are the real competition, and they cost no extra parameters.</p>
+      <p><strong>Proves:</strong> attention wins only where the weighting is genuinely unknown &mdash; and even there, knowing <em>which</em> neighbours to listen to is worth more than learning <em>how much</em> to weight them. <strong>Check it against:</strong> not the mean aggregator, which anything beats, but the fixed aggregator carrying your own domain knowledge. On the spillback rule it ties attention at half the parameters and a third of the seed variance.</p>
+      <div class="tag-row"><span>Reads with 7.2</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~3 min</span></div>
+      <a class="resource-link" href="module7/lab5_graph_attention.html">Open Lab 5</a>
     </article>
   </div>
   <div class="placeholder-panel">

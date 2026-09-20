@@ -1252,6 +1252,39 @@ items:
       sweeps and writes sweep.json. The batched rewrite matters - sample-by-sample training did not finish
       in 10 minutes, batched it is ~25.
 
+  - id: m7-lab5-graph-attention
+    file: site/module7/lab5_graph_attention.ipynb
+    kind: lab
+    module: 7
+    session: '2026-11-05'
+    status: published
+    dest: site/labs.md + _toc.yml Labs part
+    notes: 'Lab 5. One message-passing layer, SIX aggregators: mean/sum/max/attn plus two that encode domain
+      knowledge at zero parameter cost - dmax (max over DOWNSTREAM only, i.e. queues back up) and umean
+      (mean over UPSTREAM only, i.e. flow arrives from upstream). Two ground truths: rule A spillback (selector
+      is a known max) and rule B merge composition (weights proportional to Greenshields flow q=k(1-k),
+      so influence is NON-MONOTONE - an empty feeder and a jammed feeder both deliver nothing, the one at
+      capacity dominates). Optional section 9 adds rule C (who governs me depends on my own density) and
+      measures the GAT-2018 static-attention limit with a ranking-flip rate. Executed, 29 cells, 3 figures,
+      ~3 min CPU, no downloads. HEADLINE, six seeds: attention ties dmax on rule A (0.0080 vs 0.0081) at
+      DOUBLE the parameters and 2.7x vs 1.6x seed spread; attention wins rule B (0.0110) but umean - which
+      knows nothing but the support - is right behind at 0.0122. So: right support >> learned weighting
+      > generic reduction. Do not restate the lab as ''attention wins''.'
+  - id: m7-lab5-repro
+    file: gat_roadnet.py, known_aggs.py, more_seeds.py, build_lab5.py
+    kind: internal
+    module: 7
+    session: '2026-11-05'
+    status: integrated
+    notes: 'Reproducers for m7-lab5-graph-attention at the class-folder root. gat_roadnet.py holds the three
+      ground truths and the six-aggregator layer (imports the network generator from gnn_roadnet.py); more_seeds.py
+      adds seeds 3-5 to the first run''s 0-2; known_aggs.py runs dmax/umean over six seeds; build_lab5.py
+      emits the notebook, reading gat_results.json, gat_results_seeds345.json and known_aggs.json. Re-running
+      any sweep means re-running build_lab5.py AND re-executing the notebook - the full-sweep numbers are
+      baked into its markdown. METHOD TRAP worth keeping: the first version gave the attention branch a
+      weaker message function than the fixed aggregators, and attention ''lost''. All six now share one
+      message function; only the reduction differs. The notebook says so in section 4 on purpose.'
+
 # -----------------------------------------------------------------------------
 # CAPSTONE AND COURSE-WIDE
 # -----------------------------------------------------------------------------
