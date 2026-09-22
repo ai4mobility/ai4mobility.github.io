@@ -93,4 +93,4 @@ a weight of 0.45 on a token whose value vector is small moves almost nothing.
 
 ---
 
-Next: {doc}`notes4-architecture` &mdash; the blocks this mechanism is assembled into, and how to point them at your own data.
+Next: {doc}`notes4-gpt` &mdash; the same five operations, written out in code and run on a model we trained here.

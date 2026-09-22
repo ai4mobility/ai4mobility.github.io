@@ -40,13 +40,15 @@ parts:
             title: "2.2 From static to contextual vectors"
           - file: module2/notes3-attention
             title: "2.3 Attention: the mechanism"
-          - file: module2/notes4-architecture
-            title: "2.4 The transformer as a research architecture"
-          - file: module2/notes5-vision
-            title: "2.5 Transformers that see: ViT and multimodal"
-          - file: module2/notes6-evaluation
-            title: "2.6 Does it earn its keep?"
-          - file: module2/notes7-labs
+          - file: module2/notes4-gpt
+            title: "2.4 Building one: a GPT you can read"
+          - file: module2/notes5-architecture
+            title: "2.5 The transformer as a research architecture"
+          - file: module2/notes6-vision
+            title: "2.6 Transformers that see: ViT and multimodal"
+          - file: module2/notes7-evaluation
+            title: "2.7 Does it earn its keep?"
+          - file: module2/notes8-labs
             title: "Practice, exercises, and further reading"
       - file: module3/index
       - file: module4/index

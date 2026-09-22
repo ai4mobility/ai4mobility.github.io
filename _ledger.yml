@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-09-15
+  updated: 2026-09-22
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -715,43 +715,43 @@ items:
       is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-attention-query-companion.'
 
   - id: m2-notes-4-architecture
-    file: site/module2/notes4-architecture.md
+    file: site/module2/notes5-architecture.md
     kind: notes
     module: 2
     session: '2026-09-17'
     status: debt
-    notes: '2.4 The transformer as a research architecture. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
+    notes: '2.5 The transformer as a research architecture. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
       flat shape -- sections directly under module2/index in _toc.yml, no "Notes" wrapper level.
       SKELETON ONLY: header .notes-card, a "What this section covers" list, the companion embed and its
       lead prose moved verbatim off module2/index.md, and the standing evaluation close. The body prose
       is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-transformer-as-architecture-companion.'
 
   - id: m2-notes-5-vision
-    file: site/module2/notes5-vision.md
+    file: site/module2/notes6-vision.md
     kind: notes
     module: 2
     session: '2026-09-17'
     status: debt
-    notes: '2.5 Transformers that see: ViT and multimodal. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
+    notes: '2.6 Transformers that see: ViT and multimodal. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
       flat shape -- sections directly under module2/index in _toc.yml, no "Notes" wrapper level.
       SKELETON ONLY: header .notes-card, a "What this section covers" list, the companion embed and its
       lead prose moved verbatim off module2/index.md, and the standing evaluation close. The body prose
       is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-vit-attention-companion.'
 
   - id: m2-notes-6-evaluation
-    file: site/module2/notes6-evaluation.md
+    file: site/module2/notes7-evaluation.md
     kind: notes
     module: 2
     session: '2026-09-17'
     status: debt
-    notes: '2.6 Does it earn its keep?. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
+    notes: '2.7 Does it earn its keep?. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
       flat shape -- sections directly under module2/index in _toc.yml, no "Notes" wrapper level.
       SKELETON ONLY: header .notes-card, a "What this section covers" list, the companion embed and its
       lead prose moved verbatim off module2/index.md, and the standing evaluation close. The body prose
       is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-crash-bert-companion.'
 
   - id: m2-notes-7-practice
-    file: site/module2/notes7-labs.md
+    file: site/module2/notes8-labs.md
     kind: notes
     module: 2
     session: '2026-09-17'
@@ -898,7 +898,7 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    dest: site/module2/notes4-architecture.md
+    dest: site/module2/notes5-architecture.md
     mounted: site/_static/companions/Transformer_As_Architecture_Companion.html
     notes: '"Your own tokens: the transformer as a research architecture." Six tabs, 264 KB, SINGLE FILE
       (data inlined at build time, no sidecar). The THIRD module-2 embed, after tokenization and word2vec->BERT.
@@ -945,7 +945,7 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    dest: site/module2/notes5-vision.md
+    dest: site/module2/notes6-vision.md
     mounted: site/_static/companions/ViT_Attention_Companion.html
     notes: '"Where is it looking? Attention in a Vision Transformer." Six tabs, 697 KB, single file. Teaches
       how one attention weight is computed, then reads the ViT paper''s two diagnostics (Appendix D.7 attention
@@ -991,7 +991,7 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    dest: site/module2/notes6-evaluation.md
+    dest: site/module2/notes7-evaluation.md
     notes: 'Does BERT earn its keep on crash narratives? Eight panels mirroring the standard BERT-for-crash-analysis
       diagram, each run on 399 de-identified Florida long-form narratives (HSMV 90010) from 20 Pasco/Hernando/Pinellas
       corridors, 2021-2025, joined to the coded record by report number. HEADLINE RESULTS, all corridor-grouped
@@ -1052,6 +1052,74 @@ items:
       list, not a token-to-weight dict. Static figures Attention_Depends_On_Query.{svg,png} (+_1.._4)
       and Attention_Same_Word_Two_Roles.* are built but not on the site.
       Attention_Coreference_Control.* are superseded.'
+
+  - id: m2-notes-4-gpt
+    file: site/module2/notes4-gpt.md
+    kind: notes
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    notes: '2.4 Building one: a GPT you can read. Created Sept 22 2026 and INSERTED between 2.3 and the
+      research-architecture page, which moved to 2.5; vision moved to 2.6, evaluation to 2.7 and the practice
+      page to notes8-labs. Unlike its module-2 neighbours this page is NOT a skeleton -- it carries real
+      prose built from the code walkthrough deck (GPT_From_Scratch_Slides.md): the six-line forward pass,
+      the five lines of scaled_dot_product_attention, the mask-removal result, the B/T shape-independence
+      argument, and the baseline table as the evaluation close. Every number on it is reproduced by gpt_walkthrough_numbers.py
+      / varlen_numbers.py / feedforward_numbers.py. Companion: m2-gpt-from-scratch-companion. Script: m2-gpt-from-scratch-script.'
+
+  - id: m2-gpt-from-scratch-companion
+    file: GPT_From_Scratch_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    dest: site/module2/notes4-gpt.md
+    mounted: site/_static/companions/GPT_From_Scratch_Companion.html
+    notes: '"A GPT you can read." Nine tabs, 143 KB, SINGLE FILE (data inlined at build time, no sidecar).
+      Every matrix on the page is the trained weights of a 1,567,488-parameter decoder-only model trained
+      in this folder on 42,650 deduplicated NHTSA complaint narratives (4,548,008 word tokens, val perplexity
+      42.2 against bigram 94.7 / unigram 453.2 / uniform 6,000, 29 min on 2 CPU cores). Tabs: one objective
+      / tokens to vectors / Q,K,V / the dot product / scale and mask (the interactive core -- one matrix,
+      two switches) / softmax / heads and the block / does it beat the baseline / when to reach for it.
+      The keeper results: removing the causal mask on a one-layer run gives train loss 0.13 and HELD-OUT
+      perplexity 1.14 while generating ''pedal pedal pedal'' -- the leak is in the architecture, not the
+      split; the sqrt(d) scale moves the largest row weight from 0.877 to 0.512; the NumPy re-derivation
+      of one head matches PyTorch to 1.9e-07. Build chain: gpt_from_scratch.py --train -> gpt_walkthrough_numbers.py
+      -> build_gpt_companion.py -> verify_gpt_companion.py (49 headless checks, RUN AFTER ANY EDIT).'
+
+  - id: m2-gpt-from-scratch-script
+    file: gpt_from_scratch.py
+    kind: handout
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    dest: site/module2/notes4-gpt.md
+    mounted: site/_static/code/gpt_from_scratch.py
+    notes: 'Student-facing CODE, not an assignment -- the ledger has no ''code'' kind, so it sits under
+      handout. ~470 lines, the complete model: explicit W_q/W_k/W_v/W_o (never fused), scaled_dot_product_attention
+      written out, softmax implemented with the max subtraction, pre-norm blocks, tied output head, training
+      loop, counting baselines, and a NumPy mirror of one attention head that asserts agreement with PyTorch.
+      CLI: --explain --overflow --check --baselines --train --sample, plus --size tiny/small/base. NEW FILE
+      at _static/code/ -- the first non-companion asset directory in _static; linked from the page with
+      a raw <a ... download> anchor, never a markdown link (a markdown link to _static emits _build/html/_downloads/,
+      which is the standing regression test). The 7.3 MB corpus (Labs/data/nhtsa_adas_complaints.txt.gz)
+      and the 6.4 MB trained checkpoint are DELIBERATELY not in the repo; the page tells students the corpus
+      is Lab 2''s and that --train rebuilds the checkpoint.'
+
+  - id: m2-gpt-from-scratch-repro
+    kind: internal
+    module: 2
+    session: '2026-09-17'
+    status: integrated
+    file: gpt_walkthrough_numbers.py + varlen_numbers.py + feedforward_numbers.py + build_gpt_companion.py
+      + verify_gpt_companion.py + make_gpt_figures.py + make_shape_figures.py + build_gpt_deck.py
+    notes: 'Reproducer and build chain for m2-gpt-from-scratch-companion and m2-notes-4-gpt. gpt_walkthrough_numbers.py
+      recomputes every companion number from the checkpoint (the two mask/no-mask training runs are cached
+      in gpt_leakage_cache.json; delete it to force a rerun). varlen_numbers.py and feedforward_numbers.py
+      produce the shape-independence measurements the page quotes (0.000e+00 reshape identity, 0.000e+00
+      prefix consistency, the per-layer cost table). make_gpt_figures.py and make_shape_figures.py draw
+      the six slide figures; build_gpt_deck.py builds the 24-slide code-walkthrough deck and GPT_From_Scratch_Slides.md.
+      Full build notes and the trap list: GPT_From_Scratch_Notes.md in the class folder.'
 
 # -----------------------------------------------------------------------------
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)
@@ -1229,7 +1297,8 @@ items:
     status: published
     dest: site/module7/notes.md#graph-neural-networks
     mounted: site/_static/companions/GNN_On_A_Road_Network_Companion.html
-    notes: 'Five tabs. A random irregular street network is generated in the browser (perturbed lattice,
+    notes: 'SIX tabs since 2026-09-21 (tab 5 "Attention: a learned aggregator" inserted before the fit
+      card; see the tail of this note). A random irregular street network is generated in the browser (perturbed lattice,
       edges dropped keeping connectivity, degrees 1-5) and one message-passing step is exploded at any clicked
       node, so varying degree is visibly absorbed by the aggregation rather than the weights. Tab 2 gives
       every intersection the IDENTICAL input feature, so all output variation is structural: mean and max
@@ -1239,7 +1308,35 @@ items:
       L=1 deficit 1.6x at K=1 growing to 2.4x at K=3; max aggregator 4.3x better than mean at L=3/K=3; parameter
       counts 1,121-4,337 with no N in any of them. Numbers are baked from sweep.json via a __RESULTS__ placeholder
       - RE-INJECT the HTML if the sweep is ever re-run. Paired deliberately with m7-newell-lwr-cnn: that
-      one is the corridor case (convolution), this one the network case (message passing).'
+      one is the corridor case (convolution), this one the network case (message passing).
+      TAB 5, added 2026-09-21, answers "does graph attention need the topology": a transformer layer over a
+      road graph, q_u = WQ[c_u,1], k_(v-u) = WK[c_v,e_(v-u)], val = c_v, d = 2. Panel 1 is a four-link
+      example small enough to check on paper, with live sliders; its hand-set weights make the attention
+      ranking FLIP with the query node''s own congestion (upstream governs an empty link, downstream a full
+      one) at c_C = (1 + c_U - c_D)/2 = 0.325 at the defaults - which is also the demonstration that
+      GAT-2018''s additive score cannot do this. Panel 2 runs the same 10-parameter layer on the generated
+      network and FITS IT IN THE BROWSER (analytic gradient + Adam, 300 steps, 0.4-0.7 s) against the same
+      spillback rule. Measured 6-seed table is baked in: test RMSE 0.0286 typed / 0.0556 masked-untyped /
+      0.0839 full attention / 0.0870 persistence - support buys 34%, direction buys a further 49%, and full
+      attention clears persistence by only 4%. Seed 5 is reported as a train-test gap (0.0143 train, 0.0810
+      test, every restart the same), not hidden. Reproducer is attn_roadnet.py (see m7-gnn-attention-repro),
+      which regenerates every one of those numbers exactly.'
+  - id: m7-gnn-attention-repro
+    file: attn_roadnet.py
+    kind: internal
+    module: 7
+    session: '2026-11-05'
+    status: integrated
+    notes: 'Reproducer behind tab 5 of m7-gnn-road-network, at the class-folder root. NumPy only, no torch.
+      It ports the page''s mulberry32 PRNG bit-for-bit, so it builds the IDENTICAL networks and reproduces
+      the tab''s numbers digit for digit - that agreement between two independent implementations is the
+      check. Prints the four-link worked panel and the GAT-2018-vs-dot-product table by default;
+      --checkgrad verifies the analytic gradient against central differences (max relative error ~1e-8);
+      --sweep runs the 6-seed edge/mask/full table, about 3 min. TRAP worth keeping: the incident link is
+      pinned at 1 by the scenario and is UNLEARNABLE, so it must be excluded from the error - leave it in
+      and the exact-oracle predictor scores 0.1097 against persistence''s 0.0825, i.e. the metric says the
+      true rule is worse than doing nothing. Second trap: the incident must be pinned NEAR THE CBD (tab 3''s
+      rule), or no neighbour has it downstream, the queue never propagates and the rollout is pure decay.'
   - id: m7-gnn-road-network-repro
     file: gnn_roadnet.py, sweep.py
     kind: internal
@@ -1284,6 +1381,43 @@ items:
       baked into its markdown. METHOD TRAP worth keeping: the first version gave the attention branch a
       weaker message function than the fixed aggregators, and attention ''lost''. All six now share one
       message function; only the reduction differs. The notebook says so in section 4 on purpose.'
+
+  - id: m4-lab6-vit-finetune
+    file: site/module4/lab6_vit_finetune.ipynb
+    kind: lab
+    module: 4
+    session: '2026-10-01'
+    status: published
+    dest: site/labs.md + _toc.yml Labs part + module4/index.md
+    notes: 'Lab 6. Turns the Sept 10 transfer dial on ViT-Tiny (5,524,995 params, Apache-2.0) over 2,949
+      FL511 Tampa Bay camera frames collected 2026-09-21 in six sweeps through sunset. Camera-disjoint
+      split, daylight-only training. Daylight test: majority 35.5, 12 hand features 37.7, head-only at
+      the fine-tuning LR 34.5 (UNDERTRAINED - do not quote as "frozen features are useless"), converged
+      logistic probe 56.5, last block 51.4, last four blocks 64.0, full fine-tune 71.2. The dial-0
+      artifact is deliberate teaching material: dial position and optimizer are coupled, and at lr 1e-3
+      dial 0 recovers to 57.0. After dark the full fine-tune reads 67.6, which is NOT robustness - the
+      teacher detector collapses from 10.33 to 2.13 vehicles/frame and 11.2% to 40.4% empty frames, so
+      the student agrees with a failing teacher. Banner-crop control costs only 2 points (69.2 vs 71.2),
+      so the model is not reading the burned-in caption. Teacher also under-counts on bad optics:
+      blurriest daylight quartile 6.32 vehicles vs sharpest 11.27. Timing on 2 CPU threads: Tiny 13.6
+      ms/frame (73.6 fps) vs Base 143.0 ms; teacher 1.041 s/frame. ViT-Base full fine-tune was killed
+      by RAM at batch 16 in 8 GB - reported as a finding, not a gap.'
+  - id: m4-lab6-repro
+    file: Labs/vit_finetune/ + Labs/build_vit_finetune_lab.py
+    kind: internal
+    module: 4
+    session: '2026-10-01'
+    status: integrated
+    notes: 'Reproducer for m4-lab6-vit-finetune. sweep.py pulls FL511 (https://fl511.com/map/mapIcons/Cameras
+      for the inventory, /map/Cctv/<id> for the JPEG; a PNG response is the "unavailable" placeholder and
+      is dropped, which is why 717 cameras yield ~491 frames). label.py runs fasterrcnn_resnet50_fpn
+      COCO_V1 at min_size=480 on the NATIVE frame. pack.py builds the shipped zip (224x224 JPEG q=82 +
+      labels.csv). run_exp.py / run_exp2.py / run_base.py write numbers.json, which
+      build_vit_finetune_lab.py reads and fails loudly on a missing key. TRAPS: never run two label.py
+      at once (it rewrites the whole JSON - use flock); class edges (3,10) and split seed 7 are
+      hard-coded in BOTH the notebook and dataset.py; set_dial(m,0) unfreezes head AND norm = 963 params,
+      not 579; experiments must read the PACKAGED images, not the raw originals, or the notebook prints
+      numbers that do not match.'
 
 # -----------------------------------------------------------------------------
 # CAPSTONE AND COURSE-WIDE

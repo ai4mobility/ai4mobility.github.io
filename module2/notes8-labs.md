@@ -39,7 +39,7 @@ attention visualization. Setup notes and difficulty are on the {doc}`All Labs <.
 **{doc}`Lab 4 — CLIP vs. traditional computer vision <../module1/lab4_clip_vs_traditional_cv>`**
 physically lives in Module 1 and is the bridge into this module. If you skipped it, run it
 first &mdash; the multimodal embedding space it builds is the foundation for everything in
-section 2.5.
+section 2.6.
 
 ## Using this on the job
 
@@ -48,10 +48,10 @@ weight, and each has a section behind it:
 
 - **What is one token, and how many of them is this going to be?** Section 2.1. A price and a
   latency budget follow from the answer, and jargon-heavy agency text fragments badly.
-- **What is the classical method this replaces, and has anyone run it?** Sections 2.2 and 2.6.
+- **What is the classical method this replaces, and has anyone run it?** Sections 2.2 and 2.7.
   On two different real corpora in this module, counting words beats a frozen pretrained
   encoder.
-- **What is the split?** Section 2.6. Agency text is written by a small number of people
+- **What is the split?** Section 2.7. Agency text is written by a small number of people
   working from templates; a random split measures the template, not the model.
 
 The workflow framing those questions sit inside &mdash; the anatomy, the six leverage labels, the
@@ -62,7 +62,7 @@ checkpoint rule &mdash; is in {doc}`Module 7 §7.1 <../module7/notes>`.
 This module stops at using a pretrained transformer as it comes. {doc}`Module 4 <../module4/index>`
 is about changing that: retrieval-augmented generation, parameter-efficient fine-tuning, RLHF,
 and agentic systems that call tools. {doc}`Module 3 <../module3/index>` takes the generative
-half &mdash; the decoder-only models sketched in section 2.4 &mdash; into diffusion and world models.
+half &mdash; the decoder-only models sketched in section 2.5 &mdash; into diffusion and world models.
 
 The reading list for this module is on the {doc}`module page <index>`.
 

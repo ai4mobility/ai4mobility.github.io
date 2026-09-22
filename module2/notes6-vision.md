@@ -1,8 +1,8 @@
-# 2.5 Transformers that see: ViT and multimodal
+# 2.6 Transformers that see: ViT and multimodal
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.5</span>
+    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.6</span>
     <span class="notes-card-session">Session: Sept 17</span>
   </div>
   <p class="notes-card-lede">Cut an image into patches, call each one a token, and the architecture from 2.3 works without modification &mdash; which raises the question the paper had to answer: with convolution's built-in locality gone, does the model learn to look in sensible places? This section reads the attention weights on real road scenes, against the Grad-CAM you already built in Module 1.</p>
@@ -88,4 +88,4 @@ care about, which in a roadway scene are the rare ones.
 
 ---
 
-Next: {doc}`notes6-evaluation` &mdash; whether any of it beats the method it would replace.
+Next: {doc}`notes7-evaluation` &mdash; whether any of it beats the method it would replace.

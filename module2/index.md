@@ -28,7 +28,7 @@ what these systems cannot do for transportation problems.
 
 :::{admonition} How to read this module
 :class: tip
-All six sections pair with the Sept 17 meeting; skim before, read properly after. Each page
+All seven sections pair with the Sept 17 meeting; skim before, read properly after. Each page
 opens with a card naming its session and the interactive companion embedded in it.
 
 The companions are the same pages posted on Canvas, and they are not decoration — most of the
@@ -37,9 +37,9 @@ read only one before class, read {doc}`2.1 Tokens <notes1-tokens>`: what a token
 whether everything after it is affordable.
 
 The sections run in the order the machine does — what goes *in* (2.1), what comes out the
-other side (2.2), the mechanism in between (2.3), then the architecture pointed at your own
-data (2.4), at pixels (2.5), and finally at the question of whether it beats the method it
-would replace (2.6).
+other side (2.2), the mechanism in between (2.3), one whole model written out in code (2.4),
+then the architecture pointed at your own data (2.5), at pixels (2.6), and finally at the
+question of whether it beats the method it would replace (2.7).
 :::
 
 <div class="practice-table-wrap">
@@ -64,22 +64,27 @@ would replace (2.6).
   <td><a href="../_static/companions/Attention_Query_Companion.html" target="_blank" rel="noopener">Attention depends on the query &#8599;</a></td>
 </tr>
 <tr>
-  <td><a href="notes4-architecture.html"><strong>2.4 The transformer as a research architecture</strong></a><br><em>Sept 17</em></td>
+  <td><a href="notes4-gpt.html"><strong>2.4 Building one: a GPT you can read</strong></a><br><em>Sept 17</em></td>
+  <td>The same five operations as code: Q, K and V as three projections; the scaled dot product; the causal mask and what a missing one costs; softmax written out; how the shapes stay free of B and T; baselines before conclusions.</td>
+  <td><a href="../_static/companions/GPT_From_Scratch_Companion.html" target="_blank" rel="noopener">A GPT you can read &#8599;</a><br><a href="../_static/code/gpt_from_scratch.py" download>gpt_from_scratch.py</a></td>
+</tr>
+<tr>
+  <td><a href="notes5-architecture.html"><strong>2.5 The transformer as a research architecture</strong></a><br><em>Sept 17</em></td>
   <td>Encoder-only, decoder-only and encoder&ndash;decoder designs; pretraining and scaling; designing your own tokens; attention masks as a modelling choice; sizing a claim against the naive baseline.</td>
   <td><a href="../_static/companions/Transformer_As_Architecture_Companion.html" target="_blank" rel="noopener">Your own tokens &#8599;</a></td>
 </tr>
 <tr>
-  <td><a href="notes5-vision.html"><strong>2.5 Transformers that see: ViT and multimodal</strong></a><br><em>Sept 17</em></td>
+  <td><a href="notes6-vision.html"><strong>2.6 Transformers that see: ViT and multimodal</strong></a><br><em>Sept 17</em></td>
   <td>Images as patch sequences; what inductive bias buys and what data has to replace; attention distance against a CNN Grad-CAM; vision&ndash;language models; deletion tests.</td>
   <td><a href="../_static/companions/ViT_Attention_Companion.html" target="_blank" rel="noopener">Where is it looking? &#8599;</a><br><a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4</a></td>
 </tr>
 <tr>
-  <td><a href="notes6-evaluation.html"><strong>2.6 Does it earn its keep?</strong></a><br><em>Sept 17</em></td>
+  <td><a href="notes7-evaluation.html"><strong>2.7 Does it earn its keep?</strong></a><br><em>Sept 17</em></td>
   <td>Eight claimed encoder capabilities run against 399 real Florida crash narratives, each against the classical method it would replace; grouped splits; hallucination and grounding; latency and cost.</td>
   <td><a href="../_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Does BERT earn its keep? &#8599;</a></td>
 </tr>
 <tr>
-  <td><a href="notes7-labs.html"><strong>Practice, exercises, and further reading</strong></a><br><em>Sept 17</em></td>
+  <td><a href="notes8-labs.html"><strong>Practice, exercises, and further reading</strong></a><br><em>Sept 17</em></td>
   <td>What the cross-attention lab proves; the Module 1 bridge lab; the three questions this module arms you with; where transformers go in Modules 3 and 4.</td>
   <td>Cross-attention sanity check, <a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4</a></td>
 </tr>
@@ -133,7 +138,7 @@ By the end of this module you will be able to:
 
 Full descriptions, setup notes, and every lab in the course are on the
 {doc}`All Labs <../labs>` page. What each one *proves* is on
-{doc}`Practice, exercises, and further reading <notes7-labs>`.
+{doc}`Practice, exercises, and further reading <notes8-labs>`.
 
 | Notebook | What you build | Read alongside |
 | --- | --- | --- |
@@ -145,15 +150,16 @@ it first.
 
 ## Interactive companions
 
-Six interactive companions support the Sept 17 session. Each is embedded in the section it
+Seven interactive companions support the Sept 17 session. Each is embedded in the section it
 belongs to and is also linked here.
 
 - <a href="../_static/companions/Tokenization_Companion.html" target="_blank" rel="noopener">Tokens: the unit a language model actually reads</a> &mdash; embedded in <a href="notes1-tokens.html">2.1 Tokens</a>
 - <a href="../_static/companions/Word2Vec_to_BERT_Companion.html" target="_blank" rel="noopener">From word2vec to BERT: what a contextual vector buys you</a> &mdash; embedded in <a href="notes2-contextual.html">2.2 From static to contextual vectors</a>
 - <a href="../_static/companions/Attention_Query_Companion.html" target="_blank" rel="noopener">Attention depends on which word is asking</a> &mdash; embedded in <a href="notes3-attention.html">2.3 Attention: the mechanism</a>
-- <a href="../_static/companions/Transformer_As_Architecture_Companion.html" target="_blank" rel="noopener">Your own tokens: the transformer as a research architecture</a> &mdash; embedded in <a href="notes4-architecture.html">2.4 The transformer as a research architecture</a>
-- <a href="../_static/companions/ViT_Attention_Companion.html" target="_blank" rel="noopener">Where is it looking? Attention in a Vision Transformer</a> &mdash; embedded in <a href="notes5-vision.html">2.5 Transformers that see</a>
-- <a href="../_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Does BERT earn its keep on crash narratives?</a> &mdash; embedded in <a href="notes6-evaluation.html">2.6 Does it earn its keep?</a>
+- <a href="../_static/companions/GPT_From_Scratch_Companion.html" target="_blank" rel="noopener">A GPT you can read: every step, on a model trained here</a> &mdash; embedded in <a href="notes4-gpt.html">2.4 Building one</a>
+- <a href="../_static/companions/Transformer_As_Architecture_Companion.html" target="_blank" rel="noopener">Your own tokens: the transformer as a research architecture</a> &mdash; embedded in <a href="notes5-architecture.html">2.5 The transformer as a research architecture</a>
+- <a href="../_static/companions/ViT_Attention_Companion.html" target="_blank" rel="noopener">Where is it looking? Attention in a Vision Transformer</a> &mdash; embedded in <a href="notes6-vision.html">2.6 Transformers that see</a>
+- <a href="../_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Does BERT earn its keep on crash narratives?</a> &mdash; embedded in <a href="notes7-evaluation.html">2.7 Does it earn its keep?</a>
 
 The crash-narrative companion uses long-form narratives from real Florida crash reports. The
 narratives are de-identified before any model sees them, and no report is republished as a
