@@ -1212,8 +1212,30 @@ items:
       Labs/representation_quality_lab.ipynb.
 
 # -----------------------------------------------------------------------------
-# MODULES 4-8 — no built artifacts yet
+# MODULES 4-8 — Module 4 has its first section page; Modules 5-8 not started
 # -----------------------------------------------------------------------------
+
+  - id: m4-notes-1-adaptation
+    file: site/module4/notes1-adaptation.md
+    kind: notes
+    module: 4
+    session: '2026-10-01'
+    status: integrated
+    notes: '4.1 The adaptation ladder: what your corpus actually needs. The FIRST Module 4 section page,
+      created Sept 22 2026, and deliberately the module opener rather than a later section: the module index
+      already argues that most problems people fine-tune for are retrieval problems, so the decision rule
+      comes before prompting, RAG and LoRA mechanics and the later sections land as the rungs it names.
+      Numbering therefore survives -- prompting, retrieval and evaluation become 4.2+ without renumbering
+      this one. Carries the three-operations fork (continued pretraining / instruction tuning / task head),
+      the six-rung ladder table, what changes in code when moving from our model to a pretrained one (tokenizer
+      FIRST -- inherited BPE, the resize-embeddings trap), corpus size and licence reality (MUTCD free,
+      HCM is TRB-copyrighted -- students reach for it every semester), the three-way evaluation plus the
+      forgetting check, a six-field fit card and four judgment questions. Reuses only verified numbers:
+      4,548,008 tokens from m2-gpt-from-scratch-companion and the 12.5% weather recall ceiling from m2-crash-bert-companion.
+      Cites Hu et al. 2022 (LoRA) and Gururangan et al. 2020 (DAPT/TAPT) qualitatively -- no benchmark deltas
+      are asserted. NO COMPANION YET. The lab is deferred on purpose: the base-model shortlist needs a pilot
+      on the free Colab tier before the notebook is written, and the page says so.'
+
 
   - id: m4-notes
     file: site/module4/notes.md

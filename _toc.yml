@@ -52,6 +52,11 @@ parts:
             title: "Practice, exercises, and further reading"
       - file: module3/index
       - file: module4/index
+        sections:
+          # Same flat shape as Modules 1 and 2 -- section pages directly
+          # under the module index. See NOTES_GUIDE.md.
+          - file: module4/notes1-adaptation
+            title: "4.1 The adaptation ladder"
 
   - caption: Part II — Applied Mobility Systems
     chapters:

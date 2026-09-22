@@ -25,6 +25,11 @@ steps, invokes APIs, writes and runs code, and works through a task that no sing
 could complete. This is where the productivity gains in agency workflows are, and also where
 the failure modes get genuinely difficult to see.
 
+The first section page is posted: {doc}`4.1 The adaptation ladder <notes1-adaptation>` &mdash;
+the decision rule for the adaptation half, including what each rung costs and the two baselines
+you have to run before training anything. The remaining sections follow as the Oct 1 and Oct 8
+sessions are written.
+
 ## Learning objectives
 
 By the end of this module you will be able to:
