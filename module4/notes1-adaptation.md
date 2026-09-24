@@ -11,7 +11,7 @@
       <h4>Read it after</h4>
       <ul>
       <li><a href="../module2/notes4-gpt.html">2.4 Building one: a GPT you can read</a> &mdash; what you would be fine-tuning, exactly</li>
-      <li><a href="../module2/notes7-evaluation.html">2.7 Does it earn its keep?</a> &mdash; the standard this section holds you to</li>
+      <li><a href="../module2/notes8-evaluation.html">2.8 Does it earn its keep?</a> &mdash; the standard this section holds you to</li>
       </ul>
     </div>
     <div>
@@ -84,7 +84,7 @@ shape. The answer exists, in a document, and the user needs to be shown *where*.
 bad fit for that shape three separate ways: the model cannot cite what it absorbed, it cannot be
 updated without retraining, and it will answer confidently when the document says nothing at all.
 
-Hold on to the negative result from {doc}`2.7 <../module2/notes7-evaluation>`: on 399 real Florida
+Hold on to the negative result from {doc}`2.8 <../module2/notes8-evaluation>`: on 399 real Florida
 crash narratives, the question &ldquo;what was the weather?&rdquo; has a **12.5% recall ceiling**
 before any model is involved, because the narratives simply do not say. No amount of adaptation
 lifts a ceiling that the corpus imposes. Check what your text contains before you ask who should

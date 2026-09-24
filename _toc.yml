@@ -42,13 +42,15 @@ parts:
             title: "2.3 Attention: the mechanism"
           - file: module2/notes4-gpt
             title: "2.4 Building one: a GPT you can read"
-          - file: module2/notes5-architecture
-            title: "2.5 The transformer as a research architecture"
-          - file: module2/notes6-vision
-            title: "2.6 Transformers that see: ViT and multimodal"
-          - file: module2/notes7-evaluation
-            title: "2.7 Does it earn its keep?"
-          - file: module2/notes8-labs
+          - file: module2/notes5-bert
+            title: "2.5 BERT: pretrain, then adapt"
+          - file: module2/notes6-architecture
+            title: "2.6 The transformer as a research architecture"
+          - file: module2/notes7-vision
+            title: "2.7 Transformers that see: ViT and multimodal"
+          - file: module2/notes8-evaluation
+            title: "2.8 Does it earn its keep?"
+          - file: module2/notes9-labs
             title: "Practice, exercises, and further reading"
       - file: module3/index
       - file: module4/index

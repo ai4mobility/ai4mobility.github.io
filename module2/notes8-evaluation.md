@@ -1,8 +1,8 @@
-# 2.7 Does it earn its keep?
+# 2.8 Does it earn its keep?
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.7</span>
+    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.8</span>
     <span class="notes-card-session">Session: Sept 17</span>
   </div>
   <p class="notes-card-lede">A transformer is only worth its cost if it beats the method it would replace, on data the agency actually has. This section is that test, run eight ways on 399 real Florida crash narratives &mdash; and the classical baseline wins more often than the literature would lead you to expect.</p>
@@ -37,7 +37,7 @@ this section will argue from.*
 
 ## Does BERT earn its keep?
 
-The first four sections are about the machine. This one is about the decision. Eight
+The sections before this one are about the machine. This one is about the decision. Eight
 things people routinely claim a BERT-style encoder can do with crash reports &mdash; contextual
 representations, entity extraction, relation extraction, contributing-factor identification,
 classification, semantic search, clustering, extractive question answering &mdash; run one at a
@@ -89,4 +89,4 @@ was ever written down.
 
 ---
 
-Next: {doc}`notes8-labs` &mdash; the lab, the reading list, and where this goes in Module 4.
+Next: {doc}`notes9-labs` &mdash; the lab, the reading list, and where this goes in Module 4.

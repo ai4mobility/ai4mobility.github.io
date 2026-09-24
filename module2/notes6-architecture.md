@@ -1,8 +1,8 @@
-# 2.5 The transformer as a research architecture
+# 2.6 The transformer as a research architecture
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.5</span>
+    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.6</span>
     <span class="notes-card-session">Session: Sept 17</span>
   </div>
   <p class="notes-card-lede">The encoder stack does not know what a word is. Once you see that, the three decisions that matter become yours &mdash; what is one token, what may attend to what, and what "position" means in your problem. This section is the transformer pointed at detector series, trajectories and networks rather than at text, worked on 207 real loop detectors.</p>
@@ -16,7 +16,7 @@
     <div>
       <h4>Read it after</h4>
       <ul>
-      <li><a href="notes4-gpt.html">2.4 Building one: a GPT you can read</a></li>
+      <li><a href="notes5-bert.html">2.5 BERT: pretrain on text nobody labelled, then adapt</a></li>
       </ul>
     </div>
   </div>
@@ -38,7 +38,7 @@ this section will argue from.*
 
 ## Take the language out
 
-The first two sections use a transformer the way it was built, on language. This one
+The sections before this one use a transformer the way it was built, on language. This one
 takes the language out. The encoder stack does not know what a word is &mdash; it knows how to
 let a set of vectors exchange information &mdash; so the three modelling decisions that matter
 are yours: what is one token, what may attend to what, and what "position" means in your
@@ -84,4 +84,4 @@ least half the day, and the incidents you care about are exactly the times it is
 
 ---
 
-Next: {doc}`notes6-vision` &mdash; the same architecture with pixels as tokens.
+Next: {doc}`notes7-vision` &mdash; the same architecture with pixels as tokens.

@@ -715,7 +715,7 @@ items:
       is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-attention-query-companion.'
 
   - id: m2-notes-4-architecture
-    file: site/module2/notes5-architecture.md
+    file: site/module2/notes6-architecture.md
     kind: notes
     module: 2
     session: '2026-09-17'
@@ -727,7 +727,7 @@ items:
       is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-transformer-as-architecture-companion.'
 
   - id: m2-notes-5-vision
-    file: site/module2/notes6-vision.md
+    file: site/module2/notes7-vision.md
     kind: notes
     module: 2
     session: '2026-09-17'
@@ -739,7 +739,7 @@ items:
       is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-vit-attention-companion.'
 
   - id: m2-notes-6-evaluation
-    file: site/module2/notes7-evaluation.md
+    file: site/module2/notes8-evaluation.md
     kind: notes
     module: 2
     session: '2026-09-17'
@@ -751,7 +751,7 @@ items:
       is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-crash-bert-companion.'
 
   - id: m2-notes-7-practice
-    file: site/module2/notes8-labs.md
+    file: site/module2/notes9-labs.md
     kind: notes
     module: 2
     session: '2026-09-17'
@@ -898,7 +898,7 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    dest: site/module2/notes5-architecture.md
+    dest: site/module2/notes6-architecture.md
     mounted: site/_static/companions/Transformer_As_Architecture_Companion.html
     notes: '"Your own tokens: the transformer as a research architecture." Six tabs, 264 KB, SINGLE FILE
       (data inlined at build time, no sidecar). The THIRD module-2 embed, after tokenization and word2vec->BERT.
@@ -945,7 +945,7 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    dest: site/module2/notes6-vision.md
+    dest: site/module2/notes7-vision.md
     mounted: site/_static/companions/ViT_Attention_Companion.html
     notes: '"Where is it looking? Attention in a Vision Transformer." Six tabs, 697 KB, single file. Teaches
       how one attention weight is computed, then reads the ViT paper''s two diagnostics (Appendix D.7 attention
@@ -991,7 +991,7 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    dest: site/module2/notes7-evaluation.md
+    dest: site/module2/notes8-evaluation.md
     notes: 'Does BERT earn its keep on crash narratives? Eight panels mirroring the standard BERT-for-crash-analysis
       diagram, each run on 399 de-identified Florida long-form narratives (HSMV 90010) from 20 Pasco/Hernando/Pinellas
       corridors, 2021-2025, joined to the coded record by report number. HEADLINE RESULTS, all corridor-grouped
@@ -1120,6 +1120,63 @@ items:
       prefix consistency, the per-layer cost table). make_gpt_figures.py and make_shape_figures.py draw
       the six slide figures; build_gpt_deck.py builds the 24-slide code-walkthrough deck and GPT_From_Scratch_Slides.md.
       Full build notes and the trap list: GPT_From_Scratch_Notes.md in the class folder.'
+
+  - id: m2-notes-5-bert
+    file: site/module2/notes5-bert.md
+    kind: notes
+    module: 2
+    session: '2026-09-24'
+    status: integrated
+    notes: '2.5 BERT: pretrain on text nobody labelled, then adapt. Created Sept 24 2026 and INSERTED after
+      2.4 (the GPT), so research-architecture moved to notes6-architecture (2.6), vision to notes7-vision
+      (2.7), evaluation to notes8-evaluation (2.8) and the practice page to notes9-labs; module4/notes1-adaptation.md
+      links updated. NOT a skeleton: real prose from the companion''s measured numbers -- the four edits
+      from GPT, the two pretraining games with their controls (two-neighbour counts 40.5% beat BERT 33.0%
+      on one hidden word; NSP says IsNext on 64.4% of swapped pairs; lambda=1 NSP cut MLM accuracy to 15.2%
+      vs 35.2%), the label-budget table where our pretraining does not transfer and TF-IDF wins every column,
+      the four heads each with its control, frozen/fine-tuned/DAPT, and the standard evaluation close. Session
+      is Sept 24 although the syllabus still lists Sept 24 as Module 3. Companion: m2-bert-training-companion.
+      Script: m2-bert-from-scratch-script.'
+
+  - id: m2-bert-training-companion
+    file: BERT_Training_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-09-24'
+    status: integrated
+    dest: site/module2/notes5-bert.md
+    mounted: site/_static/companions/BERT_Training_Companion.html
+    notes: '"How BERT learns." Nine tabs, 2.5 MB, SINGLE FILE -- the int8 weights of the MLM-only mini-BERT
+      are inlined so tab 2 runs fill-in-the-blank live in the browser (top-5 checked against PyTorch int8
+      on 8 probes). Tabs: start here / the model / hide a word / what came next / recipe and scale / four
+      heads / frozen-tuned-re-pretrained / the same game on traffic data (illustration only, no numbers)
+      / when to reach for it. Every number comes from DATA; verify_bert_training_companion.py runs 109 headless
+      checks. Full notes and traps: BERT_Training_Companion_Notes.md in the class folder.'
+
+  - id: m2-bert-from-scratch-script
+    file: bert_from_scratch.py
+    kind: handout
+    module: 2
+    session: '2026-09-24'
+    status: integrated
+    dest: site/module2/notes5-bert.md
+    mounted: site/_static/code/bert_from_scratch.py
+    notes: 'Student-facing CODE (no ''code'' kind, so handout, like m2-gpt-from-scratch-script). gpt_from_scratch.py
+      plus four edits: padding mask, segment table, MLM + NSP pairs, two heads. CLI --train [--no-nsp] [--nsp-weight]
+      [--max-seconds], --fill. Linked with a raw <a download> anchor. Corpus and the two 6.5 MB checkpoints
+      are deliberately NOT in the repo.'
+
+  - id: m2-bert-training-repro
+    kind: internal
+    module: 2
+    session: '2026-09-24'
+    status: integrated
+    file: bert_from_scratch.py --train + mini_bert_numbers.py + bert_downstream_numbers.py + bertbase_label_budget.py
+      + build_bert_training_companion.py + verify_bert_training_companion.py
+    notes: 'Reproducer and build chain for m2-bert-training-companion and m2-notes-5-bert. Mini-BERT pretraining
+      ~39 min per variant on 2 threads; bert-base downstream stages (span, tag, dapt, pair) ~2.5 h on 2
+      CPU cores and need ~6 GB, one job at a time. Outputs: mini_bert_numbers.json, bert_downstream_numbers.json,
+      bertbase_label_budget.json. Notes: BERT_Training_Companion_Notes.md.'
 
 # -----------------------------------------------------------------------------
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)

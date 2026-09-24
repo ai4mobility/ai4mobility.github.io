@@ -1,8 +1,8 @@
-# 2.6 Transformers that see: ViT and multimodal
+# 2.7 Transformers that see: ViT and multimodal
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.6</span>
+    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.7</span>
     <span class="notes-card-session">Session: Sept 17</span>
   </div>
   <p class="notes-card-lede">Cut an image into patches, call each one a token, and the architecture from 2.3 works without modification &mdash; which raises the question the paper had to answer: with convolution's built-in locality gone, does the model learn to look in sensible places? This section reads the attention weights on real road scenes, against the Grad-CAM you already built in Module 1.</p>
@@ -37,7 +37,7 @@ this section will argue from.*
 
 ## An image is worth 16&times;16 words
 
-The first three sections treat attention as machinery you configure. This one reads it
+The sections before this one treat attention as machinery you configure. This one reads it
 as evidence. *An image is worth 16&times;16 words* is the paper that made the transformer a vision
 architecture, and it had to prove its own case: with a CNN's built-in locality removed, does
 the model actually learn to look in sensible places? The paper answers with two measurements &mdash;
@@ -88,4 +88,4 @@ care about, which in a roadway scene are the rare ones.
 
 ---
 
-Next: {doc}`notes7-evaluation` &mdash; whether any of it beats the method it would replace.
+Next: {doc}`notes8-evaluation` &mdash; whether any of it beats the method it would replace.

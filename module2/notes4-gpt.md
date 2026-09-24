@@ -196,4 +196,4 @@ convenient, and it is also a place to hide; write this check for your own models
 
 ---
 
-Next: {doc}`notes5-architecture` &mdash; the blocks this mechanism is assembled into, and how to point them at your own data.
+Next: {doc}`notes5-bert` &mdash; four edits that turn this model into a BERT, the two games it is pretrained on, and how a pretrained encoder is adapted to a task.
