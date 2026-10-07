@@ -1178,6 +1178,50 @@ items:
       CPU cores and need ~6 GB, one job at a time. Outputs: mini_bert_numbers.json, bert_downstream_numbers.json,
       bertbase_label_budget.json. Notes: BERT_Training_Companion_Notes.md.'
 
+  - id: m2-vit-to-swin-companion
+    file: ViT_To_Swin_Companion.html
+    kind: companion
+    module: 2
+    session: unscheduled (Swin extension of the ViT lecture)
+    status: integrated
+    dest: site/module2/notes7-vision.md
+    mounted: site/_static/companions/ViT_To_Swin_Companion.html
+    notes: '"From ViT to Swin: what a 224-pixel square cannot see." Six tabs, 1.05 MB single file (frames
+      inlined). Built Oct 6 2026 on the Module 1 scooter clip (frames 78/120/183 at 640 px, 224x224 ViT
+      inputs only -- privacy rule for that clip). Tabs: the 224 square (squash: child 6.7x1.6 px, under
+      one patch in 72/111 frames; timm centre crop drops the child in 96/111), paying for every pair (9,196
+      tokens, 84.6M pairs/head/layer; measured 224->1080p on 2 CPU threads ResNet-50 x35, Swin-T x44, ViT-S
+      x143 while pixels x41), one grid for every size (child grows 7.65x in 5.55 s), Swin block stepper
+      with exact influence regions vs ViT-S and ResNet-50, the benchmark (Swin Table 2b; ConvNeXt-T ties
+      Swin-T 50.4/50.4), four camera cases + calculator + fit card. Honest results kept: ViT-S FASTER than
+      Swin-T at FL511 720x480 (0.68 vs 1.08 s); ConvNeXt ties Swin. MOUNTED Oct 6 2026 as a new subsection
+      at the END of 2.7, anchor (vit-to-swin)=, after the ViT attention companion and its evaluation close,
+      with two figures in site/_static/figures/ (Swin_Dilemma.jpg, Swin_Three_Wirings.png, 1600 px). module2/index.md
+      companion count eight -> nine. The page follows the book''s light/dark switch through window.parent
+      (same origin).'
+
+  - id: m2-vit-to-swin-repro
+    file: vit_to_swin/
+    kind: internal
+    module: 2
+    session: unscheduled (Swin extension of the ViT lecture)
+    status: integrated
+    notes: 'Reproducer for m2-vit-to-swin-companion and m2-swin-slides; run order and traps in its README.md.
+      numbers.json is the single source; audit_slides.py asserts 35 slide numbers against it. TRAPS: torch''s
+      FlopCounterMode silently skips timm''s fused CPU attention (set TIMM_FUSED_ATTN=0 before counting);
+      ViT at 1080x1920 must be built at 1088x1920 with a padded input; timing needs an idle machine.'
+
+  - id: m2-swin-slides
+    file: Swin_Intro_Slides.md + Swin_*.svg/png (7 figures)
+    kind: deck
+    module: 2
+    session: unscheduled (Swin extension of the ViT lecture)
+    status: integrated
+    dest: site/module2/notes7-vision.md
+    notes: 'Ten slides + backup, On the slide / Say format: dilemma, three wirings, windows, shifted windows,
+      pyramid, cost equation with measured chart, COCO benchmark and the ConvNeXt catch, fit card, backbone-choice
+      flowchart, check yourself. Two of its figures are reused in 2.7.'
+
 # -----------------------------------------------------------------------------
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)
 # -----------------------------------------------------------------------------

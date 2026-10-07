@@ -81,8 +81,8 @@ would replace (2.8).
 </tr>
 <tr>
   <td><a href="notes7-vision.html"><strong>2.7 Transformers that see: ViT and multimodal</strong></a><br><em>Sept 17</em></td>
-  <td>Images as patch sequences; what inductive bias buys and what data has to replace; attention distance against a CNN Grad-CAM; vision&ndash;language models; deletion tests.</td>
-  <td><a href="../_static/companions/ViT_Attention_Companion.html" target="_blank" rel="noopener">Where is it looking? &#8599;</a><br><a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4</a></td>
+  <td>Images as patch sequences; what inductive bias buys and what data has to replace; attention distance against a CNN Grad-CAM; where plain ViT breaks on a full-resolution camera, and how Swin's windows, shifts and merges fix it; vision&ndash;language models; deletion tests.</td>
+  <td><a href="../_static/companions/ViT_Attention_Companion.html" target="_blank" rel="noopener">Where is it looking? &#8599;</a><br><a href="../_static/companions/ViT_To_Swin_Companion.html" target="_blank" rel="noopener">From ViT to Swin &#8599;</a><br><a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4</a></td>
 </tr>
 <tr>
   <td><a href="notes8-evaluation.html"><strong>2.8 Does it earn its keep?</strong></a><br><em>Sept 17</em></td>
@@ -110,6 +110,9 @@ By the end of this module you will be able to:
   which mobility tasks each suits.
 - Describe how a vision transformer tokenizes an image, and how vision-language models align
   visual and textual representations.
+- Explain why a plain vision transformer struggles with full-resolution camera frames, and how
+  Swin's windowed attention and feature pyramid fix it; say when a plain ViT or a CNN is still
+  the better choice.
 - Apply a pretrained LLM or VLM to a mobility task — incident description, scene
   summarization, document extraction — and characterize where it fails.
 - Evaluate a claim about foundation models in transportation: what was actually measured, on
@@ -122,6 +125,7 @@ By the end of this module you will be able to:
 - Encoder-only (BERT-style), decoder-only (GPT-style), and encoder–decoder designs
 - Pretraining, scaling behavior, and what "emergent" does and doesn't mean
 - Vision transformers: images as sequences of patches
+- Hierarchical vision transformers (Swin) for high-resolution camera frames
 - Vision-language models: contrastive alignment, captioning, visual question answering
 - Multimodal foundation models applied to driving scenes and roadway imagery
 - Hallucination, grounding, and why fluent output is not evidence of correctness
@@ -137,6 +141,7 @@ By the end of this module you will be able to:
 - Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of deep bidirectional transformers for language understanding. *NAACL-HLT*.
 - Brown, T., et al. (2020). Language models are few-shot learners. *NeurIPS*. *(GPT-3.)*
 - Dosovitskiy, A., et al. (2021). An image is worth 16×16 words: Transformers for image recognition at scale. *ICLR*. *(Vision Transformer.)*
+- Liu, Z., et al. (2021). Swin Transformer: Hierarchical vision transformer using shifted windows. *ICCV*.
 - Radford, A., et al. (2021). Learning transferable visual models from natural language supervision. *ICML*. *(CLIP — introduced in Module 1, Lab 4.)*
 - Alayrac, J.-B., et al. (2022). Flamingo: A visual language model for few-shot learning. *NeurIPS*.
 
@@ -156,8 +161,8 @@ it first.
 
 ## Interactive companions
 
-Eight interactive companions support this module, seven for the Sept 17 session and one for Sept 24.
-Each is embedded in the section it belongs to and is also linked here.
+Nine interactive companions support this module. Each is embedded in the section it belongs to and
+is also linked here.
 
 - <a href="../_static/companions/Tokenization_Companion.html" target="_blank" rel="noopener">Tokens: the unit a language model actually reads</a> &mdash; embedded in <a href="notes1-tokens.html">2.1 Tokens</a>
 - <a href="../_static/companions/Word2Vec_to_BERT_Companion.html" target="_blank" rel="noopener">From word2vec to BERT: what a contextual vector buys you</a> &mdash; embedded in <a href="notes2-contextual.html">2.2 From static to contextual vectors</a>
@@ -166,6 +171,7 @@ Each is embedded in the section it belongs to and is also linked here.
 - <a href="../_static/companions/BERT_Training_Companion.html" target="_blank" rel="noopener">How BERT learns: pretrain on text nobody labelled, then adapt</a> &mdash; embedded in <a href="notes5-bert.html">2.5 BERT</a>
 - <a href="../_static/companions/Transformer_As_Architecture_Companion.html" target="_blank" rel="noopener">Your own tokens: the transformer as a research architecture</a> &mdash; embedded in <a href="notes6-architecture.html">2.6 The transformer as a research architecture</a>
 - <a href="../_static/companions/ViT_Attention_Companion.html" target="_blank" rel="noopener">Where is it looking? Attention in a Vision Transformer</a> &mdash; embedded in <a href="notes7-vision.html">2.7 Transformers that see</a>
+- <a href="../_static/companions/ViT_To_Swin_Companion.html" target="_blank" rel="noopener">From ViT to Swin: what a 224-pixel square cannot see</a> &mdash; embedded in <a href="notes7-vision.html#vit-to-swin">2.7 Transformers that see</a>, right after the ViT companion
 - <a href="../_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Does BERT earn its keep on crash narratives?</a> &mdash; embedded in <a href="notes8-evaluation.html">2.8 Does it earn its keep?</a>
 
 The crash-narrative companion uses long-form narratives from real Florida crash reports. The
