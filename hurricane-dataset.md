@@ -210,9 +210,119 @@ answer, matched to what the course covers:
       <tr><td>ViT and CLIP on images</td><td>Embed the images with a ViT trained on ImageNet and with CLIP's image encoder. Pick a flooded-road photo and compare its nearest neighbours in the two spaces. Which one groups images by object, and which by event?</td></tr>
       <tr><td>Multimodal fusion</td><td>Does adding the image improve a text-only classifier? Check photos and graphics separately, because the answer is probably different.</td></tr>
       <tr><td>Cross-attention</td><td>Hide the pairing and ask a model to find each post's own image among 100. Compare a dual encoder (CLIP) with a model whose words cross-attend to the image patches (BLIP).</td></tr>
-      <tr><td>Class project</td><td>A triage tool that flags posts reporting a road condition (flooding, closure, debris, signals out) for a traffic management center, evaluated on an author-and-lookalike split.</td></tr>
+      <tr><td>Class project</td><td>A triage tool that flags posts reporting a road condition (flooding, closure, debris, signals out) for a traffic management center, evaluated on an author-and-lookalike split. For bigger questions, see the <a href="#hurricane-research-directions">five research directions</a> below.</td></tr>
     </tbody>
   </table>
+</div>
+
+(hurricane-research-directions)=
+## Five research directions
+
+The table above lists exercises. These five directions are bigger. Each one asks a question the
+research literature has not settled, is small enough for a class project, and could become a
+conference or journal paper if the results hold up. Each card gives the key question, a first look
+at the data, why the answer matters beyond this course, and what it would take to turn the project
+into a paper. Treat them as starting points and reshape them to fit your team.
+
+```{figure} _static/figures/HT_Research_Directions.png
+:alt: A six-stage agency pipeline drawn left to right. Posts and images; About a road? (classification); What, and how bad? (classification); Where, exactly? (extraction); New, and real? (retrieval); Send crews, inform public (judgment). Below it, five numbered research directions, each linked to the stage it studies. 1, What does the picture add? (affect vs. severity; fusion, cross-attention) links to the road filter and the severity stage. 2, A general model, or our labels? (transport damage types; CLIP, VLM, ViT) links to the severity stage. 3, Where on the road network? (place names to roads; NER, LLM, OSM) links to the location stage. 4, Worth monitoring? (posts vs. NWS reports; lead time, coverage) links to the verification stage. 5, Do agencies answer in time? (the messaging gap; BERTweet, LLM labels) links to the action stage.
+:width: 100%
+
+Where each direction sits. The numbers match the cards below.
+```
+
+<div class="notes-card">
+  <div class="notes-card-head"><span class="notes-card-eyebrow">Direction 1 &middot; What does the picture add?</span><span class="notes-card-session">Text + image &middot; fusion &middot; cross-attention</span></div>
+  <p class="notes-card-lede"><strong>Key question.</strong> Does the image tell you how severe a transportation impact is when the text does not, and does combining text and image help mainly when the caption is short or neutral?</p>
+  <p class="notes-card-lede"><strong>A first look.</strong> HT2348's text mentions sand on a barrier-island street; only the photo shows how much. HT1982's text names a damaged road but not what happened to it, and the AI relevance review judged it not about transportation; the photo shows power poles down across the road. Brandwatch's text-based label calls photo posts negative about twice as often as graphics (19.5% vs. 8.9%), but that may only mean photos come from people on the scene.</p>
+  <div class="notes-card-cols" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+    <div><h4>Why it matters</h4><ul>
+      <li>Multimodal crisis datasets such as <a href="https://crisisnlp.qcri.org/crisismmd" target="_blank" rel="noopener">CrisisMMD</a> label whether a post is informative, its humanitarian category and its damage severity. Their labels do not separate how the author feels from how bad the situation is, and they do not ask whether a road is passable, which is what an agency acts on.</li>
+      <li>CrisisMMD labeled each post's text and image separately, and fusion studies on it often keep only the posts where the two labels agree. That drops exactly the cases where one modality adds something. Labeling the same posts with and without the image measures what each modality contributes instead of assuming it.</li>
+    </ul></div>
+    <div><h4>Toward a paper</h4><ul>
+      <li>Two labels per post, author affect and impact severity (with passability), each assigned once from the text alone and once with the image, on about 400 photo posts, by two people, with agreement reported.</li>
+      <li>Text-only, image-only, late-fusion and cross-attention (BLIP) models on an author-and-lookalike split, with photos and graphics reported separately.</li>
+      <li>Show where fusion helps, by caption length and by how neutral the text is.</li>
+    </ul></div>
+  </div>
+  <p class="notes-card-lede" style="font-size:0.88rem;margin:0.7rem 0 0.2rem"><strong>Beyond the zip:</strong> only your labels. <strong>Course tools:</strong> BERT, CLIP, BLIP (Module 2). <strong>Possible venues:</strong> Transportation Research Part C; Computer-Aided Civil and Infrastructure Engineering; ISCRAM.</p>
+</div>
+
+<div class="notes-card">
+  <div class="notes-card-head"><span class="notes-card-eyebrow">Direction 2 &middot; A general model, or our labels?</span><span class="notes-card-session">Images &middot; CLIP &middot; VLMs &middot; ViT fine-tuning</span></div>
+  <p class="notes-card-lede"><strong>Key question.</strong> How well do general-purpose vision-language models recognize transportation-specific hurricane impacts (flooded lanes, trees or debris across a road, downed lines, damaged signals, washouts and sand overwash, closed bridges, fuel outages) with no training, and how many labeled examples does a small fine-tuned model need to beat them?</p>
+  <p class="notes-card-lede"><strong>A first look.</strong> In HT2199 the wind has spun traffic signal heads to face the wrong way. The text calls them street lights and Brandwatch calls the post neutral; nothing in the words matches how an agency would log it, as signal damage. 788 posts have a photo as their first image (by the automatic guess), so there is plenty to label.</p>
+  <div class="notes-card-cols" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+    <div><h4>Why it matters</h4><ul>
+      <li>General crisis taxonomies put roads, bridges, power lines and buildings into one &ldquo;infrastructure damage&rdquo; class. Agencies dispatch crews by asset type and by whether a road is passable.</li>
+      <li>A label-efficiency curve (no labels, then 10, 50 and 200 per class) answers a practical question every agency faces: use an off-the-shelf model, or invest in labeling? It is a clean test of this course's recurring question, when a general model needs domain adaptation.</li>
+    </ul></div>
+    <div><h4>Toward a paper</h4><ul>
+      <li>A transportation impact taxonomy grounded in what an agency's damage assessment teams record, with a written codebook.</li>
+      <li>About 600 photos labeled by two people. Zero-shot CLIP and an open vision-language model with several prompt wordings, against linear probes and a fine-tuned ViT at each label budget.</li>
+      <li>An error analysis of what gets confused and why, such as a flooded road against a flooded parking lot.</li>
+    </ul></div>
+  </div>
+  <p class="notes-card-lede" style="font-size:0.88rem;margin:0.7rem 0 0.2rem"><strong>Beyond the zip:</strong> your labels; optionally CrisisMMD's images for extra training data. <strong>Course tools:</strong> CLIP zero-shot (Module 2), ViT fine-tuning (Lab 6). <strong>Possible venues:</strong> Transportation Research Record; Journal of Infrastructure Systems; Computer-Aided Civil and Infrastructure Engineering.</p>
+</div>
+
+<div class="notes-card">
+  <div class="notes-card-head"><span class="notes-card-eyebrow">Direction 3 &middot; Where on the road network?</span><span class="notes-card-session">Text &middot; tokens &middot; entity extraction &middot; OSM</span></div>
+  <p class="notes-card-lede"><strong>Key question.</strong> How precisely can a road-impact post be placed on the road network from its text (route numbers, street names, bridges, cross streets), its image (signs, landmarks) and the author's city, and what share of posts can be placed precisely enough to send a crew?</p>
+  <p class="notes-card-lede"><strong>A first look.</strong> A simple pattern finds a named route, street or bridge in only about 1 post in 10, and in about 1 in 5 road-impact photos from the four days after landfall. 690 posts have no city at all. Location, not detection, may be what limits an agency's use of these posts.</p>
+  <div class="notes-card-cols" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+    <div><h4>Why it matters</h4><ul>
+      <li>Geotagged posts are rare, so location has to be read from the content. General named-entity recognizers are built for people, organizations and cities, not for &ldquo;I-275 northbound at the Howard Frankland&rdquo; or &ldquo;SR-60&rdquo;, and tokenizers break those names into pieces (the Tokens exercise above).</li>
+      <li>Linking the extracted names to OpenStreetMap or a state road inventory is entity linking adapted to transportation, with an accuracy measure an agency understands: right road, right segment, within so many meters.</li>
+    </ul></div>
+    <div><h4>Toward a paper</h4><ul>
+      <li>About 300 posts geocoded by hand (road, segment, point) as ground truth.</li>
+      <li>A gazetteer-and-rules baseline against a general named-entity model, a fine-tuned BERT token classifier and an LLM extractor. Report the share placed on the right road and within 0.5 km.</li>
+      <li>A test of whether the image (a sign, a landmark) adds anything to the text.</li>
+    </ul></div>
+  </div>
+  <p class="notes-card-lede" style="font-size:0.88rem;margin:0.7rem 0 0.2rem"><strong>Beyond the zip:</strong> OpenStreetMap roads for Florida (public). <strong>Course tools:</strong> tokenization, BERT token classification, LLM extraction. <strong>Possible venues:</strong> Transportation Research Record; Transactions in GIS; ISCRAM.</p>
+</div>
+
+<div class="notes-card">
+  <div class="notes-card-head"><span class="notes-card-eyebrow">Direction 4 &middot; Worth monitoring?</span><span class="notes-card-session">Posts vs. official reports &middot; lead time</span></div>
+  <p class="notes-card-lede"><strong>Key question.</strong> For road flooding and closures during Helene and Milton, how often did a post appear before the matching official report, and how often was there no official report at all?</p>
+  <p class="notes-card-lede"><strong>A first look.</strong> 51 posts are automated relays of National Weather Service storm reports, and a few of those official reports name a social media post as their own source. The official record already leans on the public; the question is by how much, and how early.</p>
+  <div class="notes-card-cols" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+    <div><h4>Why it matters</h4><ul>
+      <li>The amount of posting tracks damage at the level of whole areas (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4803483" target="_blank" rel="noopener">Kryvasheyeu et al., 2016</a>, Hurricane Sandy). Whether individual posts add timely, locatable road information that official channels miss is still open, and it is the question that decides whether an agency should pay for monitoring.</li>
+      <li>A lead time and a coverage rate are numbers a traffic management center can weigh against analyst hours.</li>
+    </ul></div>
+    <div><h4>Toward a paper</h4><ul>
+      <li>NWS Local Storm Reports for Florida, Sept 20 &ndash; Oct 26 2024, from the public <a href="https://mesonet.agron.iastate.edu/request/gis/lsrs.phtml" target="_blank" rel="noopener">Iowa Environmental Mesonet archive</a>.</li>
+      <li>Posts matched to reports by impact type, place and time (Direction 3 gives you the places), giving a lead time and the share of reports a post anticipated.</li>
+      <li>False alarms per hour reported as the cost side.</li>
+    </ul></div>
+  </div>
+  <p class="notes-card-lede" style="font-size:0.88rem;margin:0.7rem 0 0.2rem"><strong>Beyond the zip:</strong> NWS reports (public); closure logs from FL511 or a traffic management center would make it stronger, so ask the instructor. <strong>Watch out:</strong> the capped export undercounts posts, so coverage numbers are lower bounds. <strong>Possible venues:</strong> Natural Hazards Review; International Journal of Disaster Risk Reduction; Transportation Research Record.</p>
+</div>
+
+<div class="notes-card">
+  <div class="notes-card-head"><span class="notes-card-eyebrow">Direction 5 &middot; Do agencies answer in time?</span><span class="notes-card-session">Text &middot; BERTweet &middot; LLM labels with validation</span></div>
+  <p class="notes-card-lede"><strong>Key question.</strong> For each transportation concern (fuel, evacuation routes and traffic, closures, tolls, transit, re-entry), when do residents raise it relative to landfall, when do agencies and media address it, and where are the gaps?</p>
+  <p class="notes-card-lede"><strong>A first look.</strong> Among posts that mention fuel or gas stations, the median post by an individual comes about 6 hours before landfall and the median post by an organisation about 39 hours after (45 and 34 posts). Is that a slow response, or two groups talking about different things, empty pumps during the evacuation against reopened stations afterwards? Telling those apart is the project.</p>
+  <div class="notes-card-cols" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+    <div><h4>Why it matters</h4><ul>
+      <li>Crisis-communication studies usually measure public sentiment or agency messaging, rarely the two aligned on the same topic and the same hour. Aligning them turns sentiment analysis into a measurable gap that a public information officer can act on.</li>
+      <li>Positive or negative is the wrong unit. Brandwatch calls 92% of organisation posts neutral and misses sarcasm (it labels HT0645 positive). Concern types such as frustration, uncertainty or a need for information, fear, and trust in the agency are closer to what an agency can respond to.</li>
+    </ul></div>
+    <div><h4>Toward a paper</h4><ul>
+      <li>A codebook of concern types, and about 500 posts labeled by two people with Cohen's &kappa; reported.</li>
+      <li>A fine-tuned BERTweet or an LLM labeler, checked against those labels before you trust it on the rest.</li>
+      <li>Curves by topic, hours from landfall and account type, with confidence intervals and both storms pooled, and a lead&ndash;lag test between individual concern and organisational response.</li>
+    </ul></div>
+  </div>
+  <p class="notes-card-lede" style="font-size:0.88rem;margin:0.7rem 0 0.2rem"><strong>Beyond the zip:</strong> only your labels. <strong>Watch out:</strong> compare shares, never volumes (the export cap), and only 1,384 posts are from individuals. <strong>Possible venues:</strong> Transportation Research Record; International Journal of Disaster Risk Reduction; Natural Hazards Review.</p>
+</div>
+
+<div class="resource-callout">
+  <p><strong>Heading toward a paper?</strong> Talk to the instructor early. The posts cannot be released with a paper, so publish your code, codebook and aggregate results. Paraphrase posts rather than quoting them, because an exact quote can be searched back to its author. Ask whether your study needs an IRB determination before you submit.</p>
 </div>
 
 <div class="resource-callout">

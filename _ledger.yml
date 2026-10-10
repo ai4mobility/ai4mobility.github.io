@@ -1906,3 +1906,7 @@ items:
       Canvas only (USF login). The page shows the 8-post example figure
       (_static/figures/HT_Dataset_Examples.jpg) with Hao's OK. Mirrors Hurricane_Dataset_Canvas.html
       in the class folder; build scripts and every number are in Labs/a4_hurricane_pilot/v2/.
+      Oct 10: added "Five research directions" (anchor hurricane-research-directions): five
+      project cards (key question, first look, why it matters, toward a paper, venues) and the
+      pipeline figure _static/figures/HT_Research_Directions.png (SVG source in the class folder).
+      Not mirrored in the Canvas page.
