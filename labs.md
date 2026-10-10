@@ -5,7 +5,7 @@
   <h2>Hands-On Labs <span>Every Notebook in the Course</span></h2>
   <p>One page for all the labs &mdash; what each one builds, what it actually proves, and what to compare it against before you believe the result. Everything runs in Google Colab; nothing needs a local install.</p>
   <div class="resource-meta">
-    <span>5 notebooks available now</span>
+    <span>6 notebooks available now</span>
     <span>15 more planned for Modules 2&ndash;8</span>
     <span>Open data throughout</span>
   </div>
@@ -39,6 +39,7 @@
         <tr><td>VAE on traffic state heatmaps</td><td>M3 &middot; Sept 24</td><td>What a narrow bottleneck chooses to keep, and what it throws away</td><td>In development</td></tr>
         <tr><td>From VAE to diffusion</td><td>M3 &middot; Sept 24</td><td>Diffusion as a response to measured VAE failures, not an assertion</td><td>In development</td></tr>
         <tr><td>Training the denoiser</td><td>M3 &middot; Nov 19</td><td>What the network predicts at each noise level, and why</td><td>In development</td></tr>
+        <tr><td><a href="module4/lab6_vit_finetune.html">6 &mdash; Fine-tuning a vision transformer</a></td><td>M4 &middot; Oct 1</td><td>Where the accuracy in a fine-tune actually comes from &mdash; and how little of it survives sunset</td><td>Available</td></tr>
         <tr><td>A retrieval assistant over transportation documents</td><td>M4 &middot; Oct 1</td><td>When a RAG answer is wrong, retrieval usually failed &mdash; not the model</td><td>In development</td></tr>
         <tr><td>An agentic workflow for a recurring task</td><td>M4 &middot; Oct 8</td><td>An agent is only as good as the verification step you designed</td><td>In development</td></tr>
         <tr><td>Vehicle detection and tracking</td><td>M5 &middot; Oct 15</td><td>Count error against manual ground truth, not mAP</td><td>In development</td></tr>
@@ -59,9 +60,9 @@
 <section class="resource-section" id="module1-labs">
   <div class="resource-section-header">
     <h2>Available Now</h2>
-    <span>Modules 1 and 7</span>
+    <span>Modules 1, 4 and 7</span>
   </div>
-  <p class="section-intro">Five notebooks, all runnable in Colab on open or synthetic data. Read each one alongside the notes section named on its card &mdash; the notebook shows the thing working, the section says why it works and where it stops working.</p>
+  <p class="section-intro">Six notebooks, all runnable in Colab on open or synthetic data. Read each one alongside the notes section named on its card &mdash; the notebook shows the thing working, the section says why it works and where it stops working.</p>
   <div class="resource-grid">
     <article class="resource-card">
       <div class="resource-card-top"><p class="resource-category">Module 1 &middot; Sept 3</p><span class="level-badge level-beginner">Beginner</span></div>
@@ -102,6 +103,14 @@
       <p><strong>Proves:</strong> attention wins only where the weighting is genuinely unknown &mdash; and even there, knowing <em>which</em> neighbours to listen to is worth more than learning <em>how much</em> to weight them. <strong>Check it against:</strong> not the mean aggregator, which anything beats, but the fixed aggregator carrying your own domain knowledge. On the spillback rule it ties attention at half the parameters and a third of the seed variance.</p>
       <div class="tag-row"><span>Reads with 7.2</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~3 min</span></div>
       <a class="resource-link" href="module7/lab5_graph_attention.html">Open Lab 5</a>
+    </article>
+    <article class="resource-card">
+      <div class="resource-card-top"><p class="resource-category">Module 4 &middot; Oct 1</p><span class="level-badge level-intermediate">Intermediate</span></div>
+      <h3>Lab 6 &mdash; Fine-tuning a Vision Transformer</h3>
+      <p>2,949 snapshots from 494 FDOT traffic cameras around Tampa Bay, swept every 25 minutes straight through sunset. Turn the transfer dial you saw on the Sept 10 slides &mdash; head only, last block, last four blocks, everything &mdash; on a 5.5M-parameter ViT-Tiny, and watch what each setting costs and buys. The labels came from a detector, not a person, and the lab spends its last three sections on what that costs you.</p>
+      <p><strong>Proves:</strong> a fine-tune's accuracy splits cleanly into what the pretrained features gave you for free and what you had to buy by unfreezing &mdash; and that an after-dark score can rise while the model gets worse, because the label source failed first. <strong>Check it against:</strong> twelve hand-written image statistics and a logistic regression, which scores 37.7% where the full fine-tune scores 71.2%.</p>
+      <div class="tag-row"><span>Reads with 4.1</span><span>torch &middot; timm &middot; scikit-learn &middot; matplotlib</span><span>Downloads 31 MB &middot; ~15 min on CPU</span></div>
+      <a class="resource-link" href="module4/lab6_vit_finetune.html">Open Lab 6</a>
     </article>
   </div>
   <div class="placeholder-panel">

@@ -87,6 +87,8 @@ parts:
             title: "Lab 4 — CLIP vs. Traditional Computer Vision"
           - file: module7/lab5_graph_attention
             title: "Lab 5 — Attention on a Road Network"
+          - file: module4/lab6_vit_finetune
+            title: "Lab 6 — Fine-tuning a Vision Transformer"
 
   - caption: Capstone
     chapters:

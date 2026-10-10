@@ -81,6 +81,12 @@ By the end of this module you will be able to:
 
 ## Labs
 
+- **{doc}`Lab 6 — Fine-tuning a Vision Transformer <lab6_vit_finetune>`** *(available)*. Turn the
+  transfer dial on 2,949 real FL511 traffic-camera frames: head only, last block, last four
+  blocks, everything. Measure what each setting costs and buys, then find out why the
+  after-dark score is higher than it should be. The labels came from a detector, and the last
+  third of the lab is about what that costs.
+
 - **A retrieval assistant over transportation documents.** Build a RAG pipeline over a real
   corpus — a design manual, a set of agency reports, or a standards document — then measure
   retrieval quality on its own before judging the answers. The lesson most people skip: when
