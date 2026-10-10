@@ -1222,6 +1222,30 @@ items:
       pyramid, cost equation with measured chart, COCO benchmark and the ConvNeXt catch, fit card, backbone-choice
       flowchart, check yourself. Two of its figures are reused in 2.7.'
 
+  - id: m2-xattn-slides
+    file: Cross_Attention_Slides.pptx + Cross_Attention_Slides.md + XAttn_*.png (11 figures)
+    kind: deck
+    module: 2
+    session: unscheduled (cross-attention and multimodal transformers, after BERT and ViT)
+    status: raw
+    notes: 'Built Oct 7 2026 on the lecture template (Swin deck master). 15 slides (opens with a fusion vs. cross-attention structure comparison) + 2 reveals + 2 backups, On the
+      slide / Say format, running example crash C0007 from crash_sketch_dataset v1 (course-only; do not post on
+      the public site). Zero-shot BLIP base (ITC late fusion vs ITM cross-attention) on all 288 narrative/diagram
+      pairs: top-1 in a pool of 16 = chance 6.25%, ITC 14%, CLIP 11%, ITM 30%, Tesseract OCR + word overlap 68%;
+      same-corridor pools 13/17/17/25/42%. Edits: direction swap 50% (unrelated-diagram control 52%), vehicle
+      swap 62% (59%), street names masked 82% (53%): the model reads labels, not arrows. Label head L4H3 lift
+      80.3x on printed words (17/144 heads > 3x). Cost: 4 min late fusion vs 8.7 h all-pairs cross-attention.'
+
+  - id: m2-xattn-repro
+    file: cross_attention_crash/
+    kind: internal
+    module: 2
+    session: unscheduled (cross-attention and multimodal transformers, after BERT and ViT)
+    status: raw
+    notes: 'Reproducer for m2-xattn-slides; run order, definitions and traps in its README.md. numbers.json is the
+      single source; render_outline.py fills every number in the outline from it; audit_slides.py (36 checks)
+      recomputes the headline numbers from raw stage outputs. Stage B (ITM pools) takes ~70 min on 2 threads.'
+
 # -----------------------------------------------------------------------------
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)
 # -----------------------------------------------------------------------------
