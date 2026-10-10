@@ -304,10 +304,10 @@ reproduce in a street network in about ten seconds.
 
 #### Three results worth carrying out of the companion
 
-The companion's last tab is a real experiment, not an illustration: a GNN trained
+Tab 4 of the companion is a real experiment, not an illustration: a GNN trained
 in PyTorch on a queue-spillback rule, then tested on **networks it had never
 seen, at sizes it had never seen**. The reproducers sit beside the page as
-`gnn_roadnet.py` and `sweep.py`.
+`gnn_roadnet.py` and `sweep.py`, with `attn_roadnet.py` behind tab 5.
 
 - **Depth buys reach, and you need as much as the horizon demands.** At a
   one-step horizon a single layer is within 1.6× of the best depth — one hop is
@@ -324,6 +324,14 @@ seen, at sizes it had never seen**. The reproducers sit beside the page as
   you feed into, not the average one. Sum when the quantity is conserved, mean
   when it is an intensive state, max when a bottleneck governs, attention when
   the weighting is the thing you do not know.
+- **Attention is a learned aggregator, and the street network is worth more than
+  the learning.** Tab 5 runs a transformer layer over the road graph and fits it
+  in your browser. Restricting the softmax to streets that exist takes test RMSE
+  from 0.0839 to 0.0556; adding which way each street runs takes it to 0.0286 —
+  both free, same ten parameters. Full attention over every pair of
+  intersections, with the map withheld, beats a persistence baseline by 4%. The
+  topology is not a constraint you impose on the model. It is the most valuable
+  feature you own, and it is already in the link–node inventory.
 - **Structure enters through the wiring, and it can be switched off by
   accident.** Give every intersection the identical input feature and a mean
   aggregator with no edge feature leaves the entire city holding one single

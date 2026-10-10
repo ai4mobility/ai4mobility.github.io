@@ -80,7 +80,8 @@
   .legend .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   .gridnet{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;align-items:start}
-  @media(max-width:860px){.grid2,.gridnet{grid-template-columns:1fr}}
+  @media(max-width:860px){.grid2,.gridnet{grid-template-columns:1fr}
+    .grid2>*,.gridnet>*{min-width:0}}
   .narr{background:#f3fbf6;border:1px solid #cfe8dc;border-radius:10px;padding:12px 15px;font-size:13.6px;min-height:74px}
   .narr b{color:var(--usf-green-d)}
   .netbox{background:#fbfdfc;border:1px solid var(--line);border-radius:12px;padding:6px}
@@ -103,6 +104,8 @@
   .fitcard .row:last-child{border-bottom:none}
   .fitcard .row .k{font-weight:700;color:var(--usf-green-d);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em}
   @media(max-width:700px){.fitcard .row{grid-template-columns:1fr;gap:2px}.ctrl input[type=range]{width:min(72vw,210px)}}
+  .scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .scrollx>table{min-width:420px}
   .msgtab{font-size:12.8px}
   .msgtab td,.msgtab th{padding:6px 8px}
   .bar{display:inline-block;height:9px;border-radius:3px;background:var(--usf-green);vertical-align:middle}
@@ -125,7 +128,8 @@
   <button data-tab="p2">2 · Where structure comes from</button>
   <button data-tab="p3">3 · Cascading: layers compose</button>
   <button data-tab="p4">4 · Does it actually learn it?</button>
-  <button data-tab="p5">5 · Fit card &amp; where it breaks</button>
+  <button data-tab="p5">5 &middot; Attention: a learned &oplus;</button>
+  <button data-tab="p6">6 &middot; Fit card &amp; where it breaks</button>
 </div></nav>
 
 <!-- ==================== PAGE 1 ==================== -->
@@ -413,8 +417,293 @@
   </div>
 </div></section>
 
-<!-- ==================== PAGE 5 ==================== -->
+<!-- ==================== PAGE 5  (attention) ==================== -->
 <section class="page" id="p5"><div class="wrap">
+  <h2 class="sec">Attention: when you don't know which neighbour matters, learn it</h2>
+  <p class="lead">The last tab measured something uncomfortable: <b>max</b> beat <b>mean</b> by 4.3&times;, purely
+     because the rule generating the data takes a max over downstream links. We only got that by knowing the
+     physics in advance. Attention is what you do when you don't &mdash; let the model decide, for each
+     intersection and each moment, which neighbour to listen to. It is the same transformer layer you have seen
+     on text, run on a street network instead of a sentence.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">The analogy, and the one place it breaks</h3>
+    <figure>
+      <svg id="svgbridge" viewBox="0 0 700 250" style="display:block;width:100%;height:auto"></svg>
+      <figcaption style="max-width:none">In a sentence, attention <em>invents</em> an adjacency matrix, because
+        tokens have no connections of their own. On a road network the adjacency already exists, is causally
+        meaningful, and is free &mdash; so attention <em>reweights</em> a structure it was given.</figcaption>
+    </figure>
+    <table class="map" style="margin-top:16px">
+      <tr><th class="raw">Transformer, on text</th><th class="raw">The same layer, on this road network</th></tr>
+      <tr><td>token</td><td>intersection</td></tr>
+      <tr><td>token embedding <span class="mono">h</span></td><td>what the model is carrying for that intersection &mdash; on layer 1, the measured congestion <span class="mono">c</span></td></tr>
+      <tr><td>every token may look at every token</td><td>each intersection looks at the intersections a street actually connects it to</td></tr>
+      <tr><td>positional encoding, added because order is all the structure there is</td><td>not needed &mdash; the street geometry <em>is</em> the structure, and it is already in the wiring</td></tr>
+      <tr><td>the attention matrix: which words matter for this word, here</td><td>which approaches matter for this intersection, <em>right now</em></td></tr>
+    </table>
+    <div class="callout"><b>The question this tab answers.</b> Does the layer need the topology at all? It is
+      the same softmax either way. The only thing the street network decides is <em>which terms go into the
+      denominator</em> &mdash; and the measurement further down prices it.</div>
+  </div>
+
+  <h3>One intersection, worked by hand</h3>
+  <p class="lead" style="margin-bottom:10px">Link <b>C</b> is being updated. Three streets touch it: <b>A</b> and
+     <b>B</b> feed into it from upstream, <b>D</b> is the link it discharges into. Every number below is small
+     enough to check on paper. Move the sliders and watch which neighbour wins.</p>
+
+  <div class="gridnet">
+    <div>
+      <figure>
+        <div class="netbox"><svg id="svgtoy" viewBox="0 0 480 300"></svg></div>
+        <figcaption>Arrow width is the attention coefficient &alpha;. Node colour is congestion c.
+          E is a jammed link elsewhere in the city with no street connecting it to C.</figcaption>
+      </figure>
+      <div class="btnrow">
+        <button class="ghost on" id="toymask">Masked &mdash; C sees its 3 neighbours</button>
+        <button class="ghost" id="toyfull">Full &mdash; C also sees E</button>
+      </div>
+    </div>
+    <div>
+      <div class="controls" style="gap:10px">
+        <div class="ctrl"><label class="raw">c of C (the link being updated)</label>
+          <input type="range" id="tcC" min="0" max="1" step="0.01" value="0.40"><span class="val" id="vcC">0.40</span></div>
+      </div>
+      <div class="controls" style="gap:10px">
+        <div class="ctrl"><label class="raw">c of A &mdash; upstream</label>
+          <input type="range" id="tcA" min="0" max="1" step="0.01" value="0.20"><span class="val" id="vcA">0.20</span></div>
+        <div class="ctrl"><label class="raw">c of B &mdash; upstream</label>
+          <input type="range" id="tcB" min="0" max="1" step="0.01" value="0.55"><span class="val" id="vcB">0.55</span></div>
+      </div>
+      <div class="controls" style="gap:10px">
+        <div class="ctrl"><label class="raw">c of D &mdash; downstream</label>
+          <input type="range" id="tcD" min="0" max="1" step="0.01" value="0.90"><span class="val" id="vcD">0.90</span></div>
+        <div class="ctrl"><label class="raw">c of E &mdash; not connected</label>
+          <input type="range" id="tcE" min="0" max="1" step="0.01" value="0.85"><span class="val" id="vcE">0.85</span></div>
+      </div>
+      <div class="scrollx" style="margin-top:6px"><table class="map msgtab" id="toytab"></table></div>
+      <div class="narr" id="toynarr" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">The rule, written once</h3>
+    <div class="eq">   <span class="dim">every intersection turns its own state into a question &mdash; a <b>query</b>:</span>
+   <span class="bl">q_u</span>  =  <b>W</b><span class="yl">Q</span> · [ <span class="g">c_u</span> , 1 ]
+
+   <span class="dim">every street advertises what it is offering &mdash; a <b>key</b> and a <b>value</b>:</span>
+   <span class="bl">k_(v→u)</span>  =  <b>W</b><span class="yl">K</span> · [ <span class="g">c_v</span> , <span class="rd">e_(v→u)</span> ]        <span class="bl">val_v</span>  =  <span class="g">c_v</span>
+
+   <span class="dim">score every street that touches u, and normalise over those and only those:</span>
+   <span class="yl">s_(u,v)</span>  =  ( <span class="bl">q_u</span> · <span class="bl">k_(v→u)</span> ) / √d
+   <span class="yl">α_(u,v)</span>  =  exp( <span class="yl">s_(u,v)</span> ) / <b>Σ</b><span class="dim">[ w ∈ N(u) ]</span> exp( <span class="yl">s_(u,w)</span> )
+
+   <span class="dim">and blend:</span>
+   <b>a</b><span class="g">(u)</span>  =  <b>Σ</b><span class="dim">[ v ∈ N(u) ]</span>  <span class="yl">α_(u,v)</span> · <span class="bl">val_v</span></div>
+    <table class="map" style="margin-top:14px">
+      <tr><th class="raw">Symbol</th><th class="raw">In transportation terms</th></tr>
+      <tr><td>q_u</td><td>what intersection u is asking about. Built from u's own congestion, so a jammed link and an empty link ask different questions.</td></tr>
+      <tr><td>k_(v→u)</td><td>what the far end of this street is advertising: how bad it is (c_v) and what kind of connection this is (e = +1 downstream, &minus;1 upstream). The key is a property of the <em>pair</em>, not of v alone.</td></tr>
+      <tr><td>val_v</td><td>what actually gets mixed in if the model decides to listen &mdash; here just v's congestion, so the output stays readable.</td></tr>
+      <tr><td>&radic;d</td><td>d is the length of q and k (2 on this page). Dividing keeps the scores from growing with d and pushing the softmax into a hard max before training has started.</td></tr>
+      <tr><td>N(u)</td><td>u's neighbours. <b>This is the only place the street network appears.</b> It sets the sum in the denominator &mdash; nothing else.</td></tr>
+      <tr><td>&alpha;_(u,v)</td><td>the attention coefficient: the share of u's update that comes from v. Non-negative, and the shares over u's approaches add to exactly 1.</td></tr>
+    </table>
+    <p style="margin:14px 0 0;font-size:13.8px"><b>In words:</b> each intersection asks a question shaped by its own
+      condition; each street connected to it answers with what it has to offer; the match between question and
+      answer sets how much of that neighbour's state gets mixed in.</p>
+    <div class="callout good"><b>Varying degree needs no special handling &mdash; again.</b> A five-leg intersection
+      sums five terms in the denominator and a dead end sums one. W<sub>Q</sub> and W<sub>K</sub> never change
+      size. This is the same dissolution as tab&nbsp;1, with one upgrade: the weights in the blend are no longer
+      fixed at 1/deg, they are computed from the values.</div>
+    <div class="callout warn"><b>And one thing you give up.</b> The coefficients are forced to sum to 1, so this
+      layer can only decide <em>how to split</em> attention &mdash; never that <em>nothing</em> is arriving. That is
+      why plain attention is not automatically better than <span class="mono">sum</span>, which can see totals.
+      It is a weighted mean with learned weights, and it inherits a weighted mean's blind spot.</div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">So does it need the topology?</h3>
+    <p style="margin:6px 0 10px;font-size:14px">Mechanically, no &mdash; the softmax will happily run over all
+      N intersections. The topology is not in the equation, not in the parameters, and not in the shape of any
+      matrix. It enters in exactly one place: <b>the set the denominator sums over</b>. Switch the toy example
+      above to <b>Full</b> and nothing about the computation changes; C is simply allowed to also score E, a
+      jammed link on the other side of town with no street connecting it.</p>
+    <div class="callout warn" id="leakcallout"></div>
+    <p style="margin:12px 0 0;font-size:14px">Note what full attention also destroys: there is no
+      <span class="mono">e_(v→u)</span> for a pair with no street between them, so on a real network the direction
+      feature collapses to the same constant for every pair. Dropping the mask does not just add candidates
+      &mdash; it throws away the one feature that separates a link that drains into you from a link that feeds
+      you. The panel above keeps A, B and D correctly labelled so you can see the denominator acting alone;
+      the measurement further down prices the two losses separately.</p>
+  </div>
+
+  <h3>The same layer, on the whole city</h3>
+  <p class="lead" style="margin-bottom:10px">Same 10 parameters, same equation, now on a generated network.
+     Nothing here is hand-tuned: press <b>Fit the weights</b> and the page trains W<sub>Q</sub> and W<sub>K</sub>
+     in your browser against the spillback rule from tab&nbsp;1, then tests them on a <em>different, larger</em>
+     network it has never seen.</p>
+
+  <div class="btnrow">
+    <button class="act" id="p5new">New network</button>
+    <button class="act" id="p5fit">Fit the weights</button>
+    <span class="small">Then click any intersection to see its &alpha;.</span>
+  </div>
+  <div class="btnrow" style="margin-top:2px">
+    <span class="small" style="font-weight:700;margin-right:2px">Who may attend, and with what:</span>
+    <button class="ghost on" id="m_edge">neighbours + direction</button>
+    <button class="ghost" id="m_mask">neighbours only</button>
+    <button class="ghost" id="m_full">everyone (full attention)</button>
+  </div>
+
+  <div class="gridnet">
+    <div>
+      <figure>
+        <div class="netbox"><svg id="svg5" viewBox="0 0 560 440"></svg></div>
+        <figcaption id="cap5">Purple arrows into the selected intersection are its attention coefficients;
+          width is &alpha;. Node colour is congestion c.</figcaption>
+      </figure>
+    </div>
+    <div>
+      <div class="readout">
+        <div class="stat"><div class="n" id="s5n">–</div><div class="l">intersections</div></div>
+        <div class="stat"><div class="n t" id="s5d">–</div><div class="l raw">degree of selected</div></div>
+        <div class="stat"><div class="n" id="s5p">10</div><div class="l">parameters</div></div>
+        <div class="stat"><div class="n b sm" id="s5pairs">–</div><div class="l raw">pairs scored / layer</div></div>
+      </div>
+      <div class="card tight" style="margin-top:12px">
+        <h4 class="raw" style="margin-top:2px">&alpha; into node <span id="s5sel" class="mono">–</span></h4>
+        <div class="scrollx"><table class="map msgtab" id="p5tab"></table></div>
+        <div class="narr" id="p5narr" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Measured: what the street network is worth</h3>
+    <p style="margin:4px 0 10px;font-size:14px">Three configurations, <b>10 parameters each</b>, the same
+      equation, the same training budget, six seeds. Each step changes exactly one thing. Trained on two
+      networks, tested on two networks of a size never seen in training. The link pinned at jam by the incident
+      is excluded from the error: the scenario supplies it, the model does not predict it.</p>
+    <div class="scrollx"><table class="map">
+      <tr><th class="raw">Configuration</th><th class="raw">What it was given</th><th class="num">Train RMSE</th><th class="num">Test RMSE</th><th class="num">median</th><th class="num">vs. persistence</th></tr>
+      <tr class="hl"><td>neighbours + direction</td><td>the street network <em>and</em> which way each street runs</td><td class="num">0.0207<br><span class="small mono">.0143–.0299</span></td><td class="num best">0.0286<br><span class="small mono">.0116–.0810</span></td><td class="num">0.0208</td><td class="num">&minus;67%</td></tr>
+      <tr><td>neighbours only</td><td>the street network; every approach looks alike</td><td class="num">0.0572<br><span class="small mono">.0515–.0655</span></td><td class="num">0.0556<br><span class="small mono">.0467–.0653</span></td><td class="num">0.0551</td><td class="num">&minus;36%</td></tr>
+      <tr><td>everyone (full attention)</td><td>nothing; the graph has to be inferred from data</td><td class="num">0.0949<br><span class="small mono">.0723–.1107</span></td><td class="num">0.0839<br><span class="small mono">.0736–.1031</span></td><td class="num">0.0789</td><td class="num">&minus;4%</td></tr>
+      <tr><td>persistence baseline</td><td>predict no change</td><td class="num">&mdash;</td><td class="num">0.0870<br><span class="small mono">.0718–.1059</span></td><td class="num">0.0840</td><td class="num">&mdash;</td></tr>
+    </table></div>
+    <div class="callout good"><b>Read it as two separate purchases.</b> Restricting the softmax to real streets
+      buys 0.0839 → 0.0556, a <b>34%</b> cut. Telling the layer which way each street runs buys another
+      0.0556 → 0.0286, a further <b>49%</b> cut. Both cost nothing: identical equation, identical ten
+      parameters, one extra input the road inventory already contains. Neither is a modelling trick &mdash;
+      both are the engineer declining to make the model rediscover the map. You can see it in where the
+      attention lands, too: fitted with the direction flag, <b>89%</b> of the coefficient mass sits on the
+      genuinely worst downstream neighbour (46% before fitting). Without it, 55% &mdash; barely better than
+      the random start.</div>
+    <div class="callout warn"><b>Full attention barely clears the floor.</b> 0.0839 against a persistence
+      baseline of 0.0870 is a 4% improvement &mdash; for a model that is, mechanically, a transformer layer.
+      Nothing is wrong with it. It was simply asked to discover from twelve rollouts on two small networks
+      what the street inventory would have told it for free, and twelve rollouts is not enough to learn a city
+      map. That is the whole argument for masking, priced.</div>
+    <div class="callout"><b>Honest about the spread, and about one bad seed.</b> Look at seed 5 in the typed
+      row: it reaches <b>0.0143</b> on training data &mdash; the tightest fit of all six runs &mdash; and
+      <b>0.0810</b> on the unseen networks. That is not a failed optimisation; every random restart lands in
+      the same place. Its two training networks simply did not contain what the two test networks ask about,
+      and the model learned those cities rather than the rule. It drags the typed mean from a median of 0.0208
+      up to 0.0286 and makes the typed and untyped ranges overlap even though five of six seeds are
+      separated by a factor of two or more. Six seeds is not many. Report the spread and the median, look at
+      the train-test gap, and never report one run.</div>
+    <div class="callout sig"><b>And the result that should stop you reaching for attention by reflex.</b>
+      <a href="../labs/lab5_graph_attention.html">Lab&nbsp;5</a> puts attention against fixed aggregators that
+      encode the same domain knowledge by hand. Against a ground truth that takes a max over downstream links,
+      a plain masked max &mdash; zero learned attention, half the parameters &mdash; scores 0.0081 against
+      attention's 0.0080. A tie. Attention earned its keep only where the truth really was a weighted average
+      (0.0110 against 0.0122), and it was the least stable method in the table, with a 4.2&times; seed range.
+      <b>Right support beats learned weighting; learned weighting beats a generic reduction.</b> Attention is
+      the tool for when you cannot write the selector down &mdash; not an upgrade over knowing it.</div>
+  </div>
+
+  <details class="deeper">
+    <summary>Going deeper &mdash; why &radic;d, and why the original GAT cannot do what you just watched</summary>
+    <div>
+      <p style="margin-top:0"><b>The &radic;d.</b> If q and k have d independent components of roughly unit size,
+        their dot product has a standard deviation of about &radic;d. Let d grow and the raw scores spread out,
+        the softmax saturates, and the gradient through every non-winning neighbour goes to nearly zero before
+        the model has learned anything. Dividing by &radic;d holds the spread constant as d changes. On this
+        page d = 2, so the divisor is 1.41 and you can do it in your head.</p>
+      <p><b>The original GAT has no query and no key.</b> Veličković et al. (ICLR 2018) score a pair with a single
+        shared W and one attention vector applied to a concatenation:
+        <span class="mono">e = LeakyReLU(a<sup>T</sup>[Wh_u ‖ Wh_v])</span>. Split
+        <span class="mono">a</span> into its two halves and that is
+        <span class="mono">LeakyReLU(c_u + s_v)</span> &mdash; a term that depends only on the asking node plus a
+        term that depends only on the answering one. LeakyReLU is monotone, so adding <span class="mono">c_u</span>
+        shifts every score in a row by the same amount and <em>cannot reorder them</em>. Every intersection in the
+        city ranks its neighbours identically. Brody et al. (ICLR 2022) named this <b>static attention</b> and
+        fixed it by moving the nonlinearity inside:
+        <span class="mono">e = a<sup>T</sup>LeakyReLU(W[h_u ‖ h_v])</span>, which is GATv2.</p>
+      <p>Here are both scoring functions on the three neighbours from the panel above, as C's own congestion
+        sweeps from empty to jammed. Only the right-hand block can change its mind:</p>
+      <div class="scrollx" style="margin-top:6px"><table class="map">
+        <tr><th rowspan="2" class="raw">c of C</th><th colspan="4" class="raw" style="text-align:center">GAT-2018, additive</th><th colspan="4" class="raw" style="text-align:center">dot-product q·k</th></tr>
+        <tr><th class="num raw">&alpha;_A</th><th class="num raw">&alpha;_B</th><th class="num raw">&alpha;_D</th><th class="raw">picks</th>
+            <th class="num raw">&alpha;_A</th><th class="num raw">&alpha;_B</th><th class="num raw">&alpha;_D</th><th class="raw">picks</th></tr>
+        <tr><td>0.05</td><td class="num">0.057</td><td class="num">0.086</td><td class="num">0.857</td><td>D</td>
+            <td class="num">0.295</td><td class="num">0.483</td><td class="num">0.222</td><td><b>B</b></td></tr>
+        <tr><td>0.20</td><td class="num">0.054</td><td class="num">0.086</td><td class="num">0.860</td><td>D</td>
+            <td class="num">0.264</td><td class="num">0.433</td><td class="num">0.304</td><td><b>B</b></td></tr>
+        <tr><td>0.40</td><td class="num">0.049</td><td class="num">0.087</td><td class="num">0.864</td><td>D</td>
+            <td class="num">0.214</td><td class="num">0.351</td><td class="num">0.434</td><td>D</td></tr>
+        <tr><td>0.60</td><td class="num">0.045</td><td class="num">0.087</td><td class="num">0.868</td><td>D</td>
+            <td class="num">0.161</td><td class="num">0.264</td><td class="num">0.575</td><td>D</td></tr>
+        <tr><td>0.80</td><td class="num">0.043</td><td class="num">0.087</td><td class="num">0.870</td><td>D</td>
+            <td class="num">0.112</td><td class="num">0.184</td><td class="num">0.704</td><td>D</td></tr>
+        <tr><td>0.95</td><td class="num">0.043</td><td class="num">0.087</td><td class="num">0.870</td><td>D</td>
+            <td class="num">0.082</td><td class="num">0.134</td><td class="num">0.784</td><td>D</td></tr>
+      </table></div>
+      <p style="font-size:13px;color:#5b6b66">Across the whole range, GAT-2018 moves &alpha;_D by 0.013 and never
+        changes its pick. The dot-product form moves &alpha;_D from 0.222 to 0.784 and flips its pick at
+        c&nbsp;=&nbsp;0.325. That flip is the traffic being modelled: an empty link is governed by what feeds it,
+        a full one by what it cannot discharge into. If you teach graph attention with Q/K/V &mdash; and you
+        should &mdash; label it GATv2 or graph transformer, not GAT-2018.</p>
+      <p><b>Multi-head, in one line.</b> Run h independent copies with their own W<sub>Q</sub>, W<sub>K</sub>,
+        W<sub>V</sub> and concatenate. Each head is a separate re-weighting of the <em>same</em> street network,
+        which is why one head can settle on spillback while another tracks merge composition. The support never
+        changes; only the weighting does.</p>
+      <p style="font-size:13px;color:#5b6b66">Veličković et al., <em>Graph Attention Networks</em>, ICLR 2018 ·
+        Brody, Alon &amp; Yahav, <em>How Attentive are Graph Attention Networks?</em>, ICLR 2022 ·
+        Vaswani et al., <em>Attention Is All You Need</em>, NeurIPS 2017.</p>
+    </div>
+  </details>
+
+  <div class="card">
+    <h3 style="margin-top:0">Fit card &mdash; graph attention</h3>
+    <div class="fitcard">
+      <div class="row"><div class="k">Idea in one sentence</div><div>Let each node score its own neighbours from their current state, and blend them with the resulting weights, instead of averaging them all equally.</div></div>
+      <div class="row"><div class="k">Why it works</div><div>Which neighbour governs a link is not a fixed property of the network &mdash; it changes with conditions. A fixed aggregator has to commit once; attention recomputes the ranking every time step from the values themselves.</div></div>
+      <div class="row"><div class="k">Fits these tasks</div><div>Network-scale state estimation and short-horizon forecasting where influence shifts with congestion; incident impact propagation; anywhere approaches are non-interchangeable and you cannot say in advance which one binds. <span class="pill">prediction</span></div></div>
+      <div class="row"><div class="k">Needs this data</div><div>A network with real connectivity (any DOT link–node inventory), a state per node over time (detectors, probe speeds), and enough episodes to cover the regimes you want it to distinguish. Labels come free from the next time step. No hand-labelling.</div></div>
+      <div class="row"><div class="k">Breaks when</div><div>The truth is a total rather than a share &mdash; the coefficients sum to 1 and cannot express "nothing is arriving". Also when the binding neighbour is genuinely off-graph (diversion to a parallel corridor), when episodes are few (it was the least stable method in Lab&nbsp;5), and when one run is reported without a seed spread.</div></div>
+      <div class="row"><div class="k">Keep the classical method when</div><div>You can write the selector down. A masked max over downstream links matched attention here at half the parameters and a third of the variance. Node conservation and a sending/receiving function are still exactly right for a corridor, and they transfer to networks with no training data at all.</div></div>
+    </div>
+  </div>
+
+  <div class="card tight">
+    <h4 class="raw" style="margin-top:4px">Check yourself</h4>
+    <ol class="tight">
+      <li>An agency gives you a signal network where an incident on one arterial reliably pushes traffic onto a
+        parallel arterial eight blocks away with no intersection in common. Would masked attention over the street
+        graph find that coupling? What would you change &mdash; and what does your change cost that masking did not?</li>
+      <li>You train the full-attention configuration on a single city and it beats the masked one on that city's
+        held-out days. A colleague proposes deploying it in the next county. What specifically do you expect to
+        happen, and which number in the table above is your evidence?</li>
+      <li>Your ground truth is total inflow at a merge, in vehicles per hour, not a share. Name the failure this
+        tab warned you about and one aggregator from tab&nbsp;4 that does not have it.</li>
+    </ol>
+  </div>
+</div></section>
+
+<!-- ==================== PAGE 6 ==================== -->
+<section class="page" id="p6"><div class="wrap">
   <h2 class="sec">Fit card, failure modes, and what to check</h2>
 
   <div class="fitcard" style="margin-bottom:20px">
@@ -696,6 +985,7 @@ document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('clic
   window.scrollTo({top:0,behavior:'instant'});
   if(b.dataset.tab==='p2')renderP2();
   if(b.dataset.tab==='p3')renderP3();
+  if(b.dataset.tab==='p5')renderP5();
 }));
 
 /* =======================================================================
@@ -983,6 +1273,390 @@ function renderP4(){
   document.getElementById('ptab').innerHTML=p;
 }
 
+
+/* =======================================================================
+   TAB 5 — attention as a learned aggregator
+   Same parameterisation everywhere on this tab:
+     q_u    = WQ [ c_u , 1        ]
+     k_(v→u)= WK [ c_v , e_(v→u)  ]      val_v = c_v
+     s      = (q · k)/sqrt(d),  d = 2
+   Reproducer: attn_roadnet.py (numpy, same numbers).
+   ======================================================================= */
+const A_S2=Math.SQRT2;
+const AWQ=[[1,-0.5],[0,1]], AWK=[[0,2],[2,0]];   // hand-set, for the worked panel
+const amv=(M,x)=>[M[0][0]*x[0]+M[0][1]*x[1], M[1][0]*x[0]+M[1][1]*x[1]];
+
+/* ---------- the analogy figure ---------- */
+function drawBridge(){
+  const svg=document.getElementById('svgbridge'); if(!svg)return;
+  svg.innerHTML='';
+  const defs=el('defs',{});
+  const mk=(id,col)=>{const m=el('marker',{id,viewBox:'0 0 10 10',refX:'9',refY:'5',
+    markerWidth:'5.5',markerHeight:'5.5',orient:'auto-start-reverse'});
+    m.appendChild(el('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:col}));return m;};
+  defs.appendChild(mk('ah_br','#8E44AD')); defs.appendChild(mk('ah_br2','#9bb0a8'));
+  svg.appendChild(defs);
+  const txt=(x,y,s,o)=>{const t=el('text',Object.assign({x,y,'font-size':'12',
+    'font-family':'-apple-system,Segoe UI,Roboto,sans-serif',fill:'#1c2422'},o||{}));
+    t.textContent=s; svg.appendChild(t); return t;};
+  // panel titles
+  txt(14,20,'A sentence: no structure but order',{ 'font-weight':'700','font-size':'12.5',fill:'#00543a'});
+  txt(374,20,'A street network: the structure is given',{'font-weight':'700','font-size':'12.5',fill:'#00543a'});
+  svg.appendChild(el('line',{x1:352,y1:8,x2:352,y2:242,stroke:'#e2e8e5','stroke-width':2}));
+  // ---- LEFT: tokens in a row, all-to-all from one token
+  const toks=['the','bus','stopped','at','the','curb'];
+  const tx=i=>26+i*56, ty=118;
+  toks.forEach((w,i)=>{
+    svg.appendChild(el('rect',{x:tx(i)-22,y:ty-13,width:44,height:26,rx:7,
+      fill:i===2?'#8E44AD':'#eef3f1',stroke:i===2?'#5b2d73':'#cfdad5','stroke-width':1.4}));
+    txt(tx(i),ty+4,w,{'text-anchor':'middle','font-size':'11.5',
+      fill:i===2?'#fff':'#20302b','font-weight':i===2?'700':'500'});
+  });
+  toks.forEach((_,i)=>{ if(i===2)return;
+    const x1=tx(2),x2=tx(i), mid=(x1+x2)/2, h=26+Math.abs(i-2)*17;
+    svg.appendChild(el('path',{d:`M ${x2} ${ty-15} Q ${mid} ${ty-15-h} ${x1} ${ty-15}`,
+      fill:'none',stroke:'#8E44AD','stroke-width':1.5,opacity:.5,'marker-end':'url(#ah_br)'}));
+  });
+  txt(176,238,'every pair scored: 6 × 6 = 36',{'text-anchor':'middle','font-size':'11.5',fill:'#5b6b66','font-weight':'600'});
+  txt(176,254,'the attention matrix IS the structure',{'text-anchor':'middle','font-size':'11.5',fill:'#B5581E','font-weight':'700'});
+  // ---- RIGHT: small road graph
+  const P={a:[404,62],b:[404,170],c:[500,116],d:[600,116],e:[600,208],f:[500,214]};
+  const ED=[['a','c'],['b','c'],['c','d'],['d','e'],['b','f'],['f','e']];
+  ED.forEach(([p,q])=>{const [x1,y1]=P[p],[x2,y2]=P[q];
+    const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+    svg.appendChild(el('line',{x1,y1,x2:x2-dx/L*11,y2:y2-dy/L*11,stroke:'#c3d2cb','stroke-width':2,'marker-end':'url(#ah_br2)'}));});
+  ['a','b','d'].forEach(k=>{const [x1,y1]=P[k],[x2,y2]=P.c;
+    const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+    svg.appendChild(el('line',{x1,y1,x2:x2-dx/L*13,y2:y2-dy/L*13,stroke:'#8E44AD','stroke-width':2.6,opacity:.85,'marker-end':'url(#ah_br)'}));});
+  Object.entries(P).forEach(([k,[x,y]])=>{
+    svg.appendChild(el('circle',{cx:x,cy:y,r:k==='c'?10:8,fill:k==='c'?'#8E44AD':'#dfe8e4',
+      stroke:k==='c'?'#5b2d73':'#fff','stroke-width':2}));});
+  txt(524,238,'pairs scored: only the 6 streets',{'text-anchor':'middle','font-size':'11.5',fill:'#5b6b66','font-weight':'600'});
+  txt(524,254,'attention re-weights a structure you had',{'text-anchor':'middle','font-size':'11.5',fill:'#00785A','font-weight':'700'});
+  svg.setAttribute('viewBox','0 0 700 262');
+}
+
+/* ---------- worked panel ---------- */
+let TOY={cA:0.20,cB:0.55,cD:0.90,cC:0.40,cE:0.85,full:false};
+function toyRows(full){
+  const nb=[{n:'A',c:TOY.cA,e:-1,lab:'upstream'},{n:'B',c:TOY.cB,e:-1,lab:'upstream'},
+            {n:'D',c:TOY.cD,e:+1,lab:'downstream'}];
+  if(full)nb.push({n:'E',c:TOY.cE,e:0,lab:'not connected'});
+  const q=amv(AWQ,[TOY.cC,1]);
+  nb.forEach(r=>{r.k=amv(AWK,[r.c,r.e]); r.s=(q[0]*r.k[0]+q[1]*r.k[1])/A_S2; r.ex=Math.exp(r.s);});
+  const Z=nb.reduce((s,r)=>s+r.ex,0); nb.forEach(r=>r.a=r.ex/Z);
+  return {q,nb,Z,agg:nb.reduce((s,r)=>s+r.a*r.c,0)};
+}
+function drawToy(rows){
+  const svg=document.getElementById('svgtoy'); svg.innerHTML='';
+  const defs=el('defs',{});
+  const mk=(id,col)=>{const m=el('marker',{id,viewBox:'0 0 10 10',refX:'9',refY:'5',
+    markerWidth:'5',markerHeight:'5',orient:'auto-start-reverse'});
+    m.appendChild(el('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:col}));return m;};
+  defs.appendChild(mk('ah_toy','#8E44AD')); defs.appendChild(mk('ah_toy2','#9bb0a8'));
+  svg.appendChild(defs);
+  const P={A:[62,64],B:[62,212],C:[232,138],D:[404,138],E:[232,268]};
+  const txt=(x,y,s,o)=>{const t=el('text',Object.assign({x,y,'font-size':'12',
+    'font-family':'-apple-system,Segoe UI,Roboto,sans-serif',fill:'#1c2422'},o||{}));
+    t.textContent=s; svg.appendChild(t);};
+  // streets, drawn the way traffic travels: A→C, B→C, C→D
+  [['A','C'],['B','C'],['C','D']].forEach(([p,q])=>{
+    const [x1,y1]=P[p],[x2,y2]=P[q], dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+    svg.appendChild(el('line',{x1,y1,x2:x2-dx/L*15,y2:y2-dy/L*15,
+      stroke:'#c3d2cb','stroke-width':2.4,'marker-end':'url(#ah_toy2)'}));});
+  if(TOY.full) svg.appendChild(el('line',{x1:P.E[0],y1:P.E[1],x2:P.C[0],y2:P.C[1]+15,
+      stroke:'#B5581E','stroke-width':1.6,'stroke-dasharray':'5 4',opacity:.8}));
+  // attention arrows into C
+  rows.nb.forEach(r=>{
+    const [x1,y1]=P[r.n],[x2,y2]=P.C, dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+    svg.appendChild(el('line',{x1,y1,x2:x2-dx/L*16,y2:y2-dy/L*16,
+      stroke:r.n==='E'?'#B5581E':'#8E44AD','stroke-width':(1.2+11*r.a).toFixed(2),
+      opacity:.92,'marker-end':'url(#ah_toy)'}));
+    txt((x1+x2)/2+(r.n==='D'?0:-4),(y1+y2)/2-9,'α='+r.a.toFixed(3),
+      {'text-anchor':'middle','font-size':'11.5','font-weight':'700',
+       fill:r.n==='E'?'#B5581E':'#6b3a86'});});
+  // nodes
+  const show=['A','B','C','D'].concat(TOY.full?['E']:[]);
+  show.forEach(k=>{const [x,y]=P[k];
+    const c=k==='C'?TOY.cC:(k==='A'?TOY.cA:k==='B'?TOY.cB:k==='D'?TOY.cD:TOY.cE);
+    if(k==='C')svg.appendChild(el('circle',{cx:x,cy:y,r:20,fill:'none',stroke:'#8E44AD','stroke-width':2.5}));
+    svg.appendChild(el('circle',{cx:x,cy:y,r:15,fill:congColor(c),stroke:'#fff','stroke-width':2.4}));
+    txt(x,y+4.5,k,{'text-anchor':'middle','font-size':'13','font-weight':'800',fill:'#12211c'});
+    txt(x,y+31,'c = '+c.toFixed(2),{'text-anchor':'middle','font-size':'11',fill:'#5b6b66','font-weight':'600'});});
+  if(TOY.full) txt(P.E[0],P.E[1]-24,'no street to C',{'text-anchor':'middle','font-size':'10.5',fill:'#B5581E','font-weight':'700'});
+  svg.setAttribute('viewBox','0 0 480 '+(TOY.full?300:250));
+}
+function renderToy(){
+  ['cA','cB','cD','cC','cE'].forEach(k=>{
+    const s=document.getElementById('t'+k); if(s)TOY[k]=+s.value;
+    const v=document.getElementById('v'+k); if(v)v.textContent=TOY[k].toFixed(2);});
+  const R=toyRows(TOY.full), M=toyRows(false), F=toyRows(true);
+  drawToy(R);
+  const t=document.getElementById('toytab');
+  t.innerHTML='<tr><th class="raw">v</th><th class="num raw">e</th><th class="num raw">c_v</th>'+
+    '<th class="num raw">k = W<sub>K</sub>[c_v,e]</th><th class="num raw">s = q·k/√2</th>'+
+    '<th class="num raw">exp(s)</th><th class="num raw">α</th></tr>'+
+    R.nb.map(r=>`<tr${r.a===Math.max(...R.nb.map(x=>x.a))?' class="hl"':''}><td>${r.n}<div class="small" style="font-weight:400">${r.lab}</div></td>`+
+      `<td class="num">${r.e>0?'+1':(r.e<0?'−1':'0')}</td><td class="num">${r.c.toFixed(2)}</td>`+
+      `<td class="num">[${r.k[0].toFixed(2)}, ${r.k[1].toFixed(2)}]</td>`+
+      `<td class="num">${r.s>=0?'+':'−'}${Math.abs(r.s).toFixed(3)}</td>`+
+      `<td class="num">${r.ex.toFixed(3)}</td>`+
+      `<td class="num"><b>${r.a.toFixed(3)}</b> <span class="bar" style="width:${(r.a*46).toFixed(1)}px"></span></td></tr>`).join('')+
+    `<tr><td colspan="5" style="text-align:right;color:#5b6b66;font-weight:600">Z = Σ exp(s) =</td>`+
+    `<td class="num"><b>${R.Z.toFixed(3)}</b></td><td class="num"><b>${R.nb.reduce((s,r)=>s+r.a,0).toFixed(3)}</b></td></tr>`;
+  const win=R.nb.reduce((b,r)=>r.a>b.a?r:b);
+  const q=R.q;
+  let msg=`<b>q<sub>C</sub> = W<sub>Q</sub>[${TOY.cC.toFixed(2)}, 1] = [${q[0].toFixed(2)}, ${q[1].toFixed(2)}]</b>. `+
+    `The first component is C's own congestion minus 0.5 — that is its appetite for <em>downstream</em> news. `;
+  if(win.n==='E'){
+    msg+=`Right now the largest single share of C's update, <b>α = ${win.a.toFixed(3)}</b>, is coming from <b>E</b> — `+
+      `a link with no street connecting it to C. Nothing is broken; E was simply allowed into the denominator.`;
+  } else {
+    // best upstream scores (0.5-c_C)+c_U, D scores (c_C-0.5)+c_D  ->  cross at (1+c_U-c_D)/2
+    const cU=Math.max(TOY.cA,TOY.cB), flip=(1+cU-TOY.cD)/2;
+    const inRange=flip>0&&flip<1;
+    const where=inRange?`the flip point (c = ${flip.toFixed(3)} for these neighbour states)`
+                       :`the flip point, which at these neighbour states sits outside 0–1, so one side always wins`;
+    if(win.e<0) msg+=`C is below ${where}, so the appetite is negative and <b>upstream</b> links score higher: `+
+      `<b>${win.n}</b> takes α = ${win.a.toFixed(3)}. An empty link is governed by what feeds it.`;
+    else msg+=`C is above ${where}, so the appetite is positive and the <b>downstream</b> link wins: `+
+      `<b>${win.n}</b> takes α = ${win.a.toFixed(3)}. A full link is governed by what it cannot discharge into.`;
+  }
+  msg+=` Blended state Σα·c<sub>v</sub> = <b>${R.agg.toFixed(4)}</b>.`;
+  document.getElementById('toynarr').innerHTML=msg;
+  const aDm=M.nb.find(r=>r.n==='D').a, aDf=F.nb.find(r=>r.n==='D').a, aE=F.nb.find(r=>r.n==='E').a;
+  document.getElementById('leakcallout').innerHTML=
+    `<b>What that costs, at the current slider settings.</b> Masked, the downstream link D carries `+
+    `α = ${aDm.toFixed(3)} of C's update. Let E into the denominator and D drops to ${aDf.toFixed(3)}, `+
+    `while E — unconnected, unreachable, simply similar-looking — takes ${aE.toFixed(3)}. `+
+    `The scores never changed. Only the denominator did.`;
+  document.getElementById('toymask').classList.toggle('on',!TOY.full);
+  document.getElementById('toyfull').classList.toggle('on',TOY.full);
+}
+
+/* ---------- whole-city panel ---------- */
+let A5={net:null,seed:23,sel:0,mode:'edge',c:null,bn:0,
+        th:{edge:null,mask:null,full:null},res:{edge:null,mask:null,full:null},busy:false};
+
+function aPairs(net,mode){
+  if(mode==='full'){const s=[],d=[],g=[];
+    for(let u=0;u<net.n;u++)for(let v=0;v<net.n;v++)if(v!==u){s.push(v);d.push(u);g.push(1);}
+    return {src:s,dst:d,g};}
+  return {src:net.src,dst:net.dst,g:net.ea.map(e=>mode==='edge'?e:1)};
+}
+function aForward(net,P,c,th){
+  const [a,b,cc,dd,p,q,r,s,w1,w0]=th, n=net.n, L=P.src.length;
+  const q1=new Float64Array(n),q2=new Float64Array(n);
+  for(let u=0;u<n;u++){q1[u]=a*c[u]+b; q2[u]=cc*c[u]+dd;}
+  const sc=new Float64Array(L);
+  for(let i=0;i<L;i++){const v=P.src[i],u=P.dst[i],g=P.g[i];
+    sc[i]=(q1[u]*(p*c[v]+q*g)+q2[u]*(r*c[v]+s*g))/A_S2;}
+  const mx=new Float64Array(n).fill(-1e18),Z=new Float64Array(n),agg=new Float64Array(n);
+  for(let i=0;i<L;i++){const u=P.dst[i]; if(sc[i]>mx[u])mx[u]=sc[i];}
+  for(let i=0;i<L;i++)Z[P.dst[i]]+=Math.exp(sc[i]-mx[P.dst[i]]);
+  const al=new Float64Array(L);
+  for(let i=0;i<L;i++){const u=P.dst[i]; al[i]=Math.exp(sc[i]-mx[u])/Z[u]; agg[u]+=al[i]*c[P.src[i]];}
+  const pred=new Float64Array(n);
+  for(let u=0;u<n;u++)pred[u]=Math.min(1,Math.max(0,c[u]+w1*(agg[u]-c[u])+w0));
+  return {pred,alpha:al};
+}
+/* Pin the incident near the CBD, as tab 3 does: a bottleneck out at the edge
+   has no upstream neighbour that sees it as downstream, so its queue never
+   propagates and the whole rollout is pure decay. */
+function aBn(net){
+  const lim=Math.max(1,Math.floor(Math.max(...net.dist)/2)),c=[];
+  net.dist.forEach((d,i)=>{if(d<=lim)c.push(i);});
+  return c;
+}
+function aData(net,seed,nRoll,T){
+  const rnd=mulberry32(seed),D=[],cand=aBn(net);
+  for(let k=0;k<nRoll;k++){
+    const bn=cand[Math.floor(rnd()*cand.length)];
+    let c=Array.from({length:net.n},()=>0.10+0.25*rnd()); c[bn]=1.0;
+    for(let t=0;t<T;t++){const nx=stepDynamics(net,c,bn);D.push({c:c.slice(),y:nx.slice(),bn});c=nx;}
+  }
+  return D;
+}
+function aLoss(nets,data,Ps,th){let se=0,m=0;
+  for(let j=0;j<nets.length;j++)for(const s of data[j]){
+    const {pred}=aForward(nets[j],Ps[j],s.c,th);
+    for(let u=0;u<nets[j].n;u++){if(u===s.bn)continue;const e=pred[u]-s.y[u];se+=e*e;m++;}}
+  return Math.sqrt(se/m);}
+function aPersist(nets,data){let se=0,m=0;
+  for(let j=0;j<nets.length;j++)for(const s of data[j])
+    for(let u=0;u<nets[j].n;u++){if(u===s.bn)continue;const e=s.c[u]-s.y[u];se+=e*e;m++;}
+  return Math.sqrt(se/m);}
+function aInit(seed){const rnd=mulberry32(seed);
+  return [gauss(rnd)*.5,gauss(rnd)*.5,gauss(rnd)*.5,gauss(rnd)*.5,
+          gauss(rnd)*.5,gauss(rnd)*.5,gauss(rnd)*.5,gauss(rnd)*.5,0.5,0.0];}
+/* Analytic gradient of aLoss. Central-difference check and the identical
+   derivation in NumPy both live in attn_roadnet.py (--checkgrad); the
+   numerical version this replaced was ~20x slower and timed out in-page. */
+function aLossGrad(nets,data,Ps,th){
+  const [a,b,cc,dd,p,q,r,s,w1,w0]=th, G=new Float64Array(10);
+  let SE=0,M=0;
+  for(let j=0;j<nets.length;j++){
+    const net=nets[j],P=Ps[j],n=net.n,L=P.src.length;
+    for(const smp of data[j]){
+      const c=smp.c,y=smp.y,bn=smp.bn;
+      const q1=new Float64Array(n),q2=new Float64Array(n);
+      for(let u=0;u<n;u++){q1[u]=a*c[u]+b;q2[u]=cc*c[u]+dd;}
+      const k1=new Float64Array(L),k2=new Float64Array(L),sc=new Float64Array(L);
+      for(let i=0;i<L;i++){const v=P.src[i],u=P.dst[i],g=P.g[i];
+        k1[i]=p*c[v]+q*g; k2[i]=r*c[v]+s*g; sc[i]=(q1[u]*k1[i]+q2[u]*k2[i])/A_S2;}
+      const mx=new Float64Array(n).fill(-1e18),Z=new Float64Array(n),agg=new Float64Array(n);
+      for(let i=0;i<L;i++){const u=P.dst[i];if(sc[i]>mx[u])mx[u]=sc[i];}
+      for(let i=0;i<L;i++)Z[P.dst[i]]+=Math.exp(sc[i]-mx[P.dst[i]]);
+      const al=new Float64Array(L);
+      for(let i=0;i<L;i++){const u=P.dst[i];al[i]=Math.exp(sc[i]-mx[u])/Z[u];agg[u]+=al[i]*c[P.src[i]];}
+      const del=new Float64Array(n);
+      for(let u=0;u<n;u++){ if(u===bn)continue;
+        const z=c[u]+w1*(agg[u]-c[u])+w0, pr=Math.min(1,Math.max(0,z)), e=pr-y[u];
+        SE+=e*e; M++;
+        if(z>0&&z<1){del[u]=2*e; G[8]+=del[u]*(agg[u]-c[u]); G[9]+=del[u];}}
+      const gq1=new Float64Array(n),gq2=new Float64Array(n);
+      for(let i=0;i<L;i++){const v=P.src[i],u=P.dst[i],g=P.g[i],ga=del[u]*w1;
+        const gsc=al[i]*(ga*c[v]-ga*agg[u]);
+        gq1[u]+=gsc*k1[i]/A_S2; gq2[u]+=gsc*k2[i]/A_S2;
+        const gk1=gsc*q1[u]/A_S2, gk2=gsc*q2[u]/A_S2;
+        G[4]+=gk1*c[v]; G[5]+=gk1*g; G[6]+=gk2*c[v]; G[7]+=gk2*g;}
+      for(let u=0;u<n;u++){G[0]+=gq1[u]*c[u];G[1]+=gq1[u];G[2]+=gq2[u]*c[u];G[3]+=gq2[u];}
+    }}
+  const Lv=Math.sqrt(SE/M), k=1/(2*M*Lv);
+  for(let i=0;i<10;i++)G[i]*=k;
+  return G;
+}
+function aTrain(nets,data,Ps,seed,steps){
+  let th=aInit(seed); const m=th.map(()=>0),v=th.map(()=>0);
+  const eps=1e-8,b1=.9,b2=.999,lr=0.06;
+  for(let t=1;t<=steps;t++){
+    const gr=aLossGrad(nets,data,Ps,th);
+    for(let i=0;i<th.length;i++){
+      m[i]=b1*m[i]+(1-b1)*gr[i]; v[i]=b2*v[i]+(1-b2)*gr[i]*gr[i];
+      th[i]-=lr*(m[i]/(1-b1**t))/(Math.sqrt(v[i]/(1-b2**t))+eps);}
+  }
+  return th;
+}
+function aConc(net,P,c,th){
+  const {alpha}=aForward(net,P,c,th); let tot=0,hit=0;
+  for(let u=0;u<net.n;u++){
+    if(!net.down[u].length)continue;
+    let best=-1,bc=-1; for(const v of net.down[u])if(c[v]>bc){bc=c[v];best=v;}
+    for(let i=0;i<P.src.length;i++)if(P.dst[i]===u&&P.src[i]===best)hit+=alpha[i];
+    tot++;}
+  return tot?hit/tot:0;
+}
+function newNetwork5(seed){
+  A5.seed=seed; A5.net=makeNetwork(5,6,seed);
+  A5.th={edge:null,mask:null,full:null}; A5.res={edge:null,mask:null,full:null};
+  const rnd=mulberry32(seed+991), cand=aBn(A5.net);
+  A5.bn=cand[Math.floor(rnd()*cand.length)];
+  let c=Array.from({length:A5.net.n},()=>0.10+0.25*rnd()); c[A5.bn]=1.0;
+  for(let t=0;t<4;t++)c=stepDynamics(A5.net,c,A5.bn);  // 4 steps: the queue has spread
+  A5.c=c;
+  A5.sel=pickForAttention(A5.net,A5.c,A5.bn);
+}
+function pickForAttention(net,c,bn){
+  let best=pickInteresting(net),bs=-1e9;
+  for(let u=0;u<net.n;u++){
+    if(u===bn||net.deg[u]<2)continue;
+    const nb=net.adj[u]; let dn=0;
+    net.src.forEach((v,i)=>{if(net.dst[i]===u&&net.ea[i]>0)dn++;});
+    if(!dn)continue;
+    const vals=nb.map(v=>c[v]);
+    const spread=Math.max(...vals)-Math.min(...vals);
+    const score=spread*4+net.deg[u]*0.5;       // contrast first, then degree
+    if(score>bs){bs=score;best=u;}
+  }
+  return best;
+}
+function renderP5(){
+  if(!A5.net)newNetwork5(A5.seed);
+  const net=A5.net, mode=A5.mode, P=aPairs(net,mode);
+  const th=A5.th[mode]||aInit(3);
+  const {alpha}=aForward(net,P,A5.c,th);
+  // alpha into the selected node
+  const rows=[];
+  for(let i=0;i<P.src.length;i++) if(P.dst[i]===A5.sel)
+    rows.push({v:P.src[i],a:alpha[i],c:A5.c[P.src[i]],
+      e:mode==='full'?(net.adj[A5.sel].includes(P.src[i])?'—':'·'):(P.g[i]>0?'+1':(P.g[i]<0?'−1':'0')),
+      real:net.adj[A5.sel].includes(P.src[i])});
+  rows.sort((x,y)=>y.a-x.a);
+  const hi=new Set(rows.slice(0,10).map(r=>r.v+','+A5.sel));
+  const XY=drawNet(document.getElementById('svg5'),net,
+    {values:A5.c,sel:A5.sel,bn:A5.bn,onClick:i=>{A5.sel=i;renderP5();}});
+  const svg=document.getElementById('svg5');
+  rows.slice(0,10).forEach(r=>{
+    if(r.a<0.01)return;
+    const [x1,y1]=XY[r.v],[x2,y2]=XY[A5.sel], dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1;
+    svg.appendChild(el('line',{x1,y1,x2:x2-dx/L*14,y2:y2-dy/L*14,
+      stroke:r.real?'#8E44AD':'#B5581E','stroke-width':(1+10*r.a).toFixed(2),
+      opacity:.9,'marker-end':'url(#ahh_svg5)'}));});
+  document.getElementById('s5n').textContent=net.n;
+  document.getElementById('s5d').textContent=net.deg[A5.sel];
+  document.getElementById('s5pairs').textContent=
+    mode==='full'?`${net.n*(net.n-1)}`:`${2*net.edges.length}`;
+  document.getElementById('s5sel').textContent=A5.sel;
+  const leak=rows.filter(r=>!r.real).reduce((s,r)=>s+r.a,0);
+  document.getElementById('p5tab').innerHTML=
+    '<tr><th class="raw">from</th><th class="raw">street?</th><th class="num raw">c_v</th><th class="num raw">α</th></tr>'+
+    rows.slice(0,8).map(r=>`<tr${r.real?'':' style="color:#B5581E"'}><td>${r.v}</td>`+
+      `<td>${r.real?(mode==='edge'?(r.e==='+1'?'downstream':(r.e==='−1'?'upstream':'level')):'yes'):'<b>no</b>'}</td>`+
+      `<td class="num">${r.c.toFixed(3)}</td><td class="num"><b>${r.a.toFixed(3)}</b> `+
+      `<span class="bar" style="width:${(r.a*46).toFixed(1)}px;background:${r.real?'#006747':'#B5581E'}"></span></td></tr>`).join('')+
+    (rows.length>8?`<tr><td colspan="4" class="small">…and ${rows.length-8} more, together α = ${rows.slice(8).reduce((s,r)=>s+r.a,0).toFixed(3)}</td></tr>`:'')+
+    `<tr><td colspan="3" style="text-align:right;color:#5b6b66;font-weight:600">Σα =</td><td class="num"><b>${rows.reduce((s,r)=>s+r.a,0).toFixed(3)}</b></td></tr>`;
+  const R=A5.res[mode];
+  let n5=`Node <b>${A5.sel}</b> has <b>${net.deg[A5.sel]}</b> street${net.deg[A5.sel]===1?'':'s'} touching it, and Σα = 1.000 regardless — the denominator absorbs the degree. `;
+  if(mode==='full') n5+=`Under full attention it is scoring <b>${net.n-1}</b> candidates, and <b>${(100*leak).toFixed(0)}%</b> of its update is arriving from intersections it has no street to. `;
+  if(R){
+    n5+=`<br><br><b>Fitted.</b> Test RMSE on an unseen ${R.teN}-intersection network: <b>${R.te.toFixed(4)}</b> `+
+        `against a persistence baseline of ${R.pb.toFixed(4)}. Across that network, <b>${(100*R.conc).toFixed(0)}%</b> `+
+        `of the attention mass lands on the genuinely worst downstream neighbour — it was `+
+        `${(100*R.conc0).toFixed(0)}% before fitting.`;
+    const top=rows[0];
+    if(top&&top.a>0.9) n5+=` The winner here takes α = ${top.a.toFixed(3)}: the softmax has sharpened `+
+        `itself into a near-hard max, which is exactly the rule it was fitted to. Nobody told it to.`;
+    // did it learn direction, or just "attend to the worst"?
+    const real=rows.filter(r=>r.real);
+    if(mode==='edge'&&real.length>1){
+      const worst=real.reduce((b,r)=>r.c>b.c?r:b), picked=real.reduce((b,r)=>r.a>b.a?r:b);
+      if(worst.v!==picked.v&&worst.c-picked.c>0.15)
+        n5+=`<br><br><b>Worth pausing on.</b> Node <b>${worst.v}</b> is the most congested thing touching `+
+            `node ${A5.sel} (c = ${worst.c.toFixed(2)}), and the fitted layer gives it α = `+
+            `${worst.a.toFixed(3)}. It is <em>upstream</em>, so its queue cannot reach here. The layer `+
+            `learned the direction, not just the magnitude — which is the whole content of the `+
+            `e<sub>(v→u)</sub> feature.`;
+    }
+  } else {
+    n5+=`<br><br><span style="color:#B5581E"><b>Weights are random.</b></span> Press <b>Fit the weights</b> `+
+        `to train W<sub>Q</sub> and W<sub>K</sub> against the spillback rule and see where the attention goes.`;
+  }
+  document.getElementById('p5narr').innerHTML=n5;
+  ['edge','mask','full'].forEach(m=>document.getElementById('m_'+m).classList.toggle('on',mode===m));
+}
+async function fitP5(){
+  if(A5.busy)return; A5.busy=true;
+  const btn=document.getElementById('p5fit'); const old=btn.textContent;
+  btn.disabled=true; btn.textContent='Fitting…';
+  await new Promise(r=>setTimeout(r,30));
+  const net=A5.net, mode=A5.mode;
+  const trD=[aData(net,A5.seed+5,2,6)], trP=[aPairs(net,mode)];
+  const teNet=makeNetwork(6,7,A5.seed+777);
+  const teD=[aData(teNet,A5.seed+61,2,6)], teP=[aPairs(teNet,mode)];
+  try{
+    const th0=aInit(3);
+    const th=aTrain([net],trD,trP,3,300);
+    A5.th[mode]=th;
+    const probe=teD[0][3].c;
+    A5.res[mode]={te:aLoss([teNet],teD,teP,th),pb:aPersist([teNet],teD),teN:teNet.n,
+                  conc:aConc(teNet,teP[0],probe,th),conc0:aConc(teNet,teP[0],probe,th0)};
+  }finally{
+    btn.disabled=false; btn.textContent=old; A5.busy=false;
+  }
+  renderP5();
+}
+
 /* ---------------------- wiring ---------------------- */
 document.getElementById('p1new').addEventListener('click',()=>{newNetwork(SEED+1);renderP1();});
 document.getElementById('p1max').addEventListener('click',()=>{
@@ -1001,8 +1675,18 @@ document.getElementById('p3play').addEventListener('click',function(){
   P3.timer=setInterval(()=>{ if(P3.t>=14){resetP3();} tickP3(); },700);
 });
 
+document.getElementById('p5new').addEventListener('click',()=>{newNetwork5(A5.seed+1);renderP5();});
+document.getElementById('p5fit').addEventListener('click',fitP5);
+['edge','mask','full'].forEach(m=>document.getElementById('m_'+m)
+  .addEventListener('click',()=>{A5.mode=m;renderP5();}));
+['tcA','tcB','tcD','tcC','tcE'].forEach(id=>document.getElementById(id)
+  .addEventListener('input',renderToy));
+document.getElementById('toymask').addEventListener('click',()=>{TOY.full=false;renderToy();});
+document.getElementById('toyfull').addEventListener('click',()=>{TOY.full=true;renderToy();});
+
 newNetwork(7);
 renderP1(); renderP4();
+drawBridge(); renderToy();
 </script>
 </body>
 </html>
