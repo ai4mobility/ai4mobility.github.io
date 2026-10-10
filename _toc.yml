@@ -97,3 +97,5 @@ parts:
       - file: resources
       - file: hardware
         title: Hardware for Class
+      - file: hurricane-dataset
+        title: "Dataset: Hurricane Posts"

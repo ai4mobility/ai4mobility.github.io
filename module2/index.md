@@ -159,6 +159,14 @@ Full descriptions, setup notes, and every lab in the course are on the
 Lab 4 physically lives in Module 1 and is the bridge into this module. If you skipped it, run
 it first.
 
+## Course dataset
+
+{doc}`Florida Hurricane Transportation Posts <../hurricane-dataset>` holds 2,425 real posts about
+roads, evacuation traffic, fuel and transit during Hurricanes Helene and Milton, each with the images
+its author attached. Text and pixels for the same moment, so BERT, ViT, CLIP and fusion can all be
+tried on the same items. The page explains what is in it and what to watch out for; the files
+themselves are on Canvas for enrolled students.
+
 ## Interactive companions
 
 Nine interactive companions support this module. Each is embedded in the section it belongs to and

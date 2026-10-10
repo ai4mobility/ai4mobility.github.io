@@ -1868,3 +1868,17 @@ items:
       transfer_learning_numbers.py, which walks ResNet-50 layer by layer and asserts
       its own total against torchvision's published 25,557,032. Notes prose for this
       segment is folded into notes5-embeddings.md 1.5 rather than written separately.
+
+  - id: site-hurricane-dataset
+    file: site/hurricane-dataset.md
+    kind: handout
+    module: all
+    session: 2026-10-10
+    status: drafted
+    notes: >-
+      Course dataset page for the Florida Hurricane Transportation Posts release (v2: 2,425
+      posts, 3,348 images, Helene and Milton 2024). Sits in the Resources part of _toc.yml after
+      Hardware for Class; module2/index.md links to it under "Course dataset". The zip itself is on
+      Canvas only (USF login). The page shows the 8-post example figure
+      (_static/figures/HT_Dataset_Examples.jpg) with Hao's OK. Mirrors Hurricane_Dataset_Canvas.html
+      in the class folder; build scripts and every number are in Labs/a4_hurricane_pilot/v2/.
