@@ -47,10 +47,20 @@ parts:
           - file: module2/notes6-architecture
             title: "2.6 The transformer as a research architecture"
           - file: module2/notes7-vision
-            title: "2.7 Transformers that see: ViT and multimodal"
-          - file: module2/notes8-evaluation
-            title: "2.8 Does it earn its keep?"
-          - file: module2/notes9-labs
+            title: "2.7 Transformers that see: the Vision Transformer"
+          - file: module2/notes8-locality
+            title: "2.8 Locality returns: Swin, MobileViT, ConvNeXt"
+          - file: module2/notes9-cross-attention
+            title: "2.9 Cross-attention: one sequence reads another"
+          - file: module2/notes10-detr
+            title: "2.10 DETR: learned queries that find objects"
+          - file: module2/notes11-streams
+            title: "2.11 Many streams, one intersection"
+          - file: module2/notes12-history
+            title: "2.12 Where history enters"
+          - file: module2/notes13-evaluation
+            title: "2.13 Does it earn its keep?"
+          - file: module2/notes14-labs
             title: "Practice, exercises, and further reading"
       - file: module3/index
       - file: module4/index

@@ -23,7 +23,8 @@ the images its author attached.
 
 Every post gives you **two views of the same moment: the words and the pixels**. That is what you
 need to try a text encoder (BERT, {doc}`2.5 <module2/notes5-bert>`), an image encoder (ViT, CLIP,
-{doc}`2.7 <module2/notes7-vision>`), and models that combine the two on the same items, and to ask
+{doc}`2.7 <module2/notes7-vision>`), and models that combine the two on the same items
+({doc}`2.9 <module2/notes9-cross-attention>`), and to ask
 a question an agency would care about: *when does the picture tell you something the words do not?*
 
 ```{figure} _static/figures/HT_Dataset_Examples.jpg

@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-09-22
+  updated: 2026-10-16
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -730,33 +730,40 @@ items:
     file: site/module2/notes7-vision.md
     kind: notes
     module: 2
-    session: '2026-09-17'
-    status: debt
-    notes: '2.6 Transformers that see: ViT and multimodal. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
-      flat shape -- sections directly under module2/index in _toc.yml, no "Notes" wrapper level.
-      SKELETON ONLY: header .notes-card, a "What this section covers" list, the companion embed and its
-      lead prose moved verbatim off module2/index.md, and the standing evaluation close. The body prose
-      is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-vit-attention-companion.'
+    session: '2026-10-08'
+    status: drafted
+    notes: '2.7 Transformers that see: the Vision Transformer. REWRITTEN Oct 16 2026 (full prose) from
+      ViT_Training_vs_CNN_Slides, CNN_Recap_GradCAM_Slides and AttnMap_vs_GradCAM_Slides, keeping the
+      published "An image is worth 16x16 words" section and the ViT attention companion embed. The Swin
+      half moved to notes8-locality (2.8). Anchors (vit-training)=, (vit-vs-cnn)=, (attention-maps)=. The
+      AttnMap deck''s arterial-queue frame is a stock photo of unknown licence, so its four photo figures
+      are NOT on the site; its results are described in prose and AttnMap_Deletion + GradCAM_Two_Classes
+      are used instead. Every number fact-checked against vit_vs_cnn/, cnn_recap/, attn_maps/ by an
+      independent pass; the Tab 6 rollout claim was corrected (rollout''s top patches first RAISE
+      p(traffic light) to 4.28x at 10% blanked; it is not worse than random over the whole curve).'
 
   - id: m2-notes-6-evaluation
-    file: site/module2/notes8-evaluation.md
+    file: site/module2/notes13-evaluation.md
     kind: notes
     module: 2
     session: '2026-09-17'
     status: debt
-    notes: '2.7 Does it earn its keep?. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
+    notes: 'RENUMBERED 2.13 and renamed notes13-evaluation.md on Oct 16 2026, when 2.8-2.12 were inserted.
+      2.7 Does it earn its keep?. Created Sept 17 2026 when Module 2 was split into section pages matching the Module 1
       flat shape -- sections directly under module2/index in _toc.yml, no "Notes" wrapper level.
       SKELETON ONLY: header .notes-card, a "What this section covers" list, the companion embed and its
       lead prose moved verbatim off module2/index.md, and the standing evaluation close. The body prose
       is owed -- write it by expansion of the Sept 17 deck, never by transcription. Companion: m2-crash-bert-companion.'
 
   - id: m2-notes-7-practice
-    file: site/module2/notes9-labs.md
+    file: site/module2/notes14-labs.md
     kind: notes
     module: 2
     session: '2026-09-17'
     status: integrated
-    notes: 'Practice, exercises, and further reading -- the unnumbered close of Module 2, same role as
+    notes: 'Renamed notes14-labs.md Oct 16 2026; now names Lab 6 (reads with 2.7), five vendor questions
+      (adds where streams first meet, 2.9/2.11, and what a heat map shows, 2.7/2.9), and the Module 7 graph
+      hand-off from 2.11. Practice, exercises, and further reading -- the unnumbered close of Module 2, same role as
       module1/notes6-labs.md. What the cross-attention lab proves, the Lab 4 bridge, the three vendor
       questions each pointing at a section, and where transformers go in Modules 3 and 4. Complete as
       written; add exercises when the Sept 17 assignment is set.'
@@ -991,7 +998,7 @@ items:
     module: 2
     session: '2026-09-17'
     status: integrated
-    dest: site/module2/notes8-evaluation.md
+    dest: site/module2/notes13-evaluation.md
     notes: 'Does BERT earn its keep on crash narratives? Eight panels mirroring the standard BERT-for-crash-analysis
       diagram, each run on 399 de-identified Florida long-form narratives (HSMV 90010) from 20 Pasco/Hernando/Pinellas
       corridors, 2021-2025, joined to the coded record by report number. HEADLINE RESULTS, all corridor-grouped
@@ -1184,9 +1191,9 @@ items:
     module: 2
     session: unscheduled (Swin extension of the ViT lecture)
     status: integrated
-    dest: site/module2/notes7-vision.md
+    dest: site/module2/notes8-locality.md
     mounted: site/_static/companions/ViT_To_Swin_Companion.html
-    notes: '"From ViT to Swin: what a 224-pixel square cannot see." Six tabs, 1.05 MB single file (frames
+    notes: 'MOVED Oct 16 2026 with the Swin subsection (anchor (vit-to-swin)= kept) to 2.8 notes8-locality.md. "From ViT to Swin: what a 224-pixel square cannot see." Six tabs, 1.05 MB single file (frames
       inlined). Built Oct 6 2026 on the Module 1 scooter clip (frames 78/120/183 at 640 px, 224x224 ViT
       inputs only -- privacy rule for that clip). Tabs: the 224 square (squash: child 6.7x1.6 px, under
       one patch in 72/111 frames; timm centre crop drops the child in 96/111), paying for every pair (9,196
@@ -1217,8 +1224,8 @@ items:
     module: 2
     session: unscheduled (Swin extension of the ViT lecture)
     status: integrated
-    dest: site/module2/notes7-vision.md
-    notes: 'Ten slides + backup, On the slide / Say format: dilemma, three wirings, windows, shifted windows,
+    dest: site/module2/notes8-locality.md
+    notes: 'MOVED Oct 16 2026 with the Swin subsection (anchor (vit-to-swin)= kept) to 2.8 notes8-locality.md. Ten slides + backup, On the slide / Say format: dilemma, three wirings, windows, shifted windows,
       pyramid, cost equation with measured chart, COCO benchmark and the ConvNeXt catch, fit card, backbone-choice
       flowchart, check yourself. Two of its figures are reused in 2.7.'
 
@@ -1227,8 +1234,9 @@ items:
     kind: deck
     module: 2
     session: unscheduled (cross-attention and multimodal transformers, after BERT and ViT)
-    status: raw
-    notes: 'Built Oct 7 2026 on the lecture template (Swin deck master). 15 slides (opens with a fusion vs. cross-attention structure comparison) + 2 reveals + 2 backups, On the
+    status: integrated
+    dest: site/module2/notes9-cross-attention.md
+    notes: 'Used in 2.9 (Oct 16 2026) as AGGREGATES ONLY -- no record text, street names, crash IDs or diagram images on the public site; XAttn_Fusion_Compare re-rendered for the site with its legend reading "102 here" instead of the crash ID. Built Oct 7 2026 on the lecture template (Swin deck master). 15 slides (opens with a fusion vs. cross-attention structure comparison) + 2 reveals + 2 backups, On the
       slide / Say format, running example crash C0007 from crash_sketch_dataset v1 (course-only; do not post on
       the public site). Zero-shot BLIP base (ITC late fusion vs ITM cross-attention) on all 288 narrative/diagram
       pairs: top-1 in a pool of 16 = chance 6.25%, ITC 14%, CLIP 11%, ITM 30%, Tesseract OCR + word overlap 68%;
@@ -1241,10 +1249,217 @@ items:
     kind: internal
     module: 2
     session: unscheduled (cross-attention and multimodal transformers, after BERT and ViT)
-    status: raw
-    notes: 'Reproducer for m2-xattn-slides; run order, definitions and traps in its README.md. numbers.json is the
+    status: integrated
+    notes: 'Used in 2.9 (Oct 16 2026) as AGGREGATES ONLY -- no record text, street names, crash IDs or diagram images on the public site; XAttn_Fusion_Compare re-rendered for the site with its legend reading "102 here" instead of the crash ID. Reproducer for m2-xattn-slides; run order, definitions and traps in its README.md. numbers.json is the
       single source; render_outline.py fills every number in the outline from it; audit_slides.py (36 checks)
       recomputes the headline numbers from raw stage outputs. Stage B (ITM pools) takes ~70 min on 2 threads.'
+
+  - id: m2-notes-8-locality
+    file: site/module2/notes8-locality.md
+    kind: notes
+    module: 2
+    session: '2026-10-08'
+    status: drafted
+    notes: '2.8 Locality returns: Swin, MobileViT and ConvNeXt. Written Oct 16 2026: the Swin subsection moved verbatim from 2.7 (+ Swin_Arch_Reach), MobileViT from its companion and mobilevit_rf/, ConvNeXt from ConvNeXt_Slide, and the Camera_To_Alert_Pipeline close. Anchors (vit-to-swin)=, (mobilevit)=, (convnext)=, (camera-to-alert)=. Fact-checked number by number against its reproducer by an independent pass on Oct 16 2026.'
+
+  - id: m2-notes-9-cross-attention
+    file: site/module2/notes9-cross-attention.md
+    kind: notes
+    module: 2
+    session: '2026-10-15'
+    status: drafted
+    notes: '2.9 Cross-attention: one sequence reads another. Written Oct 16 2026 from Cross_Attention_Slides (aggregates only), the merge companion, EncDec_XAttn_Slides and the architecture companion. Anchors (fusion-vs-cross-attention)=, (cross-attention-test)=, (encoder-decoder)=. Fact-checked number by number against its reproducer by an independent pass on Oct 16 2026.'
+
+  - id: m2-notes-10-detr
+    file: site/module2/notes10-detr.md
+    kind: notes
+    module: 2
+    session: '2026-10-15'
+    status: drafted
+    notes: '2.10 DETR (sidebar: learned queries that find objects; H1: a hundred questions, one answer per vehicle). Written Oct 16 2026 from DETR_Intro_Slides and the DETR companion; object queries, Hungarian matching as the transportation problem, query designs for mobility. Photos are Wikimedia Commons, credited in each caption. Anchors (detr-object-queries)=, (detr-matching)=, (detr-query-zones)=, (detr-limits)=, (query-designs)=. Fact-checked number by number against its reproducer by an independent pass on Oct 16 2026.'
+
+  - id: m2-notes-11-streams
+    file: site/module2/notes11-streams.md
+    kind: notes
+    module: 2
+    session: '2026-10-15'
+    status: drafted
+    notes: '2.11 Many streams, one intersection. Written Oct 16 2026 from the camera+CAN multimodal companion, Cross_Attention_Encoders_Slides, Sensors_To_Tokens_Slides and Flexible_Fusion_Slides. Synthetic example intersection labelled as such. Anchors (two-sensors)=, (encoder-handover)=, (sensors-to-tokens)=, (who-reads-whom)=, (lane-anchor-hub)=. Fact-checked number by number against its reproducer by an independent pass on Oct 16 2026.'
+
+  - id: m2-notes-12-history
+    file: site/module2/notes12-history.md
+    kind: notes
+    module: 2
+    session: '2026-10-15'
+    status: drafted
+    notes: '2.12 Where history enters. Written Oct 16 2026 from GRU_Encoders_Slides, GRU_vs_Transformer_Slides and History_Paths_Slides; all trained results are on synthetic IDM tracks / a synthetic approach and labelled so. No companion. Anchors (three-paths)=, (gru-history-token)=, (temporal-transformer)=, (history-as-keys)=, (carried-memory)=. Fact-checked number by number against its reproducer by an independent pass on Oct 16 2026.'
+
+  - id: m2-mobilevit-companion
+    file: MobileViT_Receptive_Field_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes8-locality.md
+    mounted: site/_static/companions/MobileViT_Receptive_Field_Companion.html
+    notes: '703 KB single file. Mounted verbatim Oct 16 2026 at anchor (mobilevit)=. Reproducer mobilevit_rf/.'
+
+  - id: m2-merge-xattn-companion
+    file: Cross_Attention_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-09-24'
+    status: integrated
+    dest: site/module2/notes9-cross-attention.md
+    mounted: site/_static/companions/Cross_Attention_Companion.html
+    notes: 'Cross-attention at the merge (Sept 24 2026), 136 KB. Site copy differs from the class-folder file in one phrase: (Lab 7) -> (in development) for the sanity-check lab, which has no number yet.'
+
+  - id: m2-xattn-architecture-companion
+    file: Cross_Attention_Architecture_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes9-cross-attention.md
+    mounted: site/_static/companions/Cross_Attention_Architecture_Companion.html
+    notes: 'One decoder position, every encoder token (Oct 13 2026), 20 KB. SITE COPY EDITED: eyebrow AI MOBILITY TECHNOLOGIES -> AI FOR MOBILITY; the instructor-supplied reference image (source and licence unknown) and its caption removed; the lecture-use block rewritten in student voice; lecture -> section 2.9. The class-folder original is unchanged.'
+
+  - id: m2-detr-companion
+    file: DETR_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes10-detr.md
+    mounted: site/_static/companions/DETR_Companion.html
+    notes: 'How DETR detects, 3.7 MB single file (eight Wikimedia Commons photographs inlined, credited on every tab). Mounted verbatim Oct 16 2026. Build notes DETR_Companion_Notes.md; reproducer detr_companion/.'
+
+  - id: m2-multimodal-xattn-companion
+    file: Multimodal_Cross_Attention_Companion.html
+    kind: companion
+    module: 2
+    session: '2026-09-24'
+    status: integrated
+    dest: site/module2/notes11-streams.md
+    mounted: site/_static/companions/Multimodal_Cross_Attention_Companion.html
+    notes: 'Camera, CAN and cross-attention (Sept 24 2026), 2.7 MB single file, synthetic physics-grounded clips. Mounted verbatim Oct 16 2026 at anchor (two-sensors)=.'
+
+  - id: m2-vit-training-slides
+    file: ViT_Training_vs_CNN_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-08'
+    status: integrated
+    dest: site/module2/notes7-vision.md
+    notes: '12 slides + backup; reproducer vit_vs_cnn/ (numbers.json). Figures on the site: ViT_Train_Pipeline, Attention_Distance_How, ViT_vs_CNN_Reach, ViT_vs_CNN_FL511. Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-cnn-recap-slides
+    file: CNN_Recap_GradCAM_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-08'
+    status: integrated
+    dest: site/module2/notes7-vision.md
+    notes: '8 slides; reproducer cnn_recap/. Used as the short Grad-CAM recap in 2.7; figure GradCAM_Two_Classes. Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-attnmap-slides
+    file: AttnMap_vs_GradCAM_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-08'
+    status: integrated
+    dest: site/module2/notes7-vision.md
+    notes: '8 slides + backup; reproducer attn_maps/. Only AttnMap_Deletion is on the site (the other four figures show the arterial-queue stock photo). Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-convnext-slide
+    file: ConvNeXt_Slide.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes8-locality.md
+    notes: 'One slide + fit-card backup; reproducer convnext_slide/. Figure ConvNeXt_Ladder. Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-camera-to-alert-figure
+    file: Camera_To_Alert_Pipeline*.svg/png + Camera_To_Alert_Pipeline_Notes.md
+    kind: deck
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes8-locality.md
+    notes: 'Closing figure of the ViT session; the standalone reveal-3 copy is on the site. Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-detr-slides
+    file: DETR_Intro_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes10-detr.md
+    notes: '19 slides + backup; reproducer detr_slides/. Eight DETR_* figures on the site (DETR_Two_Detectors as JPEG). Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-encdec-slides
+    file: EncDec_XAttn_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes9-cross-attention.md
+    notes: '11 slides + backup on Bishop Fig. 12.20 with MarianMT; reproducer encoder_decoder_xattn/. Figures EncDec_Unpacked, EncDec_Who_Reads_2, EncDec_Training_Signal, EncDec_Breaks. Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-xenc-slides
+    file: Cross_Attention_Encoders_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes11-streams.md
+    notes: '7 slides; reproducer xattn_encoders/. Figure XEnc_Handover. Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-sensors-tokens-slides
+    file: Sensors_To_Tokens_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes11-streams.md
+    notes: '11 slides + 2 backups; reproducer sync_encoders/. Figure STT_Stale_Position. Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-flex-fusion-slides
+    file: Flexible_Fusion_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes11-streams.md
+    notes: '18 slides + 2 backups; reproducer flex_fusion_slides/. Figures FFus_Block_Types, FFus_Read_Nothing, FFus_Hub, FFus_Lane_Anchors, FFus_Anchor_Edges. Leads into GNN_Intro_Slides (Module 7). Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-gru-encoders-slides
+    file: GRU_Encoders_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes12-history.md
+    notes: '8 slides + backup; reproducer gru_encoders/. Figure GRU_Cell. Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-gru-vs-transformer-slides
+    file: GRU_vs_Transformer_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes12-history.md
+    notes: '6 slides + backup; reproducer gru_vs_transformer/. Figure GVT_Same_Window. Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-history-paths-slides
+    file: History_Paths_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: '2026-10-15'
+    status: integrated
+    dest: site/module2/notes12-history.md
+    notes: '15 slides + 2 backups; reproducer history_paths/. Figures HP_Three_Paths, HP_Chain_vs_Meeting, HP_Buffer_Attention, HP_Memory_Loop, HP_Queue_Head_To_Head, HP_Gate_Kalman. Site figures are 1600-px copies in site/_static/figures/.'
 
 # -----------------------------------------------------------------------------
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)

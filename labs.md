@@ -109,7 +109,7 @@
       <h3>Lab 6 &mdash; Fine-tuning a Vision Transformer</h3>
       <p>2,949 snapshots from 494 FDOT traffic cameras around Tampa Bay, swept every 25 minutes straight through sunset. Turn the transfer dial you saw on the Sept 10 slides &mdash; head only, last block, last four blocks, everything &mdash; on a 5.5M-parameter ViT-Tiny, and watch what each setting costs and buys. The labels came from a detector, not a person, and the lab spends its last three sections on what that costs you.</p>
       <p><strong>Proves:</strong> a fine-tune's accuracy splits cleanly into what the pretrained features gave you for free and what you had to buy by unfreezing &mdash; and that an after-dark score can rise while the model gets worse, because the label source failed first. <strong>Check it against:</strong> twelve hand-written image statistics and a logistic regression, which scores 37.7% where the full fine-tune scores 71.2%.</p>
-      <div class="tag-row"><span>Reads with 4.1</span><span>torch &middot; timm &middot; scikit-learn &middot; matplotlib</span><span>Downloads 31 MB &middot; ~15 min on CPU</span></div>
+      <div class="tag-row"><span>Reads with 2.7, 4.1</span><span>torch &middot; timm &middot; scikit-learn &middot; matplotlib</span><span>Downloads 31 MB &middot; ~15 min on CPU</span></div>
       <a class="resource-link" href="module4/lab6_vit_finetune.html">Open Lab 6</a>
     </article>
   </div>

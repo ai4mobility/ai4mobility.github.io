@@ -1,0 +1,174 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cross-attention — encoder tokens to decoder context</title><style>
+:root{color-scheme:light;--background:#fff;--foreground:#182e28;--muted-foreground:#536b62;--border:#ccd8d1;--muted:#edf2ef;--viz-series-1:#006747;--viz-series-2:#967116;--primary:#006747;--font-size-base:16px}
+*{box-sizing:border-box}body{margin:0;background:#f6f8f6;color:var(--foreground);font:16px/1.55 system-ui,sans-serif}main{max-width:1080px;margin:auto;padding:28px clamp(16px,4vw,48px) 60px;background:var(--background)}h1{font-size:30px;line-height:1.2;margin:8px 0 12px}h2{font-size:22px;font-weight:600}h3{font-size:18px}.eyebrow{color:#006747;letter-spacing:.1em;font-size:12px;font-weight:700}.intro{max-width:850px;color:var(--muted-foreground)}.viz-controls{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.btn{font:inherit;font-size:14px;min-height:40px;padding:7px 12px;border:1px solid var(--border);border-radius:7px;background:var(--background);color:var(--foreground);cursor:pointer}.btn:hover{background:var(--muted)}.btn[aria-pressed=true],.btn-primary{background:var(--primary);color:white;border-color:var(--primary)}.btn:disabled{opacity:.4;cursor:default}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #b79f4d;outline-offset:3px}.text-small{font-size:12px}.text-muted{color:var(--muted-foreground)}.ca-diagram text{font-size:13px}.ca-diagram .minor{font-size:12px}#ca-caption{font-size:17px;min-height:52px;padding-top:12px;border-top:1px solid var(--border)}details{border-top:1px solid var(--border);padding:17px 0}summary{cursor:pointer;font-weight:600}details p{max-width:900px}code{font:14px ui-monospace,monospace;background:var(--muted);padding:3px 5px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:left}a{color:#006747}img{width:100%;height:auto}.numeric{overflow-x:auto}footer{margin-top:24px;color:var(--muted-foreground);font-size:13px}@media(max-width:560px){main{padding:16px}h1{font-size:25px}.ca-diagram text{font-size:11px}.ca-diagram .minor{font-size:11px}.btn{min-height:44px}#ca-caption{font-size:15px}}
+</style></head><body><main>
+<div class="eyebrow">AI FOR MOBILITY · CROSS-ATTENTION</div>
+<h1>One decoder position. Every encoder token.</h1>
+<p class="intro">Expand the supplied architecture, then follow one query through the encoder's token memory. Click a stage, select a decoder position, or use “Play once.” Example: an incident description becomes a short lane-closure message.</p>
+<div id="cross-architecture">
+  <h2>How the decoder reads the encoder</h2>
+  <div class="viz-controls" id="ca-steps" aria-label="Walkthrough stages"></div>
+  <div class="viz-controls" style="margin-block:12px">
+    <button class="btn" type="button" id="ca-back">Previous</button>
+    <button class="btn btn-primary" type="button" id="ca-next">Next step</button>
+    <button class="btn" type="button" id="ca-play">Play once</button>
+    <span class="text-small" id="ca-progress"></span>
+  </div>
+  <div id="ca-positions" class="viz-controls" aria-label="Select a decoder position"></div>
+  <svg id="ca-diagram" class="ca-diagram text-small" role="img" aria-label="Encoder decoder architecture and token attention"></svg>
+  <div id="ca-caption" aria-live="polite"></div>
+  <div class="text-small text-muted" style="margin-top:8px">Illustrative word tokens · one head · hand-chosen vectors · scripted output</div>
+</div>
+<style>
+  #cross-architecture{width:100%}
+  #cross-architecture .ca-diagram{display:block;width:100%;overflow:visible}
+  #cross-architecture .ca-diagram text{fill:var(--foreground);font-family:inherit}
+  #cross-architecture .ca-diagram .minor{fill:var(--muted-foreground)}
+  #cross-architecture .ca-diagram .edge{fill:none;stroke:var(--border);stroke-width:1.5}
+  #cross-architecture .ca-diagram .signal{fill:none;stroke:var(--viz-series-1)}
+  #cross-architecture .ca-diagram .return{fill:none;stroke:var(--viz-series-2)}
+  #cross-architecture .ca-diagram .bar{transition:width .65s ease}
+  @media(prefers-reduced-motion:reduce){#cross-architecture .ca-diagram .bar{transition:none}}
+</style>
+<script>
+(()=>{
+  const root=document.getElementById('cross-architecture');
+  const $=s=>root.querySelector(s), svg=$('#ca-diagram');
+  const names=['Architecture','Encoder tokens','Decoder query','Match keys','Mix values','Next token'];
+  const source=['Crash','blocks','right','lane','ahead'];
+  const inputs=['‹start›','Right','lane','closed'], outputs=['Right','lane','closed','‹end›'];
+  const keys=[[-1,1],[-.5,2],[2,-1],[2,1],[0,-1]];
+  const values=[[1,.2],[.8,1],[.1,.6],[.2,.9],[.4,.1]];
+  const queries=[[2,-2],[2,1],[-1,2],[.2,.2]];
+  let step=0, pos=0, timer=null, previousWeights=null;
+  const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+  const state=window.openai?.widgetState?.modelContent;
+  if(state && Number.isInteger(state.step)&&state.step>=0&&state.step<6)step=state.step;
+  if(state && Number.isInteger(state.position)&&state.position>=0&&state.position<4)pos=state.position;
+  const weights=()=>{const scores=keys.map(k=>(k[0]*queries[pos][0]+k[1]*queries[pos][1])/Math.sqrt(2));const e=scores.map(s=>Math.exp(s-Math.max(...scores)));const a=e.map(x=>x/e.reduce((s,v)=>s+v,0));return {scores,a,c:[0,1].map(d=>a.reduce((sum,v,j)=>sum+v*values[j][d],0))};};
+  const save=()=>window.openai?.setWidgetState?.({modelContent:{step,position:pos,decoderInput:inputs[pos],prediction:outputs[pos]},privateContent:null})?.catch(()=>{});
+  const stop=()=>{clearInterval(timer);timer=null;$('#ca-play').textContent='Play once';};
+  function change(s,p=pos){stop();step=s;pos=p;render(true);save();}
+  names.forEach((n,i)=>{let b=document.createElement('button');b.type='button';b.className='btn';b.textContent=`${i+1}. ${n}`;b.addEventListener('click',()=>change(i));$('#ca-steps').append(b);});
+  inputs.forEach((n,i)=>{let b=document.createElement('button');b.type='button';b.className='btn';b.textContent=`${i+1}: ${n}`;b.setAttribute('aria-label',`Decoder position ${i+1}, input ${n}, predicts ${outputs[i]}`);b.addEventListener('click',()=>change(Math.max(step,2),i));$('#ca-positions').append(b);});
+  $('#ca-back').onclick=()=>change(Math.max(0,step-1));
+  $('#ca-next').onclick=()=>step===5?change(2,(pos+1)%4):change(step+1);
+  $('#ca-play').onclick=()=>{if(timer){stop();return;}if(step===5)step=0;render(true);$('#ca-play').textContent='Pause';timer=setInterval(()=>{step++;render(true);save();if(step===5)stop();},2600);};
+  window.addEventListener('openai:set_globals',e=>{let s=e.detail?.globals?.widgetState?.modelContent;if(s&&Number.isInteger(s.step)&&s.step>=0&&s.step<6&&Number.isInteger(s.position)&&s.position>=0&&s.position<4){stop();step=s.step;pos=s.position;render(false);}});
+  function render(animate=false){
+    const W=Math.max(280,root.clientWidth), narrow=W<560, H=step===0?590:(narrow?690:580);
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.style.height=H+'px';
+    $('#ca-steps').querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===step)));
+    $('#ca-positions').hidden=step<2;
+    $('#ca-positions').style.display=step<2?'none':'';
+    $('#ca-positions').querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===pos)));
+    $('#ca-back').disabled=step===0;$('#ca-next').textContent=step===5?'Next position':'Next step';
+    $('#ca-progress').textContent=`${step+1} / 6`;
+    const {scores,a,c}=weights();
+    let out=`<title>${esc(names[step])}</title><desc>Five source tokens form encoder memory. The selected decoder position supplies a query, scores every source key, and receives a weighted sum of source values.</desc><defs><marker id="ca-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10Z" fill="var(--muted-foreground)"/></marker></defs>`;
+    const text=(x,y,t,anchor='middle',cls='')=>out+=`<text x="${x}" y="${y}" text-anchor="${anchor}" class="${cls}">${esc(t)}</text>`;
+    const path=(d,cls='edge',width=1.5,arrow=true)=>out+=`<path d="${d}" class="${cls}" style="stroke-width:${width}" ${arrow?'marker-end="url(#ca-arrow)"':''}/>`;
+    const box=(x,y,w,h,lines,type='neutral')=>{const col=type==='q'?'--viz-series-1':type==='v'?'--viz-series-2':'--muted-foreground';out+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="7" fill="color-mix(in srgb,var(${col}) 11%,var(--background))" stroke="var(--border)"/>`;lines.forEach((l,i)=>text(x+w/2,y+h/2+(i-(lines.length-1)/2)*19+4,l));};
+    if(step===0){
+      const pad=8,gap=narrow?26:100,bw=(W-2*pad-gap)/2,L=pad,R=pad+bw+gap,lc=L+bw/2,rc=R+bw/2;
+      text(lc,30,'ENCODER');text(rc,30,'DECODER');
+      const rows=[['Source tokens',narrow?'Crash … ahead':'Crash · blocks · right · lane · ahead'],['Embedding','+ position'],['Self-attention','all source tokens'],['Feed-forward','+ add / norm'],['Z: 5 vectors',narrow?'one per token':'one per source token']];
+      rows.forEach((ls,i)=>{const y=496-i*96;box(L,y,bw,57,ls,'v');if(i<4)path(`M${lc} ${y} V${y-37}`);});
+      box(R,496,bw,57,['Shifted tokens','‹start› Right lane']);
+      box(R,413,bw,53,['Embedding','+ position']);
+      box(R,322,bw,59,['Masked self-attn','prefix only'],'q');
+      box(R,220,bw,60,['Cross-attention',narrow?'Q ← here':'Q here; K,V from Z'],'q');
+      box(R,132,bw,56,['Feed-forward','+ add / norm']);
+      box(R,54,bw,51,['Linear + softmax','next-token output']);
+      [[496,466],[413,381],[322,280],[220,188],[132,105]].forEach(([s,e])=>path(`M${rc} ${s} V${e}`));
+      path(`M${L+bw} 141 H${L+bw+gap/2} V250 H${R}`,'return',2.5);
+      text(L+bw+gap/2,205,'K,V');
+      text(W/2,581,narrow?'Stacks repeat; Z stays available.':'Encoder / decoder blocks repeat; each decoder layer can read the same Z.');
+      $('#ca-caption').textContent='Open the cross-attention block: decoder states ask; encoder memory supplies information.';
+    }else{
+      const left=8, tokenW=narrow?77:106, kvX=left+tokenW+10, kvW=narrow?82:122;
+      const end=kvX+kvW, qX=narrow?W-104:W-172, qW=narrow?96:160;
+      const y0=narrow?234:126,dy=narrow?66:69;
+      text(8,25,'ENCODER MEMORY Z','start');
+      text(8,46,'All 5 source positions remain available','start','minor');
+      if(step>=2){
+        box(qX,narrow?85:65,qW,57,[`Query q${pos+1}`,`[${queries[pos].join(', ')}]`],'q');
+        text(narrow?8:W/2,narrow?68:73,narrow?`Prefix: ${inputs.slice(0,pos+1).join(' ')}`:'Decoder prefix → masked self-attention',narrow?'start':'middle');
+        if(!narrow)text(W/2,96,inputs.slice(0,pos+1).join(' '));
+        else text(8,97,`Predict: ${outputs[pos]}`,'start');
+        if(pos<3)text(8,narrow?150:565,`Masked future: ${inputs.slice(pos+1).join(' ')}`,'start','minor');
+        else text(8,narrow?150:565,'No future decoder input at this position','start','minor');
+        if(narrow)text(8,188,step===2?'One query for this position':step===3?'Compare query with every key':step===5?'Read values':'Weights route source information','start');
+      }else{
+        box(qX,65,qW,57,['Decoder','not queried yet']);
+      }
+      text(left+tokenW/2,y0-14,'Source token');
+      text(kvX+kvW/2,y0-14,step>=4?'Value vⱼ':'Vector / key');
+      for(let j=0;j<5;j++){
+        const y=y0+j*dy;
+        box(left,y,tokenW,46,[source[j]],'v');
+        path(`M${left+tokenW} ${y+23} H${kvX}`);
+        const label=step===1?[`z${j+1}`,narrow?'vector':'contextual vector']:step<4?[`k${j+1}`,`[${keys[j].join(', ')}]`]:[`v${j+1}`,`[${values[j].join(', ')}]`];
+        box(kvX,y,kvW,46,label,'v');
+        if(step===3){
+          const x=qX+(narrow?10:18), by=y+7, available=W-x-8;
+          path(`M${qX} ${narrow?126:108} C${end+26} ${narrow?126:108},${end+22} ${y-4},${end+2} ${y+23}`,'signal',1+a[j]*5);
+          text(x,by+11,`${scores[j].toFixed(2)} → ${(a[j]*100).toFixed(1)}%`,'start');
+          out+=`<rect x="${x}" y="${by+21}" width="${available}" height="6" fill="var(--muted)"/><rect class="bar" data-weight="${j}" x="${x}" y="${by+21}" width="${available*a[j]}" height="6" fill="var(--viz-series-1)"/>`;
+        }
+        if(step>=4){
+          const cx=qX+qW/2,cy=narrow?613:489;
+          path(`M${end} ${y+23} C${end+24} ${y+23},${cx} ${cy-40},${cx} ${cy}`,'return',1+a[j]*8);
+          text(end+8,y+16,`${(a[j]*100).toFixed(1)}%`,'start');
+        }
+      }
+      if(step===1){text(8,narrow?603:510,'Z is a sequence, not one pooled vector.','start');text(8,narrow?627:534,'Each zⱼ carries context from the source.','start','minor');}
+      if(step===2){path(`M${qX} 94 H${end+12}`,'signal',2);text(8,narrow?623:516,'Q from decoder; K and V from encoder.','start');}
+      if(step===3){text(8,narrow?622:516,'Scaled score → softmax weight','start');text(8,narrow?646:540,'Weights across source tokens sum to 100%.','start','minor');}
+      if(step>=4){
+        box(qX,narrow?613:489,qW,53,['Context c'+(pos+1),`[${c.map(x=>x.toFixed(2)).join(', ')}]`],'v');
+        if(step===5){
+          box(qX,182,qW,58,['Predict next',outputs[pos]],'q');
+          path(`M${qX+qW} ${narrow?640:516} H${W-3} V211 H${qX+qW}`,'signal',2);
+          text(qX+qW/2,166,'rest of decoder');
+        }
+      }
+      const captions=[null,'Keep one contextual vector for every source token.',`Position ${pos+1} reads only “${inputs.slice(0,pos+1).join(' ')}” to form its query.`, `The same encoder keys get different weights when you select a different decoder position.`,`Use each weight to scale its value vector, then add the contributions.`,`Input “${inputs[pos]}” helps predict “${outputs[pos]}”; the predicted token enters the next position.`];
+      $('#ca-caption').textContent=captions[step];
+    }
+    svg.innerHTML=out;
+    if(animate&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+      svg.querySelectorAll('.signal,.return').forEach(p=>{const len=p.getTotalLength();p.animate([{strokeDasharray:`${len} ${len}`,strokeDashoffset:len},{strokeDasharray:`${len} ${len}`,strokeDashoffset:0}],{duration:750,easing:'ease-out'});});
+      if(previousWeights)svg.querySelectorAll('[data-weight]').forEach(r=>{const j=+r.dataset.weight,to=+r.getAttribute('width'),from=to/a[j]*previousWeights[j];r.animate([{width:from+'px'},{width:to+'px'}],{duration:650,easing:'ease-out'});});
+    }
+    previousWeights=a;
+  }
+  new ResizeObserver(()=>render(false)).observe(root);
+  render(false);
+})();
+</script>
+
+<details open><summary>How to read the animation</summary>
+<p><strong>Source:</strong> “Crash blocks right lane ahead.” <strong>Scripted output:</strong> “Right lane closed.” We use whole words as simplified tokens; a real tokenizer may split them differently. Each encoder vector contains contextual information, not just the meaning of its displayed word.</p>
+<p>Select “‹start›” to inspect the query used to predict <em>Right</em>; select “Right” to inspect the query used to predict <em>lane</em>. A decoder input token and its next-token target are offset by one position. The future positions shown in the selector are for inspection: they are masked from the selected position's self-attention.</p>
+<p>Green paths show query-to-key matching. Gold paths show values traveling back into a weighted context vector; thicker paths carry larger weights. Cross-attention updates decoder representations. It does not update the stored encoder memory during this forward pass.</p>
+</details>
+<details><summary>The calculation behind one attention head</summary>
+<p><code>qᵢ = hᵢ WQ</code>; <code>kⱼ = zⱼ WK</code>; <code>vⱼ = zⱼ WV</code>. Here <em>hᵢ</em> is the decoder state after masked self-attention; <em>zⱼ</em> is the encoder state for source position j. The W matrices are learned projections. This demo starts with hand-chosen projected vectors.</p>
+<p><code>sᵢⱼ = (qᵢ · kⱼ) / √dₖ</code>, <code>aᵢⱼ = exp(sᵢⱼ) / Σₘ exp(sᵢₘ)</code>, <code>cᵢ = Σⱼ aᵢⱼ vⱼ</code>.</p>
+<p>The score measures query–key compatibility. Softmax normalizes over <strong>source positions</strong>; each row sums to one before rounding. The context c is a weighted sum of <strong>value vectors</strong>, not words, keys, or vocabulary probabilities. Our vectors have two abstract, unitless coordinates, so dₖ = 2.</p>
+<div class="numeric"><table><thead><tr><th>Input → target</th><th>Crash</th><th>blocks</th><th>right</th><th>lane</th><th>ahead</th><th>Context c</th></tr></thead><tbody><tr><td>‹start› → Right</td><td>0.1%</td><td>0.0%</td><td>89.3%</td><td>5.3%</td><td>5.3%</td><td>[0.122, 0.589]</td></tr><tr><td>Right → lane</td><td>1.1%</td><td>4.4%</td><td>18.3%</td><td>75.1%</td><td>1.1%</td><td>[0.219, 0.833]</td></tr><tr><td>lane → closed</td><td>24.7%</td><td>71.4%</td><td>0.2%</td><td>3.0%</td><td>0.7%</td><td>[0.828, 0.792]</td></tr><tr><td>closed → ‹end›</td><td>17.3%</td><td>21.4%</td><td>19.9%</td><td>26.4%</td><td>15.0%</td><td>[0.477, 0.621]</td></tr></tbody></table></div>
+<p><strong>PhD lens:</strong> If all four positions are evaluated together during teacher-forced training, Q is 4 × 2, K and V are 5 × 2, the attention matrix is 4 × 5, and the head output is 4 × 2. Each row uses a causally masked decoder prefix. During generation, only the new query needs to be evaluated when caches are used. Multiple heads use their own projections; their outputs are concatenated and projected before the rest of the decoder.</p>
+</details>
+<details><summary>Connect this back to the encoder–decoder figure</summary>
+<p>The Z of the encoder–decoder figure (Bishop &amp; Bishop, Fig. 12.20, drawn token by token in section 2.9) is <strong>[z₁, z₂, …, z₅]</strong> here: one final encoder vector per input token. The horizontal arrows carry that sequence to the cross-attention sublayer in each decoder layer. Each decoder layer has its own projection matrices even though it reads the same Z.</p>
+<p>The walkthrough expands the decoder block into masked self-attention, cross-attention, and a feed-forward network. Residual connections and normalization surround these sublayers; their wiring is abbreviated to keep the token paths readable. Positional information is added on both input sides.</p>
+<p>The top output head maps the final decoder state to vocabulary scores and softmax probabilities. Its predicted token is fed back as the next decoder input, until an end token is selected. The output words in this walkthrough are scripted to explain that loop; they are not predictions computed from a trained decoder.</p>
+</details>
+<details><summary>Try it, then carry it further</summary>
+<p><strong>Three minutes:</strong> Before you press anything, count how many vectors Z contains. Select “‹start›,” step through matching and mixing, then select “Right” and “lane” and compare their attention over the same encoder memory. Why are the future decoder tokens masked while every source token stays visible?</p>
+<p><strong>Bridge to the crash-diagram test:</strong> Replace the five encoder word tokens with image-patch vectors. Narrative states can still supply Q while diagram-patch states supply K and V. Cross-attention does not itself require autoregressive generation: the BLIP matching test in section 2.9 uses a bidirectional text stream and a matching head, so its decoder masking and next-token output differ from this generative example.</p>
+<p><strong>Transportation task:</strong> Draft one incident message from an available roadway report, for operator review before display. Compare with a template based on verified lane-closure fields. Evaluate factual correctness of lane, direction, location, and closure status—not just fluent wording. A large weight is not proof of a causal explanation; a model can attend to “lane” and still miss a negation such as “lane is not closed.”</p>
+</details>
+<footer>Mechanism reference: <a href="https://arxiv.org/html/1706.03762v7#S3">Vaswani et al., Attention Is All You Need, §3</a>. All numerical attention examples here are illustrative and separate from the measured BLIP results in section 2.9.</footer>
+</main></body></html>

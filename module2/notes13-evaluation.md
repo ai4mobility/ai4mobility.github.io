@@ -1,8 +1,8 @@
-# 2.8 Does it earn its keep?
+# 2.13 Does it earn its keep?
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.8</span>
+    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.13</span>
     <span class="notes-card-session">Session: Sept 17</span>
   </div>
   <p class="notes-card-lede">A transformer is only worth its cost if it beats the method it would replace, on data the agency actually has. This section is that test, run eight ways on 399 real Florida crash narratives &mdash; and the classical baseline wins more often than the literature would lead you to expect.</p>
@@ -30,10 +30,6 @@
 - Ceilings that are in the data, not in the model
 - Latency, cost, and deployment constraints for transformer inference
 - Reading a foundation-model claim about transportation: what was measured, on what data, against what baseline
-
-*The written section is posted after the Sept 17 meeting. Until then the companion
-below is the material &mdash; it is the assigned preparation and it carries every number
-this section will argue from.*
 
 ## Does BERT earn its keep?
 
@@ -89,4 +85,4 @@ was ever written down.
 
 ---
 
-Next: {doc}`notes9-labs` &mdash; the lab, the reading list, and where this goes in Module 4.
+Next: {doc}`notes14-labs` &mdash; the labs, the questions this module arms you with, and where it goes next.

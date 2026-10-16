@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cross-Attention at the Merge</title>
+<style>
+  :root{
+    color-scheme:light;
+    --usf-green:#006747;--usf-green-d:#003E2A;--usf-mid:#2E7D5C;--usf-gold:#B79F4D;--sand:#CFC493;
+    --ink:#1c2422;--muted:#56665f;--paper:#f5f7f4;--card:#ffffff;--line:#e0e6e2;
+    --q1:#006747;--q2:#B5581E;--mapc:#6b5a1e;--warn:#b03a2e;--kv:#0E6E9E;
+    --road:#3d4643;--road-edge:#e9ece8;--lane-mark:#f4f1dc;
+    --shadow:0 1px 3px rgba(0,0,0,.07),0 6px 22px rgba(0,0,0,.05);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--paper);line-height:1.58;font-size:15px}
+  .wrap{max-width:1060px;margin:0 auto;padding-inline:20px}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding-block:30px 24px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--sand);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:clamp(22px,3.2vw,29px);font-weight:780;text-wrap:balance;line-height:1.25}
+  header.hero p{margin:0;max-width:860px;color:#e3eee9;font-size:15px}
+  nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(255,255,255,.97);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:7px}
+  nav.tabs button{border:none;background:transparent;font:inherit;font-size:13.5px;font-weight:650;color:var(--muted);padding:9px 13px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  nav.tabs button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--usf-gold);outline-offset:2px}
+  section.page{display:none;padding-block:24px 12px}
+  section.page.active{display:block}
+  h2.sec{font-size:23px;margin:4px 0 4px;color:var(--usf-green-d);text-wrap:balance}
+  h3{font-size:16.5px;margin:22px 0 6px;color:var(--ink);text-wrap:balance}
+  h4{font-size:12.5px;margin:12px 0 4px;color:var(--usf-green-d);text-transform:uppercase;letter-spacing:.06em}
+  p{margin:0 0 10px}
+  .lead{color:var(--muted);max-width:860px;margin:0 0 16px;font-size:15px}
+  .prose{max-width:860px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+  .eq{background:#0f1c18;color:#eafff5;border-radius:10px;padding:14px 18px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14.5px;line-height:1.9;white-space:pre}
+  .eq b{color:var(--sand)}.eq .g{color:#7fd8b0}.eq .o{color:#ffb98a}.eq .dim{color:#8aa197}
+  .callout{border-left:4px solid var(--usf-gold);background:#fcfaf0;padding:11px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:14px}
+  .callout.good{border-left-color:var(--usf-mid);background:#f1f8f4}
+  .callout.warn{border-left-color:var(--warn);background:#fcf3f1}
+  .callout b{color:var(--usf-green-d)}
+  .callout.warn b{color:var(--warn)}
+  .small{font-size:12.5px;color:var(--muted)}
+  .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .num{font-variant-numeric:tabular-nums}
+  .q1t{color:var(--q1);font-weight:700}.q2t{color:var(--q2);font-weight:700}.kvt{color:var(--kv);font-weight:700}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media (max-width:780px){.grid2,.grid3{grid-template-columns:1fr}}
+  .figbox{overflow-x:auto}
+  .figbox svg{display:block;width:100%;min-width:640px;height:auto}
+  figcaption{font-size:12.5px;color:var(--muted);margin-top:8px;max-width:820px}
+  .diffs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+  @media (max-width:780px){.diffs{grid-template-columns:1fr}}
+  .diff{border-top:3px solid var(--usf-gold);background:var(--card);padding:12px 14px 10px;border-radius:0 0 10px 10px;border:1px solid var(--line);border-top:3px solid var(--usf-gold)}
+  .diff .k{font-size:11.5px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;color:var(--mapc)}
+  .diff .t{font-weight:700;margin:3px 0 4px;color:var(--usf-green-d)}
+  .diff p{font-size:13.8px;margin:0;color:var(--ink)}
+  table.t{width:100%;border-collapse:collapse;font-size:13.6px;margin-top:6px}
+  table.t th,table.t td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.t th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--line)}
+  table.t td.n,table.t th.n{text-align:right;font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums;font-size:13px}
+  table.t tr.hl td{background:#eef7f2}
+  .tblwrap{overflow-x:auto}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 10px}
+  button.act{border:1px solid var(--usf-green);background:var(--usf-green);color:#fff;font:inherit;font-weight:700;font-size:13.5px;padding:8px 14px;border-radius:9px;cursor:pointer}
+  button.act:hover{background:var(--usf-green-d)}
+  button.ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-weight:600;font-size:13.5px;padding:8px 13px;border-radius:9px;cursor:pointer}
+  button.ghost:hover{background:var(--paper)}
+  button.ghost.on{border-color:var(--usf-green);background:#eaf5ef;color:var(--usf-green-d)}
+  label.chk{display:inline-flex;gap:6px;align-items:center;font-size:13.5px;color:var(--ink);cursor:pointer}
+  .roadbox{background:#fbfcfa;border:1px solid var(--line);border-radius:12px;overflow-x:auto}
+  #road{display:block;width:100%;min-width:680px;height:auto;touch-action:none;user-select:none}
+  #road .veh{cursor:grab}
+  #road .veh:active{cursor:grabbing}
+  .answers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0 6px}
+  @media (max-width:700px){.answers{grid-template-columns:1fr}}
+  .ans{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card)}
+  .ans.a1{border-top:4px solid var(--q1)}.ans.a2{border-top:4px solid var(--q2)}
+  .ans .qq{font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:.06em}
+  .ans .big{font-size:26px;font-weight:780;font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums;line-height:1.2;margin-top:2px}
+  .ans .rule{font-size:13px;color:var(--muted)}
+  .bars{margin-top:8px;display:grid;grid-template-columns:auto 1fr auto auto;gap:3px 8px;align-items:center;font-size:12.5px;font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+  .bars .lab{font-weight:700;color:var(--ink)}
+  .bars .track{height:11px;background:#eef1ee;border-radius:6px;overflow:hidden}
+  .bars .fill{height:100%;border-radius:6px}
+  .bars .rep{color:var(--muted);text-align:right}
+  .bars .hd{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-family:inherit}
+  .matrix{display:inline-grid;gap:2px;margin-top:4px}
+  .matrix .c{width:34px;height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-family:ui-monospace,Menlo,monospace}
+  .matrix .h{font-size:11px;font-weight:700;color:var(--muted);display:flex;align-items:center;justify-content:center}
+  .status{font-size:13px;min-height:1.5em;color:var(--usf-green-d);font-weight:600}
+  .status.bad{color:var(--warn)}
+  details.deep{border:1px dashed var(--usf-gold);border-radius:10px;padding:10px 14px;margin:14px 0;background:#fffdf6}
+  details.deep summary{cursor:pointer;font-weight:700;color:var(--mapc)}
+  details.deep p,details.deep li{font-size:14px}
+  .dict{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;margin:10px 0}
+  .dict .s{font-family:ui-monospace,Menlo,monospace;font-weight:700;color:var(--usf-green-d)}
+  .slider{display:flex;flex-direction:column;gap:3px;min-width:180px}
+  .slider label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .slider input{accent-color:var(--usf-green);width:220px;max-width:100%}
+  .slider .v{font-family:ui-monospace,Menlo,monospace;font-weight:700;color:var(--usf-green-d);font-size:13px}
+  .alts{display:grid;gap:8px;margin-top:10px}
+  .alt{display:grid;grid-template-columns:minmax(150px,1.3fr) repeat(3,minmax(60px,.6fr)) minmax(70px,.6fr) 2fr;gap:8px;align-items:center;font-size:13.5px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+  .alt.hd{border:none;background:transparent;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;padding-block:0}
+  .alt.dup{background:#eef4fa;border-color:#b9d3e6}
+  .alt .nm{font-weight:700}
+  .alt .n{font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums;text-align:right}
+  .alt .bar{height:14px;background:#eef1ee;border-radius:7px;overflow:hidden}
+  .alt .bar i{display:block;height:100%;background:var(--kv);border-radius:7px}
+  .altwrap{overflow-x:auto}
+  .altwrap .alts{min-width:640px}
+  .gal{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  @media (max-width:780px){.gal{grid-template-columns:1fr}}
+  .gcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .gcard h3{margin:2px 0 8px;font-size:15.5px}
+  .gcard .dom{font-size:11px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;color:var(--mapc)}
+  .qa{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:13.6px;margin-bottom:8px}
+  .qa .k{font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;padding-top:2px}
+  .qa .k.q{color:var(--q1)}.qa .k.kv{color:var(--kv)}.qa .k.n{color:var(--mapc)}
+  .gcard .src{font-size:12px;color:var(--muted);margin-top:6px}
+  .gcard .src a{color:var(--usf-green)}
+  .mini{display:block;width:100%;height:auto;margin:4px 0 10px}
+  .fit{display:grid;grid-template-columns:minmax(150px,210px) 1fr;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .fit div{padding:9px 14px;border-bottom:1px solid var(--line);font-size:14px}
+  .fit div:nth-child(odd){background:#f2f6f3;font-weight:700;color:var(--usf-green-d)}
+  .fit div:nth-last-child(-n+2){border-bottom:none}
+  @media (max-width:600px){.fit{grid-template-columns:1fr}.fit div:nth-child(odd){border-bottom:none;padding-bottom:2px}}
+  .evalbox{border:2px solid var(--usf-green);border-radius:12px;padding:14px 18px;background:#f4faf6;margin:18px 0}
+  .evalbox h4{margin-top:0}
+  .evalbox dl{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;margin:0;font-size:14px}
+  .evalbox dt{font-weight:700;color:var(--usf-green-d)}
+  .evalbox dd{margin:0}
+  @media (max-width:600px){.evalbox dl{grid-template-columns:1fr}}
+  ol.checks li{margin-bottom:8px}
+  .calc{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end}
+  .calcout{font-family:ui-monospace,Menlo,monospace;font-size:14px;line-height:1.8}
+  footer{padding-block:20px 40px;color:var(--muted);font-size:12.5px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · CGN 6933 · Module 2 · Attention, part 2</div>
+  <h1>Cross-attention at the merge: one set of tokens asks, another set answers</h1>
+  <p>In self-attention every word asked every other word in the same sentence. Cross-attention splits those roles:
+     the <b>questions</b> come from one place and the <b>answers</b> come from somewhere else — a different lane, a different sensor,
+     a different moment in time. The model at the centre of this page is small, trained, and runs live in your browser.
+     Drag the vehicles and watch its two questions look at different parts of the same scene.</p>
+</div></header>
+
+<nav class="tabs" aria-label="Sections"><div class="wrap">
+  <button data-tab="p1" class="active">1 · Who asks, who answers</button>
+  <button data-tab="p2">2 · The merge, live</button>
+  <button data-tab="p3">3 · A traveler asks the alternatives</button>
+  <button data-tab="p4">4 · Where it lives in transportation</button>
+  <button data-tab="p5">5 · Where it breaks · fit card</button>
+</div></nav>
+
+<!-- ============================ PAGE 1 ============================ -->
+<section class="page active" id="p1"><div class="wrap">
+  <h2 class="sec">Same arithmetic as self-attention, different roles</h2>
+  <p class="lead">A vehicle on an on-ramp is about to merge into lane 1. Before it moves it needs two answers:
+    <span class="q1t">who will I be following?</span> and <span class="q2t">who has to let me in?</span>
+    Everything it needs is in the scene around it: six vehicles and one posted speed limit. The picture below puts the two
+    attention patterns side by side on that scene.</p>
+
+  <div class="card">
+    <div class="figbox"><svg id="fig1" viewBox="0 0 1000 470" role="img" aria-label="Self-attention versus cross-attention on the merge scene"></svg></div>
+    <figcaption><b>Takeaway:</b> self-attention is a square table in which the tokens ask each other. Cross-attention is a rectangle
+      whose rows are the <em>questions</em> and whose columns are the tokens being asked, so the scene can hold any number
+      of vehicles and there are still exactly two answers. The rectangle's shading is the live model's attention on this scene.</figcaption>
+  </div>
+
+  <div class="diffs">
+    <div class="diff"><div class="k">Difference 1</div><div class="t">The asker is not in the crowd</div>
+      <p>Queries come from one source (the merging vehicle's questions); keys and values come from another (the vehicles and the map).
+        In self-attention all three came from the same sentence.</p></div>
+    <div class="diff"><div class="k">Difference 2</div><div class="t">The number of answers is yours to set</div>
+      <p>You get one output per query. Two questions give two answers whether the scene has three vehicles or thirty.
+        That makes cross-attention the standard way to get a fixed-size answer out of an input whose size varies.</p></div>
+    <div class="diff"><div class="k">Difference 3</div><div class="t">The crowd has no order</div>
+      <p>Shuffle the vehicles and the answers do not change, because the weighted average does not care what order the list is in.
+        A set of surrounding vehicles has no natural order anyway, so this is exactly the behaviour you want.</p></div>
+  </div>
+
+  <h3>The key equation</h3>
+  <div class="eq">CrossAttn(<b>X</b><span class="g">q</span>, <b>X</b><span class="o">kv</span>) = softmax( (<b>X</b><span class="g">q</span>W<span class="dim">Q</span>)(<b>X</b><span class="o">kv</span>W<span class="dim">K</span>)ᵀ / √d ) · (<b>X</b><span class="o">kv</span>W<span class="dim">V</span>)
+<span class="dim">        shape: (questions × d)·(d × tokens) → a questions × tokens table, then × (tokens × d) → questions × d</span></div>
+  <div class="dict">
+    <span class="s">X<sub>q</sub></span><span>the askers. Here: the merging vehicle's 2 questions, each a learned vector of d = 16 numbers.</span>
+    <span class="s">X<sub>kv</sub></span><span>the answerers. Here: every surrounding vehicle as (distance ahead dx in m, lane, speed in mph), plus one map token carrying the posted speed.</span>
+    <span class="s">W<sub>Q</sub>, W<sub>K</sub>, W<sub>V</sub></span><span>learned projections: what to look for, what each token advertises, what each token hands over if chosen.</span>
+    <span class="s">√d</span><span>the temperature, exactly as in self-attention. d = 16 here, so the scores are divided by 4.</span>
+    <span class="s">softmax</span><span>turns one row of scores into weights that are positive and sum to 1: the multinomial logit from Module 1, with the tokens as the alternatives.</span>
+  </div>
+  <p class="prose"><b>In words:</b> each question scores every token, the scores become shares that add to one, and the answer is the
+    share-weighted average of what the tokens hand over. Self-attention is the special case X<sub>q</sub> = X<sub>kv</sub>.</p>
+
+  <div class="card">
+    <h4>Micro-example: the live model's first question on the scene above</h4>
+    <p class="small">Every number in this table is computed in your browser from the trained weights. The same forward pass was checked
+      against PyTorch on <span data-k="verify.n_ref"></span> held-out scenes, with a maximum difference of <span data-k="verify.max_abs_err|e"></span>.</p>
+    <div class="tblwrap"><table class="t" id="microTbl"></table></div>
+    <p class="small" id="microNote"></p>
+  </div>
+
+  <details class="deep"><summary>Going deeper (optional): why shuffling the vehicles changes nothing, and what it costs</summary>
+    <p>Reorder the tokens with a permutation matrix P, so X<sub>kv</sub> becomes P X<sub>kv</sub>. The score table becomes S Pᵀ
+      (its columns are shuffled), the softmax is taken along each row, so the weights are shuffled the same way, A Pᵀ, and the output is
+      A Pᵀ P X<sub>kv</sub>W<sub>V</sub> = A X<sub>kv</sub>W<sub>V</sub>, because PᵀP = I. The output is <b>invariant</b> to the order of the answerers.
+      Shuffle the <em>questions</em> instead and the answers come back shuffled with them (<b>equivariant</b>). Tab 2 has a button that
+      runs this test on the live model.</p>
+    <p>Cost: the table has T<sub>q</sub> × T<sub>kv</sub> entries, against T² for self-attention over the same tokens. When a few queries face a very
+      large input this difference is what makes a model feasible (the Perceiver card in tab 4). Padding is handled with a mask: tokens that
+      are not really there get a score of −∞ before the softmax, which is how one batch can hold scenes with 3 and 8 vehicles.</p>
+    <p class="small">Source for the equation and the encoder–decoder origin: Vaswani et al. (2017), <i>Attention Is All You Need</i>, §3.2.3.
+      For the permutation argument in general form, see Bishop &amp; Bishop, <i>Deep Learning</i> (2024), ch. 12.</p>
+  </details>
+</div></section>
+
+<!-- ============================ PAGE 2 ============================ -->
+<section class="page" id="p2"><div class="wrap">
+  <h2 class="sec">The merge, live: two questions, one scene, any number of vehicles</h2>
+  <p class="lead">Drag a vehicle along its lane or up and down between lanes. Click the speed-limit sign to change the posted speed.
+    The two panels below show where each question puts its weight, what each token would report if it got all the weight,
+    and the answer, which is the weighted average of those reports. The ground truth from the written rule is shown for comparison.</p>
+
+  <div class="controls">
+    <button class="act" id="bNew">New random scene</button>
+    <button class="ghost" id="bDefault">Default scene</button>
+    <button class="ghost" id="bAdd">Add a vehicle</button>
+    <button class="ghost" id="bDel">Remove last vehicle</button>
+    <button class="ghost" id="bCut">Cut-in in progress</button>
+    <button class="ghost" id="bShuffle">Shuffle the token order</button>
+    <label class="chk"><input type="checkbox" id="cMap" checked> Map token present</label>
+    <label class="chk"><input type="checkbox" id="cStraddle"> Leave vehicles between lanes</label>
+  </div>
+  <div class="roadbox"><svg id="road" viewBox="0 0 1000 300" aria-label="Freeway merge scene, draggable"></svg></div>
+  <div class="status" id="status" aria-live="polite"></div>
+
+  <div class="answers">
+    <div class="ans a1"><div class="qq q1t">Question 1 · Who will I follow?</div>
+      <div class="big q1t" id="y1">–</div><div class="rule" id="t1"></div><div class="bars" id="bars1"></div></div>
+    <div class="ans a2"><div class="qq q2t">Question 2 · Who has to let me in?</div>
+      <div class="big q2t" id="y2">–</div><div class="rule" id="t2"></div><div class="bars" id="bars2"></div></div>
+  </div>
+
+  <div class="card">
+    <h4>The attention table for this scene: questions × tokens</h4>
+    <div class="tblwrap"><div class="matrix" id="matrix"></div></div>
+    <p class="small">Rows are the two questions and columns are the tokens in the order they were fed in. Add a vehicle and the table gains a
+      column, but it never gains a row.</p>
+  </div>
+
+  <h3>What the model is, exactly</h3>
+  <div class="prose">
+  <p>Each token is a vehicle, described by three things: dx, its distance ahead of the merging vehicle (m, negative means behind); its lane
+    (target lane 1 or inner lane 2); and its speed (mph). One extra token describes the map, carrying the posted speed. The two questions
+    are learned vectors, the same idea as the object queries in DETR or the motion queries in MTR (tab 4). Keys come from a small
+    network on each token's features. Values are a plain linear map of the features, so each token's "report" is readable.
+    Parameters in total: <span data-k="results.params_xattn"></span>.</p>
+  <p>The scenes are <b>synthetic</b>. Lane 1 and lane 2 each carry a stop-and-go wave, so speed changes along the road and the average
+    speed of a lane is not the speed of the car you will actually follow. The labels come from a written rule:
+    <span class="q1t">Q1</span> is the speed of the nearest lane-1 vehicle ahead within 100 m, or the posted speed if there is none.
+    <span class="q2t">Q2</span> is the gap to the nearest lane-1 vehicle behind within 100 m, or 100 m ("open") if there is none.
+    The model only ever saw the answers. <b>Nobody told it where to look.</b> The attention patterns above are what it worked out for itself.</p>
+  </div>
+
+  <h3>Does looking selectively matter? The evaluation</h3>
+  <div class="tblwrap"><table class="t" id="evalTbl"></table></div>
+  <p class="small" id="evalNote"></p>
+
+  <div class="evalbox" id="evalClose">
+    <h4>Evaluation close</h4>
+    <dl>
+      <dt>Baseline</dt><dd>Three of them: the posted speed (or "open") with no model at all; the rule with the lane left out ("nearest vehicle
+        in any lane"); and a network with the <em>same token encoder</em> that gives every token an equal weight (mean-pooling). The last is the
+        fair comparison, because only the weighting differs.</dd>
+      <dt>Split, and why it is honest</dt><dd>The <span data-k="results.test_n|int"></span> test scenes are drawn fresh from the generator and never appear in training.
+        That is honest for one question only: can this mechanism learn a selection rule from answers alone? It says nothing about real ramps.
+        Because the labels come from a rule, the rule itself scores zero error. <b>If you know the rule, write it down.</b>
+        Cross-attention earns its place when the rule is unknown, as it is for real drivers in real merges.</dd>
+      <dt>Ugly cases</dt><dd>No leader in range; a vehicle halfway through a lane change; far more vehicles than it was trained on; no map token.
+        Tab 5 measures each one. Also, training is not guaranteed: <span id="seedLine"></span></dd>
+    </dl>
+  </div>
+</div></section>
+
+<!-- ============================ PAGE 3 ============================ -->
+<section class="page" id="p3"><div class="wrap">
+  <h2 class="sec">A traveler asks the alternatives: cross-attention with one query is a logit model</h2>
+  <p class="lead">Set aside the neural network for a moment. A traveler is choosing how to get from campus to downtown. Their tastes are one
+    vector (how much they dislike time, cost and unreliability). Each alternative is described by a vector of attributes. Put the taste vector
+    in the query slot and the attributes in the key slot, and the dot product q·k is the systematic utility V. The softmax over the
+    alternatives is then the multinomial logit you estimated in your choice-modelling course.</p>
+
+  <div class="card">
+    <div class="calc">
+      <div class="slider"><label for="sVot">Value of time</label><input id="sVot" type="range" min="5" max="60" step="1" value="18"><span class="v" id="vVot"></span></div>
+      <div class="slider"><label for="sRel">Reliability weight</label><input id="sRel" type="range" min="0" max="2" step="0.05" value="0.8"><span class="v" id="vRel"></span></div>
+      <div class="slider"><label for="sMu">Scale μ = 1 / temperature</label><input id="sMu" type="range" min="0.05" max="1.5" step="0.01" value="0.25"><span class="v" id="vMu"></span></div>
+      <div class="controls" style="margin:0">
+        <button class="ghost" id="bBlue">Add a “blue bus”</button>
+      </div>
+    </div>
+    <div class="altwrap"><div class="alts" id="alts"></div></div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="calcout" id="mnlOut"></div>
+      <div class="small" id="mnlNote"></div>
+    </div>
+    <p class="small" style="margin-top:10px">Attribute values are illustrative inputs for a campus-to-downtown trip, chosen to be plausible.
+      They are not survey or agency data. Utility here is V = −μ·(cost + VOT/60 · time + ρ · VOT/60 · buffer), in dollars, where the buffer is the extra
+      minutes you would have to leave early to arrive on time 95% of the time.</p>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>What carries over, term for term</h3>
+      <div class="tblwrap"><table class="t">
+        <tr><th>Choice model</th><th>Cross-attention</th></tr>
+        <tr><td>Taste vector β</td><td>Query q</td></tr>
+        <tr><td>Attributes of alternative j</td><td>Key k<sub>j</sub></td></tr>
+        <tr><td>Systematic utility V<sub>j</sub> = β·x<sub>j</sub></td><td>Score q·k<sub>j</sub></td></tr>
+        <tr><td>Scale μ</td><td>1 / √d (and the learned size of q)</td></tr>
+        <tr><td>Choice probability P<sub>j</sub></td><td>Attention weight α<sub>j</sub></td></tr>
+        <tr><td>Expected outcome Σ P<sub>j</sub> y<sub>j</sub></td><td>Output Σ α<sub>j</sub> v<sub>j</sub></td></tr>
+      </table></div>
+    </div>
+    <div>
+      <h3>What does not carry over</h3>
+      <p><b>Tastes are computed, not fixed.</b> An estimated MNL has one β per market segment. In a network, q = W<sub>Q</sub> x, so every
+        traveler, trip purpose or time of day gets its own taste vector from a learned function. That is closer to a mixed logit, with the
+        heterogeneity produced by a function of the context instead of drawn from a distribution.</p>
+      <p><b>Attention never chooses.</b> It returns the probability-weighted <em>average</em> of the values, which is an expected outcome.
+        On the merge in tab 2 that is why an ambiguous leader gets you a speed nobody is driving.</p>
+    </div>
+  </div>
+
+  <div class="callout warn"><b>IIA comes along too.</b> Press “Add a blue bus”: an identical copy of the express bus takes share from every
+    alternative in proportion, and the two buses together end up with more than one bus had. This is the red-bus/blue-bus problem from Module 1, and plain
+    softmax attention has it for the same reason. In perception it matters directly. A vehicle seen by two overlapping cameras becomes two
+    tokens, so in fusion it gets roughly twice the say. Real systems deduplicate (DETR's set matching, BEVFormer's attention only to
+    the camera views each grid cell actually projects into) instead of assuming the softmax will sort it out.</div>
+</div></section>
+
+<!-- ============================ PAGE 4 ============================ -->
+<section class="page" id="p4"><div class="wrap">
+  <h2 class="sec">Where cross-attention lives in transportation systems</h2>
+  <p class="lead">For every system you meet, ask the same three questions: <span class="q1t">who asks</span>,
+    <span class="kvt">who answers</span>, and <span style="color:var(--mapc);font-weight:700">how many questions</span>. The last one is
+    the design decision, because it fixes the size of the output no matter how large the input is. Every model detail on these cards was read from the
+    original paper.</p>
+
+  <div class="gal" id="gallery"></div>
+
+  <div class="card" style="margin-top:20px">
+    <h4>How big is the table? A cost check for your own design</h4>
+    <div class="calc">
+      <div class="slider"><label for="cTq">Questions T<sub>q</sub></label><input id="cTq" type="range" min="1" max="4096" step="1" value="64"><span class="v" id="vTq"></span></div>
+      <div class="slider"><label for="cTkv">Tokens answered T<sub>kv</sub></label><input id="cTkv" type="range" min="10" max="50176" step="2" value="2484"><span class="v" id="vTkv"></span></div>
+      <div class="controls" style="margin:0">
+        <button class="ghost" id="pMetr">METR-LA window</button>
+        <button class="ghost" id="pPerc">Perceiver on ImageNet</button>
+        <button class="ghost" id="pDetr">DETR, 100 slots</button>
+      </div>
+    </div>
+    <div class="calcout" id="costOut" style="margin-top:10px"></div>
+    <p class="small">Entries per head per layer. The METR-LA window (207 detectors × 12 five-minute steps = 2,484 tokens) is the one from the
+      <i>Transformer as an architecture</i> companion. With self-attention it needs 6,170,256 entries. The DETR preset assumes a 1280 × 720 camera frame:
+      DETR’s backbone reduces each side by a factor of 32, which leaves 23 × 40 = 920 feature tokens.</p>
+  </div>
+</div></section>
+
+<!-- ============================ PAGE 5 ============================ -->
+<section class="page" id="p5"><div class="wrap">
+  <h2 class="sec">Where it breaks, measured on the merge model</h2>
+  <p class="lead">Every row below was measured on the same trained model you dragged around in tab 2. Each failure is a property of the
+    mechanism, not of this toy, and each one has a standard fix in the published systems.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>1 · The weights must sum to one</h4>
+      <p id="brkMap"></p>
+      <p class="small">Fix used in practice: give the model somewhere to put "nothing". DETR has a "no object" class for unused slots, and
+        language transformers park weight on separator tokens (the [SEP] sink you saw in the self-attention companion).</p>
+    </div>
+    <div class="card">
+      <h4>2 · Between two lanes, it averages</h4>
+      <p id="brkCut"></p>
+      <div class="tblwrap"><table class="t" id="cutTbl"></table></div>
+      <p class="small">Try it: tab 2 → “Cut-in in progress”, then drag the blue-outlined vehicle up and down.</p>
+    </div>
+    <div class="card">
+      <h4>3 · More vehicles than it ever saw</h4>
+      <p id="brkLen"></p>
+      <div class="tblwrap"><table class="t" id="lenTbl"></table></div>
+    </div>
+    <div class="card">
+      <h4>4 · Queries do not talk to each other</h4>
+      <p>Inside one cross-attention layer each row is computed on its own. Question 1 has no idea what question 2 found. Here that is harmless,
+        because one looks ahead and the other behind. In detection it is not: two of DETR's 100 slots can lock onto the same car. DETR therefore
+        alternates cross-attention with self-attention <em>among the queries</em> and trains with a one-to-one matching loss, so duplicate answers
+        are penalised.</p>
+      <h4>5 · Attention is not an explanation</h4>
+      <p>The weights here happen to be readable because the task is a clean selection. The cross-attention sanity-check lab (in development) shows a
+        camera-to-CAN model whose head-averaged map looks diffuse while one head routes almost perfectly. There, ablation and counterfactuals
+        were the evidence, not the picture.</p>
+    </div>
+  </div>
+
+  <h3>Fit card: cross-attention</h3>
+  <div class="fit">
+    <div>Idea in one sentence</div><div>A fixed set of questions takes a learned, content-dependent weighted average over a different set of tokens, so each question gets its own summary of the other source.</div>
+    <div>Why it works (the logic)</div><div>Scores are dot products between what the question looks for and what each token advertises. The softmax turns them into shares (an MNL over tokens), and the answer is the share-weighted report. Relevance is computed from the content, so the token that matters can change with every scene.</div>
+    <div>Fits these tasks</div><div>Fusing two sources (camera ↔ radar/CAN, image ↔ text, agent ↔ map); a fixed-size output from a variable-size input (BEV grid, N object slots, future horizons); compressing a huge input (a few latents over a whole detector network). Leverage labels: <b>extraction · prediction · classification</b>.</div>
+    <div>Needs this data</div><div>Paired examples of both sources, time-synchronised and in a shared coordinate frame, with labels only for the final answer. Thousands of scenes for a toy like this one; millions of frames for BEV perception (nuScenes, Waymo Open). Mostly held by OEMs, AV developers and the public datasets.</div>
+    <div>Breaks when</div><div>Nothing relevant is present and no token means “nothing here”; the relevant token is ambiguous (it averages); duplicated tokens (IIA); sources are not calibrated or synchronised (a 100 ms camera–radar offset at 30 m/s is 3 m); scenes far larger or stranger than training; attention maps are read as explanations.</div>
+    <div>Keep the classical method when</div><div>The selection rule is known and stable (lead-vehicle selection in ACC, gap acceptance for a merge assist): write the rule down, and it scores zero error at no training cost. Keep Kalman or track-level fusion when the sensors are few, well calibrated and need certifiable behaviour.</div>
+  </div>
+
+  <h3>Applications across the course domains</h3>
+  <div class="tblwrap"><table class="t">
+    <tr><th>Domain</th><th>Task</th><th>Who asks → who answers</th><th>Data</th><th>Classical baseline</th></tr>
+    <tr><td>ADAS / driving automation</td><td>Merge and cut-in assist</td><td>Ego intent queries → surrounding tracks + map</td><td>Radar/camera tracks, HD map; highD, Waymo Open Motion</td><td>Rule-based target selection + gap-acceptance model</td></tr>
+    <tr><td>ADAS perception</td><td>Camera-only BEV occupancy</td><td>BEV grid cells → 6 camera feature maps</td><td>Surround cameras + lidar labels (nuScenes)</td><td>IPM (inverse perspective mapping), lidar detection</td></tr>
+    <tr><td>Traffic flow / TSM&amp;O</td><td>15/30/60-min speed forecast</td><td>Future horizons → past detector window</td><td>Loop/radar detectors (METR-LA, PeMS, FDOT SunGuide)</td><td>Persistence, historical average, ARIMA</td></tr>
+    <tr><td>Agency practice / TIM</td><td>“Is the shoulder blocked?” on a CCTV frame</td><td>Question text → camera image patches</td><td>FL511 / TMC camera frames + operator logs</td><td>Operator watching the wall; video-analytics rules</td></tr>
+    <tr><td>Road safety</td><td>Crash narrative ↔ diagram consistency</td><td>Narrative tokens → diagram/image patches</td><td>Crash reports with diagrams</td><td>Manual QA/QC review</td></tr>
+    <tr><td>Air mobility</td><td>Drone route risk from airspace notices</td><td>Route segments → NOTAM / traffic tokens</td><td>Flight plans, NOTAMs, ADS-B</td><td>Geofence rules, separation minima</td></tr>
+  </table></div>
+
+  <h3>Check yourself</h3>
+  <ol class="checks">
+    <li>An ACC system selects its target vehicle with a hand-written rule that has worked for a decade. A vendor proposes replacing it with a
+      cross-attention target selector. What would you ask for before agreeing, and which ugly case from this tab would you test first?</li>
+    <li>You are forecasting speed at one detector 15, 30 and 60 minutes ahead from the last hour at 40 upstream and downstream detectors. What are
+      your queries, what are your keys and values, and how many rows does the attention table have? Why might the 60-minute row look further upstream
+      than the 15-minute row?</li>
+    <li>A roadside unit fuses two cameras with overlapping views through cross-attention. Queue lengths come out too high whenever the queue sits in the
+      overlap. Using tab 3, explain why, and name one fix.</li>
+  </ol>
+</div></section>
+
+<footer><div class="wrap">
+  AI for Mobility (CGN 6933), University of South Florida. The merge model is trained on synthetic scenes; the reproducer is
+  <span class="mono">cross_attention_merge_model.py</span>, and the page is built by <span class="mono">build_cross_attention_companion.py</span>.
+  Published figures in tab 4 are cited on each card.
+</div></footer>
+
+<script>
+const DATA = {"weights":{"Q":[[0.7920604944229126,-0.5128373503684998,0.8053627014160156,1.2415770292282104,-0.0294176135212183,-0.23287665843963623,0.717810869216919,2.168459892272949,-0.18193340301513672,-1.4129256010055542,-0.047204334288835526,-0.6836131811141968,-2.5584418773651123,-0.7368566989898682,0.07359839230775833,-0.09339924156665802],[-0.4696914553642273,-0.10099364817142487,-0.41527310013771057,-0.10198745876550674,0.9438132047653198,-0.1593722552061081,-0.410539448261261,-0.12759774923324585,-0.5920708179473877,-0.06398427486419678,-0.7569969892501831,-0.025556543841958046,0.20462451875209808,0.6856589317321777,0.5843856930732727,-0.3919322192668915]],"head":[[1.2746360301971436,1.2109291553497314,0.5908232927322388,-1.2473030090332031,-0.6700552105903625,0.5630510449409485,0.43410083651542664,-1.5932121276855469,4.9064812660217285,-0.7863804697990417,0.7213554382324219,-0.4032008647918701,-1.0137686729431152,-0.609153151512146,0.8210257887840271,0.7275767922401428],[1.4065600633621216,0.9128131866455078,1.448109745979309,-1.1165615320205688,-2.032392978668213,1.9205812215805054,1.8185312747955322,-0.8363381028175354,-4.146851062774658,-1.2024691104888916,1.600845217704773,-1.9889291524887085,-1.244600772857666,-1.937144160270691,1.5283852815628052,1.6741654872894287]],"hb":[-0.16452550888061523,0.7882073521614075],"embed.0.weight":[[0.06928829103708267,-0.6493943929672241,0.5311874747276306,-0.648838222026825,0.9053371548652649],[0.29880329966545105,0.19238081574440002,-1.0567288398742676,0.22278624773025513,-0.16697773337364197],[0.0815923735499382,0.3419666588306427,-0.28537070751190186,0.14359916746616364,0.973081111907959],[1.2077598571777344,-0.2107396274805069,0.34062477946281433,-0.5250210165977478,0.3219136595726013],[-0.6535240411758423,0.5308377146720886,0.0582943893969059,0.03784582391381264,0.4641638696193695],[0.23812225461006165,0.0970277488231659,-0.06675563752651215,-0.12237437814474106,-0.008419201709330082],[-0.9595661759376526,0.49227991700172424,0.08110285550355911,0.00787263922393322,0.5437712669372559],[-0.25778433680534363,0.3931944966316223,-0.1527239829301834,-0.056628357619047165,0.44919905066490173],[-0.24142999947071075,-0.3750065565109253,0.3115179240703583,0.11658366024494171,0.6685220003128052],[1.5271703004837036,0.5323883295059204,-1.045897126197815,-0.05685478448867798,0.005181245505809784],[0.29515597224235535,0.31720060110092163,0.5166746377944946,0.5239242911338806,-0.14200133085250854],[0.1773151010274887,-0.16244755685329437,0.08222667127847672,-0.023174084722995758,1.1289653778076172],[0.9189974665641785,-0.5686265230178833,0.8871272802352905,0.4072456359863281,0.03256380558013916],[1.7307891845703125,0.2811385691165924,-1.4268447160720825,-0.24546775221824646,0.005541734863072634],[-0.46307480335235596,0.393954336643219,-0.42634496092796326,-0.00725128035992384,0.5738228559494019],[0.03938978537917137,0.004047687165439129,-0.4180697798728943,-0.09606153517961502,-0.3019725978374481],[1.8831067085266113,0.44673678278923035,-1.3343050479888916,-0.13186493515968323,0.0035879213828593493],[-0.23612135648727417,0.2787846624851227,0.12290072441101074,-0.36189737915992737,0.47848403453826904],[0.8551040887832642,-0.5174322128295898,0.7378267645835876,-0.0282528605312109,0.015450449660420418],[0.13545867800712585,-0.7555546760559082,0.44080644845962524,-0.21565285325050354,0.2743823528289795],[-0.19065511226654053,0.3264859616756439,-0.7945106029510498,0.11892502009868622,0.8570738434791565],[0.061246734112501144,-0.14512576162815094,0.7079505324363708,-0.4414782226085663,0.01603524386882782],[1.6748861074447632,-0.12807488441467285,-0.216460719704628,0.17901815474033356,-0.03644273430109024],[0.3295036256313324,-1.0474778413772583,0.49331966042518616,-0.11603311449289322,0.9454373717308044],[1.5850369930267334,0.4093756377696991,-1.5089263916015625,0.005324169062077999,0.09939206391572952],[-0.7597589492797852,0.48531585931777954,0.3259652256965637,-0.815172553062439,0.09409724920988083],[-0.2354556918144226,0.43462061882019043,-0.584635853767395,-0.16549357771873474,0.7881854176521301],[0.2897968888282776,0.32118672132492065,-0.279528945684433,0.5139545798301697,0.3868666887283325],[-0.7424685955047607,0.2412574589252472,0.24621179699897766,-0.061372991651296616,0.36358121037483215],[1.1190986633300781,-0.5398851633071899,0.9875430464744568,0.3645542562007904,-0.012231445871293545],[1.0025506019592285,-0.7654926776885986,-1.327081322669983,0.19059012830257416,-0.007922491990029812],[-0.949966311454773,0.5343198180198669,-0.1622547060251236,0.07333115488290787,0.696407675743103]],"embed.0.bias":[-0.45932188630104065,0.7586446404457092,-0.048890769481658936,-0.1721409112215042,0.4322449862957001,0.8063239455223083,0.2543896436691284,0.12744203209877014,-0.15572476387023926,-0.4701603651046753,0.31988874077796936,0.3240491449832916,0.4282410442829132,-0.21059274673461914,-0.9615258574485779,-0.04310869425535202,-0.3718763589859009,0.3152652978897095,0.3963163197040558,0.18872258067131042,-0.5165507197380066,-0.12223757058382034,0.2403896450996399,-0.4935814440250397,-0.6695823073387146,0.19076289236545563,-0.045667584985494614,0.6892566680908203,0.3392886817455292,0.40036359429359436,-0.20368894934654236,0.07230877876281738],"embed.2.weight":[[1.071176290512085,-0.2917170822620392,0.14979396760463715,0.9156084060668945,0.3715006411075592,-0.20217463374137878,0.5608057975769043,0.007278685458004475,0.2483520805835724,0.026227211579680443,-0.2552088797092438,-0.5022054314613342,0.2588084638118744,0.29716384410858154,0.9148312211036682,-0.02950306423008442,0.22418226301670074,-0.006596683990210295,0.288863867521286,0.018784701824188232,-0.6259765625,-0.1480190008878708,-0.4700990617275238,-0.06508525460958481,0.5149216055870056,0.3566724359989166,-0.29852867126464844,0.16673050820827484,0.39088359475135803,0.3639424443244934,2.9810829162597656,0.5846049189567566],[-0.9498546123504639,0.4859711527824402,0.04992423206567764,-0.6988970041275024,-0.23176847398281097,-0.1315353810787201,-0.5104939341545105,0.1906716674566269,-0.11004660278558731,-0.7931629419326782,0.0105828195810318,0.4802478849887848,-0.5346823334693909,-1.0344741344451904,-0.8226603269577026,-0.11683990061283112,-0.9343527555465698,-0.05957856774330139,-0.850730836391449,-0.5058566927909851,0.6334614753723145,-0.17809654772281647,-0.09966035932302475,-0.2207610309123993,-1.1672413349151611,-0.491188108921051,0.15685077011585236,0.3517763912677765,-0.2792927324771881,-0.9194923639297485,-2.67450213432312,-0.3609856367111206],[0.24100467562675476,0.39091944694519043,0.07855997234582901,0.2743425965309143,-0.10402154177427292,-0.3929024338722229,0.1576707363128662,0.20796331763267517,0.27354320883750916,-2.1801376342773438,-0.10220523923635483,0.2594414949417114,-0.20428209006786346,-2.3037869930267334,-0.01344891358166933,0.03105323202908039,-2.1716647148132324,-0.035733744502067566,-0.26588764786720276,-0.5976999402046204,-0.35926535725593567,-0.46462544798851013,-1.1965937614440918,-0.29869502782821655,-1.7950176000595093,0.1101784035563469,-0.05252057686448097,0.31294336915016174,0.35592737793922424,-0.46977415680885315,0.8408746123313904,0.166697159409523],[0.2953163981437683,0.19897498190402985,-0.34911203384399414,0.010925835929811,-0.15293769538402557,-0.34215718507766724,0.22688832879066467,-0.11465763300657272,0.5509691834449768,-2.336843967437744,0.080387644469738,0.4547402262687683,-0.21946756541728973,-2.7793798446655273,0.03272665664553642,-0.06486634910106659,-2.3561758995056152,0.0009119460009969771,0.15233805775642395,-0.5613588690757751,-0.39986544847488403,-0.2824566960334778,-1.0922812223434448,-0.4217473268508911,-2.1988630294799805,0.08015793561935425,-0.13076329231262207,0.46816885471343994,0.09220647066831589,-0.36115503311157227,1.3294916152954102,0.23006272315979004],[1.0069092512130737,0.11493580043315887,-0.2007615715265274,0.7927674651145935,-0.21237781643867493,-0.34376758337020874,-0.18964031338691711,0.03538012504577637,0.2830793559551239,-2.244997501373291,0.01700863614678383,0.4062997102737427,-0.20320525765419006,-2.6030631065368652,-0.43660110235214233,-0.0012085088528692722,-2.2057158946990967,-0.3081282079219818,-0.07999522984027863,-0.44399794936180115,0.058598242700099945,-0.6143085360527039,-0.9310662150382996,-0.14264902472496033,-1.8699184656143188,-0.18289430439472198,-0.02950550802052021,0.2691032886505127,-0.014466344378888607,-0.2792760133743286,0.22854197025299072,-0.02091844007372856],[-1.1025739908218384,0.3670719861984253,0.1646173596382141,-0.8438155055046082,-0.25553157925605774,-0.07389650493860245,-0.41307711601257324,-0.07146701961755753,-0.16953839361667633,0.24995338916778564,0.0713547095656395,0.3514196574687958,-0.34650227427482605,0.5015448927879333,-1.168216586112976,-0.09607606381177902,0.1098984032869339,-0.0858498066663742,-0.6394849419593811,-0.2948389947414398,0.731991708278656,-0.01283402182161808,0.2917635142803192,0.14109177887439728,-0.1216990277171135,-0.5356205105781555,0.23068661987781525,0.301800012588501,-0.29924067854881287,-0.77149498462677,-3.27024507522583,-0.4458908140659332],[0.7870269417762756,-0.4693620502948761,0.004623899236321449,0.5779052972793579,0.27186304330825806,-0.006536381784826517,0.3565791845321655,-0.0390530489385128,-0.12070684880018234,1.2530434131622314,0.061353787779808044,-0.6028171181678772,0.483561635017395,1.6435297727584839,0.6381895542144775,0.11846179515123367,1.192935824394226,0.23868697881698608,0.5533860921859741,0.5074632167816162,-0.4968883693218231,0.37933245301246643,0.2543541491031647,0.13048624992370605,1.6549843549728394,0.31105613708496094,-0.3381457030773163,-0.42537233233451843,0.16364802420139313,0.5660673975944519,2.1766059398651123,0.2777821123600006],[0.7927845120429993,0.2827037274837494,-0.43717294931411743,0.6889238357543945,-0.12010081112384796,-0.34117627143859863,-0.014859171584248543,0.06893379986286163,0.31839463114738464,-2.466386079788208,0.2177402526140213,0.40395665168762207,-0.38862818479537964,-2.524445056915283,-0.4493403136730194,0.12969937920570374,-2.1765143871307373,-0.19469082355499268,-0.2259412556886673,-0.21969012916088104,-0.02537347562611103,-0.5062143802642822,-1.043053388595581,-0.3394280970096588,-2.067996025085449,-0.11013588309288025,0.1679411083459854,0.3323938250541687,-0.10877300798892975,-0.3305777609348297,0.0179702490568161,0.01125627662986517],[0.7181180715560913,-0.46272528171539307,0.26270249485969543,0.9544787406921387,0.21793986856937408,-0.12228158116340637,0.4038536250591278,-0.07742306590080261,0.2626761794090271,0.5005523562431335,-0.1895865797996521,-0.10417742282152176,0.22187098860740662,0.6017971634864807,0.5954569578170776,-0.036635592579841614,0.6072120070457458,0.026520125567913055,0.3549168109893799,-0.04147286340594292,-0.5494320392608643,0.0547914020717144,-0.3267591893672943,-0.19174987077713013,0.8939921259880066,0.23940718173980713,-0.292084664106369,-0.017023630440235138,0.08818057179450989,0.3160839378833771,2.7296855449676514,0.40531492233276367],[0.27900516986846924,0.41962090134620667,-0.18853002786636353,0.2683866024017334,-0.3898017108440399,-0.13775594532489777,0.09702827781438828,0.14268116652965546,0.38026487827301025,-2.3692853450775146,0.0802125409245491,0.47203269600868225,-0.49114057421684265,-2.952529191970825,-0.32974836230278015,-0.16670027375221252,-2.50345516204834,-0.28125911951065063,-0.18763616681098938,-0.5226829648017883,-0.2206891030073166,-0.18314090371131897,-1.0550485849380493,-0.3244883716106415,-2.3235325813293457,0.13135136663913727,-0.11486797034740448,0.16601663827896118,0.07830500602722168,-0.2112884819507599,1.0832607746124268,-0.09219125658273697],[-0.2638600170612335,-0.3155279755592346,0.21997174620628357,-0.5141565799713135,0.44162994623184204,0.31451961398124695,0.330025851726532,-0.03897080942988396,-0.3597467839717865,2.5209696292877197,-0.21178047358989716,-0.5365318059921265,0.2782152593135834,2.8444435596466064,0.09213591367006302,-0.15277071297168732,2.4828405380249023,0.036662038415670395,0.17817340791225433,0.5738469958305359,0.19294345378875732,0.2619789242744446,1.0383281707763672,0.4126696288585663,1.959609866142273,0.14707928895950317,-0.15249499678611755,-0.35165414214134216,-0.061049576848745346,0.5169164538383484,-0.3973170816898346,0.010306542739272118],[0.13290762901306152,0.3883073925971985,-0.1565352976322174,0.04991879686713219,-0.06356286257505417,-0.16478244960308075,-0.0676129087805748,0.059962715953588486,0.5693138241767883,-2.340038299560547,0.01602013222873211,0.3942226469516754,-0.17946244776248932,-2.6455516815185547,-0.10328682512044907,-0.034027621150016785,-2.2545759677886963,-0.1796039342880249,0.08830127120018005,-0.5760124921798706,-0.562562108039856,-0.3542066514492035,-1.1804872751235962,-0.25191497802734375,-2.2279250621795654,0.15380790829658508,-0.18273001909255981,0.4076845943927765,0.3151145577430725,-0.3873067796230316,0.9676539897918701,0.20864982903003693],[-1.0359501838684082,0.6183556914329529,-0.12772206962108612,-0.9049047827720642,-0.301194429397583,0.04879249632358551,-0.6911950707435608,0.12639948725700378,-0.17024607956409454,-0.6325886249542236,0.17379771173000336,0.3305172920227051,-0.4837847054004669,-0.7562808394432068,-0.76578289270401,0.09603410214185715,-0.7140615582466125,-0.019059352576732635,-0.5406286120414734,-0.18815678358078003,0.7019768953323364,-0.1038084551692009,0.05450359731912613,-0.028378546237945557,-0.8269080519676208,-0.33856379985809326,0.28013119101524353,0.4164928197860718,-0.36170461773872375,-0.7326931357383728,-2.6063990592956543,-0.6831970810890198],[-0.9009182453155518,0.046987034380435944,-0.607248067855835,-1.2645877599716187,-0.2805337607860565,0.1867450475692749,-0.5726545453071594,0.29859432578086853,-0.47972795367240906,1.0421218872070312,0.265719473361969,0.3726213872432709,-0.28928714990615845,1.1522635221481323,-0.8513360023498535,0.06769083440303802,0.8634398579597473,-0.1479330062866211,-0.29279279708862305,0.20061777532100677,0.7401384711265564,0.3835490345954895,0.690597653388977,0.6722345948219299,0.5318890810012817,-0.34645646810531616,0.4626389443874359,-0.5151839852333069,-0.40315061807632446,-0.5693482160568237,-2.5848944187164307,-0.5504850149154663],[-1.0888627767562866,0.5768044590950012,-0.08517584949731827,-1.0542676448822021,-0.3538060486316681,-0.07146881520748138,-0.541133463382721,0.11918905377388,-0.3018944561481476,-0.2586769759654999,0.10641742497682571,0.49744275212287903,-0.22502250969409943,-0.3039001524448395,-1.140939712524414,0.056559763848781586,-0.26500868797302246,-0.041183724999427795,-0.6365223526954651,-0.12522666156291962,0.7005592584609985,0.022303853183984756,0.04337133839726448,-0.01434791088104248,-0.7300596237182617,-0.6006779670715332,0.1450548619031906,0.27002671360969543,-0.26406100392341614,-0.7369260787963867,-2.771955966949463,-0.46356093883514404],[1.0485817193984985,-0.49305349588394165,0.029365064576268196,1.0152565240859985,0.3031651973724365,0.022467155009508133,0.5656458139419556,-0.317300409078598,0.3284282088279724,1.0446815490722656,-0.31948065757751465,-0.5083246827125549,0.43047964572906494,1.2069942951202393,0.8817640542984009,-0.13206861913204193,0.9853342175483704,0.03002973087131977,0.8487023115158081,0.13219502568244934,-0.5138394832611084,0.2851691246032715,0.14778603613376617,0.11574843525886536,1.3403137922286987,0.6689455509185791,-0.32043755054473877,-0.3468859791755676,0.5619016289710999,0.6452760696411133,2.218890905380249,0.5455420613288879]],"embed.2.bias":[-0.15470963716506958,0.021370798349380493,-0.12805704772472382,-0.004770292434841394,-0.06258536875247955,-0.09519010782241821,-0.06341318041086197,0.0435318723320961,0.05836215987801552,-0.14494448900222778,0.1716480255126953,0.1133417934179306,-0.15354566276073456,0.15187500417232513,-0.04730600863695145,-0.09797263890504837],"Wk.weight":[[-0.302807480096817,0.23863114416599274,-0.2545441687107086,-0.13568641245365143,-0.12918958067893982,1.068759560585022,-0.19279764592647552,-0.39371612668037415,-0.10733868926763535,-0.49322354793548584,0.26918667554855347,-0.4475034773349762,0.20664826035499573,0.7695778012275696,0.20224429666996002,-0.3346833288669586],[0.9170609712600708,-0.786615252494812,-0.2770801782608032,-0.05555885285139084,-0.08150643110275269,-1.350213885307312,0.26322251558303833,-0.18897143006324768,0.4763224124908447,-0.27722811698913574,0.14875535666942596,-0.033576566725969315,-1.201206088066101,-0.9271047711372375,-0.8232442140579224,1.152327299118042],[-0.5788087844848633,0.3004973828792572,-0.3558831810951233,-0.3482680320739746,-0.11889417469501495,0.9311668276786804,-0.22863340377807617,-0.10014452785253525,-0.016747962683439255,-0.062049202620983124,0.10185012221336365,0.07548631727695465,0.4104318916797638,0.4216165840625763,0.5890491604804993,-0.30959150195121765],[-0.5452115535736084,0.4293281137943268,-0.08568733930587769,-0.09489796310663223,0.02869175747036934,1.0962642431259155,-0.031651586294174194,0.009553682059049606,-0.30278173089027405,0.011194177903234959,0.14688363671302795,-0.3113759458065033,0.675230085849762,0.7501370310783386,0.787172794342041,-0.38289883732795715],[-0.34634074568748474,0.2224855273962021,0.7591166496276855,0.9148463606834412,0.8485103845596313,0.2716978192329407,-0.6022481322288513,0.8685323596000671,-0.5634433031082153,0.7507871985435486,-0.517429530620575,0.5581369400024414,0.24265465140342712,-0.0013683638535439968,0.36067917943000793,-0.6157148480415344],[0.7119860053062439,-0.5822144746780396,-0.45427635312080383,-0.35743284225463867,-0.5921177268028259,-1.2056535482406616,0.7948589324951172,-0.22362126410007477,0.8801969885826111,-0.23559251427650452,0.6139745116233826,-0.35508668422698975,-1.1749719381332397,-0.9419289827346802,-1.2352298498153687,1.347534418106079],[-0.44821715354919434,0.011096167378127575,-0.17825011909008026,-0.43777236342430115,-0.06508934497833252,1.134952425956726,-0.09068067371845245,-0.17208731174468994,-0.05578818544745445,-0.22863738238811493,0.19670745730400085,-0.2870640456676483,0.19769412279129028,0.6659244298934937,0.35315364599227905,-0.16159498691558838],[-0.701643705368042,0.5588054656982422,0.05302128568291664,-0.3752310872077942,-0.3121766448020935,1.5074790716171265,-0.3591803014278412,0.13898980617523193,-0.40672770142555237,-0.07421736419200897,0.10104842483997345,-0.10398633033037186,0.6572470664978027,0.8617570996284485,0.5757243037223816,-0.5068102478981018],[0.5194107890129089,-0.6644991040229797,-0.6969932913780212,-0.7052686810493469,-0.7070765495300293,-0.41587039828300476,0.5736023783683777,-0.4988797903060913,0.41994696855545044,-0.5811260342597961,0.604330837726593,-0.2754721939563751,-0.7307308912277222,-0.5466190576553345,-0.5450707674026489,0.6362947225570679],[0.7308804988861084,-0.7703940868377686,0.2770935595035553,0.09541019797325134,0.07140219211578369,-1.8339970111846924,0.11546284705400467,0.14962485432624817,0.34161102771759033,0.11009756475687027,0.07241442799568176,0.13790668547153473,-1.1866918802261353,-0.6751279830932617,-1.1000789403915405,0.9966310858726501],[0.598844051361084,-0.5355377793312073,-0.5418972373008728,-0.47658437490463257,-0.7593934535980225,-0.2824287414550781,0.674724817276001,-0.7906491756439209,0.5307329297065735,-0.5036208033561707,0.41108542680740356,-0.8180522918701172,-0.13452433049678802,-0.26287466287612915,-0.3275569975376129,0.5947238206863403],[0.6753303408622742,-0.6129101514816284,0.14916348457336426,0.023139163851737976,0.07305814325809479,-1.6589207649230957,0.2466491460800171,-0.07032550871372223,0.1709328591823578,-0.09810221195220947,-0.09850698709487915,0.025684120133519173,-0.6288000345230103,-0.5932222604751587,-1.0156676769256592,0.6593729853630066],[0.7676719427108765,-0.4775581955909729,0.05357472971081734,0.29979395866394043,-0.10448333621025085,-1.5069023370742798,0.22504112124443054,-0.0009734088671393692,0.3205524682998657,0.4011327624320984,0.06842708587646484,-0.020856397226452827,-0.4240020215511322,-0.45943862199783325,-0.7158495783805847,0.27602827548980713],[0.49048691987991333,-0.09394068270921707,0.25486844778060913,0.10246726125478745,0.21373732388019562,-0.9347406625747681,0.11652528494596481,0.17157132923603058,0.2277085781097412,0.21294310688972473,-0.32497653365135193,0.3779304027557373,-0.014953953213989735,-0.3791896402835846,-0.5066942572593689,0.028140781447291374],[-0.4783323407173157,0.3266414701938629,0.5829194784164429,0.6427044868469238,0.7758916616439819,0.3877581059932709,-0.6836162805557251,0.3403547406196594,-0.5659432411193848,0.7190524339675903,-0.5490630865097046,0.6800231337547302,0.46196433901786804,0.163085475564003,0.5848920345306396,-0.6511688232421875],[0.41774746775627136,-0.37264156341552734,-0.5642672181129456,-0.6158430576324463,-0.29062849283218384,-0.5766922831535339,0.5067847371101379,-0.6061736345291138,0.45398226380348206,-0.5880525708198547,0.4671894609928131,-0.4959041476249695,-0.3378129005432129,-0.5507618188858032,-0.5529516935348511,0.5773929953575134]],"Wv.weight":[[-1.0679959058761597,-0.7502096891403198,1.3662261962890625,1.487876296043396,2.1556155681610107],[-0.8721446394920349,-0.40381744503974915,1.3620848655700684,2.022204875946045,2.9670400619506836],[-1.7606086730957031,-0.951632559299469,1.2780283689498901,2.7917380332946777,1.8092249631881714],[1.2539068460464478,0.31695571541786194,-1.9098652601242065,-1.816497564315796,-2.8238117694854736],[2.0758678913116455,0.776435375213623,-1.538009524345398,-2.9996871948242188,-1.7747840881347656],[-2.011958360671997,-0.8386074304580688,1.3726394176483154,2.433054208755493,1.472915530204773],[-1.2042670249938965,-0.895792543888092,1.5588098764419556,3.584625720977783,1.4076428413391113],[0.2293504923582077,0.2719949185848236,-1.6004552841186523,-1.5956933498382568,-2.856041669845581],[2.521212577819824,2.3508782386779785,-2.0098092555999756,-4.743553161621094,7.547766208648682],[0.5442394614219666,0.1616981327533722,-1.4713212251663208,-2.1326851844787598,-1.992767572402954],[-1.5782984495162964,-0.4835854172706604,1.5052810907363892,2.642256021499634,1.940343976020813],[2.235727071762085,0.41481465101242065,-1.0623894929885864,-2.6361193656921387,-1.2858812808990479],[1.142675518989563,0.694903552532196,-1.246515154838562,-2.2986912727355957,-2.4007718563079834],[1.5266222953796387,0.7235841155052185,-1.191643476486206,-2.7534568309783936,-1.5238330364227295],[-1.5519903898239136,-0.20020155608654022,1.78285551071167,2.0309195518493652,1.8951247930526733],[-1.8153330087661743,-1.13869309425354,1.5019488334655762,2.7988741397857666,2.12919545173645]],"Wv.bias":[0.22722351551055908,0.2602013647556305,0.3531608283519745,-0.00336469616740942,-0.34205180406570435,0.6976594924926758,0.7045407891273499,0.13214385509490967,-0.7959734201431274,-0.6260702013969421,0.4045189917087555,-0.7605140805244446,-0.190382182598114,-0.6243973970413208,0.2666679620742798,0.7061976790428162]},"results":{"meanpool":{"mae_q1_mph":6.362756252288818,"mae_q2_m":8.09144401550293},"base_posted":{"mae_q1_mph":14.863744276773929,"mae_q2_m":40.93680205323696},"base_anylane":{"mae_q1_mph":6.424946510939438,"mae_q2_m":21.874179889748305},"no_leader_share":0.2828,"no_lag_share":0.2823,"params_meanpool":1330,"test_n":20000,"xattn":{"mae_q1_mph":1.4317282438278198,"mae_q2_m":2.020987033843994,"top1_q1":0.956849992275238,"top1_q2":0.7929499745368958,"mass_q1":0.8984562754631042,"mass_q2":0.6984236836433411},"params_xattn":1138,"by_n":{"1":{"mae_q1_mph":0.9024325013160706,"mae_q2_m":1.7340997457504272,"top1_q1":0.9980000257492065,"top1_q2":0.9247999787330627,"mass_q1":0.9873836040496826,"mass_q2":0.9135382771492004},"2":{"mae_q1_mph":1.0731710195541382,"mae_q2_m":1.8290375471115112,"top1_q1":0.9945999979972839,"top1_q2":0.8528000116348267,"mass_q1":0.9734813570976257,"mass_q2":0.8359807729721069},"8":{"mae_q1_mph":1.604738473892212,"mae_q2_m":2.0895111560821533,"top1_q1":0.9218000173568726,"top1_q2":0.7954000234603882,"mass_q1":0.8379256725311279,"mass_q2":0.6425241827964783},"12":{"mae_q1_mph":1.8077383041381836,"mae_q2_m":2.2801942825317383,"top1_q1":0.8398000001907349,"top1_q2":0.8817999958992004,"mass_q1":0.7308178544044495,"mass_q2":0.6203725337982178},"16":{"mae_q1_mph":2.0959699153900146,"mae_q2_m":2.5274062156677246,"top1_q1":0.7391999959945679,"top1_q2":0.9412000179290771,"mass_q1":0.6117486953735352,"mass_q2":0.596402645111084},"24":{"mae_q1_mph":2.440018892288208,"mae_q2_m":2.7606201171875,"top1_q1":0.551800012588501,"top1_q2":0.9941999912261963,"mass_q1":0.4303562045097351,"mass_q2":0.5365442633628845}},"ablate_map":{"scenes":5670,"mae_q1_with_map":1.1175053119659424,"mae_q1_without_map":18.982561111450195},"perm_maxdiff":2.288818359375e-05},"seeds":[{"mae_q1_mph":10.669791221618652,"mae_q2_m":1.1809537410736084,"top1_q1":0.16064999997615814,"top1_q2":0.7973999977111816,"mass_q1":0.14262951910495758,"mass_q2":0.7201375961303711,"seed":1,"ok":false},{"mae_q1_mph":1.4317282438278198,"mae_q2_m":2.020987033843994,"top1_q1":0.956849992275238,"top1_q2":0.7929499745368958,"mass_q1":0.8984562754631042,"mass_q2":0.6984236836433411,"seed":2,"ok":true},{"mae_q1_mph":3.9375827312469482,"mae_q2_m":2.308375835418701,"top1_q1":0.5898500084877014,"top1_q2":0.710349977016449,"mass_q1":0.5885385274887085,"mass_q2":0.6418752670288086,"seed":3,"ok":true},{"mae_q1_mph":3.9343838691711426,"mae_q2_m":2.312445878982544,"top1_q1":0.5903499722480774,"top1_q2":0.7129499912261963,"mass_q1":0.5804465413093567,"mass_q2":0.6428616046905518,"seed":4,"ok":true}],"chosen_seed":2,"default":{"y":[38.848636627197266,21.227792739868164],"A":[[0.966869056224823,0.03120833821594715,3.5940911402576603e-06,5.550979055753136e-13,5.291249855030938e-27,9.461399249399346e-26,0.0019190601306036115],[3.4995365268554023e-15,3.4459841891320945e-34,0.7798340916633606,0.08102995902299881,3.259155619161902e-06,6.182811921462417e-05,0.13907088339328766]],"top_q1":0,"top_q2":2},"cutin":{"vE":55,"vA":38,"rows":[{"p":0,"label":"in lane 2","y":38.848636627197266,"aE":1.2775088136759135e-27,"aA":0.966869056224823},{"p":0.25,"label":"a quarter of the way over","y":38.848636627197266,"aE":1.7394780293584052e-21,"aA":0.966869056224823},{"p":0.5,"label":"halfway","y":38.848636627197266,"aE":1.2733379380471064e-14,"aA":0.966869056224823},{"p":0.75,"label":"three quarters over","y":38.848636627197266,"aE":4.689621277975675e-07,"aA":0.9668685793876648},{"p":1,"label":"fully in lane 1","y":50.00865173339844,"aE":0.6882867217063904,"aA":0.3013858199119568}]},"ref":[{"veh":[[98.62634872580404,2,18.545233943513853],[26.895283496928528,2,42.6774974108511],[-4.207493431781657,2,40.13373043558749],[-75.11549496440514,1,27.635928337026016],[-16.126452945947406,1,14.313038898495284],[41.16744658197325,1,34.278933879962985],[15.719805824367342,1,24.896512590699178]],"posted":70,"y":[29.420541763305664,15.424662590026855],"A":[[3.38008216366743e-27,1.0578211819633692e-25,9.640324982136083e-25,1.0743056428176925e-13,2.857458184735151e-06,0.29535701870918274,0.7036973834037781,0.0009428084013052285],[1.627462379270861e-12,5.186985845284653e-07,1.6137793863890693e-05,0.06443667411804199,0.8012025356292725,8.88912109051125e-18,5.202809916227125e-07,0.13434365391731262]]},{"veh":[[-45.34105333860393,2,64.0287951800953],[83.49159955294951,2,67.63788340747472],[-96.73836187268819,2,69.04315050100043],[14.415468012294127,2,64.75937947544514]],"posted":55,"y":[55.83125305175781,100.14877319335938],"A":[[2.603654547558901e-24,9.437097653508774e-29,1.6966475222847488e-26,1.5592968238500598e-26,1.0],[0.0005313762812875211,3.3627436391014953e-09,0.003996769431978464,1.7324968212051317e-05,0.9954545497894287]]},{"veh":[[93.88170157331174,2,26.537602667758396],[52.27374279921267,1,20.43154165390126],[-104.4665133175428,1,29.17415840465774],[-29.433155829376346,2,37.88206792239133],[4.590600976634761,1,32.554656918088995],[-110.93189946427097,2,36.413779936042786]],"posted":70,"y":[22.371789932250977,95.74290466308594],"A":[[3.5981494334805636e-27,0.9561558961868286,5.064365323880384e-18,1.0520767155869963e-22,0.041213344782590866,4.077661955170737e-25,0.0026306866202503443],[2.0562569702509137e-10,1.3366266317350716e-21,0.08335307985544205,0.0002709803229663521,0.017570365220308304,0.006183176301419735,0.8926223516464233]]},{"veh":[[-72.65003903637079,2,74.47155334367305],[-88.1841195092212,2,68.83750357116828],[107.28534238318161,1,73.496545069563],[59.53522915897483,1,62.10649365383927]],"posted":55,"y":[60.163230895996094,100.13472747802734],"A":[[2.5612672700213635e-28,5.667439343655666e-28,0.00015653888112865388,0.9821248054504395,0.017718687653541565],[0.0015824227593839169,0.002861370798200369,5.605193857299268e-45,9.03332609785246e-25,0.9955561757087708]]},{"veh":[[-75.0065419916665,2,32.10475213948976],[29.691939318844476,2,38.37529883922441],[19.231629496749093,2,35.10058082445101],[-11.32392141528301,1,27.720516611694332],[-21.239396221567844,1,24.918068093020775],[-105.12812252775974,2,29.127548951658806]],"posted":55,"y":[54.762184143066406,8.603582382202148],"A":[[1.6512363564716802e-20,1.1674580990483906e-21,6.467345950472442e-21,0.04031822085380554,0.0017907001310959458,4.859698215652542e-21,0.9578911066055298],[0.00011727089440682903,1.8339949292567326e-07,6.513986932077387e-07,0.5714221596717834,0.35590657591819763,0.00036558773717842996,0.07218747586011887]]},{"veh":[[81.67004501623512,2,40.95242654176594],[-56.89165545868724,1,41.23144584231386],[-18.37007045789572,1,44.11526686683803],[12.307913766847719,2,41.80018264183483]],"posted":65,"y":[64.97122192382812,18.22631072998047],"A":[[4.086486843509831e-25,4.1601328604201626e-08,0.008347027003765106,2.7115885713154206e-22,0.9916529059410095],[3.4851574404193286e-10,0.12314984947443008,0.7696352601051331,2.381140575380414e-06,0.10721246898174286]]},{"veh":[[119.38334579202154,2,27.507132361996707],[-45.49594988302273,1,21.907105516476005],[15.207284337116107,1,39.98237702914911],[-60.4129100210165,1,17.69841226892295],[91.75229752887503,1,18.88783600306856]],"posted":55,"y":[40.46923828125,40.799129486083984],"A":[[1.528158830871241e-30,5.219833454361833e-10,0.9710827469825745,4.820991262449725e-12,0.028450490906834602,0.0004667902539949864],[1.4509894364810316e-19,0.4736792743206024,1.5579986438751803e-06,0.2323693037033081,8.762387961047833e-39,0.29394975304603577]]},{"veh":[[40.65336558304034,1,54.03790685546872],[78.49708289925707,2,56.31898237220297],[10.379418015858363,2,66.3090628667399],[93.45065649115935,1,62.02204256110627]],"posted":55,"y":[53.456974029541016,100.11555480957031],"A":[[0.9781729578971863,4.2959793339501683e-29,3.418578915287368e-29,0.018268028274178505,0.0035589500330388546],[8.85276220125036e-17,5.997122354273188e-09,2.878927807614673e-05,4.47984749436008e-39,0.9999711513519287]]},{"veh":[[98.93977077839918,1,31.76174408134428],[36.501461587625755,2,44.521799855054496],[50.23885711230511,1,14.987428149417394],[-49.433599624741376,2,26.170936779080442]],"posted":70,"y":[16.792234420776367,102.6869125366211],"A":[[0.0015164355281740427,3.7677087680076025e-26,0.9975267052650452,6.595970718188912e-22,0.0009569567628204823],[2.7145953850900356e-41,1.2025572004858986e-06,1.1138293909581957e-20,0.0006553334533236921,0.9993434548377991]]},{"veh":[[50.684566803609926,2,40.48296582266578],[10.084634282204206,2,45.20482861977807],[37.49124062824606,1,39.08775943332396],[-51.25794491721115,1,42.161276080115364]],"posted":70,"y":[39.62975311279297,52.019535064697266],"A":[[1.2547278896989708e-25,1.5122212103673257e-25,0.9971039891242981,7.736471463459793e-10,0.0028960388153791428],[7.550402614242557e-08,1.1556925528566353e-05,8.771599504244453e-16,0.6143919825553894,0.3855963349342346]]},{"veh":[[-64.77755662625998,1,41.45713781609091],[-57.85488408281595,2,33.75499690605923],[-96.96188631987712,1,36.57784479755952],[-20.698242762748322,1,42.91417822985113],[-116.89254070328941,1,38.87961587919078],[2.323830086458557,2,46.09761514188859],[-14.423724206074468,2,38.46403264324661],[-72.39908730833562,2,39.32272512960222]],"posted":55,"y":[55.77162551879883,20.98578643798828],"A":[[2.8034075061356134e-09,3.466814436729467e-20,2.3095356193898048e-14,0.005491115152835846,8.709099292259498e-18,6.84768247531075e-23,1.135051581990296e-20,1.3898610355904007e-21,0.9945089221000671],[0.09115671366453171,0.00010517144983168691,0.016762616112828255,0.7607752084732056,0.006072069518268108,8.974586307886057e-06,2.034040699072648e-05,0.00018153809651266783,0.12491731345653534]]},{"veh":[[39.90484272440304,2,62.18697290046392],[-75.71008389751418,1,47.79648093668268],[-118.0295806054347,1,39.52371986692913]],"posted":65,"y":[65.13079071044922,79.12242889404297],"A":[[1.488135561297698e-26,1.4564353195689606e-11,3.7500464680663024e-18,1.0],[5.322432343746186e-07,0.3015529215335846,0.032157499343156815,0.6662890315055847]]},{"veh":[[76.29290682628385,1,49.277266157844494],[-55.08136077449579,1,56.652075807642106],[91.32024725685298,1,52.678517371160886],[-29.23291727639173,1,57.16846243291635],[46.69374966105613,2,57.83116520711348]],"posted":45,"y":[48.36685562133789,27.05324935913086],"A":[[0.7479200959205627,5.297255412095581e-10,0.23180490732192993,9.619739103072789e-06,3.6192522330672034e-27,0.020265396684408188],[1.139959891280899e-32,0.17843759059906006,5.1001841076366404e-39,0.6806551218032837,4.462510005964759e-08,0.14090724289417267]]},{"veh":[[-69.14690388855871,1,55.74007055750616],[-68.31371164994742,2,65.2213270169165],[-87.23217597606214,2,56.19707653376477],[70.61602646165844,2,49.08301183518664]],"posted":55,"y":[55.83125305175781,73.11796569824219],"A":[[9.716159821149262e-11,3.855046393793499e-25,2.0431174012253065e-24,3.984617043995083e-25,1.0],[0.3880155086517334,0.0007997421198524535,0.0016366327181458473,9.468200445894581e-09,0.6095480918884277]]},{"veh":[[-74.73770442402424,1,60.0713284986249],[-110.96158655761234,2,68.11262989337592],[40.06707840488639,2,59.00492847712289]],"posted":45,"y":[46.53171157836914,77.94905090332031],"A":[[9.582539622909891e-12,1.2459856930879687e-26,1.2193490804735222e-25,1.0],[0.3176014721393585,0.004523579962551594,4.816765226678399e-07,0.6778744459152222]]},{"veh":[[-58.45221137564897,1,56.373088787771955],[25.59974481604047,1,68.74221811530974],[13.141906593643057,1,71.70902633039924],[-45.906608371410385,1,58.26160260212756],[-99.2297684674582,2,72.51877690944147],[-68.96493528117333,2,64.28864971254885],[-99.2415294682274,1,58.211713538630185],[-91.03786780471779,1,58.68376051753456]],"posted":55,"y":[69.41588592529297,40.8441162109375],"A":[[5.851683287233511e-12,0.38901486992836,0.6098904609680176,5.620906518011282e-10,5.107680188447205e-30,5.466593257922757e-28,8.113327108959125e-19,1.757954843480359e-17,0.0010946292895823717],[0.24085654318332672,4.2789684989719134e-11,8.129699381242972e-06,0.46601784229278564,0.0009678599308244884,0.0002912050113081932,0.029609328135848045,0.045373089611530304,0.21687600016593933]]},{"veh":[[-50.168051179365804,1,44.70233625372416],[78.23675591555511,1,37.61068372583808],[-64.24733415181993,2,48.40901787651127],[-112.06553864193847,1,44.47832444901053],[104.11400171675461,2,54.51020714647788],[33.44413831925931,2,58.37960464159577]],"posted":70,"y":[38.37641525268555,50.658878326416016],"A":[[1.4080541177463601e-08,0.9539010524749756,3.249373880514392e-24,7.893939681958397e-19,1.9963843737981205e-30,3.7336859829448375e-27,0.046098943799734116],[0.6137996315956116,5.3784185662057124e-33,0.00041628332110121846,0.02502855472266674,7.98810751703391e-14,6.437841761908203e-07,0.3607548773288727]]},{"veh":[[-57.5268843337924,1,17.495810872818627],[99.6504302251654,1,24.531067781552498],[58.81834540269074,1,20.22563339257552],[50.2196520779691,2,21.653761406018095],[90.743264555422,1,21.341590224184444]],"posted":65,"y":[21.445463180541992,61.549537658691406],"A":[[4.7105451483897554e-11,0.003478684462606907,0.8849281072616577,1.5359933404752391e-22,0.10887334495782852,0.0027198498137295246],[0.48494118452072144,6.600115766969888e-42,1.3062126501591873e-24,9.321789917748902e-08,4.305612845902861e-38,0.5150587558746338]]},{"veh":[[41.58263711550768,1,60.438848243042436],[-104.30566383525183,1,63.97914319472214],[59.838338104821474,1,57.5097805941967],[83.14314507972176,2,64.2707809072804],[30.0054759114432,2,67.82707450716009],[75.72621446477538,1,56.291476822843954],[-117.51044310228137,2,65.87969633793642],[-113.19091172113997,1,59.72730694564061]],"posted":45,"y":[58.15117263793945,91.45829010009766],"A":[[0.7069074511528015,1.8429783088016352e-19,0.21666277945041656,1.1367154504654967e-30,9.314592409475117e-30,0.07398343086242676,4.0683308034049513e-29,1.0280905856592972e-20,0.0024462600704282522],[2.790811764675104e-17,0.08853057026863098,5.6704411481411665e-25,2.8024085274580557e-09,2.130816938006319e-06,1.1355068541937553e-31,0.007281291298568249,0.05447288602590561,0.849713146686554]]},{"veh":[[-67.18955537885458,2,19.039596930979027],[39.48707629849184,2,28.033655199281352],[-23.61743926339099,2,13.98065371992046]],"posted":45,"y":[46.53171157836914,98.37799072265625],"A":[[5.2389777745163464e-18,3.068329223919996e-20,9.787672169804334e-16,1.0],[0.001019533141516149,6.609910769839189e-07,0.00018727162387222052,0.9987925291061401]]},{"veh":[[-105.62863687297647,2,67.15884852487889],[-8.27843680678086,2,59.95300736804571],[105.2761558410229,1,67.71304969211076],[-11.188238625690502,1,56.41489414740398]],"posted":65,"y":[64.30635833740234,12.389724731445312],"A":[[1.0850371913422852e-26,3.1272891751767093e-25,0.020888203755021095,0.10119432210922241,0.8779175281524658],[0.0004605671565514058,1.0601558642520104e-05,2.802596928649634e-45,0.9218541383743286,0.07767460495233536]]},{"veh":[[49.09526804341047,2,49.78628682347865],[-34.615513843345624,1,39.97303894229031],[111.3532711133287,1,38.06176044474786],[-42.583670783042066,2,46.00558441000331],[-87.73352593396538,2,48.930153239407176]],"posted":55,"y":[55.82109832763672,33.51647186279297],"A":[[2.7473637052457285e-24,7.33742126612924e-05,0.00046856628614477813,1.1323278636412664e-21,2.078405516098558e-23,0.9994580149650574],[5.680507086935904e-08,0.7593849897384644,0.0,0.00011049796739825979,0.0006451678927987814,0.2398591935634613]]},{"veh":[[-8.591171849937439,2,51.9793341045649],[-55.93970296017592,1,57.185821569245675],[12.559538543074382,2,48.21815138887126],[-39.247736709213626,1,49.63880085851138],[-86.55209038343234,2,43.240642305999266],[58.489171845318594,1,39.82376010477903],[43.49612997649339,2,49.139357576196836]],"posted":65,"y":[39.82984924316406,34.390689849853516],"A":[[1.065838350691227e-25,9.830805614008398e-11,1.632553806330706e-25,1.4132479009276722e-07,1.1021626343634863e-24,0.9891230463981628,4.78705973044343e-26,0.010876856744289398],[2.5430061214137822e-05,0.24923133850097656,4.0689569686946925e-06,0.5632616281509399,0.000496729975566268,5.734531659347782e-25,9.38381674586708e-08,0.18698078393936157]]},{"veh":[[-32.12072456233331,1,15.11251587560107],[-35.30610212686503,2,44.613621764172365],[12.521855432941663,2,40.57290802485882],[-46.60248011255794,1,13.702712473574536],[-75.18232572613515,2,32.00122448738309],[20.870460553622706,1,25.666635079944456]],"posted":45,"y":[27.601158142089844,27.147109985351562],"A":[[1.8326993256323476e-08,1.4150304900080893e-24,2.799250981982834e-25,2.225356149354596e-10,7.458824220410322e-24,0.9996978044509888,0.0003022562013939023],[0.526829719543457,6.739069795003161e-05,3.967662905779434e-06,0.27131134271621704,0.0003151654382236302,4.6033266087874836e-09,0.20147252082824707]]},{"veh":[[55.12255091091225,2,53.42371427103164],[-11.704211896458688,2,61.97837146784401],[-8.455819902092856,1,56.81812240828644],[98.85915409039646,1,54.50248423474287]],"posted":55,"y":[53.640541076660156,10.64806842803955],"A":[[1.1195048045924453e-25,9.822926190393567e-26,0.10869564861059189,0.6042855381965637,0.2870187759399414],[8.209855906216035e-09,1.0794849004014395e-05,0.9274781942367554,1.7558269757989958e-42,0.07251094281673431]]},{"veh":[[26.126850071385604,1,19.61938545000244],[-47.63834434070476,1,26.567647991742422],[-97.37114879074579,1,28.320566028228555],[-114.94054060148008,2,31.566980928203055],[47.42558242439,1,25.474139428648623]],"posted":70,"y":[22.567729949951172,48.32813262939453],"A":[[0.8444634675979614,2.561855727556406e-10,1.6173028719191897e-17,3.311811629516956e-25,0.15496765077114105,0.0005688324454240501],[5.7890036514463006e-11,0.5899114608764648,0.04976682737469673,0.0028655934147536755,5.76001080320192e-20,0.35745611786842346]]},{"veh":[[-67.1192110840803,1,64.37690360725419],[106.56481199448748,1,65.20763664286926],[-54.08174035784404,2,70.97305354078713],[-21.940832822008275,2,73.63080193214586]],"posted":45,"y":[46.859798431396484,70.38817596435547],"A":[[1.0294413932410151e-10,0.02175615169107914,2.100312824386031e-25,1.6430099111103776e-26,0.9782438278198242],[0.41615375876426697,7.006492321624085e-45,0.00042596651474013925,0.00012624298688024282,0.5832940340042114]]},{"veh":[[88.1750425114094,2,45.417964354662516],[-88.9020888946396,1,53.85169428274101],[26.515879955675302,2,63.69853436774254],[104.3978074351856,2,49.19286348200072],[-56.51207180217017,1,66.32010135288039]],"posted":55,"y":[55.83125305175781,56.79389953613281],"A":[[3.239530646702367e-26,6.450288030481269e-14,1.592588602943133e-26,3.1915914000102513e-28,3.4328080378287495e-09,1.0],[5.22150100934482e-10,0.08949045091867447,1.5506492445638287e-06,6.038947147251131e-14,0.5157209038734436,0.39478713274002075]]},{"veh":[[59.91841264826073,2,53.15716557612628],[23.7978238126845,2,43.42558398358514],[81.22928617303958,1,42.44522633060001],[-78.57792958558889,2,42.00280816016495],[-34.502310569045164,1,31.533939513359297],[118.1709599011646,2,40.44402348549869],[-6.5994753953882395,2,29.071670051145695]],"posted":45,"y":[41.41386413574219,34.03822326660156],"A":[[1.0863992089989558e-26,5.8536102129908936e-24,0.9705244898796082,1.4801719019911175e-23,2.028588141911314e-06,8.085162992413372e-30,1.3067426116484802e-20,0.029473483562469482],[1.555906514738581e-08,1.324043182648893e-06,1.8516928843580005e-34,0.0004669098125305027,0.7356105446815491,4.3307640676157865e-19,3.116794323432259e-05,0.26388999819755554]]},{"veh":[[106.63457167179234,2,73.6621427132638],[-61.96962017747226,2,63.71851420647432],[-97.8955383859757,2,72.19847253080812]],"posted":55,"y":[55.83125305175781,100.15690612792969],"A":[[1.7066136140252236e-31,9.55356901800827e-25,5.6552028514575045e-27,1.0],[3.277173861058677e-14,0.0010152248432859778,0.004210900515317917,0.9947739243507385]]},{"veh":[[-7.200084292958223,2,25.08014527519397],[-24.646183920042176,2,26.34528661089134],[-46.72648094523005,1,42.85117972685075],[90.38374267306713,1,33.55710456041309]],"posted":55,"y":[33.99911880493164,46.565921783447266],"A":[[1.1453057458408552e-19,4.130230154726673e-19,1.2683057093454408e-07,0.9437810182571411,0.05621888116002083],[4.377922959974967e-05,8.287090167868882e-05,0.6545514464378357,3.705075739148132e-38,0.34532198309898376]]},{"veh":[[-32.121089254366524,1,60.283246149924445],[53.48126754458923,1,71.4447684829965],[11.57034871493326,2,73.72512152374303],[85.61980833779558,1,75.86543449818596],[-9.448377883553704,2,75.45855649732596]],"posted":55,"y":[69.179931640625,30.49602508544922],"A":[[1.2553080068755662e-06,0.8944680690765381,7.699014038563732e-30,0.08942493051290512,1.9900065364166606e-29,0.016105692833662033],[0.8160257935523987,5.793602747222089e-23,4.773971795657417e-06,1.5054838616878203e-36,2.6220011932309717e-05,0.18394313752651215]]},{"veh":[[-66.12356466697317,1,43.35463000478633],[19.332699575655937,2,57.18953093558744],[90.54766247383475,2,48.115990442553944],[-23.63693503002,2,51.412397359317374],[79.21841044373221,1,41.046035795175335],[-16.225865428578516,1,46.09585954262948]],"posted":65,"y":[41.20412063598633,16.74295997619629],"A":[[4.4959438949554453e-11,1.0531706774452562e-26,2.773822287592418e-28,3.319115298207945e-24,0.952344536781311,0.0008292403072118759,0.04682626575231552],[0.07379309087991714,9.891018635244109e-07,1.0372263464786258e-10,2.4144970666384324e-05,5.5964505440931765e-34,0.8240324854850769,0.10214927047491074]]},{"veh":[[101.70321795604889,2,31.967013207410854],[24.87683629474037,1,44.73453210985324],[-38.6642497448255,2,50.56011080568731],[39.9860614296652,1,45.38327368719492],[9.417522724957763,1,39.16338135948622],[6.717348562417683,2,53.080442814975385],[-97.87205243987444,2,39.87168425481151]],"posted":45,"y":[44.443687438964844,98.3516845703125],"A":[[4.800594044238391e-29,0.6223430037498474,1.731356785816891e-25,0.21062739193439484,0.16663943231105804,1.453887018726852e-27,1.0865014527678435e-25,0.000390161934774369],[1.1292457854222837e-12,4.0619005381437034e-10,0.0003788568137679249,1.7106333295613028e-16,0.0005777311162091792,4.051615542266518e-05,0.0037192024756222963,0.9952836632728577]]},{"veh":[[-88.2472167871332,2,49.972932434200786],[35.06804220622115,1,37.02120395202522],[49.22607324599218,1,34.847952902116134]],"posted":65,"y":[37.03167724609375,101.84297180175781],"A":[[1.4095885885202046e-26,0.7141525745391846,0.284469872713089,0.0013775551924481988],[0.0028770812787115574,2.364630538630782e-14,2.5581235758624348e-20,0.9971229434013367]]},{"veh":[[-75.0120469875317,1,20.7274951788997],[12.607028765607453,1,21.502038204287185],[-62.04929123634522,1,22.24223557771772],[61.42459946245816,1,20.5470336727259],[-104.28903148418662,1,23.099096372227788],[41.998301798136396,1,19.707101623267135]],"posted":70,"y":[22.1282958984375,57.48992156982422],"A":[[7.446743688268448e-14,0.2622828781604767,3.911451457866422e-12,0.1862400472164154,2.6255153116109283e-18,0.5506642460823059,0.000812905840575695],[0.19123312830924988,2.294823934789747e-05,0.34727779030799866,8.652953639611058e-26,0.041613202542066574,1.3667227328527858e-17,0.4198530316352844]]},{"veh":[[19.866055186288065,1,59.845060910679564],[-100.65043781009777,2,77.58696106467877],[-23.533531770090363,1,74.4841665199988],[95.34067912565129,1,73.85851901232068]],"posted":65,"y":[59.45297622680664,23.378225326538086],"A":[[0.9954849481582642,8.430992490029809e-31,3.9124790873756865e-07,0.003078451380133629,0.0014362185029312968],[5.866656938025017e-09,0.0005610117223113775,0.8874345421791077,7.732645185837206e-41,0.11200442910194397]]},{"veh":[[-53.586196232223884,1,18.704385589365856],[-14.249202042840366,2,27.29599435944848],[-94.87613482675997,1,33.04171807333903],[31.124485302419544,2,23.29481295727144],[80.93175167671365,2,21.989956652391427],[75.64687927665122,1,39.60070071351296],[62.951274874703614,1,37.136008379040504],[-37.706376004352705,1,19.267292112603286]],"posted":70,"y":[37.80183029174805,32.519981384277344],"A":[[5.912279554820543e-10,1.1786286521940685e-20,5.515502152254068e-16,2.0729012864640327e-21,1.3907863292003188e-24,0.2705489695072174,0.717786431312561,7.088344489147858e-08,0.011664480902254581],[0.24736911058425903,3.733358971658163e-05,0.033340852707624435,4.402530464631127e-07,6.228391136176015e-10,3.8636248239846766e-32,8.909844960801116e-27,0.5069138407707214,0.2123384177684784]]},{"veh":[[-88.51911958014841,2,26.739955284210854],[8.75529418600641,1,19.921161579363474],[112.85307256385013,2,25.15926731644035],[98.31810786658514,1,25.522189613514858],[64.84224904404593,1,27.78069360487284],[-62.24315591388262,2,31.000366358271975],[-115.82651886700023,2,27.74769022562122],[72.79682722710811,2,28.666277445258025]],"posted":70,"y":[26.1402645111084,102.64802551269531],"A":[[2.005500632068715e-22,0.40820828080177307,1.4066507220199628e-28,0.023607995361089706,0.5606182217597961,3.191507312244876e-22,1.677250024271043e-23,8.344804355471035e-25,0.007565499283373356],[0.002797101391479373,0.0008505085716024041,1.1286481088103057e-16,4.962558381559907e-41,7.044270579383065e-27,0.0010605816496536136,0.00775260990485549,9.718707616457323e-09,0.9875391721725464]]},{"veh":[[-10.683494747470291,1,27.623887680768735],[17.231992036528027,2,28.396991496855605],[-76.26551047591397,1,15.861587062189907]],"posted":55,"y":[54.60457992553711,11.263778686523438],"A":[[0.048291873186826706,1.384761349983944e-19,7.743878455146458e-11,0.951708197593689],[0.8549086451530457,1.1961955124206725e-06,0.04003999009728432,0.10505018383264542]]},{"veh":[[-36.901628644079054,1,18.605118012728642],[48.193677443609516,2,26.873462786326947],[-76.43726547204463,1,16.214662885278976],[20.981093793585245,1,23.215214909037442],[-67.49664340998066,2,22.107709865716654],[88.17640694624671,2,27.02187852274871],[96.83178304977318,1,18.913773930880357],[83.68970546327512,1,22.096346056489306]],"posted":70,"y":[25.172157287597656,35.62936019897461],"A":[[5.390774493463368e-09,6.039419299467556e-24,3.421038341391673e-14,0.9499530792236328,5.260170459272827e-22,3.3469284352327704e-27,0.006305307615548372,0.043020691722631454,0.0007210634648799896],[0.6356445550918579,6.34753050121617e-08,0.10543759912252426,6.069550639864474e-09,0.00031337118707597256,2.9173374826996223e-10,5.470949464416951e-41,2.131527407574345e-35,0.25860437750816345]]},{"veh":[[-118.13946798901748,2,67.61594396872175],[-39.99078761597008,2,74.65040835499188],[-100.30562811236155,1,59.10350562320278]],"posted":65,"y":[65.13079071044922,95.22454833984375],"A":[[4.648064750059421e-27,5.394794165891413e-26,3.16881590073175e-16,1.0],[0.008436545729637146,0.00040828154305927455,0.1188739463686943,0.8722811937332153]]},{"veh":[[111.06651181529668,1,22.613741709074738],[47.1453134889903,2,34.31494104788424],[-7.6534495243560485,2,33.27576587644102],[-76.29891608087878,2,29.016538682999],[-16.087581282352687,2,27.854755337459146],[51.19990301202387,1,27.471608484356945]],"posted":55,"y":[28.38375473022461,100.09607696533203],"A":[[6.36778906937252e-07,3.0728869605699527e-24,1.671918996936868e-22,1.5336422825421908e-22,4.9456207939879206e-21,0.9969210624694824,0.003078373847529292],[0.0,2.733489168349479e-07,0.0001275361137231812,0.0017119204858317971,0.00017464034317526966,3.777152246161476e-21,0.9979856014251709]]},{"veh":[[-58.17541236392576,1,80.0],[54.27272250675469,2,61.02929081893781],[95.50247937006762,2,60.937920368012364],[-104.87282714029568,1,70.80497486430603],[44.967857221185426,2,62.896629704426246],[34.7249459264894,2,67.73536993870638]],"posted":70,"y":[69.78057098388672,59.632904052734375],"A":[[2.1534421468238918e-10,1.53744876641214e-26,3.718302665662293e-29,1.1632229018388177e-17,8.149209714473066e-27,1.4582442426330337e-27,1.0],[0.556265652179718,5.639608602336921e-08,5.72692518407969e-11,0.04703924432396889,1.754709302304036e-07,6.262958436309418e-07,0.39669424295425415]]},{"veh":[[43.62364110937736,1,59.815977560508415],[-40.88349646463013,2,59.82854868522902],[86.95388517440108,1,66.00191428521762],[-102.59132147653378,2,77.02853309080147],[-4.555947545651492,2,70.97477733784591],[115.63787111967909,1,74.2510771828684]],"posted":55,"y":[58.76798629760742,100.17755126953125],"A":[[0.9577945470809937,7.129128901625514e-26,0.03697814419865608,4.529604792475531e-30,2.080500868752002e-29,2.8279345087867114e-07,0.005227079149335623],[4.7237240758249215e-18,0.0004414774593897164,2.3845850677449045e-36,0.005115495063364506,0.00011640652519417927,0.0,0.994326651096344]]},{"veh":[[-72.13126515134994,2,27.198261577272714],[-103.77317517234798,2,25.974805475392774],[-35.64604918692308,2,22.12733708235675],[51.05278034147858,2,25.829174298875262],[-66.16075528119853,1,25.179294481545774],[-46.462871463142775,2,25.353841556292142]],"posted":45,"y":[46.53171157836914,69.69068145751953],"A":[[1.8703813807788392e-19,2.4578935194280162e-20,2.017719830632429e-17,2.1291103901296417e-20,3.777040014085742e-09,2.7032423718452392e-18,1.0],[0.000842006120365113,0.002686664229258895,0.000201316099264659,9.232461906094613e-08,0.38552477955818176,0.00031539867632091045,0.6104297041893005]]},{"veh":[[-54.711025206946914,1,22.201283724762504],[-56.337055450570304,2,32.228218472009175],[6.262444949931137,1,36.57230427844292],[-14.830729369890705,1,33.088497111023],[-9.314720883529617,2,42.62486434938551],[108.97001675642815,2,26.67095208207444],[18.66435917305617,2,41.17127976589997],[-66.0647134740791,2,31.997003105016365]],"posted":70,"y":[38.9753532409668,14.470843315124512],"A":[[1.0543856898692638e-09,1.022175315316941e-21,0.9753509163856506,0.0002845529525075108,1.4537450616662136e-23,8.518573033299405e-28,6.4851521377577525e-24,5.260182576176331e-22,0.02436458319425583],[0.11674636602401733,8.69474170031026e-05,0.0006256054621189833,0.7807665467262268,1.467874608351849e-05,2.9930396235175374e-16,1.0656270887920982e-06,0.00012608089309651405,0.10163272172212601]]},{"veh":[[49.390087323811,1,44.27834857536605],[-70.63750856476503,2,58.40940147115136],[118.73600615595743,1,55.178088363005],[13.734166278383185,2,41.723585390915055],[38.728657434622335,1,41.33276879755317],[-59.94055758218211,2,59.45541022472185]],"posted":55,"y":[42.3276481628418,100.10357666015625],"A":[[0.2991670072078705,4.326850835400729e-27,1.5457287005915532e-08,5.540046384812659e-25,0.6993909478187561,6.269264814181975e-27,0.001442024833522737],[1.9495609830934903e-20,0.0014094716170802712,0.0,1.7759268303052522e-05,6.254215467422304e-16,0.0009308879962190986,0.997641921043396]]},{"veh":[[87.217157811285,2,50.66996168441383],[-109.76584287821134,2,53.793105432978486],[-87.01170224172192,2,53.459845162881805]],"posted":65,"y":[65.13079071044922,101.91972351074219],"A":[[6.335387381776633e-27,7.124161912891499e-25,3.590313055648445e-24,1.0],[1.7023148446426717e-09,0.0066804238595068455,0.002747000427916646,0.9905725121498108]]},{"veh":[[108.63079516401208,2,27.205371723364713],[-102.98018845390607,1,19.36080291389211],[-1.5694018143821324,2,9.7892312262912],[81.63369291864842,1,7.6465616136573775]],"posted":70,"y":[9.0428466796875,96.4251708984375],"A":[[8.729238954336259e-29,1.8028004403899213e-17,1.3003269923551704e-18,0.9973962306976318,0.0026037783827632666],[3.5504696767649875e-15,0.09899529069662094,8.0632402386982e-05,5.6657500686714775e-34,0.9009240865707397]]},{"veh":[[94.19545487234743,1,49.58586260981721],[57.20251123029621,1,55.69397050300722],[45.91559371492548,2,67.16714156212832],[-54.13669395166832,1,65.97251053850569],[64.92527682278259,2,71.66460153517772],[80.57067558026597,1,55.778454019809516],[-101.36887016099706,2,69.18080521840967]],"posted":70,"y":[54.01131057739258,55.563316345214844],"A":[[0.0701768770813942,0.7661915421485901,1.9727953430980226e-29,8.356943609344469e-11,1.740672787014028e-30,0.14798736572265625,1.1256574227632436e-28,0.015644188970327377],[9.829394065021786e-40,3.794331418400324e-24,1.5434494571309187e-07,0.6115988492965698,1.5419670873484392e-08,5.264244820291259e-34,0.001996896229684353,0.3864040672779083]]},{"veh":[[-49.69056829013658,1,60.27832521636313],[-91.62706321674978,2,63.20366097255692],[100.63576079918559,2,58.93226689959408],[36.381565980540046,2,70.32461141842306],[-3.957501005908412,2,80.0],[44.17632131238997,1,70.86251458645948]],"posted":65,"y":[68.82490539550781,50.23403549194336],"A":[[9.3376895105024e-10,1.5470520501531374e-27,3.7642025697370432e-31,7.980715899484053e-30,1.0119130271595983e-30,0.9862648844718933,0.013735109940171242],[0.6515945792198181,0.001180582563392818,1.3783863373612038e-12,4.433934179814969e-07,4.2843112169066444e-05,9.943274479679694e-19,0.34718143939971924]]},{"veh":[[95.01428421210579,2,50.86336555705101],[52.0782519165266,2,54.29268180964089],[71.0545869978913,2,50.89040015157226],[-78.01163328247208,2,47.86681213851401],[-10.970256015019643,1,39.16575122848082],[-18.467352626777767,2,46.786662625984036],[108.78198970395377,1,45.63782198906645],[25.815787820379,1,39.57938089571982]],"posted":65,"y":[40.401920318603516,11.283952713012695],"A":[[1.0027337328333492e-30,3.024236513786507e-28,1.534222877088715e-28,4.380212730444262e-26,6.583316280739382e-05,3.3812703391836005e-25,4.630499006452737e-06,0.9988320469856262,0.0010974988108500838],[1.5964242081056845e-11,1.670671601061713e-08,1.4849789176096806e-09,0.00018333557818550617,0.90457683801651,1.868993967946153e-05,0.0,1.7741693530970437e-11,0.09522111713886261]]},{"veh":[[115.58358709398755,1,8.378877794923948],[95.71882030138397,2,19.453492104150662],[-104.68008809033753,1,18.818784260823385],[27.345594287350366,2,17.53717883640528],[107.5453557397806,1,10.799661574392118],[32.41388995190252,1,4.871283365491796],[-54.40363177633873,2,35.0454759958194]],"posted":70,"y":[7.88988733291626,96.96900177001953],"A":[[1.8120209499539186e-10,4.483060316888056e-28,2.641949736021132e-19,1.3913792331123784e-22,1.0966984120841516e-07,0.9999310970306396,1.1619988187082448e-24,6.88025465933606e-05],[0.0,7.131026324991296e-11,0.091227687895298,2.7026360385207226e-06,4.203895392974451e-45,3.552738615450468e-13,0.0007182434783317149,0.9080514311790466]]},{"veh":[[-7.05924087355514,1,56.71310223045101],[108.97232873728353,2,60.720064874910946],[0.7090500862126845,2,63.82901579426702],[-95.12910456792017,1,57.79290097151158],[27.133143316825766,1,51.73367551676657],[62.662658667572174,1,54.49278248682142],[-112.1056538685408,2,61.5985750185331]],"posted":65,"y":[51.76130676269531,9.957375526428223],"A":[[0.0007054955349303782,5.6885044250610314e-33,4.306351068553801e-29,4.52212444411411e-18,0.927962064743042,0.0696403756737709,8.23912950579481e-29,0.001692071440629661],[0.9228771328926086,2.8145734873002005e-16,6.340194431686541e-06,0.011502156034111977,3.1028294083385033e-12,3.1319823274875108e-27,0.0004904600791633129,0.06512390077114105]]},{"veh":[[18.399709655988914,1,62.16911199414686],[46.736412263435454,1,63.568671305795796],[114.84269418844428,1,63.90020269329763],[-59.21722709400788,2,64.70347162538033],[-92.83915432357483,2,66.19200256279521],[100.4637103876982,2,62.248173993429674]],"posted":65,"y":[61.673763275146484,101.85232543945312],"A":[[0.8743881583213806,0.12426797300577164,1.0168361086471123e-07,7.993542382265084e-28,5.305906302278346e-29,1.4516535325345552e-32,0.0013437755405902863],[2.192669228406885e-07,2.350136442536792e-19,0.0,0.0009592767455615103,0.003575047478079796,4.7414685025448655e-12,0.9954654574394226]]},{"veh":[[46.7592078814894,2,80.0],[47.15283652437762,1,66.60034254271025],[110.99662794719683,1,72.42169865115676],[-31.248575111230267,2,71.92176762452574]],"posted":55,"y":[64.73858642578125,100.1106948852539],"A":[[1.057852404334649e-31,0.9912582039833069,8.227623766288161e-06,6.574860977735642e-28,0.008733534254133701],[3.6067663700123376e-07,1.4705415304693416e-19,0.0,0.0003189312410540879,0.999680757522583]]},{"veh":[[-40.34587475802289,2,40.11963554610698],[60.275795936006176,2,22.954367755236234],[-68.58189558171973,2,41.343697468584054],[99.56378768037521,1,23.89110062622501],[-81.9129092503509,1,34.45850646400766],[-51.652129863363115,2,39.546611227260186],[-94.55176473020117,2,35.678519047114925]],"posted":55,"y":[34.61269760131836,84.98717498779297],"A":[[4.253363921438019e-21,3.582128664777544e-21,3.0323399202492634e-22,0.6545571684837341,3.170428329590802e-12,2.203268464904406e-21,3.433549275499387e-22,0.34544292092323303],[0.00032964308047667146,3.5772895756736034e-08,0.0009663869859650731,1.0232281386499814e-41,0.22374050319194794,0.000507976918015629,0.0026280484162271023,0.7718274593353271]]},{"veh":[[24.110775850472635,1,43.01340880782586],[14.989001059545245,2,64.60304898281181],[67.42080505235393,1,37.49154504320533],[-85.64337559187432,1,52.26747785442939],[79.09929155717765,1,36.00407301556513],[-104.66447191538612,1,49.49590334803657]],"posted":70,"y":[43.10421371459961,84.94330596923828],"A":[[0.9211615324020386,1.1729239866629151e-29,0.053065404295921326,1.94660479726553e-16,0.024578329175710678,1.8998556354616935e-19,0.0011947802267968655],[7.021453418687429e-10,1.2522038559836801e-05,3.919958364195574e-28,0.20519773662090302,4.6917612553545505e-33,0.07547861337661743,0.7193111181259155]]},{"veh":[[-112.96181139133618,2,15.241426178525042],[-26.883274294377088,2,31.008536566652335],[-10.21930188078494,1,25.249454231507787]],"posted":70,"y":[68.52529907226562,9.731941223144531],"A":[[3.4708697543059937e-19,6.259379609753212e-19,0.030193887650966644,0.9698061347007751],[0.000469731428893283,2.8684205972240306e-05,0.8965307474136353,0.10297080874443054]]}],"verify":{"n_ref":60,"max_abs_err":1.0131768071186542e-06},"gallery":[{"domain":"ADAS perception","title":"BEVFormer: the map asks the cameras","q_draw":8,"kv_draw":6,"q_short":"40,000 cells","kv_short":"6 cameras","asks":"A 200 \u00d7 200 grid of bird\u2019s-eye-view cells (40,000 queries), each a 0.512 m square of road within \u00b151.2 m of the vehicle.","answers":"Image features from the 6 surround cameras of nuScenes. Each cell is lifted to a pillar with 4 reference heights between \u22125 m and 3 m, and it looks only in the camera views where those points land.","howmany":"Fixed at 40,000 by the grid you choose. The cameras have no say.","why":"The output is a top-down map, so the grid of questions <em>is</em> the output format. Detection and lane-segmentation heads then run on that map. Looking only where a cell projects is also the deduplication from tab 3.","src":"Li et al., BEVFormer, ECCV 2022 \u00b7 <a href=\"https://arxiv.org/abs/2203.17270\" target=\"_blank\" rel=\"noopener\">arXiv:2203.17270</a>"},{"domain":"Roadside and intersection perception","title":"DETR: empty slots ask the frame","q_draw":8,"kv_draw":10,"q_short":"100 slots","kv_short":"image features","asks":"100 learned object queries: empty slots, each looking for one object.","answers":"The encoder\u2019s feature map of the frame, through 6 decoder layers that alternate self-attention among the slots with cross-attention to the image.","howmany":"100, the most objects one frame can report. Unused slots predict \u201cno object\u201d.","why":"Counting and locating road users at an intersection camera with no hand-tuned anchor boxes and no non-max suppression. The slot count is a hard cap: if a stadium lets out 300 pedestrians into one frame, only 100 can be reported.","src":"Carion et al., DETR, ECCV 2020 \u00b7 <a href=\"https://arxiv.org/abs/2005.12872\" target=\"_blank\" rel=\"noopener\">arXiv:2005.12872</a>"},{"domain":"Traffic flow and TSM&O","title":"Encoder\u2013decoder: the future asks the past","q_draw":3,"kv_draw":12,"q_short":"3 horizons","kv_short":"past window","asks":"The forecast steps being generated, for example t+15, t+30 and t+60 minutes at one detector.","answers":"The encoded history of the detector window.","howmany":"One per forecast step.","why":"This is where cross-attention started. In the original paper\u2019s words, \u201cthe queries come from the previous decoder layer, and the memory keys and values come from the output of the encoder.\u201d Each future step asks the past for what it needs, so the 60-minute step is free to look at different history from the 15-minute step.","src":"Vaswani et al., 2017, \u00a73.2.3 \u00b7 <a href=\"https://arxiv.org/abs/1706.03762\" target=\"_blank\" rel=\"noopener\">arXiv:1706.03762</a>"},{"domain":"Driving automation: motion prediction","title":"MTR: each possible future asks the map","q_draw":8,"kv_draw":10,"q_short":"64 intentions","kv_short":"agents + map","asks":"64 motion queries per agent. Each is anchored at an \u201cintention point\u201d, found by k-means on where trajectories end in the training data.","answers":"Two separate cross-attentions: one over the other agents, one over map polylines. The map side uses the 128 polylines nearest each query\u2019s predicted path.","howmany":"64 candidate futures, trimmed to 6 at the output.","why":"Each query is a hypothesis about where the vehicle is going: turn left, go straight, stop. Because each one asks the map about its own destination, different futures look at different lanes. Trained and tested on the Waymo Open Motion Dataset.","src":"Shi et al., MTR, NeurIPS 2022 \u00b7 <a href=\"https://arxiv.org/abs/2209.13508\" target=\"_blank\" rel=\"noopener\">arXiv:2209.13508</a>"},{"domain":"Agency practice: TMC camera questions","title":"Vision\u2013language: a question asks the image","q_draw":6,"kv_draw":12,"q_short":"32 queries","kv_short":"image patches","asks":"BLIP-2: 32 learned queries of 768 numbers each. Flamingo: the text tokens of a language model.","answers":"Frozen image features: 257 \u00d7 1,024 for the ViT-L/14 encoder in BLIP-2. Flamingo first compresses each image to 64 visual tokens.","howmany":"32 in BLIP-2, whatever the image size, which is what makes the image affordable for the language model.","why":"This is how a question like \u201cIs the right shoulder blocked?\u201d reaches a CCTV frame. Flamingo inserts its cross-attention layers into a frozen language model behind tanh gates that start at 0. On day one the model behaves exactly like the original language model, and it learns to look at images gradually.","src":"Li et al., BLIP-2, ICML 2023 \u00b7 <a href=\"https://arxiv.org/abs/2301.12597\" target=\"_blank\" rel=\"noopener\">arXiv:2301.12597</a> \u00b7 Alayrac et al., Flamingo, NeurIPS 2022 \u00b7 <a href=\"https://arxiv.org/abs/2204.14198\" target=\"_blank\" rel=\"noopener\">arXiv:2204.14198</a>"},{"domain":"Network-scale inputs","title":"Perceiver and Wayformer: a few latents ask everything","q_draw":4,"kv_draw":12,"q_short":"512 latents","kv_short":"50,176 pixels","asks":"A small learned latent array: 512 latents in Perceiver.","answers":"The raw input: all 50,176 pixels of a 224 \u00d7 224 image.","howmany":"Chosen for compute. The cost is O(MN) instead of the O(M\u00b2) of self-attention.","why":"For a detector network, 64 latents over the 2,484-token METR-LA window is a 64 \u00d7 2,484 table (calculator below). Wayformer uses the same latent-query trick for motion prediction on Waymo Open Motion and Argoverse, and reports 2\u00d7 to 16\u00d7 faster fusion.","src":"Jaegle et al., Perceiver, ICML 2021 \u00b7 <a href=\"https://arxiv.org/abs/2103.03206\" target=\"_blank\" rel=\"noopener\">arXiv:2103.03206</a> \u00b7 Nayakanti et al., Wayformer, ICRA 2023 \u00b7 <a href=\"https://arxiv.org/abs/2207.05844\" target=\"_blank\" rel=\"noopener\">arXiv:2207.05844</a>"}]};
+</script>
+<script>
+(function(){
+"use strict";
+const W = DATA.weights, R = DATA.results;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------------- tabs ---------------- */
+document.querySelectorAll('nav.tabs button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('nav.tabs button').forEach(x => x.classList.toggle('active', x === b));
+  document.querySelectorAll('section.page').forEach(p => p.classList.toggle('active', p.id === b.dataset.tab));
+  try { history.replaceState(null, '', '#' + b.dataset.tab); } catch(e) {}
+}));
+if (/^#p[1-5]$/.test(location.hash)) { const b = document.querySelector(`nav.tabs button[data-tab="${location.hash.slice(1)}"]`); if (b) b.click(); }
+
+/* ---------------- data-driven numbers ---------------- */
+function getk(path){ return path.split('.').reduce((o,k)=>o==null?o:o[k], DATA); }
+function fmt(v, f){
+  if (v == null) return '(not yet checked)';
+  if (f === 'int') return Math.round(v).toLocaleString('en-US');
+  if (f === 'e') return v.toExponential(1);
+  if (f === 'pct') return (100*v).toFixed(1) + '%';
+  if (f && /^\d$/.test(f)) return Number(v).toFixed(+f);
+  return typeof v === 'number' ? v.toLocaleString('en-US') : v;
+}
+document.querySelectorAll('[data-k]').forEach(el => { const [p,f] = el.dataset.k.split('|'); el.textContent = fmt(getk(p), f); });
+
+/* ---------------- the model, in plain JS ---------------- */
+const D = 16;
+function matvec(M, x, b){ const out = new Array(M.length); for (let i=0;i<M.length;i++){ let s = b ? b[i] : 0; const r = M[i]; for (let j=0;j<x.length;j++) s += r[j]*x[j]; out[i]=s; } return out; }
+function feat(v){ // v: {dx, p (1=lane1,0=lane2), v}
+  return [v.dx/100, v.p, 1-v.p, 0, v.v/70];
+}
+function mapFeat(posted){ return [0,0,0,1,posted/70]; }
+function forward(tokens){ // tokens: array of feature vectors
+  const K = tokens.map(f => { let h = matvec(W['embed.0.weight'], f, W['embed.0.bias']).map(z => z>0?z:0);
+    h = matvec(W['embed.2.weight'], h, W['embed.2.bias']); return matvec(W['Wk.weight'], h, null); });
+  const V = tokens.map(f => matvec(W['Wv.weight'], f, W['Wv.bias']));
+  const out = [];
+  for (let q=0;q<2;q++){
+    const Q = W['Q'][q];
+    const s = K.map(k => { let t=0; for (let i=0;i<D;i++) t += Q[i]*k[i]; return t/Math.sqrt(D); });
+    const m = Math.max(...s); const e = s.map(z => Math.exp(z-m)); const Z = e.reduce((a,b)=>a+b,0);
+    const a = e.map(z => z/Z);
+    const rep = V.map(v => { let t = W['hb'][q]; for (let i=0;i<D;i++) t += W['head'][q][i]*v[i]; return t; });
+    const y = a.reduce((acc,ai,j)=>acc+ai*rep[j],0);
+    out.push({scores:s, a, rep, y});
+  }
+  return out;
+}
+window.__xattn = { forward, feat, mapFeat }; // exposed for the verifier
+
+/* ---------------- scene state ---------------- */
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const POSTED = [45,55,65,70];
+let scene, order, mapOn = true;
+function defaultScene(){ return { posted: 65, veh: [
+  {dx: 35, p:1, v:38}, {dx: 80, p:1, v:46}, {dx:-22, p:1, v:36}, {dx:-70, p:1, v:41},
+  {dx: 12, p:0, v:52}, {dx:-40, p:0, v:55} ].map((o,i)=>({...o, id:LETTERS[i]})) }; }
+function gauss(){ let u=0,v=0; while(!u) u=Math.random(); while(!v) v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+function randomScene(nMin=3, nMax=8){ // mirrors make_scene() in the reproducer
+  const n = nMin + Math.floor(Math.random()*(nMax-nMin+1));
+  const u1 = 15 + Math.random()*55, u2 = Math.min(u1 + Math.random()*10, 75);
+  const posted = POSTED[Math.floor(Math.random()*4)];
+  const amp = Math.random()*15, lam = 150 + Math.random()*150, ph1 = Math.random()*2*Math.PI, ph2 = Math.random()*2*Math.PI;
+  const veh = []; let tries = 0;
+  while (veh.length < n && tries++ < 500){
+    const lane = Math.random() < .5 ? 1 : 2, dx = -120 + Math.random()*240;
+    if (Math.abs(dx) < 4 && lane === 1) continue;
+    if (veh.some(o => (o.p===1?1:2)===lane && Math.abs(o.dx-dx) < 8)) continue;
+    const base = (lane===1?u1:u2) + amp*Math.sin(2*Math.PI*dx/lam + (lane===1?ph1:ph2));
+    veh.push({dx, p: lane===1?1:0, v: Math.min(80, Math.max(3, base + 2*gauss()))});
+  }
+  veh.forEach((o,i)=>o.id=LETTERS[i]);
+  return {posted, veh};
+}
+function truth(sc){
+  const l1 = sc.veh.filter(o => o.p >= .5);
+  const ahead = l1.filter(o => o.dx > 0 && o.dx <= 100).sort((a,b)=>a.dx-b.dx);
+  const behind = l1.filter(o => o.dx < 0 && o.dx >= -100).sort((a,b)=>b.dx-a.dx);
+  return { y1: ahead.length ? ahead[0].v : sc.posted, who1: ahead.length ? ahead[0].id : 'MAP',
+           y2: behind.length ? -behind[0].dx : 100, who2: behind.length ? behind[0].id : 'MAP',
+           ambiguous: sc.veh.some(o => o.p > .02 && o.p < .98) };
+}
+function tokensOf(sc){ // respects the current feed order; map token last
+  const vs = order.map(i => sc.veh[i]);
+  const t = vs.map(feat), ids = vs.map(o=>o.id);
+  if (mapOn){ t.push(mapFeat(sc.posted)); ids.push('MAP'); }
+  return {t, ids};
+}
+function setScene(sc){ scene = sc; order = sc.veh.map((_,i)=>i); render(); }
+
+/* ---------------- road drawing ---------------- */
+const svg = $('#road'), NS = 'http://www.w3.org/2000/svg';
+const X0 = 500, PXM = 3.6;                 // px per metre; dx=0 at x=500
+const Y_L2 = 78, Y_L1 = 128, Y_RAMP = 196; // lane centre lines
+const xOf = dx => X0 + dx*PXM;
+const yOf = p => Y_L2 + (Y_L1 - Y_L2)*p;
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); (parent||svg).appendChild(e); return e; }
+function drawRoad(){
+  svg.innerHTML = '';
+  el('rect',{x:0,y:0,width:1000,height:300,fill:'#fbfcfa'});
+  // ramp
+  el('path',{d:`M 40 ${Y_RAMP+20} L 430 ${Y_RAMP+20} Q 540 ${Y_RAMP+20} 660 ${Y_L1+24} L 560 ${Y_L1+24} Q 500 ${Y_RAMP-22} 430 ${Y_RAMP-20} L 40 ${Y_RAMP-20} Z`, fill:'var(--road)'});
+  el('rect',{x:0,y:Y_L2-25,width:1000,height:(Y_L1-Y_L2)+50,fill:'var(--road)'});
+  el('line',{x1:0,x2:1000,y1:Y_L2-25,y2:Y_L2-25,stroke:'var(--road-edge)','stroke-width':2});
+  el('line',{x1:0,x2:1000,y1:Y_L1+25,y2:Y_L1+25,stroke:'var(--road-edge)','stroke-width':2});
+  el('line',{x1:0,x2:1000,y1:(Y_L1+Y_L2)/2,y2:(Y_L1+Y_L2)/2,stroke:'var(--lane-mark)','stroke-width':2,'stroke-dasharray':'14 16'});
+  const lab = (x,y,t,a) => { const e = el('text',{x,y,'font-size':12,fill:'#e8ede9','font-weight':700,'text-anchor':a||'start'}); e.textContent = t; };
+  lab(8, Y_L2-9, 'LANE 2 (inner)'); lab(8, Y_L1+18, 'LANE 1 (target lane)'); lab(48, Y_RAMP+15, 'ON-RAMP');
+  // scale ticks
+  for (let m=-120; m<=120; m+=40){ const x = xOf(m); el('line',{x1:x,x2:x,y1:262,y2:268,stroke:'#8a9a93'});
+    const t = el('text',{x, y:283,'font-size':11,fill:'#56665f','text-anchor':'middle'}); t.textContent = (m>0?'+':'')+m+' m'; }
+  const t = el('text',{x:1000-6,y:298,'font-size':10.5,fill:'#56665f','text-anchor':'end'}); t.textContent = 'dx = distance ahead of the merging vehicle';
+  // 100 m range band
+  el('rect',{x:xOf(-100),y:Y_L1-18,width:200*PXM,height:36,fill:'none',stroke:'#CFC493','stroke-width':1.2,'stroke-dasharray':'3 4',rx:6});
+}
+let gLines, gVeh;
+function render(){
+  drawRoad();
+  const {t, ids} = tokensOf(scene);
+  const out = forward(t);
+  const tr = truth(scene);
+  // attention lines from the ego to each token
+  gLines = el('g',{});
+  const ego = {x: xOf(0), y: Y_RAMP - 6};
+  const posOf = id => { if (id === 'MAP') return {x: 952, y: 34}; const o = scene.veh.find(v=>v.id===id); return {x: xOf(o.dx), y: yOf(o.p)}; };
+  [0,1].forEach(q => ids.forEach((id,j) => {
+    const a = out[q].a[j]; if (a < .01) return;
+    const p = posOf(id), off = q ? 7 : -7;
+    el('line',{x1:ego.x+off, y1:ego.y, x2:p.x+off*.4, y2:p.y+(q?6:-6), stroke: q?'var(--q2)':'var(--q1)', 'stroke-width': (1+10*a).toFixed(2), 'stroke-opacity': (.25+.65*a).toFixed(2), 'stroke-linecap':'round'}, gLines);
+  }));
+  // map token (speed-limit sign)
+  const gm = el('g',{cursor:'pointer', opacity: mapOn?1:.28, tabindex:0, role:'button','aria-label':'Posted speed limit sign; click to change'});
+  el('rect',{x:926,y:6,width:54,height:62,rx:6,fill:'#fff',stroke:'#1c2422','stroke-width':2.4},gm);
+  const s1 = el('text',{x:953,y:22,'font-size':8.5,'text-anchor':'middle','font-weight':800,fill:'#1c2422'},gm); s1.textContent='SPEED';
+  const s2 = el('text',{x:953,y:32,'font-size':8.5,'text-anchor':'middle','font-weight':800,fill:'#1c2422'},gm); s2.textContent='LIMIT';
+  const s3 = el('text',{x:953,y:58,'font-size':22,'text-anchor':'middle','font-weight':800,fill:'#1c2422'},gm); s3.textContent=scene.posted;
+  const s4 = el('text',{x:918,y:40,'font-size':11,'text-anchor':'end','font-weight':700,fill:'var(--mapc)'}); s4.textContent = mapOn ? 'MAP token' : 'map token removed';
+  const cyc = () => { scene.posted = POSTED[(POSTED.indexOf(scene.posted)+1)%4]; render(); };
+  gm.addEventListener('click', cyc); gm.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){ e.preventDefault(); cyc(); } });
+  // ego
+  const ge = el('g',{});
+  el('rect',{x:ego.x-10,y:Y_RAMP-6-8,width:20,height:16,rx:4,fill:'#CFC493',stroke:'#003E2A','stroke-width':2},ge);
+  const et = el('text',{x:ego.x,y:Y_RAMP+30,'text-anchor':'middle','font-size':11.5,'font-weight':800,fill:'#003E2A'},ge); et.textContent='merging vehicle';
+  const q1b = el('text',{x:ego.x-26,y:Y_RAMP+2,'text-anchor':'end','font-size':11.5,'font-weight':800,fill:'#8fe0bb'},ge); q1b.textContent='Q1';
+  const q2b = el('text',{x:ego.x+26,y:Y_RAMP+2,'font-size':11.5,'font-weight':800,fill:'#ffc29a'},ge); q2b.textContent='Q2';
+  // vehicles
+  gVeh = el('g',{});
+  scene.veh.forEach((o, i) => {
+    const x = xOf(o.dx), y = yOf(o.p);
+    const g = el('g',{class:'veh', 'data-i': i, tabindex:0, role:'button', 'aria-label':`Vehicle ${o.id}, ${o.dx.toFixed(0)} m, ${o.v.toFixed(0)} mph`}, gVeh);
+    const strad = o.p > .02 && o.p < .98;
+    el('rect',{x:x-9, y:y-7, width:18, height:14, rx:3.5, fill:'#e9eef0', stroke: strad ? 'var(--kv)' : '#1c2422', 'stroke-width': strad?3:1.4}, g);
+    const tl = el('text',{x, y:y+4, 'text-anchor':'middle','font-size':10.5,'font-weight':800, fill:'#1c2422','pointer-events':'none'}, g); tl.textContent = o.id;
+    const tv = el('text',{x, y: y + (o.p>.5 ? 21 : -12), 'text-anchor':'middle','font-size':10.5,'font-weight':700, fill:'#f4f6f5','pointer-events':'none'}, g);
+    tv.textContent = o.v.toFixed(0)+' mph';
+  });
+  bindDrag();
+  // answers
+  $('#y1').textContent = out[0].y.toFixed(1) + ' mph';
+  $('#y2').textContent = out[1].y.toFixed(1) + ' m';
+  $('#t1').innerHTML = tr.ambiguous ? `Rule: ambiguous (a vehicle is between lanes). Counting it as lane 1 if more than halfway: ${tr.y1.toFixed(1)} mph from ${tr.who1}` :
+    `Rule says ${tr.y1.toFixed(1)} mph (${tr.who1 === 'MAP' ? 'no leader within 100 m, so the posted speed' : 'vehicle ' + tr.who1})`;
+  $('#t2').innerHTML = tr.ambiguous ? `Rule: ambiguous. Counting it as lane 1 if more than halfway: ${tr.y2.toFixed(1)} m from ${tr.who2}` :
+    `Rule says ${tr.y2.toFixed(1)} m (${tr.who2 === 'MAP' ? 'nobody behind within 100 m: open' : 'vehicle ' + tr.who2})`;
+  [0,1].forEach(q => {
+    const box = $('#bars'+(q+1)); const col = q ? 'var(--q2)' : 'var(--q1)'; const unit = q ? ' m' : ' mph';
+    let h = `<span class="hd">token</span><span class="hd">weight</span><span class="hd">α</span><span class="hd">report</span>`;
+    ids.forEach((id,j) => { const a = out[q].a[j];
+      h += `<span class="lab">${id}</span><span class="track"><span class="fill" style="display:block;width:${(100*a).toFixed(1)}%;background:${col}"></span></span><span>${a.toFixed(3)}</span><span class="rep">${out[q].rep[j].toFixed(1)}${unit}</span>`; });
+    box.innerHTML = h;
+  });
+  // matrix
+  const m = $('#matrix'); m.style.gridTemplateColumns = `44px repeat(${ids.length}, 34px)`;
+  let mh = '<span class="h"></span>' + ids.map(id=>`<span class="h">${id}</span>`).join('');
+  [0,1].forEach(q => { mh += `<span class="h" style="color:${q?'var(--q2)':'var(--q1)'}">Q${q+1}</span>`;
+    ids.forEach((id,j) => { const a = out[q].a[j]; const base = q ? [181,88,30] : [0,103,71];
+      mh += `<span class="c" style="background:rgba(${base},${(.06+.94*a).toFixed(3)});color:${a>.45?'#fff':'#1c2422'}">${a.toFixed(2)}</span>`; }); });
+  m.innerHTML = mh;
+  drawFig1(); micro();
+}
+
+/* ---------------- dragging ---------------- */
+let drag = null;
+function svgPt(evt){ const r = svg.getBoundingClientRect(); return { x: (evt.clientX - r.left) * 1000 / r.width, y: (evt.clientY - r.top) * 300 / r.height }; }
+function bindDrag(){
+  gVeh.querySelectorAll('.veh').forEach(g => {
+    g.addEventListener('pointerdown', e => { drag = { i: +g.dataset.i }; svg.setPointerCapture(e.pointerId); e.preventDefault(); });
+    g.addEventListener('keydown', e => { const o = scene.veh[+g.dataset.i];
+      if (e.key==='ArrowLeft') o.dx = Math.max(-120, o.dx-5); else if (e.key==='ArrowRight') o.dx = Math.min(120, o.dx+5);
+      else if (e.key==='ArrowUp') o.p = 0; else if (e.key==='ArrowDown') o.p = 1; else return;
+      e.preventDefault(); render(); const n = svg.querySelector(`.veh[data-i="${g.dataset.i}"]`); if (n) n.focus(); });
+  });
+}
+svg.addEventListener('pointermove', e => { if (!drag) return; const pt = svgPt(e); const o = scene.veh[drag.i];
+  o.dx = Math.max(-120, Math.min(120, (pt.x - X0)/PXM)); o.p = Math.max(0, Math.min(1, (pt.y - Y_L2)/(Y_L1 - Y_L2))); render(); });
+const endDrag = () => { if (!drag) return; const o = scene.veh[drag.i]; if (!$('#cStraddle').checked) o.p = o.p >= .5 ? 1 : 0; drag = null; render(); };
+svg.addEventListener('pointerup', endDrag); svg.addEventListener('pointercancel', endDrag);
+
+/* ---------------- controls ---------------- */
+const status = (msg, bad) => { const s = $('#status'); s.textContent = msg; s.classList.toggle('bad', !!bad); };
+$('#bNew').onclick = () => { setScene(randomScene()); status('New scene drawn from the same generator the model was trained on.'); };
+$('#bDefault').onclick = () => { mapOn = true; $('#cMap').checked = true; setScene(defaultScene()); status(''); };
+$('#bAdd').onclick = () => { if (scene.veh.length >= 26) return; const id = LETTERS[scene.veh.length];
+  scene.veh.push({id, dx: -110 + Math.random()*220, p: Math.random()<.5?1:0, v: 25 + Math.random()*40}); order.push(scene.veh.length-1); render();
+  status(`Added vehicle ${id}. ${scene.veh.length} vehicles; the model was trained on 3 to 8.${scene.veh.length>8?' This is now outside its training range.':''}`, scene.veh.length>8); };
+$('#bDel').onclick = () => { if (!scene.veh.length) return; scene.veh.pop(); order = order.filter(i => i < scene.veh.length); render(); status(`${scene.veh.length} vehicles.`); };
+$('#bCut').onclick = () => { $('#cStraddle').checked = true; const sc = defaultScene(); sc.veh[4] = {id:'E', dx: 15, p: .5, v: 55}; setScene(sc);
+  status('Vehicle E (55 mph) is halfway from lane 2 into lane 1, 15 m ahead. The model never saw a vehicle between lanes. Drag E up or down.'); };
+$('#bShuffle').onclick = () => {
+  const before = forward(tokensOf(scene).t).map(o=>o.y);
+  for (let i=order.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [order[i],order[j]] = [order[j],order[i]]; }
+  const after = forward(tokensOf(scene).t).map(o=>o.y); render();
+  const d = Math.max(Math.abs(before[0]-after[0]), Math.abs(before[1]-after[1]));
+  status(`Token order is now ${order.map(i=>scene.veh[i].id).join(', ')}${mapOn?', MAP':''}. Largest change in either answer: ${d.toExponential(1)} (floating-point rounding).`);
+};
+$('#cMap').onchange = e => { mapOn = e.target.checked; render();
+  status(mapOn ? 'Map token restored.' : 'Map token removed. The weights must still sum to 1, so they now have to land on some vehicle.', !mapOn); };
+$('#cStraddle').onchange = () => { if (!$('#cStraddle').checked){ scene.veh.forEach(o => o.p = o.p>=.5?1:0); render(); } };
+
+/* ---------------- figure 1 (self vs cross) ---------------- */
+function drawFig1(){
+  const f = $('#fig1'); f.innerHTML = '';
+  const E = (tag, a, p) => el(tag, a, p || f);
+  const T = (x,y,txt,a) => { const e = E('text', Object.assign({x,y,'font-size':13,fill:'#1c2422'}, a||{})); e.textContent = txt; return e; };
+  const sc = defaultScene(); const vs = sc.veh; const ids = vs.map(o=>o.id);
+  E('rect',{x:0,y:0,width:1000,height:470,fill:'#ffffff'});
+  E('line',{x1:500,x2:500,y1:16,y2:454,stroke:'#e0e6e2','stroke-width':2});
+  T(24,32,'SELF-ATTENTION (Sept 17)',{'font-weight':800,fill:'#003E2A','font-size':14,'letter-spacing':'.06em'});
+  T(24,52,'the vehicles ask each other',{fill:'#56665f'});
+  T(524,32,'CROSS-ATTENTION (today)',{'font-weight':800,fill:'#003E2A','font-size':14,'letter-spacing':'.06em'});
+  T(524,52,'the merging vehicle’s questions ask the scene',{fill:'#56665f'});
+  // tokens row (left): 6 vehicles in a row with arcs
+  const lx = i => 50 + i*72, ly = 120;
+  const arcs = [[0,1],[0,2],[1,3],[2,4],[3,5],[4,0],[5,2],[1,4]];
+  arcs.forEach(([a,b]) => { const x1=lx(a), x2=lx(b), mx=(x1+x2)/2, h=18+Math.abs(b-a)*9;
+    E('path',{d:`M ${x1} ${ly-14} Q ${mx} ${ly-14-h} ${x2} ${ly-14}`, fill:'none', stroke:'#0E6E9E','stroke-opacity':.55,'stroke-width':1.6}); });
+  ids.forEach((id,i) => { E('rect',{x:lx(i)-17,y:ly-12,width:34,height:24,rx:5,fill:'#e7f0f6',stroke:'#0E6E9E','stroke-width':1.5});
+    T(lx(i),ly+5,id,{'text-anchor':'middle','font-weight':800}); });
+  T(24,168,'Q, K and V all come from the same 6 tokens',{fill:'#0E6E9E','font-weight':700});
+  // square matrix
+  const cs = 26, mx0 = 150, my0 = 200;
+  T(mx0 + 3*cs, my0-10, 'keys: A–F', {'text-anchor':'middle','font-size':12,fill:'#56665f'});
+  const lt = T(mx0-12, my0 + 3*cs, 'queries: A–F', {'text-anchor':'middle','font-size':12,fill:'#56665f'}); lt.setAttribute('transform',`rotate(-90 ${mx0-12} ${my0+3*cs})`);
+  for (let r=0;r<6;r++) for (let c=0;c<6;c++) E('rect',{x:mx0+c*cs,y:my0+r*cs,width:cs-2,height:cs-2,rx:3,fill:'#0E6E9E','fill-opacity': (r===c?.18:.08+.5*((r*7+c*3)%5)/5).toFixed(2)});
+  T(mx0 + 3*cs, my0 + 6*cs + 22, '6 × 6: one row per token', {'text-anchor':'middle','font-weight':700});
+  T(mx0 + 3*cs, my0 + 6*cs + 40, 'add a vehicle → a row AND a column', {'text-anchor':'middle',fill:'#56665f'});
+  T(24, 444, 'Illustrative shading; the self-attention weights here are not from a trained model.', {'font-size':11,fill:'#56665f'});
+  // right: questions -> tokens
+  const qx = 560, rx0 = 690;
+  const qs = [{t:'Q1  Who will I follow?', c:'#006747', y:110},{t:'Q2  Who has to let me in?', c:'#B5581E', y:150}];
+  const tok = ids.concat(['MAP']); const ty = j => 80 + j*18.5;
+  const out = forward(vs.map(feat).concat([mapFeat(sc.posted)]));
+  qs.forEach((q,qi) => { tok.forEach((id,j) => { const a = out[qi].a[j]; if (a<.01) return;
+      E('line',{x1:qx+140,y1:q.y-4,x2:rx0+128,y2:ty(j)-4,stroke:q.c,'stroke-width':(1+8*a).toFixed(2),'stroke-opacity':(.25+.7*a).toFixed(2),'stroke-linecap':'round'}); }); });
+  qs.forEach(q => { E('rect',{x:qx-36,y:q.y-19,width:176,height:28,rx:14,fill:'#fff',stroke:q.c,'stroke-width':2}); T(qx+52,q.y,q.t,{'text-anchor':'middle','font-weight':800,fill:q.c,'font-size':12}); });
+  tok.forEach((id,j) => { const o = vs[j];
+    E('rect',{x:rx0+128,y:ty(j)-15,width:150,height:16,rx:4,fill: id==='MAP'?'#f6f1dc':'#e7f0f6',stroke:id==='MAP'?'#B79F4D':'#0E6E9E','stroke-width':1});
+    T(rx0+134,ty(j)-3, id==='MAP' ? `MAP  posted ${sc.posted} mph` : `${id}  ${o.dx>0?'+':''}${o.dx} m · lane ${o.p?1:2} · ${o.v} mph`, {'font-size':11,'font-weight':700,fill:'#1c2422'}); });
+  T(qx-36, 200, 'Q from the merging vehicle;', {fill:'#006747','font-weight':700});
+  T(qx-36, 218, 'K and V from the 6 vehicles + map', {fill:'#0E6E9E','font-weight':700});
+  // rectangular matrix
+  const r0x = 640, r0y = 262;
+  tok.forEach((id,j) => T(r0x + j*cs + cs/2 - 1, r0y - 8, id, {'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#56665f'}));
+  [0,1].forEach(qi => { T(r0x-10, r0y + qi*cs + 17, 'Q'+(qi+1), {'text-anchor':'end','font-size':12,'font-weight':800,fill: qi?'#B5581E':'#006747'});
+    tok.forEach((id,j) => { const a = out[qi].a[j]; E('rect',{x:r0x+j*cs,y:r0y+qi*cs,width:cs-2,height:cs-2,rx:3,fill: qi?'#B5581E':'#006747','fill-opacity':(.05+.95*a).toFixed(3)}); }); });
+  T(r0x + 3.5*cs, r0y + 2*cs + 24, '2 × 7: one row per question', {'text-anchor':'middle','font-weight':700});
+  T(r0x + 3.5*cs, r0y + 2*cs + 42, 'add a vehicle → a column, never a row', {'text-anchor':'middle',fill:'#56665f'});
+  T(r0x + 3.5*cs, r0y + 2*cs + 60, 'shading = the trained model’s weights', {'text-anchor':'middle',fill:'#56665f','font-size':12});
+  // answers
+  T(560, 430, `Answers: Q1 → ${out[0].y.toFixed(1)} mph (follows A at 38)   ·   Q2 → ${out[1].y.toFixed(1)} m (C is 22 m back)`, {'font-weight':700,fill:'#003E2A','font-size':12.5});
+}
+
+/* ---------------- micro example ---------------- */
+function micro(){
+  const sc = defaultScene(); const t = sc.veh.map(feat).concat([mapFeat(sc.posted)]); const ids = sc.veh.map(o=>o.id).concat(['MAP']);
+  const out = forward(t)[0];
+  let h = '<tr><th>token</th><th>what it is</th><th class="n">score q·k/√d</th><th class="n">weight α</th><th class="n">report (mph)</th><th class="n">α × report</th></tr>';
+  ids.forEach((id,j) => { const o = sc.veh[j];
+    h += `<tr${out.a[j]>.5?' class="hl"':''}><td><b>${id}</b></td><td>${id==='MAP'?'posted speed '+sc.posted+' mph':(o.dx>0?'+':'')+o.dx+' m, lane '+(o.p?1:2)+', '+o.v+' mph'}</td><td class="n">${out.scores[j].toFixed(2)}</td><td class="n">${out.a[j].toFixed(3)}</td><td class="n">${out.rep[j].toFixed(1)}</td><td class="n">${(out.a[j]*out.rep[j]).toFixed(2)}</td></tr>`; });
+  h += `<tr><td colspan="3"><b>Sum</b></td><td class="n">${out.a.reduce((a,b)=>a+b,0).toFixed(3)}</td><td></td><td class="n"><b>${out.y.toFixed(2)}</b></td></tr>`;
+  $('#microTbl').innerHTML = h;
+  const top = out.a.indexOf(Math.max(...out.a));
+  $('#microNote').textContent = `The score gap does the work. ${ids[top]} is the nearest lane-1 vehicle ahead and scores highest, so it takes ${(100*out.a[top]).toFixed(1)}% of the weight. The answer is ${out.y.toFixed(1)} mph against a true ${sc.veh[0].v} mph. Vehicle E is closer (12 m) but in lane 2, and its weight is ${out.a[4].toFixed(3)}.`;
+}
+
+/* ---------------- evaluation table ---------------- */
+(function(){
+  const r = R; const rows = [
+    ['Posted speed / "open", no model', r.base_posted.mae_q1_mph, r.base_posted.mae_q2_m, null, null, '0'],
+    ['Rule without the lane ("nearest vehicle, any lane")', r.base_anylane.mae_q1_mph, r.base_anylane.mae_q2_m, null, null, '0'],
+    ['Same encoder, equal weights (mean-pool)', r.meanpool.mae_q1_mph, r.meanpool.mae_q2_m, null, null, r.params_meanpool],
+    ['Cross-attention (this page)', r.xattn.mae_q1_mph, r.xattn.mae_q2_m, r.xattn.top1_q1, r.xattn.top1_q2, r.params_xattn] ];
+  let h = '<tr><th>Method</th><th class="n">Q1 error (mph)</th><th class="n">Q2 error (m)</th><th class="n">Q1 looks at the right token</th><th class="n">Q2 looks at the right token</th><th class="n">parameters</th></tr>';
+  rows.forEach((x,i) => h += `<tr${i===3?' class="hl"':''}><td>${x[0]}</td><td class="n">${x[1].toFixed(2)}</td><td class="n">${x[2].toFixed(1)}</td><td class="n">${x[3]==null?'–':fmt(x[3],'pct')}</td><td class="n">${x[4]==null?'–':fmt(x[4],'pct')}</td><td class="n">${fmt(+x[5],'int')}</td></tr>`);
+  $('#evalTbl').innerHTML = h;
+  const ratio = r.meanpool.mae_q1_mph / r.xattn.mae_q1_mph;
+  $('#evalNote').textContent = `Mean absolute error on ${fmt(r.test_n,'int')} unseen synthetic scenes. "Looks at the right token" is the share of scenes where the largest weight lands on the vehicle (or map token) the rule would pick. The weights were never supervised. Mean-pooling uses the same token encoder and slightly more parameters, and its Q1 error is ${ratio.toFixed(1)}× larger: averaging the scene is not selecting from it. Leader missing in ${fmt(r.no_leader_share,'pct')} of test scenes, lag vehicle missing in ${fmt(r.no_lag_share,'pct')}.`;
+  const sd = DATA.seeds;
+  $('#seedLine').textContent = `the same recipe was trained with ${sd.length} random seeds. Share of test scenes where each question looked at the right token: ` +
+    sd.map(s => `seed ${s.seed}: Q1 ${fmt(s.top1_q1,'pct')}, Q2 ${fmt(s.top1_q2,'pct')}`).join('; ') +
+    `. The page runs seed ${DATA.chosen_seed}, the best of the ${sd.length}. In the others a question stalled on a wrong pattern, and nothing in the training loss warned about it. Report the spread across seeds, never only your best run.`;
+})();
+
+/* ---------------- page 5 numbers ---------------- */
+(function(){
+  const a = R.ablate_map;
+  $('#brkMap').innerHTML = `On the ${fmt(a.scenes,'int')} test scenes with <b>no lane-1 leader within 100 m</b>, the right answer is the posted speed, and the model gets it by
+    putting its weight on the map token: Q1 error ${a.mae_q1_with_map.toFixed(2)} mph. Remove the map token and the softmax still has to hand out 100% of the weight,
+    so it lands on whichever vehicle scores least badly. The error becomes <b>${a.mae_q1_without_map.toFixed(1)} mph</b>. A sum-to-one layer cannot say "nothing here".`;
+  const c = DATA.cutin;
+  const r75 = c.rows[3], r100 = c.rows[4];
+  $('#brkCut').innerHTML = `Vehicle E (${c.vE} mph) sits 15 m ahead and moves from lane 2 into lane 1. The current leader, A, is 35 m ahead doing ${c.vA} mph.
+    In training the lane feature was only ever 0 or 1, and the model treats it as a switch. Three quarters of the way across, E still gets a weight of
+    ${r75.aE.toExponential(0)}, so the model notices the cut-in late. Once E is fully across, E is the new leader and the rule says ${c.vE} mph, but the model answers
+    <b>${r100.y.toFixed(1)} mph</b>. E takes ${r100.aE.toFixed(2)} of the weight and A keeps ${r100.aA.toFixed(2)}, so the answer lands between two cars at a speed neither is driving.
+    Soft attention averages close competitors. A tracker would keep one hypothesis per target instead.`;
+  let h = '<tr><th>E’s position</th><th class="n">weight on E</th><th class="n">weight on A</th><th class="n">Q1 answer (mph)</th></tr>';
+  c.rows.forEach(r => h += `<tr><td>${r.label}</td><td class="n">${r.aE.toFixed(3)}</td><td class="n">${r.aA.toFixed(3)}</td><td class="n">${r.y.toFixed(1)}</td></tr>`);
+  $('#cutTbl').innerHTML = h;
+  const b = R.by_n; const ns = Object.keys(b).map(Number).sort((x,y)=>x-y);
+  $('#brkLen').innerHTML = `Trained on 3 to 8 vehicles. The architecture accepts any number, so nothing stops you feeding it 24, and nothing warns you either.
+    With 24 vehicles, question 1 puts only ${b[24].mass_q1.toFixed(2)} of its weight on the right vehicle, down from ${b[8].mass_q1.toFixed(2)} at 8, and its error grows
+    from ${b[8].mae_q1_mph.toFixed(2)} to ${b[24].mae_q1_mph.toFixed(2)} mph. Every extra vehicle takes a little weight, because a softmax spreads over whatever it is given.
+    Question 2 holds up better on these scenes. It degrades gradually rather than failing outright, which makes it easy to miss in a demo.`;
+  let t = '<tr><th>vehicles in scene</th><th class="n">Q1 error (mph)</th><th class="n">Q1 weight on the right token</th><th class="n">Q2 error (m)</th></tr>';
+  ns.forEach(n => t += `<tr${n>=3&&n<=8?' class="hl"':''}><td>${n}${n>=3&&n<=8?' (in range)':''}</td><td class="n">${b[n].mae_q1_mph.toFixed(2)}</td><td class="n">${b[n].mass_q1.toFixed(3)}</td><td class="n">${b[n].mae_q2_m.toFixed(1)}</td></tr>`);
+  $('#lenTbl').innerHTML = t;
+})();
+
+/* ---------------- page 3: MNL ---------------- */
+const ALTS = [
+  {nm:'Drive, general lanes', time:32, cost:12, buf:15, co2:4.2},
+  {nm:'Drive, express toll lane', time:24, cost:17, buf:4, co2:4.0},
+  {nm:'Express bus', time:44, cost:2, buf:9, co2:1.1},
+  {nm:'Ride-hail', time:30, cost:26, buf:10, co2:5.0} ];
+let blue = false;
+function mnl(){
+  const vot = +$('#sVot').value, rho = +$('#sRel').value, mu = +$('#sMu').value;
+  $('#vVot').textContent = `$${vot}/h`; $('#vRel').textContent = `ρ = ${rho.toFixed(2)}`; $('#vMu').textContent = `μ = ${mu.toFixed(2)}`;
+  const alts = ALTS.slice(); if (blue) alts.splice(3, 0, Object.assign({}, ALTS[2], {nm:'Express bus (blue livery)', dup:true}));
+  const q = [-mu*vot/60, -mu, -mu*rho*vot/60];
+  const V = alts.map(a => q[0]*a.time + q[1]*a.cost + q[2]*a.buf);
+  const m = Math.max(...V), e = V.map(v=>Math.exp(v-m)), Z = e.reduce((x,y)=>x+y,0), P = e.map(x=>x/Z);
+  let h = `<div class="alt hd"><span>alternative j (key k<sub>j</sub>)</span><span class="n">time, min</span><span class="n">cost, $</span><span class="n">buffer, min</span><span class="n">q·k<sub>j</sub></span><span>share α<sub>j</sub></span></div>`;
+  alts.forEach((a,i) => h += `<div class="alt${a.dup?' dup':''}"><span class="nm">${esc(a.nm)}</span><span class="n">${a.time}</span><span class="n">${a.cost}</span><span class="n">${a.buf}</span><span class="n">${V[i].toFixed(2)}</span><span style="display:flex;gap:8px;align-items:center"><span class="bar" style="flex:1"><i style="width:${(100*P[i]).toFixed(1)}%"></i></span><span class="mono num" style="width:3.6em;text-align:right">${(100*P[i]).toFixed(1)}%</span></span></div>`);
+  $('#alts').innerHTML = h;
+  const Et = alts.reduce((s,a,i)=>s+P[i]*a.time,0), Ec = alts.reduce((s,a,i)=>s+P[i]*a.cost,0), Eco2 = alts.reduce((s,a,i)=>s+P[i]*a.co2,0);
+  $('#mnlOut').innerHTML = `query q = [${q.map(x=>x.toFixed(3)).join(', ')}]<br>output = Σ α<sub>j</sub> v<sub>j</sub>:<br>&nbsp; expected time ${Et.toFixed(1)} min<br>&nbsp; expected cost $${Ec.toFixed(2)}<br>&nbsp; expected CO₂ ${Eco2.toFixed(2)} kg <span class="small">(illustrative)</span>`;
+  const busShare = alts.reduce((s,a,i)=> s + (/Express bus/.test(a.nm) ? P[i] : 0), 0);
+  if (!blue) window.__busOne = busShare;
+  $('#mnlNote').innerHTML = blue
+    ? `With two identical buses, bus share is <b>${(100*busShare).toFixed(1)}%</b>, up from ${(100*(window.__busOne||0)).toFixed(1)}% with one. Nothing about the trip changed, only the list of tokens did. The ratio between any two other alternatives stayed exactly the same: that is IIA.`
+    : `Raise the value of time and the share moves to the fast, expensive options. Lower μ (a higher temperature) and every share drifts toward ${(100/alts.length).toFixed(0)}%. This is the same effect as dividing by √d in attention. The output is not a choice. It is the expected time, cost and CO₂ under these shares, which is exactly what an attention layer hands to the next layer.`;
+}
+['#sVot','#sRel','#sMu'].forEach(s => $(s).addEventListener('input', mnl));
+$('#bBlue').onclick = () => { if (!blue) window.__busOne = null; mnl(); blue = !blue; $('#bBlue').classList.toggle('on', blue); $('#bBlue').textContent = blue ? 'Remove the blue bus' : 'Add a “blue bus”'; mnl(); };
+mnl();
+
+/* ---------------- page 4: gallery ---------------- */
+const G = DATA.gallery;
+function miniSvg(g){ // one generic "who asks / who answers" glyph, sized to the card's numbers
+  const nq = Math.min(g.q_draw, 8), nk = Math.min(g.kv_draw, 12);
+  const qy = i => 8 + i*(64/Math.max(nq,1)), qh = Math.min(12, 64/nq - 3);
+  const ky = j => 8 + j*(64/Math.max(nk,1)), kh = Math.min(10, 64/nk - 2);
+  let s = `<svg class="mini" viewBox="0 0 440 84" role="img" aria-label="${esc(g.title)}: queries on the left attend to tokens on the right">`;
+  for (let i=0;i<nq;i++){ for (let j=0;j<nk;j++){ if ((i*5+j*3)%4) continue; s += `<line x1="132" y1="${qy(i)+qh/2}" x2="290" y2="${ky(j)+kh/2}" stroke="#2E7D5C" stroke-opacity=".3"/>`; } }
+  for (let i=0;i<nq;i++) s += `<rect x="108" y="${qy(i)}" width="24" height="${qh}" rx="2.5" fill="#006747"/>`;
+  for (let j=0;j<nk;j++) s += `<rect x="290" y="${ky(j)}" width="24" height="${kh}" rx="2" fill="#0E6E9E"/>`;
+  s += `<text x="100" y="44" text-anchor="end" font-size="11.5" font-weight="700" fill="#006747">${esc(g.q_short)}</text><text x="322" y="44" font-size="11.5" font-weight="700" fill="#0E6E9E">${esc(g.kv_short)}</text></svg>`;
+  return s;
+}
+$('#gallery').innerHTML = G.map(g => `<div class="gcard"><div class="dom">${esc(g.domain)}</div><h3>${esc(g.title)}</h3>${miniSvg(g)}
+  <div class="qa"><span class="k q">Asks</span><span>${g.asks}</span><span class="k kv">Answers</span><span>${g.answers}</span><span class="k n">How many</span><span>${g.howmany}</span></div>
+  <p style="font-size:13.8px;margin:0">${g.why}</p><div class="src">${g.src}</div></div>`).join('');
+
+/* ---------------- page 4: cost calculator ---------------- */
+function cost(){
+  const tq = +$('#cTq').value, tk = +$('#cTkv').value; $('#vTq').textContent = tq.toLocaleString('en-US'); $('#vTkv').textContent = tk.toLocaleString('en-US');
+  const cross = tq*tk, self = tk*tk;
+  $('#costOut').innerHTML = `cross-attention table: ${tq.toLocaleString('en-US')} × ${tk.toLocaleString('en-US')} = <b>${cross.toLocaleString('en-US')}</b> entries<br>self-attention over the same input: ${tk.toLocaleString('en-US')}² = ${self.toLocaleString('en-US')} entries<br>ratio: <b>${(self/cross).toFixed(1)}×</b> smaller`;
+}
+['#cTq','#cTkv'].forEach(s => $(s).addEventListener('input', cost));
+const preset = (q,k) => () => { $('#cTq').value = q; $('#cTkv').value = k; cost(); };
+$('#pMetr').onclick = preset(64, 2484); $('#pPerc').onclick = preset(512, 50176); $('#pDetr').onclick = preset(100, 920);
+cost();
+
+setScene(defaultScene());
+})();
+</script>
+</body>
+</html>
