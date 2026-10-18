@@ -1550,6 +1550,21 @@ items:
       every number comes from genmodels/numbers.json. Edit the source and re-run, never the rendered page.
       Figures copied to _static/figures/ from genmodels/fig/.
 
+  - id: m3-notes2b-latent-variables
+    file: site/module3/notes2b-latent-variables.md
+    kind: notes
+    module: 3
+    session: 2026-10-22
+    status: drafted
+    notes: >-
+      3.3 Latent variables: hidden causes, not hidden layers (Oct 18 2026). Inserted before the VAE at Hao's request, so the
+      VAE, GAN and mixture pages became 3.4, 3.5 and 3.6 (file names and URLs unchanged). Latent representation (BERT, ViT)
+      vs latent variable; PCA vs probabilistic PCA; the guess/refit loop; which of the five CTM knobs can be found (all five
+      regenerated from ctm_vae.py's seed; 200,000 extra CTM runs as the reference posterior); prior coverage (plain
+      autoencoder vs VAE, four ways to draw); generating and steering. Rendered by genmodels/write_notes.py from
+      genmodels/notes_src/notes2b-latent-variables.md; numbers from genmodels/lv_numbers.json (lv_experiments.py), figures
+      GenLV_* from lv_figures.py, copied to _static/figures/ from genmodels/book/. No deck yet.
+
   - id: m3-notes3-vae
     file: site/module3/notes3-vae.md
     kind: notes
@@ -1557,7 +1572,7 @@ items:
     session: 2026-10-22
     status: drafted
     notes: >-
-      3.3 A few hidden knobs: the VAE. Expanded from VAE_Hidden_Knobs_Slides. Rendered by genmodels/write_notes.py from genmodels/notes_src/notes3-vae.md;
+      3.4 (was 3.3 until Oct 18) A few hidden knobs: the VAE. Expanded from VAE_Hidden_Knobs_Slides. Rendered by genmodels/write_notes.py from genmodels/notes_src/notes3-vae.md;
       every number comes from genmodels/numbers.json. Edit the source and re-run, never the rendered page.
       Figures copied to _static/figures/ from genmodels/fig/.
 
@@ -1568,7 +1583,7 @@ items:
     session: 2026-10-22
     status: drafted
     notes: >-
-      3.4 A forger, a critic, and a first scorecard. Expanded from GAN_Forger_Critic_Slides. Rendered by genmodels/write_notes.py from genmodels/notes_src/notes4-gan.md;
+      3.5 (was 3.4 until Oct 18) A forger, a critic, and a first scorecard. Expanded from GAN_Forger_Critic_Slides. Rendered by genmodels/write_notes.py from genmodels/notes_src/notes4-gan.md;
       every number comes from genmodels/numbers.json. Edit the source and re-run, never the rendered page.
       Figures copied to _static/figures/ from genmodels/fig/.
 
@@ -1618,7 +1633,8 @@ items:
       Reproducers for Evening A (Parts 0-3): ar_train.py, baselines.py, vae_train.py, gan_train.py on data.npz
       (split 3,200/400/400, seed 7), gm_numbers.py -> numbers.json, build_figures.py + render.py --deck,
       write_outlines.py, build_decks.py, write_notes.py, audit_slides.py. Also the hidden-cause section 3.5 (Oct 18):
-      mix_station_extract.py, mix_detector.py, mix_heatmaps.py, mix_figures.py. Supersedes genit/ (Oct 16). See its README.
+      mix_station_extract.py, mix_detector.py, mix_heatmaps.py, mix_figures.py. Also the latent-variables section 3.3
+      (Oct 18): lv_common.py, lv_experiments.py -> lv_numbers.json, lv_figures.py. Supersedes genit/ (Oct 16). See its README.
 
   - id: m3-decoder-training-lab
     file: Labs/decoder_training_lab.ipynb
@@ -1653,7 +1669,7 @@ items:
     module: 3
     session: unscheduled (VAE-and-diffusion lecture, after Oct 22)
     status: drafted
-    notes: '3.5 One hidden cause: mixture models. Expanded from Hidden_Cause_Mixture_Slides. Rendered by
+    notes: '3.6 (was 3.5 until Oct 18) One hidden cause: mixture models. Expanded from Hidden_Cause_Mixture_Slides. Rendered by
       genmodels/write_notes.py from genmodels/notes_src/notes5-hidden-cause.md; numbers come from genmodels/mix_detector.json,
       mix_heatmaps.json and numbers.json. Edit the source and re-run, never the rendered page. Figures copied
       to _static/figures/ from genmodels/book/. The session card says "VAE and diffusion"; add the date

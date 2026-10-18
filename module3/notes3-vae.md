@@ -1,8 +1,8 @@
-# 3.3 A few hidden knobs: the variational autoencoder
+# 3.4 A few hidden knobs: the variational autoencoder
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 3 &middot; Section 3.3</span>
+    <span class="notes-card-eyebrow">Module 3 &middot; Section 3.4</span>
     <span class="notes-card-session">Session: Oct 22</span>
   </div>
   <p class="notes-card-lede">The second answer: compress each heatmap into a few hidden numbers, learn to rebuild it from them, and make new heatmaps by drawing new numbers. A new heatmap now takes one pass instead of 400. With no labels, its knobs line up clearly with one of the simulator's own knobs and partly with another, and its blur can be measured and explained.</p>
@@ -11,6 +11,7 @@
       <h4>Read it before</h4>
       <ul>
       <li><a href="notes2-autoregressive.html">3.2 One cell at a time</a></li>
+      <li><a href="notes2b-latent-variables.html">3.3 Latent variables: hidden causes, not hidden layers</a></li>
       </ul>
     </div>
     <div>
@@ -140,10 +141,12 @@ that made it.
   5% of its variance.
 
 Nobody told the network about density or bottlenecks. Two knobs cannot hold five causes, and which ones it
-kept was not chosen by us. Inflow is a plausible miss: below capacity, more inflow does not change the free-flow
-speed at all, so in a speed heatmap it shows only through how fast queues grow. When the bottleneck starts and
-how long it lasts were not tested, because the dataset does not store them. The core idea still holds: a
-compression of the traffic state was learned rather than written down.
+kept was not chosen by us. Inflow is not invisible: below capacity it does not change the free-flow speed, but
+it does change how fast queues grow and clear, and section 3.3 shows that one heatmap cuts its uncertainty roughly
+in half. With two knobs it loses out to bigger causes; with eight, the VAE explains 43% of its variance. The
+dataset does not store when the bottleneck starts or how long it lasts; section 3.3 regenerates both, and two
+knobs explain 16% and 1% of their variance. The core idea still holds: a compression of the traffic state was
+learned rather than written down.
 
 Two cautions before anyone builds a "congestion index" on knob 1. The knobs have no fixed direction:
 retrain the model and knob 1 may come out flipped or rotated into knob 2. And a learned knob has to

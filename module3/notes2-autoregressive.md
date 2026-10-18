@@ -16,7 +16,7 @@
     </div>
     <div>
       <h4>Read it after</h4>
-      <ul><li><a href="notes3-vae.html">3.3 A few hidden knobs: the VAE</a></li></ul>
+      <ul><li><a href="notes2b-latent-variables.html">3.3 Latent variables: hidden causes, not hidden layers</a></li></ul>
     </div>
   </div>
 </div>
@@ -224,7 +224,7 @@ The transformer made A, B, F, G. The real held-out heatmaps are C, D, E, H.
 
 Being hard to tell apart by eye is necessary and not nearly sufficient. People judge a handful of
 samples on how sharp they look. They cannot see whether the model covers *all* the kinds of traffic in
-the data, or whether it is quietly copying training heatmaps. Section 3.4 measures both.
+the data, or whether it is quietly copying training heatmaps. Section 3.5 measures both.
 
 :::{admonition} Before you trust this result
 :class: warning
@@ -291,5 +291,6 @@ probabilities, and then diversity becomes something you must measure. This is wh
 
 ---
 
-Next: {doc}`notes3-vae` &mdash; the second answer, which makes a heatmap in one pass instead of
+Next: {doc}`notes2b-latent-variables` &mdash; what a latent variable is, and how it differs from the hidden vectors of
+BERT and the ViT. Then the second answer, the VAE, which makes a heatmap in one pass instead of
 400.
