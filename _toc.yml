@@ -74,6 +74,8 @@ parts:
             title: "3.3 A few hidden knobs: the VAE"
           - file: module3/notes4-gan
             title: "3.4 A forger, a critic, a scorecard"
+          - file: module3/notes5-hidden-cause
+            title: "3.5 One hidden cause: mixture models"
       - file: module4/index
         sections:
           # Same flat shape as Modules 1 and 2 -- section pages directly

@@ -30,12 +30,12 @@ models — the attempt to learn a simulator rather than write one.
 
 :::{admonition} How to read this module
 :class: tip
-Sections 3.1&ndash;3.4 pair with the Oct 22 meeting; skim before, read properly after. Diffusion and
-world models follow. Each page opens with a card naming its session.
+Sections 3.1&ndash;3.4 pair with the Oct 22 meeting; skim before, read properly after. Section 3.5
+opens the VAE-and-diffusion session; diffusion and world models follow. Each page opens with a card naming its session.
 
 Every result on these pages comes from one dataset, the 4,000 cell-transmission-model speed heatmaps
 that the VAE lab is built on, split the same way everywhere, so the four answers to "how do you draw a
-realistic traffic state?" can be compared directly. If you read only one page before class, read
+realistic traffic state?" can be compared directly. Section 3.5 adds one real PeMS detector. If you read only one page before class, read
 {doc}`3.1 <notes1-producing>`: the joint-versus-marginals figure is the idea the rest builds on.
 :::
 
@@ -64,6 +64,11 @@ realistic traffic state?" can be compared directly. If you read only one page be
   <td><a href="notes4-gan.html"><strong>3.4 A forger, a critic, and a first scorecard</strong></a><br><em>Oct 22</em></td>
   <td>The two-player game; precision and recall for generators; how much a GAN wanders between runs; the first three answers scored on the same held-out heatmaps.</td>
   <td><a href="../labs.html">From VAE to diffusion</a></td>
+</tr>
+<tr>
+  <td><a href="notes5-hidden-cause.html"><strong>3.5 One hidden cause: mixture models</strong></a><br><em>VAE and diffusion session</em></td>
+  <td>One detector&rsquo;s speeds as two hidden regimes; the two-step recipe; the soft guess; fitting without labels (EM); the same idea on the heatmaps and where it breaks; mixture, VAE and diffusion as three choices of hidden cause.</td>
+  <td>&mdash;</td>
 </tr>
 </tbody>
 </table>

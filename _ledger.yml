@@ -1617,7 +1617,8 @@ items:
     notes: >-
       Reproducers for Evening A (Parts 0-3): ar_train.py, baselines.py, vae_train.py, gan_train.py on data.npz
       (split 3,200/400/400, seed 7), gm_numbers.py -> numbers.json, build_figures.py + render.py --deck,
-      write_outlines.py, build_decks.py, write_notes.py, audit_slides.py. Supersedes genit/ (Oct 16). See its README.
+      write_outlines.py, build_decks.py, write_notes.py, audit_slides.py. Also the hidden-cause section 3.5 (Oct 18):
+      mix_station_extract.py, mix_detector.py, mix_heatmaps.py, mix_figures.py. Supersedes genit/ (Oct 16). See its README.
 
   - id: m3-decoder-training-lab
     file: Labs/decoder_training_lab.ipynb
@@ -1646,6 +1647,30 @@ items:
       Labs/representation_quality_lab.ipynb.
 
 # -----------------------------------------------------------------------------
+  - id: m3-notes5-hidden-cause
+    file: site/module3/notes5-hidden-cause.md
+    kind: notes
+    module: 3
+    session: unscheduled (VAE-and-diffusion lecture, after Oct 22)
+    status: drafted
+    notes: '3.5 One hidden cause: mixture models. Expanded from Hidden_Cause_Mixture_Slides. Rendered by
+      genmodels/write_notes.py from genmodels/notes_src/notes5-hidden-cause.md; numbers come from genmodels/mix_detector.json,
+      mix_heatmaps.json and numbers.json. Edit the source and re-run, never the rendered page. Figures copied
+      to _static/figures/ from genmodels/book/. The session card says "VAE and diffusion"; add the date
+      when the lecture is scheduled.'
+
+  - id: m3-deck-hidden-cause-mixture
+    file: Hidden_Cause_Mixture_Slides.pptx
+    kind: deck
+    module: 3
+    session: unscheduled (VAE-and-diffusion lecture, after Oct 22)
+    status: drafted
+    notes: 'Opener of the VAE-and-diffusion lecture: a real PeMS detector (I-405 N, station 772455, May
+      fit / June check) as two hidden regimes, the soft guess, EM, then a 50-class latent class model on
+      the CTM heatmaps, where it breaks, and mixture / VAE / diffusion as three hidden causes. 11 slides
+      + header + 1 backup, about 20-25 minutes. Outline Hidden_Cause_Mixture_Slides.md; both built from
+      genmodels/slides_content.py by write_outlines.py and build_decks.py.'
+
 # MODULES 4-8 — Module 4 has its first section page; Modules 5-8 not started
 # -----------------------------------------------------------------------------
 
