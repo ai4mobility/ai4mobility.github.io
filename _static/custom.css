@@ -53,6 +53,11 @@ header.navbar {
 .bd-main table thead th {
     color: #ffffff !important;
 }
+/* The theme paints the header row itself (.table thead tr) in its pale
+   heading colour, which covers the green above and hides the white text. */
+.bd-main table thead tr {
+    background-color: var(--usf-green);
+}
 
 /* Active sidebar item */
 .bd-sidebar-primary .nav-link.active,
