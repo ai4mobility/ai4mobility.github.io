@@ -126,7 +126,7 @@ models can be scored exactly, which the next sections use.
 Take logs of the chain rule. The log of a product is the sum of the logs, so
 $\log p(x) = \sum_i \log p(x_i \mid x_{<i})$. Each term is conditioned on everything before it; drop
 the conditioning and the sum becomes $\sum_i \log p(x_i)$, the marginals from section 3.1, which describes the
-right-hand panel of the joint-versus-marginals figure. Measured in bits (logs base 2), the average of
+shuffled panel of the joint-versus-marginals figure. Measured in bits (logs base 2), the average of
 $-\log_2 p(x_i \mid x_{<i})$ over cells is the *bits per cell* used below.
 :::
 

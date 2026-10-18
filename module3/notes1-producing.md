@@ -85,35 +85,50 @@ times the size of one heatmap.
 ## What "realistic" means: the joint
 
 ```{figure} ../_static/figures/GenM_Joint_vs_Marginals.png
-:alt: Left, a real CTM heatmap with a clear queue front. Right, the same 400 cells each drawn independently from their own distribution, which looks like noise.
+:alt: Left, one real CTM heatmap with a clear queue front. Middle, one heatmap from the shuffled set, which looks like noise. Right, bars for one outlined cell across all 4,000 heatmaps, identical in the real and the shuffled set.
 :width: 100%
 
-Each cell on the right has exactly the right distribution of speeds. The shockwave is gone.
+Each panel is one heatmap from its set. The bars follow the outlined cell through all 4,000 heatmaps of each set: the same spread of speeds in both. The shockwave is gone all the same.
 ```
 
 Here is an experiment that says what a generative model must get right. Take the 4,000
-heatmaps. For each of the 400 cells separately, shuffle that cell's value across the
-4,000 heatmaps. A shuffle keeps every cell's own spread of speeds exactly: each cell's average and standard deviation are
-unchanged, apart from computer rounding. What it destroys is every relationship between cells.
+heatmaps. For each of the 400 cells separately, take that cell's 4,000 values and
+deal them out to the 4,000 heatmaps in random order. Nothing is added or lost: every cell
+ends up holding exactly the same 4,000 speeds it had before, only in different heatmaps.
+What the shuffle destroys is every relationship between cells, because neighbouring cells in a
+shuffled heatmap now come from different simulation runs.
 
-The result, on the right of the figure, is not a traffic state. In the real heatmaps, road cells next
+The result, in the middle of the figure, is not a traffic state. In the real heatmaps, road cells next
 to each other differ by **4.06 mph** on average and are correlated at
 0.942. In the shuffled ones they differ by **25.63 mph** and are
 correlated at 0.059: free flow sits next to a jam with no front between them.
 
-The distribution of a single cell is called its *marginal*. The distribution of all 400
+Now follow one cell, the outlined one, through all 4,000 heatmaps (right of the figure).
+In the real set it is below 30 mph in 43% of them, between 30 and
+60 mph in 21%, and 60 mph or faster in 36%. In the shuffled
+set the numbers are identical, because the shuffle only moved its values between heatmaps. The same
+holds for every one of the 400 cells. This spread of one cell's speeds across the whole set is
+called the cell's *marginal*, so the real and the shuffled set have the same 400 marginals.
+
+One thing that trips people up: the two heatmaps on the left do not even have the same mix of colours.
+They should not. A cell's spread of speeds belongs to the whole set of 4,000 heatmaps, not
+to any one picture. The real heatmap shown was picked for its wide speed range and is mostly jammed
+(71% of its cells are below 30 mph). A random heatmap from the shuffled set looks
+like the set as a whole, where 45% of all cells are at 60 mph or faster.
+
+The distribution of all 400
 cells together, including how they move together, is the *joint*. The experiment shows that
 everything a traffic engineer cares about lives in the joint. That queues grow backwards at a finite
 wave speed, that a front is continuous, that a cell looks like its neighbours a moment earlier: none of
 it is visible in any single cell. So when we say *generating a heatmap is drawing a sample from a joint
 distribution*, the word "joint" carries the whole idea. A model that matches the marginals and nothing
-else produces the right-hand panel.
+else produces the middle panel.
 
 :::{admonition} Going deeper &mdash; how big is the joint?
 :class: dropdown
 Round each speed to one of 25 bins 3 mph wide. A heatmap is then one choice out of $25^{400}$, about
 $10^{559}$: a number with 560 digits. No table can list the probability of each one,
-and almost all of them look like the right-hand panel. A generative model has to put nearly all of its
+and almost all of them look like the shuffled panel. A generative model has to put nearly all of its
 probability on the tiny fraction that look like traffic, using a few hundred thousand weights. The four
 answers in this module are four ways of making that possible.
 :::
