@@ -63,6 +63,17 @@ parts:
           - file: module2/notes14-labs
             title: "Practice, exercises, and further reading"
       - file: module3/index
+        sections:
+          # Same flat shape as Modules 1 and 2 -- section pages directly under the
+          # module index, which carries the map. See NOTES_GUIDE.md.
+          - file: module3/notes1-producing
+            title: "3.1 From predicting to producing"
+          - file: module3/notes2-autoregressive
+            title: "3.2 One cell at a time"
+          - file: module3/notes3-vae
+            title: "3.3 A few hidden knobs: the VAE"
+          - file: module3/notes4-gan
+            title: "3.4 A forger, a critic, a scorecard"
       - file: module4/index
         sections:
           # Same flat shape as Modules 1 and 2 -- section pages directly

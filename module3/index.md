@@ -1,12 +1,12 @@
 # Module 3 — Generative AI and World Models
 
-*Weeks 5 and 13 of the {doc}`../syllabus` — Sept 24 and Nov 19, 2026.*
+*Generative models open on Oct 22, after the GNN week; world models return on Nov 19. See the {doc}`../syllabus`.*
 
 ## Class meetings
 
 | Date | Session topic | Due before class |
 |---|---|---|
-| Sept 24 | Generative AI foundations, including latent variables, VAE, GAN, diffusion models, and world models | **One-page project proposal** |
+| Oct 22 | Generative models, part 1: what changes when a model produces data; autoregressive generation, VAE, GAN, and a first scorecard (3.1&ndash;3.4) | **Rotating project progress report: Team 4** |
 | Nov 19 | World model applications in mobility *(shared session — model reliability and the cost, computation, and deployment side are covered in {doc}`../module8/index`)* | Draft final project materials |
 
 ## Overview
@@ -25,6 +25,49 @@ whole corridor's behavior can be summarized by a handful of numbers — density,
 A latent-variable model does the same thing, except it learns which few numbers to keep. This
 module builds from that idea through VAEs, GANs, and diffusion, and closes with world
 models — the attempt to learn a simulator rather than write one.
+
+## The module, page by page
+
+:::{admonition} How to read this module
+:class: tip
+Sections 3.1&ndash;3.4 pair with the Oct 22 meeting; skim before, read properly after. Diffusion and
+world models follow. Each page opens with a card naming its session.
+
+Every result on these pages comes from one dataset, the 4,000 cell-transmission-model speed heatmaps
+that the VAE lab is built on, split the same way everywhere, so the four answers to "how do you draw a
+realistic traffic state?" can be compared directly. If you read only one page before class, read
+{doc}`3.1 <notes1-producing>`: the joint-versus-marginals figure is the idea the rest builds on.
+:::
+
+<div class="practice-table-wrap">
+<table class="practice-table notes-map">
+<thead>
+<tr><th style="width:30%">Page</th><th style="width:48%">What it covers</th><th style="width:22%">Labs</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="notes1-producing.html"><strong>3.1 From predicting to producing</strong></a><br><em>Oct 22</em></td>
+  <td>Four requests that need new data rather than a label; p(y | x) versus p(x); why a realistic traffic state is a matter of the <em>joint</em> distribution; the four answers.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes2-autoregressive.html"><strong>3.2 One cell at a time</strong></a><br><em>Oct 22</em></td>
+  <td>The chain rule; next-cell prediction over 25 speed bins; why the training loss is the likelihood; bits per cell against a CTM-shaped baseline; where the model is uncertain.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes3-vae.html"><strong>3.3 A few hidden knobs: the VAE</strong></a><br><em>Oct 22</em></td>
+  <td>Macroscopic state reduction, learned; encoder, decoder and the two-term loss; the knobs it rediscovers; why it blurs, measured; VAE against PCA.</td>
+  <td><a href="../labs.html">VAE on traffic heatmaps</a></td>
+</tr>
+<tr>
+  <td><a href="notes4-gan.html"><strong>3.4 A forger, a critic, and a first scorecard</strong></a><br><em>Oct 22</em></td>
+  <td>The two-player game; precision and recall for generators; how much a GAN wanders between runs; the first three answers scored on the same held-out heatmaps.</td>
+  <td><a href="../labs.html">From VAE to diffusion</a></td>
+</tr>
+</tbody>
+</table>
+</div>
 
 ## Learning objectives
 
@@ -45,6 +88,8 @@ By the end of this module you will be able to:
 
 ## Topics
 
+- What changes when a model produces data: the joint distribution, and how to score a generator
+- Autoregressive generation: the chain rule and next-cell prediction
 - Latent variables, manifolds, and dimensionality reduction
 - Autoencoders → variational autoencoders; the ELBO (referenced, not re-derived)
 - Reading a latent space: structure, interpolation, and fragmentation

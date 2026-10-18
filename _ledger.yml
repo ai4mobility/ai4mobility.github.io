@@ -1471,6 +1471,9 @@ items:
     module: 3
     session: [2026-09-24, 2026-11-19]
     status: debt
+    notes: >-
+      Oct 17 2026: Module 3 follows the split-page shape instead of one notes.md. Pages 3.1-3.4 exist (rows
+      m3-notes1..4). Still owed: the diffusion pages and the world-model application page (Nov 19).
 
   - id: m3-vae-traffic-lab-companion
     file: VAE_Traffic_Lab.html
@@ -1524,6 +1527,97 @@ items:
     session: 2026-09-24
     status: raw
     notes: Solution notebook exists (dashcam_vae_lab_SOLUTION.ipynb) — keep off the site.
+
+  - id: m3-notes1-producing
+    file: site/module3/notes1-producing.md
+    kind: notes
+    module: 3
+    session: 2026-10-22
+    status: drafted
+    notes: >-
+      3.1 From predicting to producing. Expanded from Generative_Models_Intro_Slides. Rendered by genmodels/write_notes.py from genmodels/notes_src/notes1-producing.md;
+      every number comes from genmodels/numbers.json. Edit the source and re-run, never the rendered page.
+      Figures copied to _static/figures/ from genmodels/fig/.
+
+  - id: m3-notes2-autoregressive
+    file: site/module3/notes2-autoregressive.md
+    kind: notes
+    module: 3
+    session: 2026-10-22
+    status: drafted
+    notes: >-
+      3.2 One cell at a time. Expanded from Generative_Image_Transformers_Slides. Rendered by genmodels/write_notes.py from genmodels/notes_src/notes2-autoregressive.md;
+      every number comes from genmodels/numbers.json. Edit the source and re-run, never the rendered page.
+      Figures copied to _static/figures/ from genmodels/fig/.
+
+  - id: m3-notes3-vae
+    file: site/module3/notes3-vae.md
+    kind: notes
+    module: 3
+    session: 2026-10-22
+    status: drafted
+    notes: >-
+      3.3 A few hidden knobs: the VAE. Expanded from VAE_Hidden_Knobs_Slides. Rendered by genmodels/write_notes.py from genmodels/notes_src/notes3-vae.md;
+      every number comes from genmodels/numbers.json. Edit the source and re-run, never the rendered page.
+      Figures copied to _static/figures/ from genmodels/fig/.
+
+  - id: m3-notes4-gan
+    file: site/module3/notes4-gan.md
+    kind: notes
+    module: 3
+    session: 2026-10-22
+    status: drafted
+    notes: >-
+      3.4 A forger, a critic, and a first scorecard. Expanded from GAN_Forger_Critic_Slides. Rendered by genmodels/write_notes.py from genmodels/notes_src/notes4-gan.md;
+      every number comes from genmodels/numbers.json. Edit the source and re-run, never the rendered page.
+      Figures copied to _static/figures/ from genmodels/fig/.
+
+  - id: m3-deck-generative-models-intro
+    file: Generative_Models_Intro_Slides.pptx
+    kind: deck
+    module: 3
+    session: 2026-10-22
+    status: drafted
+    notes: >-
+      Part 0: why a generator, p(y|x) vs p(x), the joint vs the marginals, one question four answers. 5 slides. Outline Generative_Models_Intro_Slides.md; both built from genmodels/slides_content.py by write_outlines.py and build_decks.py.
+
+  - id: m3-deck-generative-image-transformers
+    file: Generative_Image_Transformers_Slides.pptx
+    kind: deck
+    module: 3
+    session: 2026-10-22
+    status: drafted
+    notes: >-
+      Part 1: autoregressive generation on the CTM heatmaps; replaces the Oct 16 opener of the same name (its slides moved to Part 0). 11 slides + 3 backups. Outline Generative_Image_Transformers_Slides.md; both built from genmodels/slides_content.py by write_outlines.py and build_decks.py.
+
+  - id: m3-deck-vae-hidden-knobs
+    file: VAE_Hidden_Knobs_Slides.pptx
+    kind: deck
+    module: 3
+    session: 2026-10-22
+    status: drafted
+    notes: >-
+      Part 2: the lab VAE retrained on the training split; knobs vs the simulator, the averaging explanation of blur, VAE vs PCA. 10 slides + 1 backup. Outline VAE_Hidden_Knobs_Slides.md; both built from genmodels/slides_content.py by write_outlines.py and build_decks.py.
+
+  - id: m3-deck-gan-forger-critic
+    file: GAN_Forger_Critic_Slides.pptx
+    kind: deck
+    module: 3
+    session: 2026-10-22
+    status: drafted
+    notes: >-
+      Part 3: GAN, precision/recall, three seeds, the first scorecard, bridge to diffusion. 10 slides. Outline GAN_Forger_Critic_Slides.md; both built from genmodels/slides_content.py by write_outlines.py and build_decks.py.
+
+  - id: m3-genmodels
+    file: genmodels/
+    kind: internal
+    module: 3
+    session: 2026-10-22
+    status: integrated
+    notes: >-
+      Reproducers for Evening A (Parts 0-3): ar_train.py, baselines.py, vae_train.py, gan_train.py on data.npz
+      (split 3,200/400/400, seed 7), gm_numbers.py -> numbers.json, build_figures.py + render.py --deck,
+      write_outlines.py, build_decks.py, write_notes.py, audit_slides.py. Supersedes genit/ (Oct 16). See its README.
 
   - id: m3-decoder-training-lab
     file: Labs/decoder_training_lab.ipynb
