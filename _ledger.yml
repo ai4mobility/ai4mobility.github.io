@@ -1687,6 +1687,31 @@ items:
       + header + 1 backup, about 20-25 minutes. Outline Hidden_Cause_Mixture_Slides.md; both built from
       genmodels/slides_content.py by write_outlines.py and build_decks.py.'
 
+  - id: m3-deck-vae-label-to-knobs
+    file: VAE_Label_To_Knobs_Slides.pptx
+    kind: deck
+    module: 3
+    session: unscheduled (VAE-and-diffusion lecture, after Oct 22)
+    status: drafted
+    notes: 'VAE-and-diffusion lecture: the VAE through the hidden-cause lens, on the Evening A model (not
+      retrained): knob map, the exact soft guess on a 161 x 161 grid against the encoder, the ELBO as the
+      bound EM climbs, walking between two states, blur vs speckle on the 3.5 scorecard. 11 slides + header
+      + 1 backup. Overlaps Smooth_Knobs_PCA_VAE_Slides (built in parallel); the outline says how to run
+      both. Outline VAE_Label_To_Knobs_Slides.md; built from genmodels/slides_content.py (part_vae2); numbers
+      vae_lens.json.'
+
+  - id: m3-deck-diffusion-denoise
+    file: Diffusion_Denoise_Slides.pptx
+    kind: deck
+    module: 3
+    session: unscheduled (VAE-and-diffusion lecture, after Oct 22)
+    status: drafted
+    notes: 'VAE-and-diffusion lecture: Answer 4. A small conv U-Net (609,665 weights) trained on the CTM
+      heatmaps (dm_train.py); joins the scorecard (0.950 / 0.945), fewer steps (DDIM), big decisions first,
+      gap filling with no retraining against interpolation and persistence, research uses, four-answers
+      table. 13 slides + header + 1 backup. Outline Diffusion_Denoise_Slides.md; built from genmodels/slides_content.py
+      (part_dm); numbers dm_results.json.'
+
 # MODULES 4-8 — Module 4 has its first section page; Modules 5-8 not started
 # -----------------------------------------------------------------------------
 
