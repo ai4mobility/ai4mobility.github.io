@@ -8,9 +8,10 @@
   <p class="notes-card-lede">In 2.9 one sequence asked and one answered. A signalized intersection has four streams &mdash; camera, loops, probe-vehicle CAN and connected-vehicle messages &mdash; each with its own rate, clock and map, and which should ask depends on the task. This section starts with a model that reads synthetic camera and CAN clips to write a crash warning, then works out what encoders hand over, how streams line up and who reads whom. The answer is a graph.</p>
   <div class="notes-card-cols">
     <div>
-      <h4>Interactive companion on this page</h4>
+      <h4>Interactive companions on this page</h4>
       <ul>
       <li><a href="../_static/companions/Multimodal_Cross_Attention_Companion.html" target="_blank" rel="noopener">Camera, CAN and cross-attention &#8599;</a></li>
+      <li><a href="../_static/companions/Multimodal_Fusion_Papers_Companion.html" target="_blank" rel="noopener">Fifteen fusion papers, one recipe &#8599;</a></li>
       </ul>
     </div>
     <div>
@@ -30,6 +31,7 @@
 - Four streams, four clocks: every token stamped with when, where and how sure, because a stale position is a wrong position
 - Who reads whom: blocks masked, gated or off; a null token; a hub that keeps the cost linear
 - Lane &times; distance anchors, sized like the cell transmission model's cells and joined by typed edges
+- Fifteen published fusion models side by side, and the recipe most of them share: encode, tag, one shared attention
 
 (two-sensors)=
 ## Two sensors, one sentence
@@ -426,11 +428,116 @@ model, and where {doc}`Lab 5 <../module7/lab5_graph_attention>` puts attention o
 a stream's history becomes one token, with a GRU or a temporal transformer, is
 {doc}`2.12 <notes12-history>`.
 
+(fusion-papers)=
+## Fifteen published models, one recipe
+
+Everything above was designed from the intersection outward. Published models met the same problem
+with other streams &mdash; images and captions, audio and video, cameras and LiDAR, V2X messages from
+other vehicles &mdash; and it helps to know where your own design sits among them. Put fifteen of them
+side by side, from ViLBERT (2019) to Chameleon (2024), and one recipe accounts for most of them.
+
+```{figure} ../_static/figures/MSplit_Recipe.png
+:alt: Five streams (road camera, driver camera, CAN, V2X, route) each pass through their own encoder into tokens; a stream tag is added to every token; all tokens enter one sequence and a shared transformer, and a takeover token asks whether the driver will take over in the next few seconds.
+:width: 100%
+
+The common recipe, drawn for takeover prediction: an encoder per stream, a stream tag (plus time and place) on every token, one shared attention, and a task token that holds the answer.
+```
+
+**Encode, tag, pool.** Each stream gets its own encoder, often pretrained: a ViT for a camera, a voxel
+network for LiDAR, a language model for text. A projection brings every token to one width. Then
+something says where each token came from: a learned stream-type vector added to every token (ViLT), a
+modality code (the Perceiver), type-specific weights (V2X-ViT), plus position and, in driving, time
+&mdash; V2X-ViT adds each agent's time delay to its features. Finally all tokens meet in attention, and
+a task token or a set of task queries holds the answer. This is the stamping of {ref}`four streams, four
+clocks <sensors-to-tokens>`, done by almost everyone.
+
+**Most of them split the weight with one softmax.** In LLaVA, ViLT, TransFuser, Wayformer's early-fusion
+model and Chameleon, every row of attention is one softmax over the tokens of all streams. Nobody sets
+the split between streams; it can still be read out exactly, because every weight in that softmax
+factors into two parts:
+
+$$a_{ij} = S_{im}\, w_{ij}, \qquad \text{output}_i = \sum_m S_{im}\, r_{im}$$
+
+$i$ is the asking token (the takeover token), $j$ a token of stream $m$ (one driver-camera region),
+$a_{ij}$ its weight in the one softmax over all tokens, $w_{ij}$ its weight in a softmax over stream
+$m$ alone, $S_{im}$ the total weight $i$ puts on stream $m$ (the shares add to 1 across streams), and
+$r_{im}$ what $i$ would read from stream $m$ alone. **In words:** one softmax over everything is a
+softmax inside each stream followed by a split across streams. The two-level softmax of
+{ref}`who reads whom <who-reads-whom>` learns the shares $S$ separately; one pool computes them from
+the scores. Either way, you can read them out after training and ask when, and for which moments, the
+driver camera's share rises.
+
+:::{admonition} Going deeper &mdash; why a big stream starts ahead
+:class: dropdown
+With scores $s_{ij}$, the share of stream $m$ is a softmax over streams of
+
+$$z_{im} = \log n_m + \log\Big(\frac{1}{n_m}\sum_{j \in m} e^{s_{ij}}\Big)$$
+
+where $n_m$ is the number of tokens stream $m$ has. The first term is pure size: before training, when
+the scores are alike, each stream's share is close to its share of the tokens &mdash; why the camera's
+784 of 874 tokens took 0.88 of the weight above. Training has to earn a small stream its share through
+the second term, the average of its exponentiated scores. Two cautions when you read shares. Read them
+in the first fusion layer: after it, every token already carries what it read from the other streams, so
+in later layers weight on one stream can be a second-hand read of another. And a large share shows where
+the model looks, not that it needs that stream; remove the stream and watch the output, as the
+camera-and-CAN companion did.
+:::
+
+**Where they differ** is in how the fusion core is built. The companion below ends by naming four ways:
+*one sequence* (ViLT, LLaVA, Chameleon, Wayformer); *queries that read the streams* (the Perceiver's
+latents, BEVFormer's grid cells, BLIP-2's 32 queries); *a narrow channel* (MBT's four bottleneck
+tokens); and *geometry first* (BEVFusion turns camera and LiDAR into one bird's-eye-view map and joins
+them there, with no attention at all). Most systems combine two of these. The lane-anchor hub above is
+queries and geometry at once, as in BEVFormer. Gates appear where a pretrained model must not be
+disturbed: Flamingo's new cross-attention layers are scaled by a tanh gate that starts at 0, and
+removing the gate dropped its 3B model's overall score from 70.7 to 66.5.
+
+The papers also disagree about depth, which is why the answer is "test it". MBT's bottlenecks beat late
+fusion on mini-AudioSet (41.80 to 43.92 mAP) and on Epic-Kitchens (37.90 to 43.40); Wayformer found
+early fusion best for small models but late fusion the better choice under a 16 ms latency budget. Spend
+your time in three places: filter the cards by **Driving and V2X** (TransFuser, BEVFormer, V2X-ViT,
+Wayformer, BEVFusion); compare the who-reads-whom table on each card with the one above; and end at
+**The standard architecture**, whose last table lists what still varies and how to choose.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion &mdash; Fifteen fusion papers, one recipe</span>
+    <a href="../_static/companions/Multimodal_Fusion_Papers_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Multimodal_Fusion_Papers_Companion.html"
+          title="Fifteen fusion papers, and the recipe most of them share" loading="lazy"></iframe>
+</div>
+
+:::{admonition} Fit card &mdash; Encode, tag, one shared attention
+:class: tip
+**Idea in one sentence.** Give each stream its own encoder, bring every token to one width, tag it with its stream, time and place, and let one shared attention split the weight.
+
+**Why it works.** Pretrained encoders do the per-stream work; the softmax learns the split per query and per sample, and the split can be read out after training.
+
+**Fits these tasks.** Takeover or crash-risk prediction from road camera, driver camera, CAN and V2X; queue estimates from camera, loops and BSMs (*prediction*, *classification*).
+
+**Needs this data.** Streams on one clock and one map; labels for the task; training samples with whole streams dropped, so the model can answer without them.
+
+**Breaks when.** One stream has far more tokens and wins weight by size; one stream is a shortcut; cost grows with the square of all tokens; tags or clocks are wrong, so a stale V2X message looks current.
+
+**Keep the classical method when.** One sensor already answers (radar TTC for a rear-end warning), or late fusion of per-stream models scores the same and is easier to validate.
+:::
+
+:::{admonition} Before you trust a paper's fusion claim
+:class: warning
+**What is the baseline?** The best single stream and late fusion of per-stream models, at the same size. MBT (early, mid, late), Wayformer (early, late, hierarchical) and TransFuser (against late and geometry-based fusion) each compared fusion choices inside one model; a comparison only against other papers' models does not show that the fusion choice is what helped.
+
+**How was the data split, and why is that honest?** Whole drives, scenes or sites held out, never frames from the same drive, which are near-copies of their neighbours.
+
+**What does it do on the ugly cases?** A missing stream, night and rain, a delayed or mislocated V2X message. V2X-ViT reports a noisy setting, 0.2 m pose error and 100 ms delay, beside the clean one; ask every fusion paper for the same.
+:::
+
 ## Check yourself
 
-1. Your agency wants an in-vehicle warning 2 s before rear-end crashes. Using the companion's comparison with radar TTC, argue for or against putting the multimodal model in the warning loop, and say what belongs there instead.
+1. Your agency wants an in-vehicle warning 2 s before rear-end crashes. Using the camera-and-CAN companion's comparison with radar TTC, argue for or against putting the multimodal model in the warning loop, and say what belongs there instead.
 2. A fused queue model works at its training intersection and fails at the next one down the corridor. Name two design choices from this section that could cause it, and a test that would catch each.
 3. A colleague proposes one anchor per lane, 32 instead of 116, "to save compute". The camera's own encoder spends 153,664 attention scores per head per layer on its four frames each update. Is compute a good reason? What do you lose?
+4. Your takeover model reads the road camera, driver camera, CAN, V2X and route in one pool. After training, the takeover token puts most of its weight on the driver camera in the moments before a takeover. What does that show, what does it not show, and which test from this section would settle it?
 
 ---
 

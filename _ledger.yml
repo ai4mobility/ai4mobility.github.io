@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-10-16
+  updated: 2026-10-22
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -1344,6 +1344,20 @@ items:
     mounted: site/_static/companions/Multimodal_Cross_Attention_Companion.html
     notes: 'Camera, CAN and cross-attention (Sept 24 2026), 2.7 MB single file, synthetic physics-grounded clips. Mounted verbatim Oct 16 2026 at anchor (two-sensors)=.'
 
+  - id: m2-fusion-papers-companion
+    file: Multimodal_Fusion_Papers_Companion.html
+    kind: companion
+    module: 2
+    session: unscheduled
+    status: integrated
+    dest: site/module2/notes11-streams.md
+    mounted: site/_static/companions/Multimodal_Fusion_Papers_Companion.html
+    notes: Fifteen fusion papers, and the recipe most of them share (built Oct 22 2026), 2.8 MB single file.
+      Mounted verbatim at anchor (fusion-papers)= in a new closing section of 2.11, which also carries MSplit_Recipe
+      (1600-px copy) and the share x within identity. Paper figures embedded only for the five CC BY 4.0
+      papers (BLIP-2, LLaVA, BEVFormer, V2X-ViT, Chameleon); the other ten get our own schematics. Reproducer
+      fusion_papers/ (papers.py, schematics.py, build_companion.py).
+
   - id: m2-vit-training-slides
     file: ViT_Training_vs_CNN_Slides.pptx + .md
     kind: deck
@@ -1460,6 +1474,47 @@ items:
     status: integrated
     dest: site/module2/notes12-history.md
     notes: '15 slides + 2 backups; reproducer history_paths/. Figures HP_Three_Paths, HP_Chain_vs_Meeting, HP_Buffer_Attention, HP_Memory_Loop, HP_Queue_Head_To_Head, HP_Gate_Kalman. Site figures are 1600-px copies in site/_static/figures/.'
+
+  - id: m2-modality-split-slides
+    file: Modality_Split_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: unscheduled
+    status: drafted
+    dest: site/module2/notes11-streams.md
+    notes: Section header + 13 slides + 2 backups on reading the modality split out of one softmax (weight
+      = share x within), synthetic takeover experiment; reproducer modality_split/ (numbers.json, audit.py).
+      Only the identity and the recipe figure are on the site so far (2.11, fusion-papers); the takeover
+      experiment, removal tests and the cheap gate are not.
+
+  - id: m2-multimodal-practice-slides
+    file: Multimodal_Practice_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: unscheduled
+    status: drafted
+    dest: site/module2/notes11-streams.md
+    notes: '3 closing slides: the common recipe (MSplit_Recipe), one-sequence models, where gates, bottlenecks
+      and maps fit. Expanded on the site by the fusion-papers section and companion.'
+
+  - id: m2-fusion-levels-slides
+    file: Fusion_Levels_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: unscheduled
+    status: raw
+    dest: site/module2/notes11-streams.md
+    notes: 3 slides on early, mid and late fusion as the layer where streams meet (MBT L_f); reproducer
+      fusion_levels/.
+
+  - id: m2-camera-can-bsm-slide
+    file: Camera_CAN_BSM_Slide.pptx + .md
+    kind: deck
+    module: 2
+    session: unscheduled
+    status: raw
+    dest: site/module2/notes11-streams.md
+    notes: '1 slide: three camera-to-CAN+BSM designs in the who-reads-whom matrix; reproducer fusion_levels/.'
 
 # -----------------------------------------------------------------------------
 # MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)

@@ -115,8 +115,8 @@ whether any of it beats the method it would replace (2.13).
 </tr>
 <tr>
   <td><a href="notes11-streams.html"><strong>2.11 Many streams, one intersection</strong></a><br><em>Oct 15</em></td>
-  <td>A camera-plus-CAN model that writes a crash warning; what an encoder must hand over; four streams, four clocks, one map; who reads whom with masks, gates and a null token; the lane-anchor hub, sized like CTM cells.</td>
-  <td><a href="../_static/companions/Multimodal_Cross_Attention_Companion.html" target="_blank" rel="noopener">Camera, CAN and cross-attention &#8599;</a></td>
+  <td>A camera-plus-CAN model that writes a crash warning; what an encoder must hand over; four streams, four clocks, one map; who reads whom with masks, gates and a null token; the lane-anchor hub, sized like CTM cells; fifteen published fusion models and the recipe most of them share.</td>
+  <td><a href="../_static/companions/Multimodal_Cross_Attention_Companion.html" target="_blank" rel="noopener">Camera, CAN and cross-attention &#8599;</a><br><a href="../_static/companions/Multimodal_Fusion_Papers_Companion.html" target="_blank" rel="noopener">Fifteen fusion papers &#8599;</a></td>
 </tr>
 <tr>
   <td><a href="notes12-history.html"><strong>2.12 Where history enters</strong></a><br><em>Oct 15</em></td>
@@ -227,7 +227,7 @@ themselves are on Canvas for enrolled students.
 
 ## Interactive companions
 
-Fourteen interactive companions support this module. Each is embedded in the section it belongs to and
+Fifteen interactive companions support this module. Each is embedded in the section it belongs to and
 is also linked here.
 
 - <a href="../_static/companions/Tokenization_Companion.html" target="_blank" rel="noopener">Tokens: the unit a language model actually reads</a> &mdash; embedded in <a href="notes1-tokens.html">2.1 Tokens</a>
@@ -243,6 +243,7 @@ is also linked here.
 - <a href="../_static/companions/Cross_Attention_Architecture_Companion.html" target="_blank" rel="noopener">One decoder position, every encoder token</a> &mdash; embedded in <a href="notes9-cross-attention.html#encoder-decoder">2.9 Cross-attention</a>
 - <a href="../_static/companions/DETR_Companion.html" target="_blank" rel="noopener">How DETR detects: 100 learned questions, one answer per vehicle</a> &mdash; embedded in <a href="notes10-detr.html">2.10 DETR</a>
 - <a href="../_static/companions/Multimodal_Cross_Attention_Companion.html" target="_blank" rel="noopener">Camera, CAN and cross-attention: training a model that writes a crash warning</a> &mdash; embedded in <a href="notes11-streams.html">2.11 Many streams, one intersection</a>
+- <a href="../_static/companions/Multimodal_Fusion_Papers_Companion.html" target="_blank" rel="noopener">Fifteen fusion papers, and the recipe most of them share</a> &mdash; embedded in <a href="notes11-streams.html#fusion-papers">2.11 Many streams, one intersection</a>
 - <a href="../_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Does BERT earn its keep on crash narratives?</a> &mdash; embedded in <a href="notes13-evaluation.html">2.13 Does it earn its keep?</a>
 
 The crash-narrative companion uses long-form narratives from real Florida crash reports. The
