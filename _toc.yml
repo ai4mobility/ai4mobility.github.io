@@ -89,6 +89,12 @@ parts:
         sections:
           - file: module4/notes1-workflow
             title: "4.1 The workflow is the unit of work"
+          - file: module4/notes2-loop
+            title: "4.2 A model in a loop"
+          - file: module4/notes3-tools
+            title: "4.3 Tools: what an agent can reach"
+          - file: module4/notes4-context
+            title: "4.4 Context: what the model reads"
       - file: module5/index
       - file: module6/index
         sections:

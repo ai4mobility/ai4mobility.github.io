@@ -52,9 +52,19 @@ rebuilds it around transportation research and agency work.
   <td>&mdash;</td>
 </tr>
 <tr>
-  <td><strong>Further sections</strong><br><em>Oct 29</em></td>
-  <td>The agent loop, tool use and MCP, context engineering and RAG &mdash; written up after the session.</td>
+  <td><a href="notes2-loop.html"><strong>4.2 A model in a loop</strong></a><br><em>Oct 29</em></td>
+  <td>From answering to acting; a tool call is just text; recorded runs of a small model retiming a signal in SUMO; <strong>milestone paper: ReAct</strong>; workflow or agent, and Agentless; a model plus a harness.</td>
   <td>Agent lab <em>(in development)</em></td>
+</tr>
+<tr>
+  <td><a href="notes3-tools.html"><strong>4.3 Tools: what an agent can reach</strong></a><br><em>Oct 29</em></td>
+  <td>Tool descriptions as contracts; what a harness can check; <strong>milestone paper: Toolformer</strong>; code as the action; MCP; the published traffic agents and the gap they leave; a detector as a tool; grading tool use.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes4-context.html"><strong>4.4 Context: what the model reads</strong></a><br><em>Oct 29</em></td>
+  <td>The context measured and its growth; lost in the middle; four ways to keep context useful; summaries that drop a rule; <strong>milestone paper: retrieval-augmented generation</strong>; RAG for a safety analyst.</td>
+  <td>&mdash;</td>
 </tr>
 </tbody>
 </table>
@@ -99,12 +109,15 @@ By the end of this module you will be able to:
 - Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. *NeurIPS*.
 - Anthropic (2024). [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents).
 - Anthropic (2024). [Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol).
-- Ye, C., et al. (2025). [SUMO-MCP: Leveraging the Model Context Protocol for traffic simulation](https://arxiv.org/abs/2506.03548). *arXiv:2506.03548*.
+- Liu, N. F., et al. (2024). Lost in the middle: How language models use long contexts. *Transactions of the ACL*.
+- Xia, C. S., et al. (2025). Demystifying LLM-based software engineering agents (preprint title: Agentless). *FSE*.
+- Ye, C., et al. (2025). [SUMO-MCP: Leveraging the Model Context Protocol for autonomous traffic simulation and optimization](https://arxiv.org/abs/2506.03548). *China Automation Congress*.
 - Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures 1–3.
 
 ## Labs
 
-- **An agent that tunes a signal plan** *(in development)*. Build a small agent loop that adjusts the
-  timing of one intersection through SUMO tools. Run it twice — once without and once with the timing
-  limits (minimum green, pedestrian clearance) shown in the tool's output — and count how many of its
-  proposed plans break them. Then add a checkpoint before any plan is applied.
+- **An agent that tunes a signal plan** *(in development)*. Run the agent of {doc}`4.2 <notes2-loop>` on its
+  SUMO intersection with the timing limits (minimum green, pedestrian clearance) hidden, shown, and enforced by
+  the harness; read every trace; then change one tool description or error message and measure what changes:
+  tokens read per step, plans tested, plans that broke a limit, and the gap to the best valid plan of a grid
+  search.

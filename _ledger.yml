@@ -1802,8 +1802,96 @@ items:
     kind: notes
     module: 4
     session: 2026-10-29
-    status: debt
-    notes: Module 4 = How an Agent Works (Oct 29). 4.1 exists (m4-notes-1-workflow); the agent loop, tool use and MCP, and context engineering and RAG sections are owed.
+    status: superseded
+    notes: Module 4 = How an Agent Works (Oct 29). Section pages, not one notes.md - 4.1 (m4-notes-1-workflow), 4.2 loop, 4.3 tools, 4.4 context, drafted 2026-10-24 (m4-notes-2-loop, m4-notes-3-tools, m4-notes-4-context).
+
+  - id: m4-notes-2-loop
+    file: site/module4/notes2-loop.md
+    kind: notes
+    module: 4
+    session: '2026-10-29'
+    status: drafted
+    notes: >-
+      4.2 A model in a loop. Prose twin of Agents_Loop_Slides: three kinds of task (SUMO, safety analysis, visual
+      inspection, as examples drawn widely), alone/ask-first/never, the agent definition, the real Qwen chat template with token counts, ALINEA as
+      the loop you already know, the loop in eleven lines, the recorded SUMO runs (A/0 trace, the B/2-vs-C/2 pair, the two
+      failed first attempts), milestone paper ReAct in depth (Fig. 1 redrawn, the action-space equation, Tables 1-4, the
+      Table 2 failure analysis, the six-question reading checklist), workflow-vs-agent and Agentless, model plus harness,
+      fit card. Every number traced by agents_m4/audit.py; paper claims checked against the PDFs by an independent pass.
+
+  - id: m4-notes-3-tools
+    file: site/module4/notes3-tools.md
+    kind: notes
+    module: 4
+    session: '2026-10-29'
+    status: drafted
+    notes: >-
+      4.3 Tools. Prose twin of Agents_Tools_Slides: four needs for tools, the tool schema as a contract, form vs truth,
+      milestone paper Toolformer in depth (Fig. 2 redrawn with the Pittsburgh example, the filter equation and weighted
+      loss, Tables 3-7, the TempLAMA two-call limit), CodeAct, MCP (spec revision 2026-07-28: stateless), SUMO-MCP,
+      TrafficGPT (preprint) and Open-TI read with one checklist, a detector as a tool, grading tool use on the recorded
+      runs with the grid search as the no-model baseline.
+
+  - id: m4-notes-4-context
+    file: site/module4/notes4-context.md
+    kind: notes
+    module: 4
+    session: '2026-10-29'
+    status: drafted
+    notes: >-
+      4.4 Context. Prose twin of Agents_Context_Slides: the context of the longest recorded run measured (510 -> 2,298
+      tokens over 10 steps), the n-squared growth formula checked against the measurement, Lost in the Middle, four moves
+      for context, the summary test (does a 60-word summary keep the 21 s pedestrian minimum?), milestone paper RAG in
+      depth (Fig. 1 redrawn, the marginal-likelihood equation, Tables 1, 2, 4, the index hot-swap), RAG for a safety
+      analyst, where retrieval breaks, fit card.
+
+  - id: m4-deck-agents-loop
+    file: Agents_Loop_Slides.md
+    kind: deck
+    module: 4
+    session: '2026-10-29'
+    status: drafted
+    dest: site/module4/notes2-loop.md
+    notes: >-
+      AI agents 1: a model in a loop. Section header, 20 slides, 1 backup, about 55 min (figure-only slides for the
+      ReAct figure and the B/C pair). Outline -> Agents_Loop_Slides.pptx
+      via agents_m4/build_deck.py on the Swin_Intro_Slides template. Figures AGL_* (SVG masters + PNG) from agents_m4/figs.py.
+
+  - id: m4-deck-agents-tools
+    file: Agents_Tools_Slides.md
+    kind: deck
+    module: 4
+    session: '2026-10-29'
+    status: drafted
+    dest: site/module4/notes3-tools.md
+    notes: >-
+      AI agents 2: tools. Section header, 17 slides, 1 backup, about 50 min. Figures AGT_*.
+
+  - id: m4-deck-agents-context
+    file: Agents_Context_Slides.md
+    kind: deck
+    module: 4
+    session: '2026-10-29'
+    status: drafted
+    dest: site/module4/notes4-context.md
+    notes: >-
+      AI agents 3: context. Section header, 15 slides, 1 backup, about 50 min with the lab launch. Figures AGC_*.
+      The summary test (slide 5) is measured: 12 summaries of run D/0; the 21 s pedestrian minimum kept 1/6 and 1/6.
+
+  - id: m4-agents-repro
+    file: agents_m4/
+    kind: internal
+    module: 4
+    session: '2026-10-29'
+    status: integrated
+    notes: >-
+      Reproducers for the three Module 4 decks and notes 4.2-4.4 (README.md inside). scenario.py (SUMO intersection,
+      synthetic), grid.py (315 plans), agent.py (Qwen2.5-1.5B-Instruct in a ReAct-style loop; conditions A-D),
+      runs.jsonl (12 recorded runs) plus runs_first_attempt.jsonl and runs_second_attempt.jsonl (the two failed first
+      attempts, kept as slide material), summary_test.py, make_numbers.py -> numbers.json (measured and cited values,
+      tables named), figs.py, build_deck.py, audit.py. TRAPS in the README: the grid optimum is a grid optimum; C and D
+      were finalized before any C or D run was recorded; token counts include the final instructions only.
+
 
   - id: m5-notes
     file: site/module5/notes.md
@@ -1873,7 +1961,8 @@ items:
     notes: >
       Since 2026-10-24 Part II is the AI agents unit. Three labs are described
       and none is built: an agent that tunes a signal plan through SUMO tools
-      (M4), LoRA on crash narratives (M6), and reviewing recorded agent runs
+      (M4; its agent, scenario, grid and recorded runs exist in agents_m4/ and
+      can seed the notebook), LoRA on crash narratives (M6), and reviewing recorded agent runs
       (M7). The old applied labs (detection and tracking, edge deployment,
       production driving stack, lane keeping, RL signal control, CARLA,
       surrogate safety, agency document workflow) left the site with them.
