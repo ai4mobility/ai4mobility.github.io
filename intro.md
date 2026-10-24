@@ -2,19 +2,105 @@
 
 # AI for Mobility
 
-Welcome to **AI for Mobility** — a graduate course at the University of South Florida on how artificial intelligence is transforming transportation systems. The course is structured as an applied **AI Mobility Systems Studio**: students learn AI foundations, hear from domain experts, work on agency-informed problems, and present solutions to real stakeholders. Course materials are openly licensed, so anyone can follow along.
+Welcome to **AI for Mobility**, a graduate course at the University of South Florida on how modern AI
+works and how to use it on transportation problems. Each method is taught through a transportation
+example. You then run it yourself, in a lab notebook or an interactive page, and use it in a team
+project on a real transportation problem. The materials are openly licensed, so anyone can follow along.
 
 :::{admonition} Fall 2026 offering
 :class: tip
 
-**CGN 6933, Section 903** (CRN 85372) · Thursdays, 5:00–7:45 PM · NES 103
+**CGN 6933, Section 903** (CRN 85372) · Thursdays, 5:00–7:45 PM · NES 103\
 First class Thursday, August 27, 2026
 
 No prerequisites and no prior AI coursework required — open to graduate students across
 engineering. Full details on the {doc}`syllabus` page.
 :::
 
-## Course Overview
+## What the Course Offers
+
+Everything below is on this site and free to use, except the course dataset, which enrolled students
+download from Canvas.
+
+% Counts as of Oct 24, 2026. Update them when a notes section, companion, lab or device is added.
+% Companions = HTML pages in _static/companions/ minus AI4Mobility_Intake_Survey.html.
+
+<ul class="offer-stats" aria-label="The course in numbers">
+  <li><span class="offer-num">8</span><span class="offer-label">modules, from neural networks to AI agents</span></li>
+  <li><span class="offer-num">30</span><span class="offer-label">sections of course notes so far</span></li>
+  <li><span class="offer-num">29</span><span class="offer-label">interactive companion pages</span></li>
+  <li><span class="offer-num">6</span><span class="offer-label">lab notebooks, with 7 more in development</span></li>
+  <li><span class="offer-num">8</span><span class="offer-label">kinds of hardware you can borrow</span></li>
+  <li><span class="offer-num">2,425</span><span class="offer-label">hurricane posts with images in the course dataset</span></li>
+</ul>
+
+<div class="resource-grid">
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Read</p></div>
+    <h3>Course notes</h3>
+    <p>Written section by section, like a textbook. Each section first shows how a method works in a diagram, then gives the key equation in plain words. Extra math sits in optional &ldquo;Going deeper&rdquo; boxes.</p>
+    <div class="tag-row"><span>Diagram first</span><span>Two levels of math</span></div>
+    <a class="resource-link" href="module1/index.html">Start with Module 1</a>
+  </article>
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Explore</p></div>
+    <h3>Interactive companions</h3>
+    <p>Pages that run in your browser, with nothing to install. Change an input and watch what the model does. Many run a real model on real transportation data, such as Florida crash reports or Los Angeles freeway detectors.</p>
+    <div class="tag-row"><span>Runs in the browser</span><span>Real data</span></div>
+    <a class="resource-link" href="#try-a-companion">Try one</a>
+  </article>
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Build</p></div>
+    <h3>Lab notebooks</h3>
+    <p>Notebooks that run in Google Colab. Each one names the simpler method to compare against before you trust the result. Labs and notebook exercises are 40% of the course grade.</p>
+    <div class="tag-row"><span>Google Colab</span><span>Open data</span></div>
+    <a class="resource-link" href="labs.html">All labs</a>
+  </article>
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Build</p></div>
+    <h3>Hardware you can borrow</h3>
+    <p>A Raspberry Pi 5 and two NVIDIA Jetson computers, camera kits, a desktop AI robot, and comma devices that run openpilot in a car. All equipment is provided by the instructor; projects never use personal vehicles.</p>
+    <div class="tag-row"><span>Edge AI</span><span>In-vehicle</span></div>
+    <a class="resource-link" href="hardware.html">Hardware for Class</a>
+  </article>
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Data</p></div>
+    <h3>Transportation data</h3>
+    <p>The course dataset holds 2,425 posts about roads, bridges, evacuation and fuel from Hurricanes Helene and Milton, with 3,348 images. The notes and labs also use FL511 traffic cameras, NHTSA vehicle complaints, Florida crash reports and METR-LA freeway detectors. More open datasets are on the <a href="resources.html">Resources</a> page.</p>
+    <div class="tag-row"><span>Florida data</span><span>Text and images</span></div>
+    <a class="resource-link" href="hurricane-dataset.html">The hurricane dataset</a>
+  </article>
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Part II</p></div>
+    <h3>AI agents for transportation</h3>
+    <p>The last five lectures cover how AI agents work and how to build them for transportation work: tools, memory, planning, evaluation, fine-tuning, human review, and full workflows for SUMO simulation and safety analysis.</p>
+    <div class="tag-row"><span>Five lectures</span><span>Research and agency practice</span></div>
+    <a class="resource-link" href="module4/index.html">Start Part II</a>
+  </article>
+</div>
+
+## How the Course Teaches
+
+<div class="community-grid">
+  <div class="community-card">
+    <h3>Transportation examples first</h3>
+    <p>You meet each AI idea through something you already know. The cell transmission model turns out to be a convolution, and later a graph neural network. Attention works like a signal controller deciding how much green each approach gets.</p>
+  </div>
+  <div class="community-card">
+    <h3>A picture before an equation</h3>
+    <p>Each section starts with a diagram of how the method works. Then comes one key equation, read out in words. Extra math for those who want it sits in optional boxes. There are no proofs.</p>
+  </div>
+  <div class="community-card">
+    <h3>Real numbers from real runs</h3>
+    <p>The numbers in the notes and companions come from models that were actually run, often on Florida data. Where a method fails, the page shows the failure instead of hiding it.</p>
+  </div>
+  <div class="community-card">
+    <h3>Always check against a baseline</h3>
+    <p>A new method is only better if it beats something simpler. Every lab names what to compare against, and most sections end by saying when to keep the classical method.</p>
+  </div>
+</div>
+
+## Who This Course Is For
 
 This course is designed for:
 
@@ -34,47 +120,12 @@ You'll get the most out of the course if you have basic Python familiarity and h
 - Communicate methods, results, limitations, and practical implications in written and oral form.
 - Reason about responsible use of human-in-the-loop AI in transportation: reliability, robustness, safety, privacy, interpretability, human oversight, and professional accountability.
 
-## From Mobility Operations to AI Solutions
-
-This course is organized around a problem-to-solution learning model. Students do not only learn AI algorithms; they learn how to identify real transportation needs, translate them into AI-ready problems, develop feasible solution concepts, and communicate results back to practitioners.
-
-<ol class="workflow-pipeline" aria-label="From mobility operations to AI solutions — five-step workflow">
-
-<li class="workflow-pipeline-step">
-<div class="workflow-pipeline-badge" aria-hidden="true">1</div>
-<h4>Real Mobility Needs</h4>
-<p>Agencies, industry partners, and practitioners share operational pain points.</p>
-</li>
-
-<li class="workflow-pipeline-step">
-<div class="workflow-pipeline-badge" aria-hidden="true">2</div>
-<h4>Problem Translation</h4>
-<p>Students and researchers convert needs into AI-actionable problem statements.</p>
-</li>
-
-<li class="workflow-pipeline-step">
-<div class="workflow-pipeline-badge" aria-hidden="true">3</div>
-<h4>AI Methods &amp; Prototypes</h4>
-<p>Teams explore computer vision, prediction, optimization, LLMs/VLMs, simulation, and edge AI.</p>
-</li>
-
-<li class="workflow-pipeline-step">
-<div class="workflow-pipeline-badge" aria-hidden="true">4</div>
-<h4>Practitioner Feedback</h4>
-<p>Agency and industry advisors review feasibility, constraints, data needs, and deployment value.</p>
-</li>
-
-<li class="workflow-pipeline-step">
-<div class="workflow-pipeline-badge" aria-hidden="true">5</div>
-<h4>Open Knowledge &amp; Impact</h4>
-<p>Results become reusable project briefs, tutorials, open-source tools, and future research directions.</p>
-</li>
-
-</ol>
-
 ## Learning Modules
 
-Course materials are organized into eight modules across two parts, plus a capstone. Each module contains notes written section by section, a video walkthrough on YouTube, hands-on lab notebooks (runnable in Google Colab), and recommended readings. The module sequence follows the week-by-week schedule on the {doc}`syllabus` page, and every notebook in the course is listed on the {doc}`All Labs <labs>` page.
+The course has eight modules in two parts, plus a capstone project. Modules fill in as the term goes on:
+each one gets course notes, interactive companions, readings, and lab notebooks that run in Google Colab,
+and video lectures go up on YouTube as they are recorded. The order follows the week-by-week schedule on
+the {doc}`syllabus` page, and every notebook in the course is listed on the {doc}`All Labs <labs>` page.
 
 **Part I — AI foundations through a transportation lens**
 
@@ -100,193 +151,119 @@ safety, operations, driving automation, infrastructure, EVs, transit and air mob
 with SUMO and transportation safety analysis each get a hands-on lab and a full workflow, and the unit
 ends with harnesses built for transportation research and agency use.
 
-The {doc}`capstone/index` starts in Week 1, runs the whole term, and is worth half the course
-grade. Project teams and topics are settled by Sept 17. From Oct 1 through Oct 22, most class
-meetings opened with a rotating team progress report; the AI agents unit has none. Final
-presentations are Dec 3.
+(try-a-companion)=
+## Try a Companion
 
-## Guest Speakers & Course Contributors
+Companions are interactive pages built into the course notes. Each one opens in a new tab and runs in
+your browser, with nothing to install. Here are six to start with.
 
-*Bringing academic, industry, and public-sector expertise into the classroom.*
-
-::::{grid} 1 2 3 3
-:gutter: 3
-:class-container: speaker-grid
-
-:::{grid-item-card}
-:class-card: speaker-card
-:img-top: _static/headshot-placeholder.svg
-
-<span class="speaker-tag tag-academic">Academic Contributor</span>
-
-**Speaker TBA**  
-*Affiliation TBA*
-
-**Topic:** Foundation models for mobility
-
-Research on large foundation models applied to transportation perception and planning.
-:::
-
-:::{grid-item-card}
-:class-card: speaker-card
-:img-top: _static/headshot-placeholder.svg
-
-<span class="speaker-tag tag-industry">Industry Mentor</span>
-
-**Speaker TBA**  
-*Affiliation TBA*
-
-**Topic:** AI deployment in autonomous and connected vehicles
-
-On-road production experience with self-driving and ADAS systems.
-:::
-
-:::{grid-item-card}
-:class-card: speaker-card
-:img-top: _static/headshot-placeholder.svg
-
-<span class="speaker-tag tag-industry">Industry Mentor</span>
-
-**Speaker TBA**  
-*Affiliation TBA*
-
-**Topic:** Edge AI, sensing, and real-world system integration
-
-Traffic-camera and AI dashcam deployments at scale.
-:::
-
-:::{grid-item-card}
-:class-card: speaker-card
-:img-top: _static/headshot-placeholder.svg
-
-<span class="speaker-tag tag-public">Public-Sector Partner</span>
-
-**Speaker TBA**  
-*Affiliation TBA*
-
-**Topic:** Traffic operations and smart corridors
-
-Public-agency perspective on deploying AI in active traffic management.
-:::
-
-:::{grid-item-card}
-:class-card: speaker-card
-:img-top: _static/headshot-placeholder.svg
-
-<span class="speaker-tag tag-academic">Guest Speaker</span>
-
-**Speaker TBA**  
-*Affiliation TBA*
-
-**Topic:** Reinforcement learning for adaptive signal control
-
-Multi-agent RL methods for coordinated traffic-signal networks.
-:::
-
-:::{grid-item-card}
-:class-card: speaker-card
-:img-top: _static/headshot-placeholder.svg
-
-<span class="speaker-tag tag-industry">Industry Mentor</span>
-
-**Speaker TBA**  
-*Affiliation TBA*
-
-**Topic:** Computer vision for traffic monitoring
-
-Production vision pipelines for vehicle counting and incident detection.
-:::
-
-::::
-
-<div class="cta-row">
-<a class="cta-button" href="mailto:haozhou1@usf.edu?subject=Guest%20Speaker%20Nomination%20%E2%80%94%20AI%20for%20Mobility">Nominate a Guest Speaker</a>
+<div class="resource-grid">
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Module 1 &middot; Section 1.3</p></div>
+    <h3>A traffic wave is a convolution</h3>
+    <p>Newell&rsquo;s car-following rule and the cell transmission model each turn out to be a convolution. A small network with 1,217 weights learns the traffic update live in your browser. Read it in context in <a href="module1/notes3-cnn.html">section 1.3</a>.</p>
+    <div class="tag-row"><span>Traffic flow</span><span>CNN</span></div>
+    <a class="resource-link" href="_static/companions/Newell_LWR_CNN_Companion.html" target="_blank" rel="noopener">Open the companion</a>
+  </article>
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Module 1 &middot; Section 1.3</p></div>
+    <h3>A child on a scooter, seen by a stock detector</h3>
+    <p>Thirteen seconds of forward-camera video from a car driving on Tesla FSD in Florida. An off-the-shelf detector labels every frame, and gets four things wrong that matter. Read it in context in <a href="module1/notes3-cnn.html">section 1.3</a>.</p>
+    <div class="tag-row"><span>ADAS</span><span>Object detection</span></div>
+    <a class="resource-link" href="_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">Open the companion</a>
+  </article>
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Module 2 &middot; Section 2.1</p></div>
+    <h3>Tokens: what a language model reads</h3>
+    <p>A real GPT tokenizer runs in your browser on any text you type, from a crash narrative to the Signal Timing Manual. See why a model splits transportation words the way it does. Read it in context in <a href="module2/notes1-tokens.html">section 2.1</a>.</p>
+    <div class="tag-row"><span>Language models</span><span>Tokenization</span></div>
+    <a class="resource-link" href="_static/companions/Tokenization_Companion.html" target="_blank" rel="noopener">Open the companion</a>
+  </article>
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Module 2 &middot; Section 2.6</p></div>
+    <h3>A transformer on freeway detectors</h3>
+    <p>Take the language out of a transformer and point it at 207 loop detectors on Los Angeles freeways (METR-LA). The same machine works once you decide what your tokens are. Read it in context in <a href="module2/notes6-architecture.html">section 2.6</a>.</p>
+    <div class="tag-row"><span>Traffic sensing</span><span>Transformers</span></div>
+    <a class="resource-link" href="_static/companions/Transformer_As_Architecture_Companion.html" target="_blank" rel="noopener">Open the companion</a>
+  </article>
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Module 2 &middot; Section 2.13</p></div>
+    <h3>Does BERT earn its keep on crash reports?</h3>
+    <p>Eight things people claim a language model can do with crash reports, each tested on 399 real Florida crash narratives and compared with the classical method it would replace. Read it in context in <a href="module2/notes13-evaluation.html">section 2.13</a>.</p>
+    <div class="tag-row"><span>Road safety</span><span>BERT</span></div>
+    <a class="resource-link" href="_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Open the companion</a>
+  </article>
+  <article class="resource-card">
+    <div class="resource-card-top"><p class="resource-category">Module 3 &middot; Section 3.7</p></div>
+    <h3>A graph neural network on a road network</h3>
+    <p>Generate a street network in your browser and watch one shared rule run at every intersection, and how a rule that only looks one hop away ends up modelling a disturbance that travels for miles. Read it in context in <a href="module3/notes7-gnn.html">section 3.7</a>.</p>
+    <div class="tag-row"><span>Road networks</span><span>GNN</span></div>
+    <a class="resource-link" href="_static/companions/GNN_On_A_Road_Network_Companion.html" target="_blank" rel="noopener">Open the companion</a>
+  </article>
 </div>
 
-## Agency Advisory Board & Project Partners
+## The Capstone Project
 
-*Connecting student projects with real transportation challenges.*
+The {doc}`capstone/index` is a team project that starts in Week 1 and runs all term. It is half the
+course grade: 20% for the proposal and progress updates, and 30% for the final product, report, and
+presentation. Teams settled their topics by Sept 17, and final presentations and demos are on Dec 3.
 
-::::{grid} 1 1 2 2
-:gutter: 4
-:class-container: advisory-grid
+Every project follows the same path, from a real need to a result other people can reuse.
 
-:::{grid-item}
+<ol class="workflow-pipeline" aria-label="The path of a course project — five steps">
 
-Local transportation agencies and public-sector partners are invited to help shape project topics, provide operational context, review student concepts, and participate in final project presentations. This structure helps students connect AI methods with real-world transportation needs, implementation constraints, and public-sector decision-making.
+<li class="workflow-pipeline-step">
+<div class="workflow-pipeline-badge" aria-hidden="true">1</div>
+<h4>A Real Mobility Need</h4>
+<p>Start from a problem someone in transportation actually has.</p>
+</li>
 
-**We welcome partnerships with:**
+<li class="workflow-pipeline-step">
+<div class="workflow-pipeline-badge" aria-hidden="true">2</div>
+<h4>Problem Translation</h4>
+<p>Turn it into a question an AI method can answer, with data you can get.</p>
+</li>
 
-- Local transportation agencies
-- City and county traffic operations teams
-- Regional planning organizations
-- Transit agencies
-- Industry deployment partners
+<li class="workflow-pipeline-step">
+<div class="workflow-pipeline-badge" aria-hidden="true">3</div>
+<h4>AI Methods &amp; Prototypes</h4>
+<p>Try vision, language models, simulation, edge AI, or an agent.</p>
+</li>
 
-:::
+<li class="workflow-pipeline-step">
+<div class="workflow-pipeline-badge" aria-hidden="true">4</div>
+<h4>Baselines &amp; Peer Review</h4>
+<p>Beat a simpler method, and answer questions from classmates.</p>
+</li>
 
-:::{grid-item}
+<li class="workflow-pipeline-step">
+<div class="workflow-pipeline-badge" aria-hidden="true">5</div>
+<h4>Open Results</h4>
+<p>Share code, notebooks, and a short report others can build on.</p>
+</li>
 
-<div class="workflow-timeline">
+</ol>
 
-<div class="workflow-step">
-<div class="workflow-marker"><span>1</span></div>
-<div class="workflow-content">
-<h4>Problem Discovery</h4>
-<p>Agencies introduce real mobility challenges.</p>
-</div>
-</div>
+### Projects This Term
 
-<div class="workflow-step">
-<div class="workflow-marker"><span>2</span></div>
-<div class="workflow-content">
-<h4>Project Scoping</h4>
-<p>Student teams translate problems into AI-enabled project ideas.</p>
-</div>
-</div>
+Fall 2026 teams are working on:
 
-<div class="workflow-step">
-<div class="workflow-marker"><span>3</span></div>
-<div class="workflow-content">
-<h4>Mid-Semester Feedback</h4>
-<p>Advisors comment on feasibility, data needs, and deployment value.</p>
-</div>
-</div>
-
-<div class="workflow-step">
-<div class="workflow-marker"><span>4</span></div>
-<div class="workflow-content">
-<h4>Final Showcase</h4>
-<p>Agencies join final presentations and provide feedback for future development.</p>
-</div>
+<div class="focus-chip-row project-topics">
+  <span>Building and structure damage detection</span>
+  <span>Post-storm road damage inspection from AI dashcams, with automatic reports</span>
+  <span>Pedestrian safety around self-driving cars</span>
+  <span>Pavement distress detection</span>
+  <span>An AI workflow for SUMO traffic simulation</span>
+  <span>Safety analysis of agency data with BERT</span>
 </div>
 
-</div>
+Finished projects will be posted here after the Dec 3 presentations, each with a short problem brief,
+the methods, the results, and what the team learned.
 
-:::
+### Open Mobility Challenges
 
-::::
-
-<div class="cta-row">
-<a class="cta-button cta-secondary" href="mailto:haozhou1@usf.edu?subject=Project%20Partner%20Inquiry%20%E2%80%94%20AI%20for%20Mobility">Become a Project Partner</a>
-</div>
-
-### Suggest a Workflow for Students
-
-Have a real, time-consuming workflow that AI might help with? Tell us about it below. A student team of 3–4 will spend a semester mapping how it works today, finding where AI genuinely helps, building a working prototype with a human in the loop, validating it against your current process, and handing it back with documentation.
-
-The best candidates are tasks that are repetitive, data- or document-heavy, and where a human still makes the final call. You don't need to propose an AI method — a clear description of the operational problem is enough. Prefer to work offline? <a href="_static/AI_for_Mobility_Partner_Intake_Template.docx">Download the intake form (Word)</a>, or post your idea as a <a href="https://github.com/ai4mobility/ai4mobility.github.io/issues" target="_blank" rel="noopener">GitHub issue</a>.
-
-<div class="gform-embed">
-<iframe
-  title="AI for Mobility — Suggest a Workflow"
-  src="https://docs.google.com/forms/d/e/1FAIpQLScCKF43644uLZDST8DAuU8MICFamktw2FH_vlRubPxhDTjAXQ/viewform?embedded=true"
-  loading="lazy">Loading the form…</iframe>
-</div>
-
-## Open Mobility Challenges
-
-Transportation agencies and industry partners often face practical operational challenges that may benefit from AI, but these problems are not always easy to formulate as research or student project topics. The *Open Mobility Challenges* section provides a structured space to document real-world needs, discuss feasibility, and connect practitioners with students and researchers.
+Not sure what a good project looks like? These five problems are the kind transportation agencies deal
+with every day. Each is a reasonable starting point for a project, as long as you can get the data.
 
 <div class="challenge-grid">
 
@@ -372,31 +349,25 @@ Transportation agencies and industry partners often face practical operational c
 
 </div>
 
-<div class="cta-row">
-<a class="cta-button" href="https://github.com/ai4mobility/ai4mobility.github.io/issues" target="_blank" rel="noopener">Submit or Discuss a Mobility Challenge</a>
-</div>
-
-<p class="challenge-note"><em>Practitioners do not need to propose an AI method. A clear description of the operational problem is enough.</em></p>
-
-## Student Project Showcase
-
-*Coming soon.* Highlights from final projects developed in partnership with our agency advisors will be published here after each cohort wraps — including a problem brief, methods, results, and a short reflection from the student team.
+<p class="challenge-note">Know a problem like these? <a href="https://github.com/ai4mobility/ai4mobility.github.io/issues" target="_blank" rel="noopener">Post it as a GitHub issue</a>.</p>
 
 ## How to Use This Site
 
-- **Reading sequentially?** Start at {doc}`prerequisites`, then move through the modules in order. The left sidebar tracks your place.
-- **Looking up a specific topic?** Use the search box (top of the sidebar) — it indexes every page.
-- **Want to run a lab?** Click the rocket icon at the top of any notebook page and choose "Colab" to launch it in your browser. No local setup required.
+- **New here?** Read {doc}`course-intro` for why the course is shaped the way it is, then {doc}`prerequisites`.
+- **Reading in order?** Move through the modules from the left sidebar, which keeps your place.
+- **Looking up a topic?** Use the search box at the top of the sidebar. It covers every page.
+- **Want to run a lab?** Click the rocket icon at the top of any notebook page and choose "Colab" to open it in your browser. No local setup is needed.
 
-## Contact & Get Involved
+## Instructor and Contact
 
-**Hao Zhou** is an Assistant Professor of Transportation Engineering at the University of South Florida. His research focuses on traffic flow theory, vehicle technologies (ADAS, lane-keeping assist, EVs), and AI applications in mobility — including AI dash cameras for traffic monitoring and road hazard detection.
+**Hao Zhou** is an Assistant Professor of Transportation Engineering at the University of South Florida. His research covers traffic flow theory, vehicle technologies (ADAS, lane-keeping assist, EVs), and AI for mobility, including AI dash cameras for traffic monitoring and road hazard detection.
 
 - Email: [haozhou1@usf.edu](mailto:haozhou1@usf.edu)
 - Video lectures: [YouTube — @hao6247](https://www.youtube.com/@hao6247)
 - Course site: [ai4mobility.github.io](https://ai4mobility.github.io)
 
-If you'd like to contribute as a guest speaker, partner agency, or collaborator, please reach out via the buttons above or by email.
+Questions about the course, or a mistake you spotted in the materials? Send an email or open a
+[GitHub issue](https://github.com/ai4mobility/ai4mobility.github.io/issues).
 
 ## License
 

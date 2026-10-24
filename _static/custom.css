@@ -1207,3 +1207,55 @@ header.navbar {
     font-size: 0.86rem;
     line-height: 1.45;
 }
+
+/* -----------------------------------------------------------
+   Intro page — "What the Course Offers" number strip and the
+   "Projects This Term" chip row. Cards on that page reuse
+   .resource-grid / .resource-card and .community-grid.
+   ----------------------------------------------------------- */
+
+.offer-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0 1.5rem;
+    padding: 0;
+    list-style: none;
+}
+.offer-stats li {
+    margin: 0;
+    padding: 0.85rem 0.9rem;
+    background: #eef7f2;
+    border: 1px solid rgba(0, 103, 71, 0.16);
+    border-top: 4px solid var(--usf-gold);
+    border-radius: 10px;
+}
+.offer-num {
+    display: block;
+    color: var(--usf-green-dark);
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+.offer-label {
+    display: block;
+    margin-top: 0.25rem;
+    color: #344054;
+    font-size: 0.86rem;
+    line-height: 1.35;
+}
+
+.project-topics {
+    margin: 0.75rem 0 1.25rem;
+}
+.project-topics span {
+    background: #eef7f2;
+}
+@media (max-width: 720px) {
+    .offer-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .offer-num {
+        font-size: 1.5rem;
+    }
+}
