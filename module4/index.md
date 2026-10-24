@@ -88,6 +88,8 @@ By the end of this module you will be able to:
 ## Topics
 
 - What agents can do today, and which tasks an agent may do alone, must ask about first, or must never do
+- The words of Part II: what counts as an agent, the six capabilities an agent needs, training the model vs.
+  engineering the harness, and the system around the model (sandbox, inference, monitoring)
 - The agent loop: a tool call is text the model writes; ReAct
 - Workflow vs. agent: the scale from fixed steps to model-chosen steps
 - The model and its harness

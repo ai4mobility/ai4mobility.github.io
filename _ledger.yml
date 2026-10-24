@@ -1845,6 +1845,21 @@ items:
       depth (Fig. 1 redrawn, the marginal-likelihood equation, Tables 1, 2, 4, the index hot-swap), RAG for a safety
       analyst, where retrieval breaks, fit card.
 
+  - id: m4-deck-agents-intro
+    file: Agents_Intro_Slides.md
+    kind: deck
+    module: 4
+    session: '2026-10-29'
+    status: drafted
+    dest: site/module4/index.md
+    notes: >-
+      AI agents 0: an introduction. Section header and 16 slides, about 30 min: what agents can do today (the C
+      compiler, SUMO-MCP, the inbox incident), alone / ask first / never, what counts as an agent, LM recap, actions
+      as tokens, six capabilities, training vs. harness, the system around the model, where a run goes wrong, a demo
+      is not evidence, three slides of key terms, the papers of Part II, fit card. Follows CMU 11-768 lecture 1 with
+      vocabulary from lectures 2-3; nothing copied. Outline -> Agents_Intro_Slides.pptx via agents_m4/build_deck.py;
+      figures AGI_* from agents_m4/figs_intro.py; numbers in agents_m4/numbers_intro.json.
+
   - id: m4-deck-agents-loop
     file: Agents_Loop_Slides.md
     kind: deck
@@ -1853,8 +1868,9 @@ items:
     status: drafted
     dest: site/module4/notes2-loop.md
     notes: >-
-      AI agents 1: a model in a loop. Section header, 20 slides, 1 backup, about 55 min (figure-only slides for the
-      ReAct figure and the B/C pair). Outline -> Agents_Loop_Slides.pptx
+      AI agents 1: a model in a loop. Section header, 18 slides, 1 backup, about 48 min (figure-only slides for the
+      ReAct figure and the B/C pair); the sorting exercise and the agent definition moved to the introduction deck
+      on Oct 24. Outline -> Agents_Loop_Slides.pptx
       via agents_m4/build_deck.py on the Swin_Intro_Slides template. Figures AGL_* (SVG masters + PNG) from agents_m4/figs.py.
 
   - id: m4-deck-agents-tools
