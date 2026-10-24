@@ -6,7 +6,7 @@
 
 | Date | Session topic | Due before class |
 |---|---|---|
-| Oct 29 | How an agent works: a model in a loop, workflow vs. agent, the model and its harness, tool use and MCP, context engineering and RAG | **First project progress report** · *rotating project progress report or project clinic* |
+| Oct 29 | How an agent works: a model in a loop, workflow vs. agent, the model and its harness, tool use and MCP, context engineering and RAG | **First project progress report** |
 
 ## Overview
 
@@ -28,9 +28,12 @@ Three ideas carry the whole of Part II.
   its tools, its memory, the loop, and its permissions. You will almost never change the model. You will
   build harnesses, and {doc}`Module 8 <../module8/index>` builds them for transportation.
 
-Two cases run through all five modules of Part II: **traffic simulation with SUMO** and
-**transportation safety analysis**. Here they appear as tools — an agent that runs a simulation and reads
-the result, and an agent that retrieves the right passage of the Highway Safety Manual before it answers.
+The examples in Part II come from across transportation research and agency practice, so you should
+find your own kind of work among them. Two topics get extra depth: **traffic simulation with SUMO** (this
+module's lab and a full workflow in Module 8) and **transportation safety analysis** (the Module 6 lab and
+a full workflow in Module 8). In this module the examples are an agent that runs a SUMO simulation
+through tools and reads the result, an agent that retrieves the right passage of an agency manual before
+it answers, and an agent that calls live traffic data such as Florida 511 incident reports.
 
 Part II adapts the structure of CMU 11-768 *AI Agents* (Fall 2026, Daniel Fried and Graham Neubig) and
 rebuilds it around transportation research and agency work.

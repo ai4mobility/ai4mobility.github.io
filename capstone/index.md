@@ -39,15 +39,14 @@ Everything below is due *before* that day's class.
 | Dec 3 | **Final presentation materials**; presentations and demonstrations in class |
 | Dec 5–10 | **Final submission**, if assigned, during the university final exam period |
 
-From Oct 1 onward, one team also gives a rotating progress report at the start of most class
-meetings — see below. That presentation is separate from the written milestones in this table.
+From Oct 1 through Oct 22, one team also gave a rotating progress report at the start of most
+class meetings — see below. That presentation is separate from the written milestones in this table.
 
 ## Rotating project progress reports
 
-Beginning Oct 1, most Thursday meetings open with a short rotating project progress report.
-With approximately four to five project teams, one team normally presents each week, with
-additional short check-ins or project clinic time as needed. Every team presents twice before
-the Nov 19 dry run.
+From Oct 1 through Oct 22, most Thursday meetings opened with a short rotating project
+progress report, one team per week. The rotation does not continue during the AI agents unit
+(Oct 29 to Nov 24), so those lectures keep their full time.
 
 Presenting teams should report current progress rather than wait for polished results. A
 useful update includes the current problem statement, data or hardware status, method or

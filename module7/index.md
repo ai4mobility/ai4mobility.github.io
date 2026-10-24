@@ -37,8 +37,8 @@ reviewing, which is the same over-trust problem you know from driver-assistance 
 The module ends with **agents that interact**: agents with different goals meeting one another, such as
 language-model agents acting as simulated travelers or drivers.
 
-In the two Part II cases: who signs off on a safety analysis's site ranking and countermeasures, and
-language-model drivers inside a SUMO simulation.
+Other examples: traffic management center operators approving the dynamic message sign messages an
+agent drafts, and automated vehicles and human drivers as agents with different goals.
 
 ## Learning objectives
 

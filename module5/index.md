@@ -6,7 +6,7 @@
 
 | Date | Session topic | Due before class |
 |---|---|---|
-| Nov 5 | Skills, memory, and planning: agency procedures as skills, what an agent should remember, planning and re-planning, steps that cannot be undone, and coordinating several agents | Project progress update · *rotating project progress report* |
+| Nov 5 | Skills, memory, and planning: agency procedures as skills, what an agent should remember, planning and re-planning, steps that cannot be undone, and coordinating several agents | Project progress update |
 
 ## Overview
 
@@ -33,10 +33,11 @@ whole task rather than to one step.
 Often one agent that sees the whole task does better, because a hand-off is a summary and summaries drop
 things.
 
-The running example is restoring traffic signals after a hurricane: read the damage reports, check the
-generator stock, decide the order of work, and only then file the work order — the step that cannot be
-undone. The two Part II cases appear as a calibration procedure for SUMO written as a skill, and the
-Highway Safety Manual's safety management steps written as a plan.
+The main planning example is restoring traffic signals after a hurricane: read the damage reports,
+check the generator stock, decide the order of work, and only then file the work order — the step that
+cannot be undone. Other examples come from agency practice and research: an FDOT procedure written as a
+skill, and a manager agent with helper agents working through a literature review (how driver-assistance
+systems change freeway capacity, say) while keeping notes in memory between sessions.
 
 ## Learning objectives
 

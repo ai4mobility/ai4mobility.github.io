@@ -2046,7 +2046,8 @@ items:
     status: integrated
     notes: 'Instructor plan behind Part II (2026-10-24): five 2.5-hour lectures adapted from CMU 11-768
       AI Agents (local copy AI_Agents/CMU_11-768_Fall_2026), with SUMO simulation and safety analysis as
-      the two running cases. The five module index pages (module4-8/index.md) were rewritten from it; old
+      required topics (one lab and one full workflow each) and examples drawn widely from transportation
+      research and agency practice (revised the same day: not running cases). The five module index pages (module4-8/index.md) were rewritten from it; old
       Modules 4-8 (adapting and orchestrating, sensing and edge, driving and connectivity, simulation and
       operations, safety and agency practice) left the site.'
 

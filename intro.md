@@ -95,12 +95,15 @@ Course materials are organized into eight modules across two parts, plus a capst
 | {doc}`module7/index` | Agents and People in an Agency | Thu, Nov 19 |
 | {doc}`module8/index` | Building Transportation Harnesses | Tue, Nov 24 |
 
-Part II follows two cases through all five modules, traffic simulation with SUMO and transportation
-safety analysis, and ends with harnesses built for transportation research and agency use.
+Part II draws its examples from across transportation research and agency practice: traffic flow,
+safety, operations, driving automation, infrastructure, EVs, transit and air mobility. Traffic simulation
+with SUMO and transportation safety analysis each get a hands-on lab and a full workflow, and the unit
+ends with harnesses built for transportation research and agency use.
 
 The {doc}`capstone/index` starts in Week 1, runs the whole term, and is worth half the course
-grade. Project teams and topics are settled by Sept 17, and from Oct 1 onward most class
-meetings open with a rotating team progress report. Final presentations are Dec 3.
+grade. Project teams and topics are settled by Sept 17. From Oct 1 through Oct 22, most class
+meetings opened with a rotating team progress report; the AI agents unit has none. Final
+presentations are Dec 3.
 
 ## Guest Speakers & Course Contributors
 

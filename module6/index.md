@@ -6,7 +6,7 @@
 
 | Date | Session topic | Due before class |
 |---|---|---|
-| Nov 12 | Making agents better: evaluating agents; fine-tuning — full fine-tuning, LoRA, instruction tuning, training on agent runs; agents that learn from experience | Project progress update · *rotating project progress report* |
+| Nov 12 | Making agents better: evaluating agents; fine-tuning — full fine-tuning, LoRA, instruction tuning, training on agent runs; agents that learn from experience | Project progress update |
 
 ## Overview
 
@@ -30,8 +30,9 @@ on. The module ends with **agents that learn from experience** — saving lesson
 past runs — and why the quality of the judge that decides what counts as a success limits how far that
 can go.
 
-In the two Part II cases: fine-tuning a small model to turn crash narratives into structured fields, and
-a SUMO agent that builds up a library of skills from its own runs.
+The examples: fine-tuning a small model to turn crash narratives into structured fields (this module's
+lab), scoring an agent that drafts post-storm damage reports from dashcam frames against inspectors'
+labels, and SimSkill, a published agent that builds up a library of skills from its own SUMO runs.
 
 ## The module, page by page
 
