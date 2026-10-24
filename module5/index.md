@@ -1,75 +1,64 @@
-# Module 5 — Mobility Sensing and Edge AI
+# Module 5 — Skills, Memory, and Planning
 
-*Weeks 8 and 9 of the {doc}`../syllabus` — Oct 15 and Oct 22, 2026.*
+*Part II, AI Agents for Mobility · lecture 2 of 5 · Thursday, Nov 5, 2026. See the {doc}`../syllabus`.*
 
 ## Class meetings
 
 | Date | Session topic | Due before class |
 |---|---|---|
-| Oct 15 | AI for mobility sensing: computer vision, vehicle-based sensing, roadside sensing, radar, lidar, and related transportation data sources | **Final project proposal** · *rotating project progress report* |
-| Oct 22 | Edge AI and hardware-integrated mobility systems: edge devices, embedded computing, vehicle computing platforms, and AI robotics | Project progress materials as assigned · *rotating project progress report* |
+| Nov 5 | Skills, memory, and planning: agency procedures as skills, what an agent should remember, planning and re-planning, steps that cannot be undone, and coordinating several agents | Project progress update · *rotating project progress report* |
 
 ## Overview
 
-Computer vision has become the dominant sensing modality for traffic monitoring. This module
-covers how convolutional and transformer-based networks detect, track, classify, and count
-vehicles and pedestrians, and how to evaluate detector quality in terms a transportation
-engineer cares about — counts, speeds, queue lengths — rather than generic mAP scores.
+An agent that starts every task from nothing is slow, and it makes the same mistakes twice. This module
+covers three ways an agent carries what it knows from one task to the next, and one way to split a task
+too big for a single agent.
 
-The sensing half is organized around where the sensor sits, because that decides what you can
-measure. **Roadside sensing** — fixed cameras, drones, radar, lidar, Wi-Fi and Bluetooth
-readers — gives you a complete picture of one location. **Vehicle-based sensing** — dashcams,
-AI cameras, CAN and telematics streams, probe fleets — gives you a thin sample of everywhere,
-which turns out to be the right trade for asset inventory, pavement and sign condition, and
-corridor-wide travel time. Neither substitutes for the other, and knowing which question each
-can answer is most of the skill.
+**Skills.** A skill is a written procedure the agent opens only when a task calls for it: a short
+description is always visible, and the full instructions load on demand. Agencies already write these —
+standard operating procedures, design manuals, checklists — so turning one into a skill is often the
+cheapest improvement available. It is not free: in one benchmark, curated skills raised the average pass
+rate from 33.9% to 50.5%, but made results worse on 13 of 87 tasks, because a skill can push aside a
+better default.
 
-The second half is about where the model actually runs. A detector that needs a datacenter GPU
-is not a roadside product. **Edge AI** is the engineering discipline of getting a useful model
-onto a device with a power budget, a thermal limit, and no reliable backhaul. That includes
-the embedded accelerators on a pole, the **vehicle computing platforms** that carry a
-production driving stack, and the small **AI robotics** platforms we use in class to make the
-sense–compute–act loop concrete. This is where the course's hardware sessions live.
+**Memory.** What should an agent keep from past runs — a fact, a lesson, a whole episode — and when
+should it update or delete what it kept?
+
+**Planning.** A plan is a written statement of what the agent intends to do, so it can be checked before
+anything happens. Some plans should be fixed up front; others need re-planning as new information
+arrives. Every plan should mark the steps that cannot be undone, and the constraints that apply to the
+whole task rather than to one step.
+
+**Several agents.** A manager agent can hand pieces of a task to helper agents. Sometimes that helps.
+Often one agent that sees the whole task does better, because a hand-off is a summary and summaries drop
+things.
+
+The running example is restoring traffic signals after a hurricane: read the damage reports, check the
+generator stock, decide the order of work, and only then file the work order — the step that cannot be
+undone. The two Part II cases appear as a calibration procedure for SUMO written as a skill, and the
+Highway Safety Manual's safety management steps written as a plan.
 
 ## Learning objectives
 
 By the end of this module you will be able to:
 
-- Describe the architecture and training data behind modern object detectors (YOLO, DETR-family, RT-DETR).
-- Train or fine-tune a vehicle detector on traffic-camera footage.
-- Track detected vehicles across frames (SORT, DeepSORT, ByteTrack) and extract counts and speeds.
-- Identify failure modes of camera-based monitoring — occlusion, night, glare, perspective
-  distortion, weather — and discuss mitigations.
-- Compare camera, radar, lidar, and Wi-Fi/Bluetooth sensing on cost, coverage, accuracy, and
-  privacy exposure.
-- Choose between roadside and vehicle-based sensing for a given measurement problem, and state
-  the sampling bias each one introduces.
-- Connect detection outputs to transportation measures: volumes by class, turning movement
-  counts, queue lengths, incident flags.
-- Quantize or compress a model and deploy it to an edge device, then measure the accuracy and
-  latency you traded away.
-- Describe the compute hierarchy a mobility AI system runs on — embedded accelerator, vehicle
-  computing platform, gateway, cloud — and place a workload on it for defensible reasons.
+- Turn an agency procedure into a skill an agent can load, and say when a skill helps and when it gets
+  in the way.
+- Decide what an agent should remember between tasks, and who is allowed to change it.
+- Write a plan for a multi-step transportation task, mark the steps that cannot be undone, and place the
+  checkpoint.
+- Explain when splitting a task across several agents helps, and when one agent with the whole picture
+  does better.
 
 ## Topics
 
-- Image data pipelines and annotation; dataset bias in roadway imagery
-- Two-stage vs. single-stage detectors; transformer-based detectors
-- Multi-object tracking and re-identification
-- Drone-based monitoring and bird's-eye trajectory extraction
-- Hazard and incident detection
-- Radar and lidar for traffic sensing; sensor fusion basics
-- Wi-Fi and Bluetooth probe sensing: penetration rates, sampling bias, privacy
-- Vehicle-based sensing: dashcams and AI cameras, forward-camera crops, CAN and telematics streams, probe and fleet data
-- Roadside versus vehicle-based coverage: complete-at-a-point versus thin-everywhere, and which transportation questions each can answer
-- Related agency data sources and how sensing output joins them: ATMS/ATSPM feeds, crash and asset inventories, work-zone and 511 feeds
-- Evaluation metrics that matter for transportation (count error, speed error) vs. computer-vision metrics (mAP)
-- Edge hardware: NVIDIA Jetson, AI dash cameras, embedded accelerators, microcontroller-class devices
-- Vehicle computing platforms: automotive SoCs, the comma 3x development device, in-vehicle compute and power budgets
-- AI robotics as a teaching platform: the sense → compute → act loop on M5Stack desktop robots
-- Model compression: quantization, pruning, distillation; INT8 inference
-- Power, thermal, and bandwidth constraints; on-device vs. backhaul decisions
-- Privacy by design at the edge — what should never leave the device
+- Skills written by people vs. skills an agent learns from experience
+- Loading only what a task needs (progressive disclosure)
+- Agency SOPs, manuals and checklists as skills
+- Memory: facts, lessons and episodes; adding, updating and deleting
+- Plans as written artifacts: breaking a task down, plan-then-act, re-planning
+- Steps that cannot be undone, and constraints that span the whole task
+- A manager agent with helper agents, and the case for staying with one
 
 ## Video lectures
 
@@ -77,21 +66,15 @@ By the end of this module you will be able to:
 
 ## Recommended readings
 
-- Redmon, J., Divvala, S., Girshick, R., & Farhadi, A. (2016). You only look once: Unified, real-time object detection. *CVPR*.
-- Carion, N., et al. (2020). End-to-end object detection with transformers. *ECCV*. *(DETR.)*
-- Wojke, N., Bewley, A., & Paulus, D. (2017). Simple online and realtime tracking with a deep association metric. *ICIP*. *(DeepSORT.)*
-- Howard, A. G., et al. (2017). MobileNets: Efficient convolutional neural networks for mobile vision applications. *arXiv:1704.04861*.
-- Jacob, B., et al. (2018). Quantization and training of neural networks for efficient integer-arithmetic-only inference. *CVPR*.
-- A recent survey on vehicle detection and tracking for ITS — choose one from the current year.
+- Packer, C., et al. (2023). MemGPT: Towards LLMs as operating systems. *arXiv:2310.08560*.
+- Wang, Z. Z., Mao, J., Fried, D., & Neubig, G. (2024). Agent workflow memory. *arXiv:2409.07429*.
+- Li, X., et al. (2026). SkillsBench. *arXiv:2602.12670*.
+- Zhou, D., et al. (2023). Least-to-most prompting enables complex reasoning in large language models. *ICLR*.
+- Ahn, M., et al. (2022). Do as I can, not as I say: Grounding language in robotic affordances. *CoRL*. *(SayCan.)*
+- Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures 4–5.
 
 ## Labs
 
-- **Vehicle detection and tracking.** Train a YOLO detector on a public traffic-camera dataset,
-  then use ByteTrack to extract counts and turning-movement statistics. Compare your counts
-  against manual ground truth and report count error, not mAP.
-
-- **Deploy it to the edge.** Take the detector you just trained, quantize it, and run it on a
-  Jetson. Measure what you lost in accuracy and what you gained in latency and power — then
-  decide whether you would put it on a pole.
-
-*Hardware sessions use instructor-provided equipment. See the {doc}`../prerequisites` page.*
+- **In class: a procedure becomes a skill.** Take one FDOT procedure and write it as a skill an agent can
+  load. Then plan post-storm signal restoration with the irreversible step marked and the checkpoint
+  placed. No notebook.

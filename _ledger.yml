@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-10-22
+  updated: 2026-10-24
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -78,7 +78,7 @@ items:
     kind: notes
     module: 7
     session: 2026-11-05
-    status: drafted
+    status: superseded
     notes: >
       Created 2026-09-04. Section 7.1 is the workflow framing moved out of
       Module 1 (anatomy, six leverage labels, checkpoint rule, TIM case, both
@@ -89,6 +89,10 @@ items:
       by m7-gnn-road-network, with the GNN companion embedded at anchor
       (graph-neural-networks)= - is done. Digital twins, SUMO/CARLA workflows,
       signal control and the operations material still follow the Nov 5 session.
+      SPLIT 2026-10-24 when Part II became the AI agents unit: section 7.1 went
+      to site/module4/notes1-workflow.md (now 4.1, row m4-notes-1-workflow) and the
+      GNN half of 7.2 to site/module3/notes7-gnn.md (now 3.7, row m3-notes-7-gnn).
+      The old file was moved out of the repo to _to_delete/site-restructure-20261024/.
 
   - id: course-intro
     file: site/course-intro.md
@@ -1517,7 +1521,7 @@ items:
     notes: '1 slide: three camera-to-CAN+BSM designs in the who-reads-whom matrix; reproducer fusion_levels/.'
 
 # -----------------------------------------------------------------------------
-# MODULE 3 — Generative AI and World Models (Sept 24, Nov 19)
+# MODULE 3 — Generative AI and World Models (Oct 22; section 3.7 = the GNN week)
 # -----------------------------------------------------------------------------
 
   - id: m3-notes
@@ -1767,16 +1771,17 @@ items:
       table. 13 slides + header + 1 backup. Outline Diffusion_Denoise_Slides.md; built from genmodels/slides_content.py
       (part_dm); numbers dm_results.json.'
 
-# MODULES 4-8 — Module 4 has its first section page; Modules 5-8 not started
+# MODULES 4-8 — PART II, AI AGENTS (since 2026-10-24): one module per lecture, Oct 29 to Tue Nov 24
 # -----------------------------------------------------------------------------
 
   - id: m4-notes-1-adaptation
-    file: site/module4/notes1-adaptation.md
+    file: site/module6/notes1-adaptation.md
     kind: notes
-    module: 4
-    session: '2026-10-01'
+    module: 6
+    session: '2026-11-12'
     status: integrated
-    notes: '4.1 The adaptation ladder: what your corpus actually needs. The FIRST Module 4 section page,
+    notes: 'MOVED 2026-10-24 to Module 6 and renumbered 6.1 (was 4.1); its closing line now points to Module 4 for retrieval.
+      4.1 The adaptation ladder: what your corpus actually needs. The FIRST Module 4 section page,
       created Sept 22 2026, and deliberately the module opener rather than a later section: the module index
       already argues that most problems people fine-tune for are retrieval problems, so the decision rule
       comes before prompting, RAG and LoRA mechanics and the later sections land as the rungs it names.
@@ -1796,31 +1801,33 @@ items:
     file: site/module4/notes.md
     kind: notes
     module: 4
-    session: [2026-10-01, 2026-10-08]
+    session: 2026-10-29
     status: debt
-    notes: Evaluation for transportation tasks lands here — see NOTES_GUIDE.md.
+    notes: Module 4 = How an Agent Works (Oct 29). 4.1 exists (m4-notes-1-workflow); the agent loop, tool use and MCP, and context engineering and RAG sections are owed.
 
   - id: m5-notes
     file: site/module5/notes.md
     kind: notes
     module: 5
-    session: [2026-10-15, 2026-10-22]
+    session: 2026-11-05
     status: debt
+    notes: Module 5 = Skills, Memory, and Planning (Nov 5). No section pages yet.
 
   - id: m6-notes
     file: site/module6/notes.md
     kind: notes
     module: 6
-    session: 2026-10-29
+    session: 2026-11-12
     status: debt
+    notes: Module 6 = Making Agents Better, Evaluation and Fine-Tuning (Nov 12). 6.1 exists (m4-notes-1-adaptation).
 
   - id: m7-newell-lwr-cnn
     file: Newell_LWR_CNN_Companion.html
     kind: companion
-    module: 7
-    session: 2026-11-05
+    module: 1
+    session: 2026-09-03
     status: published
-    dest: site/module7/index.md#interactive-companion
+    dest: site/module1/notes3-cnn.md#newell-lwr
     mounted: site/_static/companions/Newell_LWR_CNN_Companion.html
     notes: >-
       Newell's car-following model and the CTM update shown to BE convolutions, then a
@@ -1833,12 +1840,14 @@ items:
       assemble.py; verify.py is the Playwright check). Still mounted on the INDEX page; module7/notes.md now
       exists and §7.2 names this companion as the corridor-scale counterpart to
       m7-gnn-road-network, so folding the embed itself into the chapter is the remaining move.
+      MOVED 2026-10-24 at Hao's request: now embedded in Module 1 section 1.3 under
+      (newell-lwr)= with its three results; module1/index.md companion count ten -> eleven.
 
   - id: m7-newell-lwr-repro
     file: cnn_newell_lwr/
     kind: internal
-    module: 7
-    session: 2026-11-05
+    module: 1
+    session: 2026-09-03
     status: integrated
     notes: >-
       Reproducers behind m7-newell-lwr-cnn: the Newell conv fits (exp1, exp1b), the CTM
@@ -1852,8 +1861,9 @@ items:
     file: site/module8/notes.md
     kind: notes
     module: 8
-    session: [2026-11-12, 2026-11-19]
+    session: 2026-11-24
     status: debt
+    notes: Module 8 = Building Transportation Harnesses (Tue Nov 24, an added session). No section pages yet.
 
   - id: m4-m8-labs
     file: null
@@ -1861,18 +1871,20 @@ items:
     module: [4, 5, 6, 7, 8]
     status: debt
     notes: >
-      Ten labs are described on the module pages and none are built. This is
-      the top feasibility risk in the structure review, and it competes with
-      notes authoring for the same hours. See NOTES_GUIDE.md "when a week
-      runs short".
+      Since 2026-10-24 Part II is the AI agents unit. Three labs are described
+      and none is built: an agent that tunes a signal plan through SUMO tools
+      (M4), LoRA on crash narratives (M6), and reviewing recorded agent runs
+      (M7). The old applied labs (detection and tracking, edge deployment,
+      production driving stack, lane keeping, RL signal control, CARLA,
+      surrogate safety, agency document workflow) left the site with them.
 
   - id: m7-gnn-road-network
     file: GNN_On_A_Road_Network_Companion.html
     kind: companion
-    module: 7
-    session: '2026-11-05'
+    module: 3
+    session: gnn-week
     status: published
-    dest: site/module7/notes.md#graph-neural-networks
+    dest: site/module3/notes7-gnn.md#graph-neural-networks
     mounted: site/_static/companions/GNN_On_A_Road_Network_Companion.html
     notes: 'SIX tabs since 2026-09-21 (tab 5 "Attention: a learned aggregator" inserted before the fit
       card; see the tail of this note). A random irregular street network is generated in the browser (perturbed lattice,
@@ -1901,8 +1913,8 @@ items:
   - id: m7-gnn-attention-repro
     file: attn_roadnet.py
     kind: internal
-    module: 7
-    session: '2026-11-05'
+    module: 3
+    session: gnn-week
     status: integrated
     notes: 'Reproducer behind tab 5 of m7-gnn-road-network, at the class-folder root. NumPy only, no torch.
       It ports the page''s mulberry32 PRNG bit-for-bit, so it builds the IDENTICAL networks and reproduces
@@ -1917,8 +1929,8 @@ items:
   - id: m7-gnn-road-network-repro
     file: gnn_roadnet.py, sweep.py
     kind: internal
-    module: 7
-    session: '2026-11-05'
+    module: 3
+    session: gnn-week
     status: integrated
     notes: Reproducers behind m7-gnn-road-network, at the class-folder root beside the companion. gnn_roadnet.py
       holds the network generator, the queue-spillback ground truth (beta=0.70, gamma=0.05, bottleneck pinned
@@ -1927,10 +1939,10 @@ items:
       in 10 minutes, batched it is ~25.
 
   - id: m7-lab5-graph-attention
-    file: site/module7/lab5_graph_attention.ipynb
+    file: site/module3/lab5_graph_attention.ipynb
     kind: lab
-    module: 7
-    session: '2026-11-05'
+    module: 3
+    session: gnn-week
     status: published
     dest: site/labs.md + _toc.yml Labs part
     notes: 'Lab 5. One message-passing layer, SIX aggregators: mean/sum/max/attn plus two that encode domain
@@ -1947,8 +1959,8 @@ items:
   - id: m7-lab5-repro
     file: gat_roadnet.py, known_aggs.py, more_seeds.py, build_lab5.py
     kind: internal
-    module: 7
-    session: '2026-11-05'
+    module: 3
+    session: gnn-week
     status: integrated
     notes: 'Reproducers for m7-lab5-graph-attention at the class-folder root. gat_roadnet.py holds the three
       ground truths and the six-aggregator layer (imports the network generator from gnn_roadnet.py); more_seeds.py
@@ -1960,12 +1972,12 @@ items:
       message function; only the reduction differs. The notebook says so in section 4 on purpose.'
 
   - id: m4-lab6-vit-finetune
-    file: site/module4/lab6_vit_finetune.ipynb
+    file: site/module6/lab6_vit_finetune.ipynb
     kind: lab
-    module: 4
+    module: 6
     session: '2026-10-01'
     status: published
-    dest: site/labs.md + _toc.yml Labs part + module4/index.md
+    dest: site/labs.md + _toc.yml Labs part + module6/index.md
     notes: 'Lab 6. Turns the Sept 10 transfer dial on ViT-Tiny (5,524,995 params, Apache-2.0) over 2,949
       FL511 Tampa Bay camera frames collected 2026-09-21 in six sweeps through sunset. Camera-disjoint
       split, daylight-only training. Daylight test: majority 35.5, 12 hand features 37.7, head-only at
@@ -1982,7 +1994,7 @@ items:
   - id: m4-lab6-repro
     file: Labs/vit_finetune/ + Labs/build_vit_finetune_lab.py
     kind: internal
-    module: 4
+    module: 6
     session: '2026-10-01'
     status: integrated
     notes: 'Reproducer for m4-lab6-vit-finetune. sweep.py pulls FL511 (https://fl511.com/map/mapIcons/Cameras
@@ -1995,6 +2007,48 @@ items:
       hard-coded in BOTH the notebook and dataset.py; set_dial(m,0) unfreezes head AND norm = 963 params,
       not 579; experiments must read the PACKAGED images, not the raw originals, or the notebook prints
       numbers that do not match.'
+
+  - id: m3-notes-7-gnn
+    file: site/module3/notes7-gnn.md
+    kind: notes
+    module: 3
+    session: gnn-week
+    status: integrated
+    notes: '3.7 When the thing you model is a network: graph neural networks. Moved 2026-10-24 from module7/notes.md
+      section 7.2 when Part II became the agents unit; numbered last so 3.1-3.6 keep their numbers (the
+      page and the module index say it was taught first). Keeps the (graph-neural-networks)= target, so
+      the {ref} links from 2.11 and 2.12 still resolve. Embeds m7-gnn-road-network; reads with Lab 5.'
+
+  - id: m4-notes-1-workflow
+    file: site/module4/notes1-workflow.md
+    kind: notes
+    module: 4
+    session:
+    - '2026-08-27'
+    - '2026-10-29'
+    status: integrated
+    notes: 4.1 The workflow is the unit of work. Moved 2026-10-24 from module7/notes.md section 7.1 (anatomy,
+      six leverage labels, checkpoint rule, TIM case with both companion embeds, workflow audit) to open
+      the agents unit, plus a closing "From a workflow to an agent" bridge.
+
+  - id: site-part2-agents
+    file: AI_Agents/AI_Agents_Five_Lecture_Plan.docx
+    kind: internal
+    module:
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    session:
+    - '2026-10-29'
+    - '2026-11-24'
+    status: integrated
+    notes: 'Instructor plan behind Part II (2026-10-24): five 2.5-hour lectures adapted from CMU 11-768
+      AI Agents (local copy AI_Agents/CMU_11-768_Fall_2026), with SUMO simulation and safety analysis as
+      the two running cases. The five module index pages (module4-8/index.md) were rewritten from it; old
+      Modules 4-8 (adapting and orchestrating, sensing and edge, driving and connectivity, simulation and
+      operations, safety and agency practice) left the site.'
 
 # -----------------------------------------------------------------------------
 # CAPSTONE AND COURSE-WIDE

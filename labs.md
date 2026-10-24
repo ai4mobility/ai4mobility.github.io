@@ -6,7 +6,7 @@
   <p>One page for all the labs &mdash; what each one builds, what it actually proves, and what to compare it against before you believe the result. Everything runs in Google Colab; nothing needs a local install.</p>
   <div class="resource-meta">
     <span>6 notebooks available now</span>
-    <span>15 more planned for Modules 2&ndash;8</span>
+    <span>7 more planned for Modules 2&ndash;7</span>
     <span>Open data throughout</span>
   </div>
 </section>
@@ -18,7 +18,7 @@
 <section class="resource-section" id="at-a-glance">
   <div class="resource-section-header">
     <h2>All Labs at a Glance</h2>
-    <span>Modules 1&ndash;8</span>
+    <span>Modules 1&ndash;7</span>
   </div>
   <div class="practice-table-wrap">
     <table class="practice-table">
@@ -35,23 +35,16 @@
         <tr><td><a href="module1/lab2_word_embeddings.html">2 &mdash; From Word2Vec to Road2Vec</a></td><td>M1 &middot; Sept 10</td><td>Representation learning is not about language &mdash; and a free baseline may match it</td><td>Available</td></tr>
         <tr><td><a href="module1/lab3_image_embeddings.html">3 &mdash; Image embeddings with a deep CNN</a></td><td>M1 &middot; Sept 3 &amp; 10</td><td>Transfer learning in its simplest useful form</td><td>Available</td></tr>
         <tr><td><a href="module1/lab4_clip_vs_traditional_cv.html">4 &mdash; CLIP vs. traditional computer vision</a></td><td>M1 &middot; Sept 10</td><td>Why open-vocabulary perception matters for long-tail safety scenes</td><td>Available</td></tr>
+        <tr><td><a href="module1/notes3-cnn.html#newell-lwr">Learning the CTM update</a></td><td>M1 &middot; Sept 3</td><td>A convolution kernel carries a reaction time and a wave speed</td><td>Companion available</td></tr>
         <tr><td>Cross-attention sanity check</td><td>M2 &middot; Sept 17</td><td>Attention heads route; they are not the tidy alignment maps papers suggest</td><td>In development</td></tr>
-        <tr><td>VAE on traffic state heatmaps</td><td>M3 &middot; Sept 24</td><td>What a narrow bottleneck chooses to keep, and what it throws away</td><td>In development</td></tr>
-        <tr><td>From VAE to diffusion</td><td>M3 &middot; Sept 24</td><td>Diffusion as a response to measured VAE failures, not an assertion</td><td>In development</td></tr>
-        <tr><td>Training the denoiser</td><td>M3 &middot; Nov 19</td><td>What the network predicts at each noise level, and why</td><td>In development</td></tr>
-        <tr><td><a href="module4/lab6_vit_finetune.html">6 &mdash; Fine-tuning a vision transformer</a></td><td>M4 &middot; Oct 1</td><td>Where the accuracy in a fine-tune actually comes from &mdash; and how little of it survives sunset</td><td>Available</td></tr>
-        <tr><td>A retrieval assistant over transportation documents</td><td>M4 &middot; Oct 1</td><td>When a RAG answer is wrong, retrieval usually failed &mdash; not the model</td><td>In development</td></tr>
-        <tr><td>An agentic workflow for a recurring task</td><td>M4 &middot; Oct 8</td><td>An agent is only as good as the verification step you designed</td><td>In development</td></tr>
-        <tr><td>Vehicle detection and tracking</td><td>M5 &middot; Oct 15</td><td>Count error against manual ground truth, not mAP</td><td>In development</td></tr>
-        <tr><td>Deploy it to the edge <em>(hardware)</em></td><td>M5 &middot; Oct 22</td><td>What quantization costs in accuracy and buys in latency and power</td><td>In development</td></tr>
-        <tr><td>Reading a production driving stack <em>(hardware)</em></td><td>M6 &middot; Oct 29</td><td>What a deployed ADAS is doing, and how you would know if it were doing it badly</td><td>In development</td></tr>
-        <tr><td>A lane-keeping policy from camera images</td><td>M6 &middot; Oct 29</td><td>The failure cases that look fine on aggregate metrics</td><td>In development</td></tr>
-        <tr><td><a href="module7/lab5_graph_attention.html">5 &mdash; Attention on a road network</a></td><td>M7 &middot; Nov 5</td><td>Attention earns its parameters only where the weighting is unknown &mdash; and structure beats weighting</td><td>Available</td></tr>
-        <tr><td>Learning the CTM update</td><td>M7 &middot; Nov 5</td><td>A convolution kernel carries a reaction time and a wave speed</td><td>Companion available</td></tr>
-        <tr><td>RL signal control in SUMO</td><td>M7 &middot; Nov 5</td><td>The tuned actuated baseline is the comparison that deflates the result</td><td>In development</td></tr>
-        <tr><td>Sensor simulation in CARLA</td><td>M7 &middot; Nov 5</td><td>What a simulator systematically fails to represent</td><td>In development</td></tr>
-        <tr><td>Surrogate safety from video</td><td>M8 &middot; Nov 12</td><td>What would have to be true for TTC and PET to predict crashes here</td><td>In development</td></tr>
-        <tr><td>An agency document workflow</td><td>M8 &middot; Nov 12</td><td>End-to-end time including your verification, against doing it by hand</td><td>In development</td></tr>
+        <tr><td><a href="module3/lab5_graph_attention.html">5 &mdash; Attention on a road network</a></td><td>M3 &middot; GNN week</td><td>Attention earns its parameters only where the weighting is unknown &mdash; and structure beats weighting</td><td>Available</td></tr>
+        <tr><td>VAE on traffic state heatmaps</td><td>M3 &middot; Oct 22</td><td>What a narrow bottleneck chooses to keep, and what it throws away</td><td>In development</td></tr>
+        <tr><td>From VAE to diffusion</td><td>M3 &middot; Oct 22</td><td>Diffusion as a response to measured VAE failures, not an assertion</td><td>In development</td></tr>
+        <tr><td>Training the denoiser</td><td>M3 &middot; Oct 22</td><td>What the network predicts at each noise level, and why</td><td>In development</td></tr>
+        <tr><td>An agent that tunes a signal plan</td><td>M4 &middot; Oct 29</td><td>What you show an agent in a tool's output changes how often it breaks the rules</td><td>In development</td></tr>
+        <tr><td><a href="module6/lab6_vit_finetune.html">6 &mdash; Fine-tuning a vision transformer</a></td><td>M6 &middot; Nov 12</td><td>Where the accuracy in a fine-tune actually comes from &mdash; and how little of it survives sunset</td><td>Available</td></tr>
+        <tr><td>Fine-tuning a small language model on crash narratives</td><td>M6 &middot; Nov 12</td><td>Whether LoRA beats prompting and retrieval on a split you can defend</td><td>In development</td></tr>
+        <tr><td>Reviewing an agent&rsquo;s work</td><td>M7 &middot; Nov 19</td><td>Which agent failures a human reviewer would actually have caught</td><td>In development</td></tr>
       </tbody>
     </table>
   </div>
@@ -60,7 +53,7 @@
 <section class="resource-section" id="module1-labs">
   <div class="resource-section-header">
     <h2>Available Now</h2>
-    <span>Modules 1, 4 and 7</span>
+    <span>Modules 1, 3 and 6</span>
   </div>
   <p class="section-intro">Six notebooks, all runnable in Colab on open or synthetic data. Read each one alongside the notes section named on its card &mdash; the notebook shows the thing working, the section says why it works and where it stops working.</p>
   <div class="resource-grid">
@@ -97,20 +90,20 @@
       <a class="resource-link" href="module1/lab4_clip_vs_traditional_cv.html">Open Lab 4</a>
     </article>
     <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 7 &middot; Nov 5</p><span class="level-badge level-advanced">Advanced</span></div>
+      <div class="resource-card-top"><p class="resource-category">Module 3 &middot; GNN week</p><span class="level-badge level-advanced">Advanced</span></div>
       <h3>Lab 5 &mdash; Attention on a Road Network</h3>
       <p>Build one message-passing layer with six interchangeable aggregators and run it against two ground-truth traffic rules taken from flow theory. Four aggregators are generic; two of them encode what a traffic engineer already knows &mdash; that a queue backs up from downstream, that arriving flow comes from upstream. Those two are the real competition, and they cost no extra parameters.</p>
       <p><strong>Proves:</strong> attention wins only where the weighting is genuinely unknown &mdash; and even there, knowing <em>which</em> neighbours to listen to is worth more than learning <em>how much</em> to weight them. <strong>Check it against:</strong> not the mean aggregator, which anything beats, but the fixed aggregator carrying your own domain knowledge. On the spillback rule it ties attention at half the parameters and a third of the seed variance.</p>
-      <div class="tag-row"><span>Reads with 7.2</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~3 min</span></div>
-      <a class="resource-link" href="module7/lab5_graph_attention.html">Open Lab 5</a>
+      <div class="tag-row"><span>Reads with 3.7</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~3 min</span></div>
+      <a class="resource-link" href="module3/lab5_graph_attention.html">Open Lab 5</a>
     </article>
     <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 4 &middot; Oct 1</p><span class="level-badge level-intermediate">Intermediate</span></div>
+      <div class="resource-card-top"><p class="resource-category">Module 6 &middot; Nov 12</p><span class="level-badge level-intermediate">Intermediate</span></div>
       <h3>Lab 6 &mdash; Fine-tuning a Vision Transformer</h3>
       <p>2,949 snapshots from 494 FDOT traffic cameras around Tampa Bay, swept every 25 minutes straight through sunset. Turn the transfer dial you saw on the Sept 10 slides &mdash; head only, last block, last four blocks, everything &mdash; on a 5.5M-parameter ViT-Tiny, and watch what each setting costs and buys. The labels came from a detector, not a person, and the lab spends its last three sections on what that costs you.</p>
       <p><strong>Proves:</strong> a fine-tune's accuracy splits cleanly into what the pretrained features gave you for free and what you had to buy by unfreezing &mdash; and that an after-dark score can rise while the model gets worse, because the label source failed first. <strong>Check it against:</strong> twelve hand-written image statistics and a logistic regression, which scores 37.7% where the full fine-tune scores 71.2%.</p>
-      <div class="tag-row"><span>Reads with 2.7, 4.1</span><span>torch &middot; timm &middot; scikit-learn &middot; matplotlib</span><span>Downloads 31 MB &middot; ~15 min on CPU</span></div>
-      <a class="resource-link" href="module4/lab6_vit_finetune.html">Open Lab 6</a>
+      <div class="tag-row"><span>Reads with 2.7, 6.1</span><span>torch &middot; timm &middot; scikit-learn &middot; matplotlib</span><span>Downloads 31 MB &middot; ~15 min on CPU</span></div>
+      <a class="resource-link" href="module6/lab6_vit_finetune.html">Open Lab 6</a>
     </article>
   </div>
   <div class="placeholder-panel">
@@ -121,7 +114,7 @@
 <section class="resource-section" id="coming-later">
   <div class="resource-section-header">
     <h2>Coming Later in the Course</h2>
-    <span>Modules 2&ndash;8</span>
+    <span>Modules 2&ndash;7</span>
   </div>
   <p class="section-intro">These are described on each module page and released as the semester reaches them. They are listed here so you can see the arc &mdash; and so that if one of them is close to your capstone, you can start early rather than waiting for the week it is assigned.</p>
   <div class="resource-grid">
@@ -132,40 +125,28 @@
       <a class="resource-link" href="module2/index.html">Module 2</a>
     </article>
     <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 3 &middot; Sept 24, Nov 19</p><span class="status-tag status-closed">In development</span></div>
+      <div class="resource-card-top"><p class="resource-category">Module 3 &middot; Oct 22</p><span class="status-tag status-closed">In development</span></div>
       <h3>Generative AI and World Models</h3>
       <p><strong>VAE on traffic state heatmaps</strong> &mdash; read the latent space of a model trained on cell-transmission speed fields. <strong>From VAE to diffusion</strong> &mdash; measure where the VAE breaks on that same data before reaching for diffusion. <strong>Training the denoiser</strong> &mdash; build it in numpy and answer what the network is really predicting at each noise level.</p>
       <a class="resource-link" href="module3/index.html">Module 3</a>
     </article>
     <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 4 &middot; Oct 1, Oct 8</p><span class="status-tag status-closed">In development</span></div>
-      <h3>Adapting and Orchestrating Models</h3>
-      <p><strong>A retrieval assistant over transportation documents</strong> &mdash; build a RAG pipeline over a design manual or a set of agency reports, and measure retrieval quality on its own before judging the answers. <strong>An agentic workflow for a recurring task</strong> &mdash; decompose a monthly analysis into tool calls, with a verification step you designed rather than one the agent reports on itself.</p>
+      <div class="resource-card-top"><p class="resource-category">Module 4 &middot; Oct 29</p><span class="status-tag status-closed">In development</span></div>
+      <h3>How an Agent Works</h3>
+      <p><strong>An agent that tunes a signal plan.</strong> Build a small agent loop that adjusts the timing of one intersection through SUMO tools. Run it with and without the timing limits shown in the tool&rsquo;s output, count the plans that break them, then add a checkpoint before any plan is applied.</p>
       <a class="resource-link" href="module4/index.html">Module 4</a>
     </article>
     <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 5 &middot; Oct 15, Oct 22</p><span class="status-tag status-closed">In development &middot; hardware</span></div>
-      <h3>Mobility Sensing and Edge AI</h3>
-      <p><strong>Vehicle detection and tracking</strong> &mdash; train a YOLO detector on a public traffic-camera dataset, extract counts and turning movements with ByteTrack, and report count error against manual ground truth rather than mAP. <strong>Deploy it to the edge</strong> &mdash; quantize that detector, run it on a Jetson, and measure what you lost and gained before deciding whether you would put it on a pole.</p>
-      <a class="resource-link" href="module5/index.html">Module 5</a>
-    </article>
-    <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 6 &middot; Oct 29</p><span class="status-tag status-closed">In development &middot; hardware</span></div>
-      <h3>Autonomous Driving and Connectivity</h3>
-      <p><strong>Reading a production driving stack</strong> &mdash; work through the Openpilot longitudinal and lateral control paths and examine CAN traces from a vehicle running it. <strong>A lane-keeping policy from camera images</strong> &mdash; train a small CNN policy, evaluate it in simulation, and analyze the failures that look fine in aggregate.</p>
+      <div class="resource-card-top"><p class="resource-category">Module 6 &middot; Nov 12</p><span class="status-tag status-closed">In development</span></div>
+      <h3>Evaluation and Fine-Tuning</h3>
+      <p><strong>Fine-tuning a small language model on crash narratives.</strong> Use LoRA to teach a small open model to turn crash narratives into structured fields, and compare it with prompting alone and with retrieval on a split you can defend.</p>
       <a class="resource-link" href="module6/index.html">Module 6</a>
     </article>
     <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 7 &middot; Nov 5</p><span class="status-tag status-open">Companion available</span></div>
-      <h3>Simulation, Digital Twins, and Operations</h3>
-      <p><strong>Learning the CTM update</strong> &mdash; fit a convolution kernel to a Newell platoon, read the reaction time off its peak, then train a residual conv block on CTM fields and measure the wave speeds it learned. Runs in the browser, nothing to install. <strong>RL signal control in SUMO</strong> and <strong>sensor simulation in CARLA</strong> follow.</p>
+      <div class="resource-card-top"><p class="resource-category">Module 7 &middot; Nov 19</p><span class="status-tag status-closed">In development</span></div>
+      <h3>Agents and People in an Agency</h3>
+      <p><strong>Reviewing an agent&rsquo;s work.</strong> Work through recorded agent runs on transportation tasks, find the failures, decide which a human reviewer would have caught, and design where the approvals go. The runs are recorded in advance, so nothing needs an API key.</p>
       <a class="resource-link" href="module7/index.html">Module 7</a>
-    </article>
-    <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 8 &middot; Nov 12</p><span class="status-tag status-closed">In development</span></div>
-      <h3>Safety, Agency Practice, and Responsible Use</h3>
-      <p><strong>Surrogate safety from video</strong> &mdash; extract trajectories from an intersection video, compute TTC and PET distributions, then state what would have to be true for those numbers to predict crashes at that location and check whether it is. <strong>An agency document workflow</strong> &mdash; build one, design its verification step, and time it honestly against doing the task by hand.</p>
-      <a class="resource-link" href="module8/index.html">Module 8</a>
     </article>
   </div>
 </section>
@@ -179,7 +160,7 @@
     <p><strong>In Colab, there is nothing to install.</strong> Open any notebook page and use the rocket icon at the top right to launch it in Google Colab, or download the <code>.ipynb</code> and run it locally. Running locally means installing the packages each lab names in its first setup cell; the notebooks keep those lists short and each one states its dependencies before it uses them.</p>
     <p><strong>Two of the four run without a network.</strong> Lab 1 generates its own data and Lab 2 needs only numpy and matplotlib. Labs 3 and 4 download pretrained model weights and sample images, so run them where you have a connection.</p>
     <p><strong>You are not expected to write code unaided.</strong> The prerequisite is being able to read Python, run a cell, and say what the output means &mdash; not writing a training loop from memory. Where you use an AI assistant on lab code, the course's expectation is the one in the <a href="syllabus.html">syllabus</a>: you can explain every line you hand in. The <a href="prerequisites.html">prerequisites</a> page has the setup details and the refresher material.</p>
-    <p><strong>Hardware labs are different.</strong> The Module 5 and Module 6 labs marked <em>hardware</em> use instructor-provided equipment &mdash; Jetsons, cameras, and the comma devices on the <a href="hardware.html">Hardware for Class</a> page. No personal vehicle is used for any lab, and any project that collects identifiable data needs IRB approval before collection starts.</p>
+    <p><strong>Hardware is for projects.</strong> No lab on the current schedule needs hardware. Capstone projects that do use instructor-provided equipment &mdash; Jetsons, cameras, and the comma devices on the <a href="hardware.html">Hardware for Class</a> page. No personal vehicle is used for any lab or project, and any project that collects identifiable data needs IRB approval before collection starts.</p>
   </div>
 </section>
 
@@ -190,7 +171,7 @@
   </div>
   <p class="section-intro">Every notebook in this course produces something that looks like a result. The point of the lab is not the number &mdash; it is whether the number survives three questions, the same three that decide whether you would put a system on a pole or in front of a review board.</p>
   <div class="placeholder-panel">
-    <p><strong>What is the baseline?</strong> Not "no model" &mdash; the cheap, tuned, classical thing a colleague would do instead. Latitude and longitude in Lab 2. A properly tuned actuated controller in the SUMO lab. Manual counts in the detection lab. A result that does not beat its baseline is a finding, and worth reporting as one.</p>
+    <p><strong>What is the baseline?</strong> Not "no model" &mdash; the cheap, tuned, classical thing a colleague would do instead. Latitude and longitude in Lab 2. A Webster or properly tuned actuated plan in the SUMO agent lab. Prompting alone in the crash-narrative fine-tuning lab. A result that does not beat its baseline is a finding, and worth reporting as one.</p>
     <p><strong>How was the data split, and is that split honest?</strong> Random splits flatter models on data with structure &mdash; consecutive frames of the same video, repeated days at the same station, trips by the same driver. Ask whether anything in your test set could have been memorized from your training set.</p>
     <p><strong>What happens on the ugly cases?</strong> Night, rain, occlusion, work zones, the scene with no label for it. Aggregate accuracy hides exactly the cases that matter for safety, and those are the ones a vendor demo will not show you.</p>
   </div>

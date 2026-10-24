@@ -73,7 +73,7 @@ image, a video, or a raw sensor waveform.
 
 **Computer vision.** A specialized branch of deep learning: detecting and
 tracking objects in images and video. Central to traffic monitoring and to
-vehicle perception. Module 5 lives here.
+vehicle perception. Modules 1 and 2 cover it.
 
 **Reinforcement learning.** Agents that learn by interacting with an
 environment. Used for signal control, driving policy, and dispatch. Powerful,
@@ -93,9 +93,9 @@ this session was the vocabulary the whole semester uses: a task written as
 <strong>trigger &rarr; ingest &rarr; transform &rarr; act &rarr; checkpoint &rarr; record</strong>, each step
 labelled with one of six kinds of leverage &mdash; <strong>extraction &middot; classification &middot;
 generation &middot; retrieval &middot; prediction &middot; judgment</strong> &mdash; and the human review placed
-immediately before the first irreversible action. That material is operations
-material, so it is written up with the operations module: see
-<a href="module7/notes.html">Module 7 &sect;7.1</a> for the anatomy, the six labels, the
+immediately before the first irreversible action. That material opens the AI agents
+part of the course, so it is written up there: see
+<a href="module4/notes1-workflow.html">4.1 The workflow is the unit of work</a> for the anatomy, the six labels, the
 checkpoint rule, and the worked Traffic Incident Management case.
 </div>
 
@@ -105,7 +105,7 @@ checkpoint rule, and the worked Traffic Incident Management case.
 
 A recurring worry in a course like this is that the transportation background is
 the thing being replaced. It is not, and the workflow framing in
-{doc}`Module 7 <module7/notes>` is what makes that concrete.
+{doc}`4.1 <module4/notes1-workflow>` is what makes that concrete.
 
 Traffic flow theory tells you what a plausible output looks like, which is how
 you catch a model that has learned something absurd. Statistics tells you

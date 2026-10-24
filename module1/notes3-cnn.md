@@ -5,12 +5,13 @@
     <span class="notes-card-eyebrow">Module 1 &middot; Section 1.3</span>
     <span class="notes-card-session">Session: Sept 3</span>
   </div>
-  <p class="notes-card-lede">The same neuron from sections 1.1 and 1.2, wired to reuse its weights. Convolution arrived at from a moving average you already trust, then a worked case: a stock detector meeting a child on a scooter on a real Tampa street. This is the first page where the mechanism stops being an idea and starts being a thing that can be wrong.</p>
+  <p class="notes-card-lede">The same neuron from sections 1.1 and 1.2, wired to reuse its weights. Convolution arrived at from a moving average you already trust; two traffic models that turn out to be convolutions already; then a worked case: a stock detector meeting a child on a scooter on a real Tampa street. This is the first page where the mechanism stops being an idea and starts being a thing that can be wrong.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Interactive companions on this page</h4>
       <ul>
       <li><a href="../_static/companions/Convolution_Kernels_Companion.html" target="_blank" rel="noopener">Convolution kernels &#8599;</a></li>
+      <li><a href="../_static/companions/Newell_LWR_CNN_Companion.html" target="_blank" rel="noopener">Newell&rsquo;s shift and the LWR shockwave as convolutions &#8599;</a></li>
       <li><a href="../_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">A child on a scooter, seen by a stock CNN detector &#8599;</a></li>
       </ul>
     </div>
@@ -59,7 +60,7 @@ detector that finds bumpers, the stop bar and the shadow line under a vehicle.
 Put a single 1 off centre and the template does not detect anything at all — it
 **moves** the image by one pixel, exactly, with maximum difference $0.0$ against
 a plain array shift. Hold onto that one: a translation in a time–space diagram
-is what Newell's car-following model does, and Module 7 takes it up again.
+is what Newell's car-following model does, and {ref}`a companion later on this page <newell-lwr>` takes it up.
 
 **Why this wiring instead of a dense layer.** On a 384 × 241 frame — the size
 used in the companion below — a 3 × 3 kernel is **9** weights covering
@@ -128,6 +129,44 @@ is the low-contrast shape between them.
 Type the nine numbers yourself on the first tab, click any output pixel to see
 the nine multiplications behind it, then stack the kernels into a layer and
 finally page through the 64 real filters — the dead ones included — on the third.
+
+(newell-lwr)=
+## Two traffic models that are already convolutions
+
+The off-centre 1 above moved a whole image by one pixel. Newell's car-following model is the same move
+made in a time–space diagram: the follower's trajectory is the leader's, shifted later by a reaction
+time $\tau$ and back by a jam spacing $\delta$. Written as a network, that is one convolution tap and a
+bias. The cell transmission model goes one step further. Its update is a small convolution block with
+ReLUs, and the skip connection in that block is conservation of vehicles.
+
+The companion below makes that case with real numbers. Newell's model and the cell transmission model
+are shown to *already be* convolutions, a real 1,217-weight network is trained to reproduce the CTM
+update, and then it is broken in three named ways. Everything on the page — the platoon, the kernel
+fit, the CTM, and the network's forward pass — is computed live in your browser.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion — Newell's shift and the LWR shockwave as convolutions</span>
+    <a href="../_static/companions/Newell_LWR_CNN_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Newell_LWR_CNN_Companion.html"
+          title="Newell's shift and the LWR shockwave as convolutions" loading="lazy"></iframe>
+</div>
+
+The three results worth carrying out of it:
+
+- **A learned operator is not a forecast.** With boundary demand and exit capacity supplied each step the
+  rollout holds 0.85 veh/mi/ln of error over 12 minutes. Freeze the boundary and the error jumps from
+  0.35 to 35.6 veh/mi/ln the moment the incident clears — the network propagates the queue at the right
+  speed but cannot know the blockage ended. Ask that question of every predictive traffic product.
+- **The physics is in the weights, not in the inputs.** The block recovers both characteristic speeds from
+  data (+74.7 and −15.4 mi/hr against the model's +75 and −15), and it loses them the moment it is moved
+  to a corridor with a different backward wave speed — a factor of 13 in RMSE for a 3 mi/hr change.
+- **Convolution assumes the road is the same everywhere.** That holds for a shockwave and fails for a
+  bottleneck at a fixed milepost, which is why geometry belongs in the input as extra channels.
+
+This is the corridor half of a question that {doc}`3.7 <../module3/notes7-gnn>` asks for a whole
+network: can a learned model stand in for one you would otherwise write down?
 
 (scooter-kid-case)=
 ## A worked case: a child on a scooter, seen by a stock detector

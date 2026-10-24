@@ -97,10 +97,11 @@ Canvas.
 | Oct 8 | Agentic AI, tool use, memory, skills, API calling, AI-assisted coding, transportation workflow automation | Baseline method or data acquisition plan; **rotating project progress report: Team 2** |
 | Oct 15 | AI for mobility sensing: computer vision, AI cameras, dashcam data, roadside video, Wi-Fi/Bluetooth, radar, lidar | **Final project proposal**; **rotating project progress report: Team 3** |
 | Oct 22 | Edge AI and hardware-integrated mobility systems: edge devices, embedded computing, self-driving development devices, AI robotics | **Rotating project progress report: Team 4** |
-| Oct 29 | AI for autonomous driving and production vehicle intelligence: longitudinal control, lane-keeping assist, Openpilot, CAN/telematics, vehicle data | First project progress report; **rotating project progress report: Team 5 or project clinic** |
-| Nov 5 | AI for traffic simulation, digital twins, and traffic operations: SUMO/CARLA, signal control, hurricane mobility applications | Project progress update; **rotating project progress report: Team 1** |
-| Nov 12 | AI for transportation safety, design, and agency decision-making: crash precursor detection, safety analysis, report generation, manuals, planning support | Project progress update; **rotating project progress report: Team 2** |
-| Nov 19 | World model applications in mobility; responsible use; tokenomics of AI in mobility | Draft final project materials; short final-prep updates from remaining teams |
+| Oct 29 | AI agents 1 — how an agent works: a model in a loop, workflow vs. agent, the model and its harness, tool use and MCP, context engineering and RAG | First project progress report; **rotating project progress report: Team 5 or project clinic** |
+| Nov 5 | AI agents 2 — skills, memory, and planning: agency procedures as skills, planning and re-planning, steps that cannot be undone, coordinating several agents | Project progress update; **rotating project progress report: Team 1** |
+| Nov 12 | AI agents 3 — making agents better: evaluating agents; fine-tuning, LoRA, and instruction tuning; agents that learn from experience | Project progress update; **rotating project progress report: Team 2** |
+| Nov 19 | AI agents 4 — agents and people in an agency: orchestration and monitoring, safety and permissions, human-in-the-loop design under agency AI policy | Draft final project materials; short final-prep updates from remaining teams |
+| Tue, Nov 24 | AI agents 5 — building transportation harnesses: the SUMO simulation workflow, the safety analysis workflow, and data engineering for AI agents *(added session)* | — |
 | Nov 26 | *No class — Thanksgiving holiday* | — |
 | Dec 3 | Final project presentations, demonstrations, and course synthesis | Final project materials in progress |
 | Dec 5–10 | University-scheduled final exam period — may be used for final project submission, demonstrations, or presentations | Final project submission, if assigned |

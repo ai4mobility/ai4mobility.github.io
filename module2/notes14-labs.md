@@ -11,7 +11,7 @@
       <h4>Notebooks that go with it</h4>
       <ul>
       <li><a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4 &mdash; CLIP versus traditional computer vision</a></li>
-      <li><a href="../module4/lab6_vit_finetune.html">Lab 6 &mdash; Fine-tuning a Vision Transformer</a></li>
+      <li><a href="../module6/lab6_vit_finetune.html">Lab 6 &mdash; Fine-tuning a Vision Transformer</a></li>
       <li>Cross-attention sanity check &mdash; <em>in development</em></li>
       </ul>
     </div>
@@ -31,8 +31,8 @@ physically lives in Module 1 and is the bridge into this module. If you skipped 
 first. CLIP is the late-fusion dual encoder of section 2.9: two towers that meet only at the end,
 which is the baseline every cross-attention design on these pages has to beat.
 
-**{doc}`Lab 6 — Fine-tuning a Vision Transformer <../module4/lab6_vit_finetune>`** lives in
-Module 4, where fine-tuning is the topic, and reads with section 2.7: it fine-tunes the ViT-Tiny
+**{doc}`Lab 6 — Fine-tuning a Vision Transformer <../module6/lab6_vit_finetune>`** lives in
+Module 6, where fine-tuning is the topic, and reads with section 2.7: it fine-tunes the ViT-Tiny
 that 2.7 dissects on FL511 camera frames. *Proves:* a fine-tune's accuracy splits cleanly into what
 the pretrained features gave you for free and what you had to buy by unfreezing &mdash; and that an
 after-dark score can rise while the model gets worse, because the label source failed first.
@@ -68,16 +68,16 @@ weight, and each has a section behind it:
   claim to test with a deletion or an edit, not an explanation.
 
 The workflow framing those questions sit inside &mdash; the anatomy, the six leverage labels, the
-checkpoint rule &mdash; is in {doc}`Module 7 §7.1 <../module7/notes>`.
+checkpoint rule &mdash; is in {doc}`4.1 The workflow is the unit of work <../module4/notes1-workflow>`.
 
 ## Where this goes next
 
 Apart from the fine-tuning in section 2.5 and Lab 6, this module uses pretrained transformers as
-they come. {doc}`Module 4 <../module4/index>` is about changing that: retrieval-augmented
-generation, parameter-efficient fine-tuning, RLHF, and agentic systems that call tools.
+they come. Part II of the course is about changing that: {doc}`Module 4 <../module4/index>` puts a
+model in a loop with tools and retrieval, and {doc}`Module 6 <../module6/index>` fine-tunes it.
 {doc}`Module 3 <../module3/index>` takes the generative half &mdash; the decoder-only models sketched
 in section 2.6 &mdash; into diffusion and world models. The lane-anchor hub of section 2.11 is a graph
-with attention on its edges, which is where {doc}`Module 7 <../module7/notes>` picks up.
+with attention on its edges, which is where {doc}`3.7 <../module3/notes7-gnn>` picks up.
 
 The reading list for this module is on the {doc}`module page <index>`.
 

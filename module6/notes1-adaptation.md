@@ -1,9 +1,9 @@
-# 4.1 The adaptation ladder: what your corpus actually needs
+# 6.1 The adaptation ladder: what your corpus actually needs
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.1</span>
-    <span class="notes-card-session">Session: Oct 1</span>
+    <span class="notes-card-eyebrow">Module 6 &middot; Section 6.1</span>
+    <span class="notes-card-session">Session: Nov 12</span>
   </div>
   <p class="notes-card-lede">&ldquo;We should fine-tune a model on our corpus&rdquo; is the most common sentence in a transportation AI project, and it names three different operations that want different things. This section is the decision rule: what each rung of the adaptation ladder changes, what it costs, which one your problem actually needs, and what has to be true before you are allowed to climb. Most problems people reach for fine-tuning to solve are retrieval problems.</p>
   <div class="notes-card-cols">
@@ -193,5 +193,6 @@ being piloted against the free Colab tier so that every step is runnable without
 
 ---
 
-Next: the retrieval pipeline this section keeps pointing at, and how to evaluate the retriever on
-its own before judging a single answer.
+Next: evaluating an agent &mdash; tasks with known answers, repeated runs, and checks that do not rely
+on the agent's own report. The retrieval pipeline this section keeps pointing at is part of
+{doc}`Module 4 <../module4/index>`.

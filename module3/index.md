@@ -1,13 +1,12 @@
 # Module 3 — Generative AI and World Models
 
-*Generative models open on Oct 22, after the GNN week; world models return on Nov 19. See the {doc}`../syllabus`.*
+*Generative models open on Oct 22. Section 3.7 carries the graph-neural-network week that came just before it. See the {doc}`../syllabus`.*
 
 ## Class meetings
 
 | Date | Session topic | Due before class |
 |---|---|---|
 | Oct 22 | Generative models, part 1: what changes when a model produces data; autoregressive generation, latent variables, VAE, GAN, and a first scorecard (3.1&ndash;3.5) | **Rotating project progress report: Team 4** |
-| Nov 19 | World model applications in mobility *(shared session — model reliability and the cost, computation, and deployment side are covered in {doc}`../module8/index`)* | Draft final project materials |
 
 ## Overview
 
@@ -26,12 +25,19 @@ A latent-variable model does the same thing, except it learns which few numbers 
 module builds from that idea through VAEs, GANs, and diffusion, and closes with world
 models — the attempt to learn a simulator rather than write one.
 
+The module also carries the **graph neural network** material from the week before the generative
+models, in {doc}`section 3.7 <notes7-gnn>`. A road network is a graph, and the cell transmission model
+turns out to be a graph neural network already, so this is where the transformer ideas of Module 2 meet
+the network you actually manage.
+
 ## The module, page by page
 
 :::{admonition} How to read this module
 :class: tip
 Sections 3.1&ndash;3.5 pair with the Oct 22 meeting; skim before, read properly after. Section 3.6
-opens the VAE-and-diffusion session; diffusion and world models follow. Each page opens with a card naming its session.
+opens the VAE-and-diffusion session; diffusion and world models follow. Section 3.7 is the
+graph-neural-network week, which came before the generative models; it is numbered last so the
+generative sections keep their numbers. Each page opens with a card naming its session.
 
 Every result on these pages comes from one dataset, the 4,000 cell-transmission-model speed heatmaps
 that the VAE lab is built on, split the same way everywhere, so the four answers to "how do you draw a
@@ -75,6 +81,11 @@ realistic traffic state?" can be compared directly. Section 3.6 adds one real Pe
   <td>One detector&rsquo;s speeds as two hidden regimes; the two-step recipe; the soft guess; fitting without labels (EM); the same idea on the heatmaps and where it breaks; mixture, VAE and diffusion as three choices of hidden cause.</td>
   <td>&mdash;</td>
 </tr>
+<tr>
+  <td><a href="notes7-gnn.html"><strong>3.7 When the thing you model is a network: graph neural networks</strong></a><br><em>GNN week</em></td>
+  <td>The cell transmission model is already a graph neural network; one rule per connection, any number of legs; depth from the forecast horizon; the aggregator as a modelling choice; graph attention and what the street network is worth; the parameter-count test for transferability.</td>
+  <td><a href="lab5_graph_attention.html">Lab 5</a></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -83,6 +94,9 @@ realistic traffic state?" can be compared directly. Section 3.6 adds one real Pe
 
 By the end of this module you will be able to:
 
+- Explain message passing as one shared rule applied per connection, choose a graph network's
+  depth and aggregator from the traffic problem, and tell whether a network model can move to
+  another city from its parameter count.
 - Explain latent-variable modeling as a learned generalization of macroscopic state reduction.
 - Tell a latent representation (BERT, ViT) from a latent variable, and explain how a latent-variable model
   finds its hidden causes, learns their distribution, and uses it to generate.
@@ -100,6 +114,15 @@ By the end of this module you will be able to:
 
 ## Topics
 
+**Graph neural networks** (section 3.7)
+
+- The cell transmission model as message passing: one rule per connection, conservation at the node
+- Aggregators (sum, mean, max, attention) as modelling choices, and depth as reach
+- Graph attention: a learned aggregator, and why the street network is worth more than the learning
+- Transferability: does the number of nodes appear in the parameter count?
+
+**Generative models** (sections 3.1&ndash;3.6)
+
 - What changes when a model produces data: the joint distribution, and how to score a generator
 - Autoregressive generation: the chain rule and next-cell prediction
 - Latent variables, manifolds, and dimensionality reduction
@@ -113,19 +136,14 @@ By the end of this module you will be able to:
 - Synthetic data for rare events — and how to tell whether it helped
 - Evaluating generative models when there's no ground-truth label
 
-*Week 13 returns to the last of these at the application level:*
-
-- Driving world models: generating drivable video, and what "drivable" has to mean to be useful
-- Scenario generation for testing ADAS and automated driving stacks
-- Learned traffic simulators, and what one would have to reproduce before it could replace a calibrated microsimulator
-- Where a world model beats writing the model down, and where it plainly does not
-
 ## Video lectures
 
 *To be populated.* See the course [YouTube channel](https://www.youtube.com/@hao6247).
 
 ## Recommended readings
 
+- Xu, K., Hu, W., Leskovec, J., & Jegelka, S. (2019). How powerful are graph neural networks? *ICLR*.
+- Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2018). Graph attention networks. *ICLR*.
 - Tipping, M. E., & Bishop, C. M. (1999). Probabilistic principal component analysis. *Journal of the Royal Statistical Society: Series B*, 61(3), 611–622.
 - Kingma, D. P., & Welling, M. (2014). Auto-encoding variational Bayes. *ICLR*.
 - Goodfellow, I., et al. (2014). Generative adversarial nets. *NeurIPS*.
@@ -135,6 +153,11 @@ By the end of this module you will be able to:
 - Hafner, D., Lillicrap, T., Ba, J., & Norouzi, M. (2020). Dream to control: Learning behaviors by latent imagination. *ICLR*. *(Dreamer.)*
 
 ## Labs
+
+- **{doc}`Lab 5 — Attention on a Road Network <lab5_graph_attention>`** *(available)*. Six aggregators,
+  two traffic rules, one controlled comparison. Find out where a learned weighting beats a fixed one —
+  and where a one-line aggregator carrying your own domain knowledge beats them both. Reads with
+  section 3.7. Runs in about three minutes with nothing to install.
 
 - **VAE on traffic state heatmaps.** Train an image VAE on speed heatmaps generated by a cell
   transmission model, then read the latent space — what does the model choose to encode when

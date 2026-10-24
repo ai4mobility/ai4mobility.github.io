@@ -1,76 +1,78 @@
-# Module 8 — Safety, Agency Practice, and Responsible Use
+# Module 8 — Building Transportation Harnesses
 
-*Weeks 12 and 13 of the {doc}`../syllabus` — Nov 12 and Nov 19, 2026.*
+*Part II, AI Agents for Mobility · lecture 5 of 5 · Tuesday, Nov 24, 2026 (an added session). Final
+presentations follow on Dec 3. See the {doc}`../syllabus`.*
 
 ## Class meetings
 
 | Date | Session topic | Due before class |
 |---|---|---|
-| Nov 12 | AI for transportation safety, design, and agency decision-support workflows: safety analysis, report generation, manuals, and planning support | Project progress update · *rotating project progress report* |
-| Nov 19 | Model reliability; cost, computation, and practical deployment considerations *(shared session — the world-model half is covered in {doc}`../module3/index`)* | Draft final project materials · *final project preparation and short team updates* |
+| Tue, Nov 24 | Building transportation harnesses: a harness template, the SUMO simulation workflow, the safety analysis workflow, and data engineering for AI agents | &mdash; |
 
 ## Overview
 
-This module covers the two places where AI in mobility meets professional accountability.
+This module puts Part II together. Every agent you build for transportation work is a model inside a
+harness, and the same template describes the harness every time:
 
-The first is **safety analysis**. Crashes are rare, under-reported, and lagging — which is why
-the field has spent decades building surrogate measures from conflicts and near-misses. AI
-makes those measures cheap to compute at scale from video. It does not, by itself, make them
-valid. The interesting question is not whether you can detect a conflict, but whether the
-conflicts you detect predict the crashes you care about.
+| Field | Question to answer |
+|---|---|
+| Task and trigger | What starts the agent, and what does "done" look like? |
+| Tools and data access | Which APIs or MCP servers can it call? Read-only or write? |
+| Knowledge | Which manuals or documents does it retrieve from? |
+| Skills | Which agency procedures are written as skills? |
+| Memory | What does it keep between runs, and who can edit it? |
+| Workflow or agent | Which steps are fixed in code, and which does the model decide? |
+| Checkpoints and permissions | Where must a person approve, especially before steps that cannot be undone? |
+| Evaluation | How do we know it works, and what is the baseline? |
+| Logs and disclosure | What is recorded, and how are AI-assisted outputs labeled? |
 
-The second is **agency practice**: report generation, design manual and standards QA, plan
-review, planning support, and the document-heavy work that consumes a large share of
-professional engineering time. This is where AI's productivity gains are most immediate and
-where the oversight question is sharpest, because the failure mode is a fluent, confident,
-wrong document that looks exactly like a right one.
+**The SUMO simulation workflow.** Build the network, load the demand, calibrate to field counts, compare
+signal plans against a Webster or actuated baseline, and report. The agent runs the tools; a person
+checks the geometry, chooses what to test, and — the key checkpoint — accepts the calibration, using the
+usual GEH check against counts, before anyone trusts a scenario result.
 
-The module closes on the questions that decide whether any of this survives contact with an
-agency: **reliability** — does the model hold up on data that does not look like its training
-set, and will you find out when it stops working — and the **cost, computation, and
-deployment** picture, meaning what the workflow actually costs to run and maintain, and
-whether it beats the classical approach it replaced. That closing session shares Nov 19 with
-the world-model applications in {doc}`../module3/index`.
+**The safety analysis workflow.** Follow the Highway Safety Manual's safety management process:
+network screening, diagnosis, countermeasure selection, economic appraisal, prioritization, and
+effectiveness evaluation. The agent links crash, roadway and volume data, runs the safety performance
+functions, reads crash narratives, and retrieves crash modification factors. The engineer approves the
+site list and the countermeasures.
+
+**Data engineering for AI agents.** Transportation data was collected for people to read. Agents are a
+new kind of user, and they need three things:
+
+- *Data they can use:* data dictionaries with units and codes, written like a skill; IDs that link crash
+  records, roadway inventory, traffic counts and weather; access through tools with privacy rules built in.
+- *What experts carry in their heads, written down:* known data errors, changes to report forms over the
+  years, missing exposure data.
+- *Data people could not use at scale:* narratives, sketches and video linked to crash records, and
+  near-miss events.
+
+One warning comes with it. An agent that tests 1,000 ideas at the 5% level will find about 50 that look
+real by chance alone. Agent-ready data needs held-out data or tests stated in advance — above all for
+crash data, where counts are small and regression to the mean is common.
+
+*Optional:* a harness for reviewing transportation papers or projects. Use it only on published papers or
+your own drafts. Funders and many journals do not allow confidential manuscripts or proposals to be
+uploaded to AI tools.
 
 ## Learning objectives
 
 By the end of this module you will be able to:
 
-- Compute surrogate safety measures (time-to-collision, post-encroachment time) from trajectory
-  data, and state precisely what they do and do not establish about crash risk.
-- Describe crash precursor and conflict detection from video, and design a validation strategy
-  against crash records.
-- Apply AI to an agency document workflow — report drafting, design manual and standards QA,
-  plan review, planning support — with a human oversight step you can defend.
-- Reason about privacy in mobility data: faces, plates, MAC addresses, and the
-  re-identifiability of trajectory data.
-- Assess the reliability of a deployed model: robustness under distribution shift, calibrated
-  uncertainty, and the monitoring that tells you it has degraded before a user does.
-- Estimate the cost of an AI mobility workflow — inference, computation, latency, maintenance —
-  and judge whether it is worth it relative to the classical baseline.
-- Articulate where professional accountability sits when an AI system is in the decision loop.
+- Describe any transportation agent with the harness template, and spot the field a design has left empty.
+- Lay out an AI workflow for traffic simulation and one for safety analysis, with the agent's steps, the
+  person's steps, and the checkpoints.
+- Say what would make a transportation dataset easier for an agent to use, and what would make the
+  agent's "findings" trustworthy.
 
 ## Topics
 
-- Surrogate safety measures: TTC, PET, deceleration rate to avoid crash
-- Traffic conflict techniques and their long-standing validation problem
-- Crash precursor detection from video; trajectory extraction and calibration
-- Validating surrogate measures against crash records
-- AI for report generation, document QA, and standards checking
-- Design support: roadway design manuals, plan review, and design exception documentation
-- Planning support and scenario summarization
-- Interpretability and meaningful human oversight — versus oversight theater
-- Privacy and de-identification in mobility data; trajectory re-identification
-- IRB considerations for student and agency data collection
-- Bias and equity in mobility datasets and deployed systems
-
-*Week 13 (Nov 19) — reliability, cost, and deployment:*
-
-- Reliability: robustness under distribution shift, out-of-distribution detection, calibrated uncertainty
-- Silent failure and model drift; monitoring, alerting, and the fallback path when the model is wrong
-- Cost and computation: inference cost, token accounting, latency budgets, total cost of ownership
-- Deployment reality: hosting versus API, data residency, versioning, retraining cadence, who maintains it in year three
-- Evaluating a vendor claim; procurement and maintenance reality
+- The harness template
+- An AI workflow for traffic simulation in SUMO
+- An AI workflow for transportation safety analysis
+- Data engineering for AI agents: making existing data usable, writing down expert knowledge, new data to collect
+- Many tests, false findings, and how to guard against them
+- *(Optional)* a review harness for papers and projects
 
 ## Video lectures
 
@@ -78,19 +80,12 @@ By the end of this module you will be able to:
 
 ## Recommended readings
 
-- Tarko, A. P. (2018). Surrogate measures of safety. In *Safe Mobility: Challenges, Methodology and Solutions*. Emerald Publishing.
-- Gettman, D., & Head, L. (2003). Surrogate safety measures from traffic simulation models. *Transportation Research Record, 1840*, 104–115.
-- Zheng, L., Ismail, K., & Meng, X. (2014). Traffic conflict techniques for road safety analysis: Open questions and some insights. *Canadian Journal of Civil Engineering, 41*(7), 633–641.
-- de Montjoye, Y.-A., Hidalgo, C. A., Verleysen, M., & Blondel, V. D. (2013). Unique in the crowd: The privacy bounds of human mobility. *Scientific Reports, 3*, 1376.
-- Bender, E. M., Gebru, T., McMillan-Major, A., & Shmitchell, S. (2021). On the dangers of stochastic parrots: Can language models be too big? *FAccT*.
+- Ye, C., et al. (2025). [SUMO-MCP: Leveraging the Model Context Protocol for traffic simulation](https://arxiv.org/abs/2506.03548). *arXiv:2506.03548*.
+- Liu, Q., et al. (2026). [SimSkill: A self-evolving LLM agent for skill and knowledge accumulation in traffic simulation](https://arxiv.org/abs/2609.03753). *arXiv:2609.03753*.
+- AASHTO. *Highway Safety Manual*, Part B: the roadway safety management process.
+- Federal Highway Administration (2026). [AI for Safety and Efficiency Program Roadmap](https://highways.dot.gov/sites/fhwa.dot.gov/files/FHWA-HRT-26-063.pdf). FHWA-HRT-26-063.
 
 ## Labs
 
-- **Surrogate safety from video.** Extract trajectories from an intersection video, compute TTC
-  and PET distributions, and then do the part that usually gets skipped: state what would have
-  to be true for these numbers to predict crashes at this location, and check whether it is.
-
-- **An agency document workflow.** Build an AI-assisted workflow for a real document task —
-  drafting a section of a report, checking a submittal against a standard — and design the
-  verification step. Then measure how long the workflow takes end to end, including your
-  verification, and compare it honestly to doing it by hand.
+- **Your capstone's harness.** Each team fills in the harness template for its own project: what the
+  agent does, what the people do, and where the checkpoints go. No notebook.

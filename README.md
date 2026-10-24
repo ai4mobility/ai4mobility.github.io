@@ -12,10 +12,19 @@ This repository hosts the source for the *AI for Mobility* course site, built wi
 
 ## Course outline
 
-- **Module 1** — Foundations of AI for Mobility
-- **Module 2** — AI Sensing for Traffic Monitoring
-- **Module 3** — AI for Driving Automation and Connectivity
-- **Module 4** — AI Traffic Simulation and Digital Twin
+Part I — AI foundations through a transportation lens
+
+- **Module 1** — Foundations and Representation Learning
+- **Module 2** — Transformers, LLMs, and Multimodal Models
+- **Module 3** — Generative AI and World Models (section 3.7: graph neural networks)
+
+Part II — AI agents for mobility (since Oct 24, 2026; one module per lecture)
+
+- **Module 4** — How an Agent Works
+- **Module 5** — Skills, Memory, and Planning
+- **Module 6** — Making Agents Better: Evaluation and Fine-Tuning
+- **Module 7** — Agents and People in an Agency
+- **Module 8** — Building Transportation Harnesses
 
 ## First-time deployment
 
@@ -124,7 +133,7 @@ If you'd like inline embedded players, install `sphinxcontrib-youtube` (`pip ins
 │   ├── notes5-embeddings.md        # 1.5
 │   ├── notes6-labs.md      # Practice, exercises, further reading
 │   └── lab1.ipynb …        # four lab notebooks, listed under the Labs part
-├── module2/ … module8/     # index.md each; module7 also has notes.md
+├── module2/ … module8/     # index.md each, plus notesN-*.md section pages where written
 ├── capstone/index.md
 ├── _ledger.yml             # content inventory — one row per artifact
 ├── NOTES_GUIDE.md          # how to write a notes section page

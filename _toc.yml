@@ -78,26 +78,28 @@ parts:
             title: "3.5 A forger, a critic, a scorecard"
           - file: module3/notes5-hidden-cause
             title: "3.6 One hidden cause: mixture models"
+          # Taught in the GNN week, before 3.1; numbered last so 3.1-3.6 keep their numbers.
+          - file: module3/notes7-gnn
+            title: "3.7 Graph neural networks"
+
+  # Part II became the AI agents unit on 2026-10-24: five lectures, one module each.
+  - caption: Part II — AI Agents for Mobility
+    chapters:
       - file: module4/index
         sections:
-          # Same flat shape as Modules 1 and 2 -- section pages directly
-          # under the module index. See NOTES_GUIDE.md.
-          - file: module4/notes1-adaptation
-            title: "4.1 The adaptation ladder"
-
-  - caption: Part II — Applied Mobility Systems
-    chapters:
+          - file: module4/notes1-workflow
+            title: "4.1 The workflow is the unit of work"
       - file: module5/index
       - file: module6/index
-      - file: module7/index
         sections:
-          - file: module7/notes
-            title: Notes
+          - file: module6/notes1-adaptation
+            title: "6.1 The adaptation ladder"
+      - file: module7/index
       - file: module8/index
 
   - caption: Labs
     chapters:
-      # The lab notebooks live in module1/ on disk but are listed here so all
+      # The lab notebooks live in their module folders on disk but are listed here so all
       # labs, from every module, have one home students can find.
       - file: labs
         title: "All Labs"
@@ -110,9 +112,9 @@ parts:
             title: "Lab 3 — Image Embeddings with a Deep CNN"
           - file: module1/lab4_clip_vs_traditional_cv
             title: "Lab 4 — CLIP vs. Traditional Computer Vision"
-          - file: module7/lab5_graph_attention
+          - file: module3/lab5_graph_attention
             title: "Lab 5 — Attention on a Road Network"
-          - file: module4/lab6_vit_finetune
+          - file: module6/lab6_vit_finetune
             title: "Lab 6 — Fine-tuning a Vision Transformer"
 
   - caption: Capstone

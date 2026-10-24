@@ -17,7 +17,7 @@
     <div>
       <h4>Notebooks that go with it</h4>
       <ul>
-      <li><a href="../module4/lab6_vit_finetune.html">Lab 6 &mdash; Fine-tuning a Vision Transformer</a></li>
+      <li><a href="../module6/lab6_vit_finetune.html">Lab 6 &mdash; Fine-tuning a Vision Transformer</a></li>
       </ul>
     </div>
   </div>

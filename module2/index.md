@@ -96,7 +96,7 @@ whether any of it beats the method it would replace (2.13).
 <tr>
   <td><a href="notes7-vision.html"><strong>2.7 Transformers that see: the Vision Transformer</strong></a><br><em>Oct 8</em></td>
   <td>Training a ViT to classify a frame, and why its loss is a logit likelihood; blocks, heads and attention distance; what data buys against CNNs, on ImageNet and on FL511 frames; attention maps against Grad-CAM, and the deletion test.</td>
-  <td><a href="../_static/companions/ViT_Attention_Companion.html" target="_blank" rel="noopener">Where is it looking? &#8599;</a><br><a href="../module4/lab6_vit_finetune.html">Lab 6</a></td>
+  <td><a href="../_static/companions/ViT_Attention_Companion.html" target="_blank" rel="noopener">Where is it looking? &#8599;</a><br><a href="../module6/lab6_vit_finetune.html">Lab 6</a></td>
 </tr>
 <tr>
   <td><a href="notes8-locality.html"><strong>2.8 Locality returns: Swin, MobileViT and ConvNeXt</strong></a><br><em>Oct 8 &amp; 15</em></td>
@@ -131,7 +131,7 @@ whether any of it beats the method it would replace (2.13).
 <tr>
   <td><a href="notes14-labs.html"><strong>Practice, exercises, and further reading</strong></a><br><em>Sept 17 &ndash; Oct 15</em></td>
   <td>What the labs prove; the Module 1 bridge lab; the five questions this module arms you with; where transformers go in Modules 3, 4 and 7.</td>
-  <td><a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4</a>, <a href="../module4/lab6_vit_finetune.html">Lab 6</a>, cross-attention sanity check</td>
+  <td><a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4</a>, <a href="../module6/lab6_vit_finetune.html">Lab 6</a>, cross-attention sanity check</td>
 </tr>
 </tbody>
 </table>
@@ -211,11 +211,11 @@ Full descriptions, setup notes, and every lab in the course are on the
 | Notebook | What you build | Read alongside |
 | --- | --- | --- |
 | {doc}`Lab 4 — CLIP vs. traditional computer vision <../module1/lab4_clip_vs_traditional_cv>` | Zero-shot recognition of open-world mobility scenes with a late-fusion dual encoder | 2.7, 2.9 |
-| {doc}`Lab 6 — Fine-tuning a Vision Transformer <../module4/lab6_vit_finetune>` | ViT-Tiny fine-tuned on FL511 Tampa Bay camera frames, from a frozen probe to full fine-tuning | 2.7 |
+| {doc}`Lab 6 — Fine-tuning a Vision Transformer <../module6/lab6_vit_finetune>` | ViT-Tiny fine-tuned on FL511 Tampa Bay camera frames, from a frozen probe to full fine-tuning | 2.7 |
 | Cross-attention sanity check *(in development)* | A small cross-attention model on paired mobility data, plus the three-tier check on whether the expected pattern actually emerges | 2.9, 2.11 |
 
 Lab 4 physically lives in Module 1 and is the bridge into this module; if you skipped it, run
-it first. Lab 6 lives in Module 4, where fine-tuning is the topic, and reads with 2.7.
+it first. Lab 6 lives in Module 6, where fine-tuning is the topic, and reads with 2.7.
 
 ## Course dataset
 

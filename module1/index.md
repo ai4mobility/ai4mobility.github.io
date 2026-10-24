@@ -47,8 +47,8 @@ several of the results argued in these sections are only convincing if you move
 the sliders yourself.
 
 Looking for the workflow framing from the first class &mdash; the anatomy, the six
-leverage labels, the checkpoint rule, the Traffic Incident Management case? That
-is operations material and lives in {doc}`Module 7 §7.1 <../module7/notes>`. The
+leverage labels, the checkpoint rule, the Traffic Incident Management case? It
+opens the AI agents part of the course, in {doc}`4.1 The workflow is the unit of work <../module4/notes1-workflow>`. The
 {doc}`Week 1 course introduction <../course-intro>` carries the rest of Aug 27.
 :::
 
@@ -70,8 +70,8 @@ is operations material and lives in {doc}`Module 7 §7.1 <../module7/notes>`. Th
 </tr>
 <tr>
   <td><a href="notes3-cnn.html"><strong>1.3 Convolution, and a network that sees</strong></a><br><em>Sept 3</em></td>
-  <td>Convolution from a moving average; weight sharing; a worked case &mdash; a child on a scooter, seen by a stock detector.</td>
-  <td><a href="../_static/companions/Convolution_Kernels_Companion.html" target="_blank" rel="noopener">Convolution kernels &#8599;</a><br><a href="../_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">The scooter-kid case &#8599;</a><br><a href="lab3_image_embeddings.html">Lab 3</a></td>
+  <td>Convolution from a moving average; weight sharing; Newell's model and the cell transmission model as convolutions; a worked case &mdash; a child on a scooter, seen by a stock detector.</td>
+  <td><a href="../_static/companions/Convolution_Kernels_Companion.html" target="_blank" rel="noopener">Convolution kernels &#8599;</a><br><a href="../_static/companions/Newell_LWR_CNN_Companion.html" target="_blank" rel="noopener">Newell and LWR as convolutions &#8599;</a><br><a href="../_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">The scooter-kid case &#8599;</a><br><a href="lab3_image_embeddings.html">Lab 3</a></td>
 </tr>
 <tr>
   <td><a href="notes4-cnn-in-practice.html"><strong>1.4 Choosing a network, and interrogating it</strong></a><br><em>Sept 3 &amp; 10</em></td>
@@ -99,8 +99,8 @@ Start with {doc}`1.1 From the logit to the network <notes1-networks>`.
 This module establishes the foundation for the rest of the course, and it does so in two
 steps. What "AI" covers, where it is deployed in mobility today, and how to read a capability
 claim were the {doc}`Aug 27 opening session <../course-intro>`; the workflow framing that goes
-with them is developed in {doc}`Module 7 <../module7/notes>`, where the operations material
-lives.
+with them is developed in {doc}`Module 4 <../module4/notes1-workflow>`, where the AI agents part of
+the course begins.
 
 We start by building the **neural network** from the ground up: a composition of linear maps and
 nonlinearities, trained by gradient descent on a loss. The on-ramp here is one you already
@@ -199,7 +199,7 @@ bridge into multimodal models.
 
 ## Interactive companions
 
-Ten interactive companions support the Sept 3 and Sept 10 sessions. Each is
+Eleven interactive companions support the Sept 3 and Sept 10 sessions. Each is
 embedded in the section it belongs to and is also linked here: one walks the sigmoid, tanh and softmax activations
 from the binary-logit starting point; one works through the learned-versus-fixed basis
 comparison and the point where a multilayer network becomes the cheaper option; one takes
@@ -209,6 +209,8 @@ what early stopping, a zero initialization and a badly chosen learning rate actu
 one hands you the nine numbers of a convolution kernel to set yourself, on real
 dashcam frames, before stacking them into a layer and comparing your kernels against the 64
 first-layer filters a trained ResNet-18 actually learned — eight of which turn out to be dead;
+one shows that Newell's car-following model and the cell transmission model already are convolutions,
+then trains a 1,217-weight network to reproduce the CTM update and breaks it in three named ways;
 one runs an off-the-shelf detector over thirteen seconds of real FSD footage in which a
 child on a scooter approaches the car, then takes apart what the model does and does not tell you;
 one walks the architectures themselves — LeNet, AlexNet, VGG, GoogLeNet, ResNet and
@@ -225,6 +227,7 @@ text backbone trained from scratch on 4,200 NHTSA complaints.
 - <a href="../_static/companions/Neural_Networks_and_Backprop_Companion.html" target="_blank" rel="noopener">What a neural network is, and how it learns</a> &mdash; embedded in <a href="notes2-learning.html">1.2 How a network learns</a>
 - <a href="../_static/companions/Loss_Reward_Design_Companion.html" target="_blank" rel="noopener">Loss and reward design: how you tell a model what you want</a> &mdash; embedded in <a href="notes2-learning.html">1.2 How a network learns</a>
 - <a href="../_static/companions/Convolution_Kernels_Companion.html" target="_blank" rel="noopener">Convolution kernels: how a network learns to see shape</a> &mdash; embedded in <a href="notes3-cnn.html">1.3 Convolution, and a network that sees</a>
+- <a href="../_static/companions/Newell_LWR_CNN_Companion.html" target="_blank" rel="noopener">Newell's shift and the LWR shockwave as convolutions</a> &mdash; embedded in <a href="notes3-cnn.html">1.3 Convolution, and a network that sees</a>
 - <a href="../_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">A child on a scooter, seen by a stock CNN detector</a> &mdash; embedded in <a href="notes3-cnn.html">1.3 Convolution, and a network that sees</a>
 - <a href="../_static/companions/CNN_Architectures_Companion.html" target="_blank" rel="noopener">CNN architectures: LeNet to ResNet, and how to choose</a> &mdash; embedded in <a href="notes4-cnn-in-practice.html">1.4 Choosing a network, and interrogating it</a>
 - <a href="../_static/companions/Saliency_Maps_Companion.html" target="_blank" rel="noopener">Saliency maps: what is the network actually looking at?</a> &mdash; embedded in <a href="notes4-cnn-in-practice.html">1.4 Choosing a network, and interrogating it</a>

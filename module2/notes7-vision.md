@@ -16,7 +16,7 @@
     <div>
       <h4>Notebooks that go with it</h4>
       <ul>
-      <li><a href="../module4/lab6_vit_finetune.html">Lab 6 &mdash; Fine-tuning a Vision Transformer</a></li>
+      <li><a href="../module6/lab6_vit_finetune.html">Lab 6 &mdash; Fine-tuning a Vision Transformer</a></li>
       <li><a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4 &mdash; CLIP versus traditional computer vision</a></li>
       </ul>
     </div>
@@ -50,7 +50,7 @@ it into three scores (light, moderate, heavy traffic) and softmax into probabili
 
 Nobody trains a ViT from nothing on a few thousand frames. Stage 1 is done once by a large lab: the ViT
 paper used ImageNet-21k, 14 million images in 21k classes. Stage 2 is yours, in
-{doc}`Lab 6 <../module4/lab6_vit_finetune>`: attach a new linear head of 192 &times; 3 + 3 = **579**
+{doc}`Lab 6 <../module6/lab6_vit_finetune>`: attach a new linear head of 192 &times; 3 + 3 = **579**
 weights and fine-tune everything on 1,375 FL511 daylight frames for three epochs. The loss is one you
 have estimated before:
 
@@ -330,7 +330,7 @@ companion's Tab 6, asking the stop-bar frame about "traffic light", which the Vi
 there, finds that blanking rollout's top patches first *raises* p(traffic light), to 4.28&times; at
 10% blanked, while random blanking leaves it at 0.97&times;.
 
-The strongest test needs no map. {doc}`Lab 6 <../module4/lab6_vit_finetune>` cropped the camera banner
+The strongest test needs no map. {doc}`Lab 6 <../module6/lab6_vit_finetune>` cropped the camera banner
 off every FL511 frame and retrained: accuracy on unseen cameras moved from 71.2% to 69.2%, a 2-point
 answer no map can give.
 

@@ -1,123 +1,62 @@
-# Module 7 — Traffic Simulation, Digital Twins, and Operations
+# Module 7 — Agents and People in an Agency
 
-*Week 11 of the {doc}`../syllabus` — Nov 5, 2026.*
-
-This module also carries the course-wide **workflow framing** — where AI enters a
-transportation task, the six leverage labels, the checkpoint rule, and the Traffic
-Incident Management worked case. It is operations material, so it is written up here
-rather than with the AI foundations in Module 1: see {doc}`notes` §7.1.
+*Part II, AI Agents for Mobility · lecture 4 of 5 · Thursday, Nov 19, 2026. See the {doc}`../syllabus`.*
 
 ## Class meetings
 
 | Date | Session topic | Due before class |
 |---|---|---|
-| Nov 5 | AI for traffic simulation, digital twins, and traffic operations: SUMO/CARLA, signal control, and transportation system management | Project progress update · *rotating project progress report* |
+| Nov 19 | Agents and people in an agency: orchestration and monitoring, safety and permissions, human-in-the-loop design under agency AI policy, and agents that interact | **Draft final project materials** · *final project preparation and short team updates* |
 
 ## Overview
 
-Traffic simulation has been a workhorse of transportation engineering for decades —
-microsimulators like SUMO, VISSIM, and Aimsun let us evaluate signal plans, geometric changes,
-and operational strategies before building them. AI is reshaping this space in two ways:
-**learned components inside simulators** (neural car-following models, RL-based signal
-controllers, learned demand generators), and **digital twins** — continuously calibrated
-real-time replicas of corridors and networks that ingest live sensor data.
+An agency will only use an agent it can approve. This module is about building one it could.
 
-CARLA extends the same idea to the sensor level, rendering camera, lidar, and radar streams
-for driving-stack development. Between SUMO and CARLA you can test a claim at either the
-network scale or the vehicle scale, which is exactly what a well-posed mobility question
-usually requires.
+**Orchestration.** Fix in code the steps you already know, and let the model handle only the judgment
+calls. Take a citizen request to a city's traffic operations team. "The signal at this intersection is
+stuck on red" should create a work order right away, with no model involved. "Please add a crosswalk
+here" should look up the warrant criteria, draft a reply, and wait for an engineer's review before
+anything is sent.
 
-The module closes with an application that matters in Florida specifically: modeling
-evacuation and hurricane mobility, where the demand patterns fall far outside anything in the
-calibration data.
+**Monitoring.** Keep a record of everything the agent did, so a failure can be traced. When the problems
+you are watching for are rare, most alarms will be false — the same arithmetic you meet in automatic
+incident detection.
+
+**Safety.** Agents cause harm in four main ways: a user asks for something they should not; instructions
+are hidden inside text the agent reads, such as a citizen request or a 511 free-text field; the agent
+makes an honest mistake; or it takes a shortcut that passes the check without doing the work. The
+defences are part of the harness: read-only access by default, credentials the model never sees, and an
+audit log.
+
+**People in the loop.** FDOT's AI Policy (May 2024) requires that AI supplement human work and that
+people remain fully responsible for its outputs; it also asks staff to disclose AI use, use approved tools
+only, and validate AI outputs. Each of those rules can be turned into a feature of the harness. The hard
+part is placing the person so the review is real. A reviewer who approves a hundred items a day stops
+reviewing, which is the same over-trust problem you know from driver-assistance systems.
+
+The module ends with **agents that interact**: agents with different goals meeting one another, such as
+language-model agents acting as simulated travelers or drivers.
+
+In the two Part II cases: who signs off on a safety analysis's site ranking and countermeasures, and
+language-model drivers inside a SUMO simulation.
 
 ## Learning objectives
 
 By the end of this module you will be able to:
 
-- Set up and run a basic microscopic traffic simulation in SUMO.
-- Train a reinforcement-learning agent to control a signalized intersection, and compare it
-  honestly against fixed-time and fully-actuated baselines.
-- Explain how neural car-following and lane-changing models compare to calibrated classical
-  models (IDM, Wiedemann, MOBIL).
-- Describe what makes a digital twin different from an offline simulation, and what data,
-  calibration loop, and computation it requires.
-- Use CARLA to generate sensor data for a perception or control component.
-- Write any transportation task as a workflow — trigger → ingest → transform → act →
-  checkpoint → record — label each step with one of the six kinds of leverage, and place the
-  human checkpoint immediately before the first irreversible action.
-- Identify where AI fits into day-to-day transportation systems management and operations —
-  signal retiming, ramp metering, incident detection and response, performance measurement —
-  and what data an agency would already have to have.
-- State the baseline for a workflow as the current process's own numbers — how long it takes
-  today, how often it is wrong, what it costs — rather than as another model.
-- Reason about simulating conditions outside the calibration range — evacuation, incident, and
-  hurricane mobility scenarios.
-- Critique a claimed RL traffic-control result: is it reproducible, does it transfer, does it
-  beat an actuated baseline that was actually tuned?
+- Design a workflow for an agency task, choosing which steps are fixed in code and which the model decides.
+- Read an agent's trace, and explain why an alarm for rare problems produces mostly false alarms.
+- Name the main ways an agent causes harm, and design permissions, credentials and logs against each.
+- Turn an agency's AI policy into specific harness features, and place human review where it is real.
+- Describe what changes when several agents with different goals interact.
 
 ## Topics
 
-**The workflow framing** (written up in {doc}`notes` §7.1)
-
-- The workflow anatomy: trigger → ingest → transform → act → checkpoint → record
-- The six kinds of leverage: extraction · classification · generation · retrieval ·
-  prediction · judgment — and why judgment is not a step you can hand over
-- The checkpoint rule, and the cheap-to-verify / expensive-to-produce asymmetry that decides
-  whether automating a step is worth anything
-- Worked case: Traffic Incident Management, from detection through after-action recording
-
-**Simulation, digital twins, and operations**
-
-- Microscopic, mesoscopic, and macroscopic simulation
-- Calibration and validation of microsimulation models
-- Neural car-following and lane-changing models
-- Reinforcement learning for traffic signal control
-- Multi-agent RL for coordinated signal networks
-- Digital twins: architecture, data flows, calibration loops
-- Transportation systems management and operations (TSM&O): where the AI actually lands —
-  automated signal performance measures, adaptive and retiming workflows, ramp metering,
-  incident detection and response, work-zone and event management
-- Operational data an agency already owns: ATSPM, ATMS logs, detector health, probe travel times
-- Online learning and model drift
-- Surrogate models — replacing expensive simulators with neural emulators
-- CARLA and sensor-level simulation for driving stacks
-- Sim-to-real transfer and its failure modes
-- Evacuation and hurricane mobility modeling
-
-## Interactive companions
-
-Three more sit inside {doc}`notes` — the anatomy of an AI workflow and the Traffic
-Incident Management case worked end to end in §7.1, and a graph neural network running on a
-freshly generated road network in §7.2, which is the network-scale counterpart to the corridor
-companion below.
-
-Before the neural car-following and surrogate-model topics below, work through this page. It makes the
-case for learned traffic dynamics in the most concrete way available: Newell's car-following model and
-the cell transmission model are shown to *already be* convolutions, a real 1,217-weight network is trained
-to reproduce the CTM update, and then it is broken in three named ways. Everything on the page — the
-platoon, the kernel fit, the CTM, and the network's forward pass — is computed live in your browser.
-
-<div class="companion-embed">
-  <div class="companion-embed-bar">
-    <span>Interactive companion — Newell's shift and the LWR shockwave as convolutions</span>
-    <a href="../_static/companions/Newell_LWR_CNN_Companion.html" target="_blank" rel="noopener">Open full screen ↗</a>
-  </div>
-  <iframe src="../_static/companions/Newell_LWR_CNN_Companion.html"
-          title="Newell's shift and the LWR shockwave as convolutions" loading="lazy"></iframe>
-</div>
-
-The three results worth carrying into the rest of the module:
-
-- **A learned operator is not a forecast.** With boundary demand and exit capacity supplied each step the
-  rollout holds 0.85 veh/mi/ln of error over 12 minutes. Freeze the boundary and the error jumps from
-  0.35 to 35.6 veh/mi/ln the moment the incident clears — the network propagates the queue at the right
-  speed but cannot know the blockage ended. Ask that question of every predictive traffic product.
-- **The physics is in the weights, not in the inputs.** The block recovers both characteristic speeds from
-  data (+74.7 and −15.4 mi/hr against the model's +75 and −15), and it loses them the moment it is moved
-  to a corridor with a different backward wave speed — a factor of 13 in RMSE for a 3 mi/hr change.
-- **Convolution assumes the road is the same everywhere.** That holds for a shockwave and fails for a
-  bottleneck at a fixed milepost, which is why geometry belongs in the input as extra channels.
+- Orchestration: workflow graphs, routing, saved progress, and tests for each step
+- Monitoring: traces of what the agent did; why an overall score can hide the cause; alarm base rates
+- Safety: four ways agents cause harm; sandboxes; read-only and write access; credentials; audit logs
+- Human-in-the-loop design under an agency AI policy; real review vs. rubber stamp
+- Agents that interact: different goals, simulated travelers and drivers
 
 ## Video lectures
 
@@ -125,27 +64,15 @@ The three results worth carrying into the rest of the module:
 
 ## Recommended readings
 
-- Treiber, M., Hennecke, A., & Helbing, D. (2000). Congested traffic states in empirical observations and microscopic simulations. *Physical Review E, 62*(2), 1805–1824. *(The Intelligent Driver Model.)*
-- Dosovitskiy, A., Ros, G., Codevilla, F., López, A., & Koltun, V. (2017). CARLA: An open urban driving simulator. *CoRL*.
-- Wei, H., Chen, C., Zheng, G., Wu, K., Gayah, V., Xu, K., & Li, Z. (2019). PressLight: Learning max pressure control to coordinate traffic signals in arterial network. *KDD*.
-- Chen, C., et al. (2020). Toward a thousand lights: Decentralized deep reinforcement learning for large-scale traffic signal control. *AAAI*.
-- Saroj, A. J., Roy, S., Guin, A., & Hunter, M. (2021). Development of a connected corridor real-time data-driven traffic digital twin simulation model. *Journal of Transportation Engineering, Part A*.
+- Debenedetti, E., et al. (2024). AgentDojo: A dynamic environment to evaluate prompt injection attacks and defenses for LLM agents. *NeurIPS Datasets and Benchmarks*.
+- Greenblatt, R., et al. (2024). AI control: Improving safety despite intentional subversion. *ICML*.
+- HNTB. [FDOT's approach for artificial intelligence success](https://www.hntb.com/think/think-innovation-in-motion-fdots-approach-for-artificial-intelligence-success/) *(a summary of the FDOT AI Policy)*.
+- Federal Highway Administration (2026). [AI for Safety and Efficiency Program Roadmap](https://highways.dot.gov/sites/fhwa.dot.gov/files/FHWA-HRT-26-063.pdf). FHWA-HRT-26-063.
+- NCHRP Project 03-159. [Implementing human-AI collaboration for enhancing TMC freeway operations](https://rip.trb.org/View/2709250).
+- Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures 13 and 15.
 
 ## Labs
 
-- **{doc}`Lab 5 — Attention on a Road Network <lab5_graph_attention>`.** Six aggregators, two traffic
-  rules, one controlled comparison. Find out where a learned weighting beats a fixed one — and where
-  a one-line aggregator carrying your own domain knowledge beats them both. Runs in about three
-  minutes with nothing to install.
-
-- **Learning the CTM update (companion, above).** Fit a convolution kernel to a Newell platoon and read
-  the reaction time off its peak; then train a residual conv block on CTM fields and measure the wave
-  speeds it learned. Runs entirely in the browser — nothing to install.
-
-- **RL signal control in SUMO.** Train a Q-learning controller on a single intersection, then
-  compare it against a fixed-time baseline *and* a properly tuned actuated baseline. The second
-  comparison is the one that usually deflates the result, which is why it's the point of the lab.
-
-- **Sensor simulation in CARLA.** Generate camera and lidar streams for a scenario you design,
-  and use them to test a perception component from Module 5. Then ask what the simulator is
-  systematically failing to represent.
+- **Reviewing an agent's work** *(in development)*. Work through a set of recorded agent runs on
+  transportation tasks. Find the failures, decide which ones a human reviewer would have caught, and
+  design where the approvals should go. The runs are recorded in advance, so nothing needs an API key.

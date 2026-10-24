@@ -1,70 +1,89 @@
-# Module 4 — Adapting and Orchestrating Models
+# Module 4 — How an Agent Works
 
-*Weeks 6 and 7 of the {doc}`../syllabus` — Oct 1 and Oct 8, 2026.*
+*Part II, AI Agents for Mobility · lecture 1 of 5 · Thursday, Oct 29, 2026. See the {doc}`../syllabus`.*
 
 ## Class meetings
 
 | Date | Session topic | Due before class |
 |---|---|---|
-| Oct 1 | Prompting, retrieval-augmented generation, fine-tuning, model adaptation, and evaluation for transportation tasks | Revised project proposal and initial data/model plan · *rotating project progress reports begin* |
-| Oct 8 | Agentic AI, tool use, API calling, AI-assisted coding, and transportation workflow automation | Baseline method or data acquisition plan · *rotating project progress report* |
+| Oct 29 | How an agent works: a model in a loop, workflow vs. agent, the model and its harness, tool use and MCP, context engineering and RAG | **First project progress report** · *rotating project progress report or project clinic* |
 
 ## Overview
 
-You will almost never train a foundation model. You will adapt one, and then wire it into a
-workflow that does something useful.
+Part II of the course is about **AI agents**: systems in which a language model does not just answer a
+question but works through a task — calling tools, reading the results, and deciding what to do next.
+This module covers how that works.
 
-This module covers both halves. The first is **adaptation**: prompting, retrieval-augmented
-generation, fine-tuning, LoRA, instruction tuning, and RLHF — a ladder of increasingly
-expensive interventions, where the practical skill is knowing which rung a problem actually
-needs. Most transportation problems that people reach for fine-tuning to solve are retrieval
-problems.
+Three ideas carry the whole of Part II.
 
-The second is **orchestration**: agentic AI, where a model calls tools, holds state across
-steps, invokes APIs, writes and runs code, and works through a task that no single prompt
-could complete. This is where the productivity gains in agency workflows are, and also where
-the failure modes get genuinely difficult to see.
+- **An agent is a model in a loop.** The model writes a short, structured request to use a tool. A
+  program runs it, the result is pasted back into the model's input, and the loop repeats until the model
+  decides the task is done. The model never touches the simulator or the database itself; it only writes
+  text that something else executes.
+- **There is a scale from a fixed workflow to a free agent.** In a workflow, a person decides every step
+  in advance. In an agent, the model decides them while it runs. Signal control has the same scale:
+  fixed-time, actuated, adaptive. Adaptive control pays off when demand is unpredictable, and an agent
+  pays off only when the steps cannot be written down in advance. If you know the steps, write a workflow.
+- **An agent is a model plus a harness.** The harness is everything around the model: its instructions,
+  its tools, its memory, the loop, and its permissions. You will almost never change the model. You will
+  build harnesses, and {doc}`Module 8 <../module8/index>` builds them for transportation.
 
-The first section page is posted: {doc}`4.1 The adaptation ladder <notes1-adaptation>` &mdash;
-the decision rule for the adaptation half, including what each rung costs and the two baselines
-you have to run before training anything. The remaining sections follow as the Oct 1 and Oct 8
-sessions are written.
+Two cases run through all five modules of Part II: **traffic simulation with SUMO** and
+**transportation safety analysis**. Here they appear as tools — an agent that runs a simulation and reads
+the result, and an agent that retrieves the right passage of the Highway Safety Manual before it answers.
+
+Part II adapts the structure of CMU 11-768 *AI Agents* (Fall 2026, Daniel Fried and Graham Neubig) and
+rebuilds it around transportation research and agency work.
+
+## The module, page by page
+
+<div class="practice-table-wrap">
+<table class="practice-table notes-map">
+<thead>
+<tr><th style="width:32%">Page</th><th style="width:50%">What it covers</th><th style="width:18%">Labs</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="notes1-workflow.html"><strong>4.1 The workflow is the unit of work</strong></a><br><em>Aug 27, revisited Oct 29</em></td>
+  <td>The workflow anatomy; the six leverage labels; the checkpoint rule; the Traffic Incident Management case; from a workflow to an agent.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><strong>Further sections</strong><br><em>Oct 29</em></td>
+  <td>The agent loop, tool use and MCP, context engineering and RAG &mdash; written up after the session.</td>
+  <td>Agent lab <em>(in development)</em></td>
+</tr>
+</tbody>
+</table>
+</div>
 
 ## Learning objectives
 
 By the end of this module you will be able to:
 
-- Choose among prompting, RAG, fine-tuning, and LoRA for a given mobility task, and justify
-  the choice on cost, data requirements, and maintenance burden.
-- Build a retrieval pipeline over transportation documents, and evaluate retrieval quality
-  separately from generation quality.
-- Construct an evaluation set for a transportation task before you build the system, and state
-  in advance what result would count as good enough to deploy.
-- Explain instruction tuning and RLHF, and state what alignment does and does not guarantee.
-- Design an agentic workflow with explicit tool calls and a human in the loop at the decision
-  points that matter.
-- Use AI-assisted coding on a real analysis task, and verify the result rather than trusting it.
-- Identify the conditions under which an agentic workflow should not be trusted with a
-  transportation decision.
+- Explain an agent as a language model running in a loop, and say what happens, step by step, when it
+  calls a tool.
+- Tell a task that needs an agent from one that needs a fixed workflow, and justify the choice.
+- Name the parts of a harness — instructions, tools, memory, the loop, permissions — and say which part
+  to change for a given failure.
+- Describe a tool to a model with a schema, and say what a schema can and cannot guarantee.
+- Explain what MCP is, how it differs from calling a web API directly, and why the model should never
+  see an agency's credentials.
+- Decide what belongs in an agent's context window, build retrieval (RAG) over transportation
+  documents, and explain why an agent's cost grows with every step it takes.
 
 ## Topics
 
-- Prompt design, context construction, and structured output
-- Retrieval-augmented generation: chunking, embedding, retrieval, reranking, grounding
-- Evaluating retrieval independently of the generator
-- Full fine-tuning vs. parameter-efficient methods; LoRA and adapters
-- Instruction tuning; RLHF and preference optimization
-- Alignment: what it addresses, and the failure modes it doesn't
-- Evaluation for transportation tasks: building a task-specific test set from real agency
-  documents and real queries, rather than borrowing a public benchmark
-- Metrics that survive scrutiny — exact-match and grounded-citation checks, human review
-  protocols, and where LLM-as-judge is and isn't defensible
-- Regression testing a prompt or pipeline, so that last month's fix stays fixed
-- Agent loops: tool use, memory, skills, planning, and termination
-- API calling, token cost, and latency budgets
-- AI-assisted coding for engineering and data analysis
-- Human-in-the-loop design: where to put the human, and where it's theater
-- Evaluating agentic systems when the output is a process, not a number
+- What agents can do today, and which tasks an agent may do alone, must ask about first, or must never do
+- The agent loop: a tool call is text the model writes; ReAct
+- Workflow vs. agent: the scale from fixed steps to model-chosen steps
+- The model and its harness
+- Tool use: function calling, schemas, web APIs, one-at-a-time and parallel calls
+- MCP (Model Context Protocol), and keeping credentials away from the model
+- Context engineering: what fills the context window, and what it costs
+- Retrieval-augmented generation: chunking, embedding, retrieving, grounding — and checking the
+  retriever on its own before judging any answer
+- Summaries that drift: how an agent loses an exact constraint when its history is compressed
 
 ## Video lectures
 
@@ -72,26 +91,17 @@ By the end of this module you will be able to:
 
 ## Recommended readings
 
-- Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. *NeurIPS*.
-- Hu, E. J., et al. (2022). LoRA: Low-rank adaptation of large language models. *ICLR*.
-- Ouyang, L., et al. (2022). Training language models to follow instructions with human feedback. *NeurIPS*. *(InstructGPT — the RLHF reference.)*
-- Wei, J., et al. (2022). Chain-of-thought prompting elicits reasoning in large language models. *NeurIPS*.
 - Yao, S., et al. (2023). ReAct: Synergizing reasoning and acting in language models. *ICLR*.
 - Schick, T., et al. (2023). Toolformer: Language models can teach themselves to use tools. *NeurIPS*.
+- Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. *NeurIPS*.
+- Anthropic (2024). [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents).
+- Anthropic (2024). [Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol).
+- Ye, C., et al. (2025). [SUMO-MCP: Leveraging the Model Context Protocol for traffic simulation](https://arxiv.org/abs/2506.03548). *arXiv:2506.03548*.
+- Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures 1–3.
 
 ## Labs
 
-- **{doc}`Lab 6 — Fine-tuning a Vision Transformer <lab6_vit_finetune>`** *(available)*. Turn the
-  transfer dial on 2,949 real FL511 traffic-camera frames: head only, last block, last four
-  blocks, everything. Measure what each setting costs and buys, then find out why the
-  after-dark score is higher than it should be. The labels came from a detector, and the last
-  third of the lab is about what that costs.
-
-- **A retrieval assistant over transportation documents.** Build a RAG pipeline over a real
-  corpus — a design manual, a set of agency reports, or a standards document — then measure
-  retrieval quality on its own before judging the answers. The lesson most people skip: when
-  the output is wrong, it is usually retrieval that failed, not the model.
-
-- **An agentic workflow for a recurring task.** Take an analysis you would otherwise do by
-  hand every month, decompose it into tool calls, and build an agent that completes it — with
-  a verification step you designed, not one the agent reports on itself.
+- **An agent that tunes a signal plan** *(in development)*. Build a small agent loop that adjusts the
+  timing of one intersection through SUMO tools. Run it twice — once without and once with the timing
+  limits (minimum green, pedestrian clearance) shown in the tool's output — and count how many of its
+  proposed plans break them. Then add a checkpoint before any plan is applied.

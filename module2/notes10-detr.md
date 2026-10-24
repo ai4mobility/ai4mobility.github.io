@@ -134,7 +134,7 @@ starts empty, all a query brings to layer 1 is its position, which is why each e
 region and a box size (Carion et al., 2020, Fig. 7).
 
 Nobody gives a query a job. The figure runs the paper's weights on 600 Tampa Bay FL511 frames from
-{doc}`Lab 6 <../module4/lab6_vit_finetune>`, every prediction plotted: q63 works the upper left, q58 the
+{doc}`Lab 6 <../module6/lab6_vit_finetune>`, every prediction plotted: q63 works the upper left, q58 the
 centre, q75 the right side, and q82 sits on the right edge and never names anything. Across all hundred,
 the median query's box centres lie a typical 0.27 frame widths from their mean, against 0.41 for a
 query that answered anywhere; 1 of 100 never fires; the average frame gets 7.4 confident answers.

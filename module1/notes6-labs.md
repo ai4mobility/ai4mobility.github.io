@@ -67,7 +67,7 @@ bridge into multimodal models.
 
 The workflow-level questions — which step is being automated, where the
 checkpoint goes, what the current process costs today — are in
-{doc}`Module 7 §7.1 <../module7/notes>`, together with the workflow audit
+{doc}`4.1 The workflow is the unit of work <../module4/notes1-workflow>`, together with the workflow audit
 exercise. What follows is the foundations half.
 
 **When you have low-dimensional tabular data,** the answer is often not a
