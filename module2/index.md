@@ -1,6 +1,6 @@
 # Module 2 — Transformers, LLMs, and Multimodal Models
 
-*Sept 17, Oct 8 and Oct 15, 2026, with section 2.5 from the Sept 24 meeting. The {doc}`../syllabus` schedules this module in week 4; the vision and multimodal half ran in weeks 7 and 8.*
+*Sept 17, Oct 8 and Oct 15, 2026, with section 2.5 from the Sept 24 meeting and section 2.14 from the graph-neural-network week. The {doc}`../syllabus` schedules this module in week 4; the vision and multimodal half ran in weeks 7 and 8.*
 
 ## Class meetings
 
@@ -34,12 +34,17 @@ questions that find vehicles. The module ends at a signalized intersection, wher
 probe-vehicle CAN and connected-vehicle messages have to be lined up in time and space, read in the
 right direction, and given a memory, before any of them is worth fusing.
 
+The module closes by putting every network so far in one picture. Each one lets a token mix in what
+some other tokens carry; only *who may be read* and *how much each counts* differ. Drawn that way, each
+is a graph, and a **graph neural network** is the version where the graph comes from the road network
+itself (2.14).
+
 ## The module, page by page
 
 :::{admonition} How to read this module
 :class: tip
 Sections 2.1&ndash;2.4, 2.6 and 2.13 pair with the Sept 17 meeting, 2.5 with Sept 24, 2.7 and the
-Swin and MobileViT parts of 2.8 with Oct 8, and the rest of 2.8 through 2.12 with Oct 15; skim before,
+Swin and MobileViT parts of 2.8 with Oct 8, the rest of 2.8 through 2.12 with Oct 15, and 2.14 with the graph-neural-network week; skim before,
 read properly after. Each page opens with a card naming its session and the interactive companions
 embedded in it.
 
@@ -54,7 +59,8 @@ how its encoder cousin is pretrained and adapted (2.5), then the architecture po
 own data (2.6) and at pixels (2.7), and how locality comes back (2.8). Then two inputs: one
 sequence reading another (2.9), questions that are learned rather than written (2.10), every
 sensor at an intersection (2.11) and their history (2.12). The module ends on the question of
-whether any of it beats the method it would replace (2.13).
+whether any of it beats the method it would replace (2.13), and then on one picture of every
+network so far, with the road network as the graph (2.14).
 :::
 
 <div class="practice-table-wrap">
@@ -129,9 +135,14 @@ whether any of it beats the method it would replace (2.13).
   <td><a href="../_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Does BERT earn its keep? &#8599;</a></td>
 </tr>
 <tr>
+  <td><a href="notes15-gnn.html"><strong>2.14 One view of every network: graph neural networks</strong></a><br><em>GNN week</em></td>
+  <td>Every network so far as one update with two choices: who may be read, and how much each counts. Who-reads-whom as a graph; what a node is on a road network; the cell transmission model as message passing; depth and aggregators; graph attention; the parameter-count test for moving a model to another city.</td>
+  <td><a href="../_static/companions/GNN_On_A_Road_Network_Companion.html" target="_blank" rel="noopener">A GNN on a road network &#8599;</a><br><a href="lab5_graph_attention.html">Lab 5</a></td>
+</tr>
+<tr>
   <td><a href="notes14-labs.html"><strong>Practice, exercises, and further reading</strong></a><br><em>Sept 17 &ndash; Oct 15</em></td>
   <td>What the labs prove; the Module 1 bridge lab; the five questions this module arms you with; where transformers go in Modules 3, 4 and 7.</td>
-  <td><a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4</a>, <a href="../module6/lab6_vit_finetune.html">Lab 6</a>, cross-attention sanity check</td>
+  <td><a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4</a>, <a href="lab5_graph_attention.html">Lab 5</a>, <a href="../module6/lab6_vit_finetune.html">Lab 6</a>, cross-attention sanity check</td>
 </tr>
 </tbody>
 </table>
@@ -164,6 +175,12 @@ By the end of this module you will be able to:
   space before fusing them, and choose where a model carries their history.
 - Evaluate a claim about foundation models in transportation: what was actually measured, on
   what data, against what baseline.
+- Describe every architecture in Modules 1 and 2 as one update with two choices &mdash; who may be
+  read, and how the weights are set &mdash; and say what a node and an edge should be when the system
+  is a road network.
+- Explain message passing as one shared rule applied per connection, choose a graph network's
+  depth and aggregator from the traffic problem, and tell whether a network model can move to
+  another city from its parameter count.
 
 ## Topics
 
@@ -182,6 +199,10 @@ By the end of this module you will be able to:
 - Multimodal foundation models applied to driving scenes and roadway imagery
 - Hallucination, grounding, and why fluent output is not evidence of correctness
 - Latency, cost, and deployment constraints for transformer inference
+- One view of every network: who may be read, and how much each counts; graph convolution and graph attention on that map
+- Nodes as tokens on a road network: detectors, directed road segments, intersections; the line graph
+- The cell transmission model as message passing; aggregators (sum, mean, max, attention) as modelling choices, and depth as reach
+- Transferability: does the number of nodes appear in the parameter count?
 
 ## Video lectures
 
@@ -201,6 +222,8 @@ By the end of this module you will be able to:
 - Mehta, S., & Rastegari, M. (2022). MobileViT: Light-weight, general-purpose, and mobile-friendly vision transformer. *ICLR*.
 - Liu, Z., Mao, H., Wu, C.-Y., Feichtenhofer, C., Darrell, T., & Xie, S. (2022). A ConvNet for the 2020s. *CVPR*. *(ConvNeXt.)*
 - Bishop, C. M., & Bishop, H. (2024). *Deep Learning: Foundations and Concepts*. Springer. Chapter 12 (transformers, cross-attention, the encoder&ndash;decoder).
+- Xu, K., Hu, W., Leskovec, J., & Jegelka, S. (2019). How powerful are graph neural networks? *ICLR*.
+- Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2018). Graph attention networks. *ICLR*.
 
 ## Labs
 
@@ -212,6 +235,7 @@ Full descriptions, setup notes, and every lab in the course are on the
 | --- | --- | --- |
 | {doc}`Lab 4 — CLIP vs. traditional computer vision <../module1/lab4_clip_vs_traditional_cv>` | Zero-shot recognition of open-world mobility scenes with a late-fusion dual encoder | 2.7, 2.9 |
 | {doc}`Lab 6 — Fine-tuning a Vision Transformer <../module6/lab6_vit_finetune>` | ViT-Tiny fine-tuned on FL511 Tampa Bay camera frames, from a frozen probe to full fine-tuning | 2.7 |
+| {doc}`Lab 5 — Attention on a Road Network <lab5_graph_attention>` | One message-passing layer with six aggregators on two traffic rules: where a learned weighting beats a fixed one, and where the right set of neighbours beats both | 2.14 |
 | Cross-attention sanity check *(in development)* | A small cross-attention model on paired mobility data, plus the three-tier check on whether the expected pattern actually emerges | 2.9, 2.11 |
 
 Lab 4 physically lives in Module 1 and is the bridge into this module; if you skipped it, run
@@ -227,7 +251,7 @@ themselves are on Canvas for enrolled students.
 
 ## Interactive companions
 
-Fifteen interactive companions support this module. Each is embedded in the section it belongs to and
+Sixteen interactive companions support this module. Each is embedded in the section it belongs to and
 is also linked here.
 
 - <a href="../_static/companions/Tokenization_Companion.html" target="_blank" rel="noopener">Tokens: the unit a language model actually reads</a> &mdash; embedded in <a href="notes1-tokens.html">2.1 Tokens</a>
@@ -245,6 +269,7 @@ is also linked here.
 - <a href="../_static/companions/Multimodal_Cross_Attention_Companion.html" target="_blank" rel="noopener">Camera, CAN and cross-attention: training a model that writes a crash warning</a> &mdash; embedded in <a href="notes11-streams.html">2.11 Many streams, one intersection</a>
 - <a href="../_static/companions/Multimodal_Fusion_Papers_Companion.html" target="_blank" rel="noopener">Fifteen fusion papers, and the recipe most of them share</a> &mdash; embedded in <a href="notes11-streams.html#fusion-papers">2.11 Many streams, one intersection</a>
 - <a href="../_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Does BERT earn its keep on crash narratives?</a> &mdash; embedded in <a href="notes13-evaluation.html">2.13 Does it earn its keep?</a>
+- <a href="../_static/companions/GNN_On_A_Road_Network_Companion.html" target="_blank" rel="noopener">A GNN on a road network: one shared rule, any number of intersections</a> &mdash; embedded in <a href="notes15-gnn.html">2.14 One view of every network</a>
 
 The crash-narrative companion uses long-form narratives from real Florida crash reports. The
 narratives are de-identified before any model sees them, and no report is republished as a

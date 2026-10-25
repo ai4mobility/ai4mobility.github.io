@@ -37,7 +37,7 @@
         <tr><td><a href="module1/lab4_clip_vs_traditional_cv.html">4 &mdash; CLIP vs. traditional computer vision</a></td><td>M1 &middot; Sept 10</td><td>Why open-vocabulary perception matters for long-tail safety scenes</td><td>Available</td></tr>
         <tr><td><a href="module1/notes3-cnn.html#newell-lwr">Learning the CTM update</a></td><td>M1 &middot; Sept 3</td><td>A convolution kernel carries a reaction time and a wave speed</td><td>Companion available</td></tr>
         <tr><td>Cross-attention sanity check</td><td>M2 &middot; Sept 17</td><td>Attention heads route; they are not the tidy alignment maps papers suggest</td><td>In development</td></tr>
-        <tr><td><a href="module3/lab5_graph_attention.html">5 &mdash; Attention on a road network</a></td><td>M3 &middot; GNN week</td><td>Attention earns its parameters only where the weighting is unknown &mdash; and structure beats weighting</td><td>Available</td></tr>
+        <tr><td><a href="module2/lab5_graph_attention.html">5 &mdash; Attention on a road network</a></td><td>M2 &middot; GNN week</td><td>Attention earns its parameters only where the weighting is unknown &mdash; and structure beats weighting</td><td>Available</td></tr>
         <tr><td>VAE on traffic state heatmaps</td><td>M3 &middot; Oct 22</td><td>What a narrow bottleneck chooses to keep, and what it throws away</td><td>In development</td></tr>
         <tr><td>From VAE to diffusion</td><td>M3 &middot; Oct 22</td><td>Diffusion as a response to measured VAE failures, not an assertion</td><td>In development</td></tr>
         <tr><td>Training the denoiser</td><td>M3 &middot; Oct 22</td><td>What the network predicts at each noise level, and why</td><td>In development</td></tr>
@@ -90,12 +90,12 @@
       <a class="resource-link" href="module1/lab4_clip_vs_traditional_cv.html">Open Lab 4</a>
     </article>
     <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 3 &middot; GNN week</p><span class="level-badge level-advanced">Advanced</span></div>
+      <div class="resource-card-top"><p class="resource-category">Module 2 &middot; GNN week</p><span class="level-badge level-advanced">Advanced</span></div>
       <h3>Lab 5 &mdash; Attention on a Road Network</h3>
       <p>Build one message-passing layer with six interchangeable aggregators and run it against two ground-truth traffic rules taken from flow theory. Four aggregators are generic; two of them encode what a traffic engineer already knows &mdash; that a queue backs up from downstream, that arriving flow comes from upstream. Those two are the real competition, and they cost no extra parameters.</p>
       <p><strong>Proves:</strong> attention wins only where the weighting is genuinely unknown &mdash; and even there, knowing <em>which</em> neighbours to listen to is worth more than learning <em>how much</em> to weight them. <strong>Check it against:</strong> not the mean aggregator, which anything beats, but the fixed aggregator carrying your own domain knowledge. On the spillback rule it ties attention at half the parameters and a third of the seed variance.</p>
-      <div class="tag-row"><span>Reads with 3.7</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~3 min</span></div>
-      <a class="resource-link" href="module3/lab5_graph_attention.html">Open Lab 5</a>
+      <div class="tag-row"><span>Reads with 2.14</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~3 min</span></div>
+      <a class="resource-link" href="module2/lab5_graph_attention.html">Open Lab 5</a>
     </article>
     <article class="resource-card">
       <div class="resource-card-top"><p class="resource-category">Module 6 &middot; Nov 12</p><span class="level-badge level-intermediate">Intermediate</span></div>

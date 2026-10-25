@@ -15,8 +15,8 @@ This repository hosts the source for the *AI for Mobility* course site, built wi
 Part I — AI foundations through a transportation lens
 
 - **Module 1** — Foundations and Representation Learning
-- **Module 2** — Transformers, LLMs, and Multimodal Models
-- **Module 3** — Generative AI and World Models (section 3.7: graph neural networks)
+- **Module 2** — Transformers, LLMs, and Multimodal Models (section 2.14: graph neural networks, one view of every network)
+- **Module 3** — Generative AI and World Models
 
 Part II — AI agents for mobility (since Oct 24, 2026; one module per lecture)
 

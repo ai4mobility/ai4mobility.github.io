@@ -3,15 +3,16 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Practice</span>
-    <span class="notes-card-session">Sessions: Sept 17 &ndash; Oct 15</span>
+    <span class="notes-card-session">Sessions: Sept 17 &ndash; Oct 15, and the GNN week</span>
   </div>
-  <p class="notes-card-lede">What the labs that go with this module <em>prove</em>, the bridge lab from Module 1 you should run first, the questions this module arms you with, and where transformers go from here. Everything on this page is practice &mdash; the explanations live in sections 2.1&ndash;2.13.</p>
+  <p class="notes-card-lede">What the labs that go with this module <em>prove</em>, the bridge lab from Module 1 you should run first, the questions this module arms you with, and where transformers go from here. Everything on this page is practice &mdash; the explanations live in sections 2.1&ndash;2.14.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Notebooks that go with it</h4>
       <ul>
       <li><a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4 &mdash; CLIP versus traditional computer vision</a></li>
       <li><a href="../module6/lab6_vit_finetune.html">Lab 6 &mdash; Fine-tuning a Vision Transformer</a></li>
+      <li><a href="lab5_graph_attention.html">Lab 5 &mdash; Attention on a road network</a></li>
       <li>Cross-attention sanity check &mdash; <em>in development</em></li>
       </ul>
     </div>
@@ -36,6 +37,15 @@ Module 6, where fine-tuning is the topic, and reads with section 2.7: it fine-tu
 that 2.7 dissects on FL511 camera frames. *Proves:* a fine-tune's accuracy splits cleanly into what
 the pretrained features gave you for free and what you had to buy by unfreezing &mdash; and that an
 after-dark score can rise while the model gets worse, because the label source failed first.
+
+**{doc}`Lab 5 — Attention on a Road Network <lab5_graph_attention>`** reads with section 2.14. One
+message-passing layer, six ways to combine what the neighbours send: mean, sum, max, attention, and two
+that encode what you know at no cost in parameters &mdash; the worst downstream neighbour (queues back
+up) and the average upstream one (flow arrives from upstream). *Proves:* the right set of neighbours
+matters more than learning the weights. On the merge rule, reading only upstream links takes the error
+from 0.0214 to 0.0122 for free; attention gets to 0.0110 with twice the parameters. On the spillback rule,
+attention only ties the worst-downstream rule (0.0080 against 0.0081). Runs in about three minutes with
+nothing to install.
 
 **Cross-attention sanity check** *(in development)*. Build a small cross-attention model on
 paired mobility data and ask a question you can actually answer: *does the attention pattern we
@@ -77,7 +87,8 @@ they come. Part II of the course is about changing that: {doc}`Module 4 <../modu
 model in a loop with tools and retrieval, and {doc}`Module 6 <../module6/index>` fine-tunes it.
 {doc}`Module 3 <../module3/index>` takes the generative half &mdash; the decoder-only models sketched
 in section 2.6 &mdash; into diffusion and world models. The lane-anchor hub of section 2.11 is a graph
-with attention on its edges, which is where {doc}`3.7 <../module3/notes7-gnn>` picks up.
+with attention on its edges, which is where {doc}`2.14 <notes15-gnn>` picks up: every network in this
+module drawn as one update on a graph, and then the road network as that graph.
 
 The reading list for this module is on the {doc}`module page <index>`.
 

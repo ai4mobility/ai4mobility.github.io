@@ -137,8 +137,8 @@ the {doc}`syllabus` page, and every notebook in the course is listed on the {doc
 |---|---|---|
 | {doc}`course-intro` | Course Introduction | Aug 27 |
 | {doc}`module1/index` | Foundations and Representation Learning | Sept 3 · Sept 10 |
-| {doc}`module2/index` | Transformers, LLMs, and Multimodal Models | Sept 17 · Oct 8 · Oct 15 |
-| {doc}`module3/index` | Generative AI and World Models, with graph neural networks | GNN week · Oct 22 |
+| {doc}`module2/index` | Transformers, LLMs, and Multimodal Models, ending with graph neural networks | Sept 17 · Oct 8 · Oct 15 · GNN week |
+| {doc}`module3/index` | Generative AI and World Models | Oct 22 |
 
 **Part II — AI agents for mobility**
 
@@ -198,9 +198,9 @@ your browser, with nothing to install. Here are six to start with.
     <a class="resource-link" href="_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Open the companion</a>
   </article>
   <article class="resource-card">
-    <div class="resource-card-top"><p class="resource-category">Module 3 &middot; Section 3.7</p></div>
+    <div class="resource-card-top"><p class="resource-category">Module 2 &middot; Section 2.14</p></div>
     <h3>A graph neural network on a road network</h3>
-    <p>Generate a street network in your browser and watch one shared rule run at every intersection, and how a rule that only looks one hop away ends up modelling a disturbance that travels for miles. Read it in context in <a href="module3/notes7-gnn.html">section 3.7</a>.</p>
+    <p>Generate a street network in your browser and watch one shared rule run at every intersection, and how a rule that only looks one hop away ends up modelling a disturbance that travels for miles. Read it in context in <a href="module2/notes15-gnn.html">section 2.14</a>.</p>
     <div class="tag-row"><span>Road networks</span><span>GNN</span></div>
     <a class="resource-link" href="_static/companions/GNN_On_A_Road_Network_Companion.html" target="_blank" rel="noopener">Open the companion</a>
   </article>

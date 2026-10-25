@@ -60,6 +60,9 @@ parts:
             title: "2.12 Where history enters"
           - file: module2/notes13-evaluation
             title: "2.13 Does it earn its keep?"
+          # The unified view: every network so far as one update on a graph. Taught in the GNN week.
+          - file: module2/notes15-gnn
+            title: "2.14 One view of every network: graph neural networks"
           - file: module2/notes14-labs
             title: "Practice, exercises, and further reading"
       - file: module3/index
@@ -78,9 +81,6 @@ parts:
             title: "3.5 A forger, a critic, a scorecard"
           - file: module3/notes5-hidden-cause
             title: "3.6 One hidden cause: mixture models"
-          # Taught in the GNN week, before 3.1; numbered last so 3.1-3.6 keep their numbers.
-          - file: module3/notes7-gnn
-            title: "3.7 Graph neural networks"
 
   # Part II became the AI agents unit on 2026-10-24: five lectures, one module each.
   - caption: Part II — AI Agents for Mobility
@@ -118,7 +118,7 @@ parts:
             title: "Lab 3 — Image Embeddings with a Deep CNN"
           - file: module1/lab4_clip_vs_traditional_cv
             title: "Lab 4 — CLIP vs. Traditional Computer Vision"
-          - file: module3/lab5_graph_attention
+          - file: module2/lab5_graph_attention
             title: "Lab 5 — Attention on a Road Network"
           - file: module6/lab6_vit_finetune
             title: "Lab 6 — Fine-tuning a Vision Transformer"

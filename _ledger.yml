@@ -91,7 +91,8 @@ items:
       signal control and the operations material still follow the Nov 5 session.
       SPLIT 2026-10-24 when Part II became the AI agents unit: section 7.1 went
       to site/module4/notes1-workflow.md (now 4.1, row m4-notes-1-workflow) and the
-      GNN half of 7.2 to site/module3/notes7-gnn.md (now 3.7, row m3-notes-7-gnn).
+      GNN half of 7.2 to site/module3/notes7-gnn.md (then 3.7; since 2026-10-25 it is 2.14,
+      site/module2/notes15-gnn.md, row m3-notes-7-gnn).
       The old file was moved out of the repo to _to_delete/site-restructure-20261024/.
 
   - id: course-intro
@@ -1450,7 +1451,7 @@ items:
     session: '2026-10-15'
     status: integrated
     dest: site/module2/notes11-streams.md
-    notes: '18 slides + 2 backups; reproducer flex_fusion_slides/. Figures FFus_Block_Types, FFus_Read_Nothing, FFus_Hub, FFus_Lane_Anchors, FFus_Anchor_Edges. Leads into GNN_Intro_Slides (Module 7). Site figures are 1600-px copies in site/_static/figures/.'
+    notes: '18 slides + 2 backups; reproducer flex_fusion_slides/. Figures FFus_Block_Types, FFus_Read_Nothing, FFus_Hub, FFus_Lane_Anchors, FFus_Anchor_Edges. Leads into GNN_Intro_Slides (section 2.14). Site figures are 1600-px copies in site/_static/figures/.'
 
   - id: m2-gru-encoders-slides
     file: GRU_Encoders_Slides.pptx + .md
@@ -1520,8 +1521,42 @@ items:
     dest: site/module2/notes11-streams.md
     notes: '1 slide: three camera-to-CAN+BSM designs in the who-reads-whom matrix; reproducer fusion_levels/.'
 
+  - id: m2-gnn-intro-slides
+    file: GNN_Intro_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: gnn-week
+    status: integrated
+    dest: site/module2/notes15-gnn.md
+    notes: 'GNN part 1, "what is a node?": 10 slides (tokens you already chose, who reads whom, a graph
+      is two tables, put the node where the state lives, one intersection two tokenizations, edges are a
+      claim, infrastructure as a heterogeneous graph, fit card, check yourself). Reproducer gnn_intro/ (20/20
+      audit). GNN_Who_Reads_Whom and GNN_Two_Tokenizations are on the site in 2.14.'
+
+  - id: m2-gnn-message-passing-slides
+    file: GNN_Message_Passing_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: gnn-week
+    status: raw
+    dest: site/module2/notes15-gnn.md
+    notes: 'GNN part 2: 19 slides from the kernel breaking at a junction through the CTM, GCN, aggregators,
+      depth, oversmoothing and node/edge/graph tasks. Reproducer gnn_mp/. Not yet folded into 2.14 beyond
+      what the section already said; its node/edge/graph-task half is the obvious next addition.'
+
+  - id: m2-encode-mix-compress-slides
+    file: Encode_Mix_Compress_Slides.pptx + .md
+    kind: deck
+    module: 2
+    session: unscheduled
+    status: integrated
+    dest: site/module2/notes15-gnn.md
+    notes: 'The summary session after cross-attention: every model as encode, mix, compress, then five design
+      tips. Reproducer mixing_recap/. Its "one update" and "two dials" figures open 2.14 as EMC_One_Update
+      and EMC_Two_Dials; the design-tips half is not on the site.'
+
 # -----------------------------------------------------------------------------
-# MODULE 3 — Generative AI and World Models (Oct 22; section 3.7 = the GNN week)
+# MODULE 3 — Generative AI and World Models (Oct 22; the GNN week moved to Module 2 as 2.14 on 2026-10-25)
 # -----------------------------------------------------------------------------
 
   - id: m3-notes
@@ -1986,10 +2021,10 @@ items:
   - id: m7-gnn-road-network
     file: GNN_On_A_Road_Network_Companion.html
     kind: companion
-    module: 3
+    module: 2
     session: gnn-week
     status: published
-    dest: site/module3/notes7-gnn.md#graph-neural-networks
+    dest: site/module2/notes15-gnn.md#graph-neural-networks
     mounted: site/_static/companions/GNN_On_A_Road_Network_Companion.html
     notes: 'SIX tabs since 2026-09-21 (tab 5 "Attention: a learned aggregator" inserted before the fit
       card; see the tail of this note). A random irregular street network is generated in the browser (perturbed lattice,
@@ -2018,7 +2053,7 @@ items:
   - id: m7-gnn-attention-repro
     file: attn_roadnet.py
     kind: internal
-    module: 3
+    module: 2
     session: gnn-week
     status: integrated
     notes: 'Reproducer behind tab 5 of m7-gnn-road-network, at the class-folder root. NumPy only, no torch.
@@ -2034,7 +2069,7 @@ items:
   - id: m7-gnn-road-network-repro
     file: gnn_roadnet.py, sweep.py
     kind: internal
-    module: 3
+    module: 2
     session: gnn-week
     status: integrated
     notes: Reproducers behind m7-gnn-road-network, at the class-folder root beside the companion. gnn_roadnet.py
@@ -2044,9 +2079,9 @@ items:
       in 10 minutes, batched it is ~25.
 
   - id: m7-lab5-graph-attention
-    file: site/module3/lab5_graph_attention.ipynb
+    file: site/module2/lab5_graph_attention.ipynb
     kind: lab
-    module: 3
+    module: 2
     session: gnn-week
     status: published
     dest: site/labs.md + _toc.yml Labs part
@@ -2064,7 +2099,7 @@ items:
   - id: m7-lab5-repro
     file: gat_roadnet.py, known_aggs.py, more_seeds.py, build_lab5.py
     kind: internal
-    module: 3
+    module: 2
     session: gnn-week
     status: integrated
     notes: 'Reproducers for m7-lab5-graph-attention at the class-folder root. gat_roadnet.py holds the three
@@ -2114,15 +2149,25 @@ items:
       numbers that do not match.'
 
   - id: m3-notes-7-gnn
-    file: site/module3/notes7-gnn.md
+    file: site/module2/notes15-gnn.md
     kind: notes
-    module: 3
+    module: 2
     session: gnn-week
     status: integrated
     notes: '3.7 When the thing you model is a network: graph neural networks. Moved 2026-10-24 from module7/notes.md
       section 7.2 when Part II became the agents unit; numbered last so 3.1-3.6 keep their numbers (the
       page and the module index say it was taught first). Keeps the (graph-neural-networks)= target, so
-      the {ref} links from 2.11 and 2.12 still resolve. Embeds m7-gnn-road-network; reads with Lab 5.'
+      the {ref} links from 2.11 and 2.12 still resolve. Embeds m7-gnn-road-network; reads with Lab 5.
+      MOVED AGAIN 2026-10-25 to the end of Module 2 as 2.14 "One view of every network: graph neural networks"
+      (file notes15-gnn.md, because notes14-labs.md is the practice page), with Lab 5 moved to site/module2/.
+      New opening half frames every M1-M2 architecture as one update h_i <- sum over N(i) of a_ij W v_j
+      (choice 1: who may be read; choice 2: how the weights are set), then who-reads-whom as a graph, a
+      nine-row table (MLP, CNN, RNN, BERT/ViT, GPT, Swin, cross-attention, graph convolution, graph attention),
+      the three caveats (CNN = typed edges; position = what you add after dropping the graph; cross-attention
+      = two kinds of node), node = token with the line graph, and a graph-attention subsection (one masked_fill
+      line; self-loops because 6 METR-LA detectors are isolated; GAT-2018 static vs GATv2 dropdown). Site figures
+      EMC_One_Update, EMC_Two_Dials (1600-px copies of the mixing-recap figures) and GNN_Who_Reads_Whom,
+      GNN_Two_Tokenizations (re-rendered from gnn_intro/fig/ without title or caption). Id kept for history.'
 
   - id: m4-notes-1-workflow
     file: site/module4/notes1-workflow.md

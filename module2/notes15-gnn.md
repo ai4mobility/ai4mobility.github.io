@@ -1,12 +1,12 @@
 (graph-neural-networks)=
-# 3.7 When the thing you model is a network: graph neural networks
+# 2.14 One view of every network: graph neural networks
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 3 &middot; Section 3.7</span>
+    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.14</span>
     <span class="notes-card-session">Session: the GNN week</span>
   </div>
-  <p class="notes-card-lede">A city is not a line, so a convolution sliding along a corridor is not enough. This section shows that the cell transmission model is already a graph neural network: one rule per connection, applied however many streets meet. Then it asks what a learned version of that rule gives you, what the aggregator and the depth have to match in the traffic, and the one question that decides whether a network model can ever move to another city.</p>
+  <p class="notes-card-lede">Every network in Modules 1 and 2 does the same thing: each token takes a weighted mix of what some other tokens carry. Only two choices differ &mdash; which tokens it may read, and how much each one counts. Draw &ldquo;may read&rdquo; as lines and every one of those networks is a graph. A graph neural network is the version where the graph comes from the problem. That makes it both the summary of this module and the right tool when the thing you model is a road network.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Interactive companion on this page</h4>
@@ -23,23 +23,141 @@
   </div>
 </div>
 
-:::{admonition} Where this section sits
+:::{admonition} Why this section comes last
 :class: tip
-This material was taught in the graph-neural-network week, just before the generative models of
-sections 3.1&ndash;3.6. It is numbered last so those sections keep their numbers. If you are following
-the order of the classes, read it first.
+It needs everything before it: the convolution of {doc}`1.3 <../module1/notes3-cnn>`, the recurrence
+of {doc}`2.12 <notes12-history>`, self-attention in 2.3&ndash;2.8 and cross-attention in 2.9&ndash;2.11.
+The first half puts all of them in one picture. The second half uses that picture to read a road
+network.
 :::
 
-Module 2 ended with a graph. The lane-anchor hub of {doc}`2.11 <../module2/notes11-streams>` is nodes of
-different kinds joined by edges of different kinds, with attention on each edge. This section starts that
-idea again from traffic flow theory, and it asks a narrow question: **can a learned model stand in for a
-model you would otherwise write down?**
+## Every network so far is one update
 
-The honest way to answer is to show the classical traffic model to *already be* the neural architecture,
-which puts the two on the same footing instead of pitting a tuned network against a strawman.
-{doc}`1.3 <../module1/notes3-cnn>` does that for a **corridor**, where Newell's model and the cell
-transmission model turn out to be convolutions. This section does it for a **network**, where the cell
-transmission model turns out to be a graph neural network.
+Take away the names and every layer you have met does one job: it lets each token take in what some
+other tokens carry. A token can be a word piece, a camera patch, a time&ndash;space cell or a detector
+station. The picture below shows it for one station on a freeway.
+
+```{figure} ../_static/figures/EMC_One_Update.png
+:alt: Left, station 8 now reads stations 7, 9, 10 and its own reading five minutes earlier, each arrow labelled with a weight a. Right, the update h_i equals the sum over j in N(i) of a_ij times W times v_j, with N(i) marked choice 1, who may be read, and a_ij marked choice 2, how much j counts.
+:width: 100%
+
+One update covers every network so far: token i becomes a weighted mix of what its allowed neighbours carry. The weights shown are made up.
+```
+
+$$
+h_i \;\leftarrow\; \sum_{j \in N(i)} a_{ij}\, W\, v_j
+$$
+
+| Symbol | In transportation terms |
+| --- | --- |
+| $v_j$ | what token j carries: a station's last hour of speeds, a word piece's vector, a camera patch |
+| $N(i)$ | the tokens that token i is allowed to read &mdash; **choice 1** |
+| $a_{ij}$ | how much token j counts for token i &mdash; **choice 2** |
+| $W$ | one linear map, the same for every token |
+| $h_i$ | token i's new state, which now carries context |
+
+**In words:** each token becomes a weighted mix of what its allowed neighbours carry. Choose who may be
+read and how the weights are set, and you have chosen an architecture. A real layer also adds a
+nonlinearity and keeps some of the token's own state, but that does not change the two choices.
+
+## Who may read whom is a graph
+
+Draw each token as a dot. Draw a line from token j to token i when i may read j. What you get is a
+graph. The same lines can be written as a table, A: a 1 in row i, column j when i reads j, and a 0
+otherwise.
+
+```{figure} ../_static/figures/GNN_Who_Reads_Whom.png
+:alt: Three panels. BERT or ViT, seven words all joined to each other, with an all-ones 7 by 7 table. Swin on a 4 by 4 grid of patches in four 2 by 2 windows, with a block-diagonal 16 by 16 table, 64 of 256 entries on. A street network of 8 intersections and 10 road links, intersection 5 joined to 2, 4, 6 and 7, with a sparse 8 by 8 table, 28 of 64 entries on.
+:width: 100%
+
+Three architectures as graphs. BERT and ViT: every token reads every token, so the table is all ones. Swin: only the window (a toy 4 &times; 4 grid; Swin uses 7 &times; 7 windows). A street network: only the intersections a car reaches directly. In all three, a token also reads itself.
+```
+
+Here is every network in Modules 1 and 2 written the same way.
+
+| Network | A node is | Who it may read, $N(i)$ | How much each counts, $a_{ij}$ |
+| --- | --- | --- | --- |
+| Dense layer (MLP) | one input number | every input | one learned weight for every pair |
+| CNN ({doc}`1.3 <../module1/notes3-cnn>`) | a pixel, or a time&ndash;space cell | a fixed 3 &times; 3 window | one learned weight per window slot, the same everywhere |
+| RNN, GRU ({doc}`2.12 <notes12-history>`) | one time step | the step before, through a running state | learned once, the same at every step |
+| BERT, ViT (2.3, 2.5, 2.7) | a word piece; a 16 &times; 16 patch | every token | computed from the content: softmax of $q \cdot k / \sqrt{d}$ |
+| GPT ({doc}`2.4 <notes4-gpt>`) | a word piece | every earlier token | computed from the content |
+| Swin ({doc}`2.8 <notes8-locality>`) | a patch | the tokens in its own window | computed from the content |
+| Cross-attention, DETR (2.9, 2.10) | a query, and the tokens of another source | every token in the other source | computed from the content |
+| Graph convolution (this section) | a detector, a road segment, an intersection | its neighbours on the road | fixed in advance by how many links each node has |
+| Graph attention (this section) | the same | its neighbours on the road | computed from the content |
+
+Read the last two rows against the rest. A graph convolution keeps the CNN's habit: the weights are
+fixed before the data arrive. Graph attention takes BERT's habit: the weights are computed from the
+content. The only new thing in either is where $N(i)$ comes from. It is not a pixel grid and not
+&ldquo;everyone&rdquo;. It is the road network you already manage.
+
+```{figure} ../_static/figures/EMC_Two_Dials.png
+:alt: A map with two axes. Vertical, who may talk, from a few fixed neighbours to everyone. Horizontal, how much each one counts, from fixed in advance to computed from the content. Bottom left, RNN, CNN and graph convolution. Top left, the dense layer: 600,100 weights where 8 convolution filters need 80. Right, self-attention and cross-attention near the top, Swin and graph attention near the bottom.
+:width: 100%
+
+Two dials make every architecture: who may talk, and how the weights are set. Graph convolution sits with the CNN; graph attention sits with Swin, a fixed set of neighbours with weights computed from the content.
+```
+
+This is the sense in which a graph neural network is the general form. Every point on that map is the
+same update, with a particular graph and a particular rule for the weights. A graph network leaves both
+choices open. Give it everyone-reads-everyone and computed weights, and you have self-attention. Give it
+the road and fixed weights, and you have a graph convolution.
+
+:::{admonition} Where the one picture is too neat
+:class: note
+- **A CNN has a different weight for each slot.** The upstream tap and the downstream tap of a 3-tap
+  kernel are different numbers. As a graph, a 3 &times; 3 CNN has nine *kinds* of edge, one per slot.
+  A plain graph convolution has one weight for every neighbour, so on a pixel grid it can only blur;
+  it cannot find an edge in an image. The fix is to tell the edges apart. On a road the obvious kinds
+  are upstream and downstream, and the companion below shows that knowing direction is worth more
+  than attention itself.
+- **Position is what you add back after you throw the graph away.** When every token reads every
+  token, the wiring says nothing about order, so BERT and ViT add position embeddings
+  ({doc}`2.1 <notes1-tokens>`, {doc}`2.7 <notes7-vision>`). In a graph network the edges carry the
+  structure. Swin's relative position bias ({doc}`2.8 <notes8-locality>`) is already a feature on an
+  edge.
+- **Cross-attention is a graph with two kinds of node.** Queries sit on one side, keys and values on
+  the other, and the edges go one way. The lane-anchor hub of {doc}`2.11 <notes11-streams>` is the
+  same idea with many kinds of node.
+:::
+
+## What is a node? The same question as &ldquo;what is a token?&rdquo;
+
+BERT's designers chose the word piece as the token. ViT's chose a 16 &times; 16 square. A graph
+network asks you to make that choice again, and nobody has made it for you. The rule is the one a
+tokenizer follows: **make a node of the thing whose state you want to read out.**
+
+```{figure} ../_static/figures/GNN_Two_Tokenizations.png
+:alt: Three panels. A four-leg intersection with two-way roads. The same intersection as a graph with the intersection as a node, 5 nodes and 4 edges. The same intersection with each directed road link as a node, 4 inbound and 4 outbound, joined by 12 turning movements coloured through, left and right.
+:width: 100%
+
+One intersection, two graphs. With intersections as nodes, the roads are the edges. With directed road links as nodes, the turning movements are the edges: 8 nodes and 12 movements. Pick the one whose nodes carry the state you want to predict.
+```
+
+- **Speed at a sensor:** make the detector station the node. The METR-LA data set in
+  {doc}`2.6 <notes6-architecture>` is 207 detectors, each with about six and a half road neighbours.
+- **Density or travel time on a road:** make the directed road segment the node. On the map a
+  segment is an edge between two intersections; in the graph network it is a node, and the turning
+  movements become its edges. This is called the *line graph*.
+- **A queue or a signal phase:** make the intersection the node, or each movement.
+- **Direction splits a road.** Northbound and southbound at the same milepost carry different
+  states, so they are two nodes.
+- **Granularity is your choice,** just as whole words versus word pieces is: one link can be one
+  node, or ten 0.1-mile cells.
+
+## From one picture to a road network
+
+Section {doc}`2.11 <notes11-streams>` already ended at a graph: lane cells of different kinds joined
+by edges of different kinds, with attention on each edge. The rest of this section starts that idea
+again from traffic flow theory and asks a narrow question: **can a learned model stand in for a model
+you would otherwise write down?**
+
+The honest way to answer is to show that the classical traffic model *already is* the neural
+architecture. That puts the two on the same footing instead of pitting a tuned network against a
+strawman. {doc}`1.3 <../module1/notes3-cnn>` does this for a **corridor**, where Newell's model and the
+cell transmission model turn out to be convolutions. This section does it for a **network**, where the
+cell transmission model turns out to be a graph neural network.
 
 ## When the thing you are modelling is a network
 
@@ -148,6 +266,36 @@ cost you nothing in transferability. See Xu et al., *How Powerful are Graph
 Neural Networks?* (ICLR 2019), which also explains why a sum aggregator reaches
 that ceiling while mean and max fall short of it — a gap the companion lets you
 reproduce in a street network in about ten seconds.
+:::
+
+## Graph attention: BERT's weights on the road's wiring
+
+On the two-dials map, graph attention sits next to Swin: the road fixes who may be read, and the
+content sets the weights. In code it is one line added to the attention of {doc}`2.3 <notes3-attention>`:
+
+```python
+scores = Q @ K.T / d**0.5                           # every token scores every token, as in BERT
+scores = scores.masked_fill(A == 0, float('-inf'))  # only road neighbours may be read
+alpha  = scores.softmax(dim=-1)                     # weights over the allowed neighbours sum to 1
+H_new  = alpha @ V
+```
+
+With A all ones this is BERT or ViT. A lower-triangular A gives GPT's causal mask
+({doc}`2.4 <notes4-gpt>`). Window blocks give Swin. The road's adjacency, with each node also reading
+itself, gives graph attention. Keep those self-links: in the METR-LA road graph six detectors have no
+neighbour at all, and a softmax over an empty row has no answer. The mask is the teaching version.
+Graph libraries compute scores only along the edges that exist, which is why they scale to a whole
+city where every-pair attention would not.
+
+:::{admonition} Going deeper &mdash; which &ldquo;graph attention&rdquo;?
+:class: dropdown
+The original graph attention network (Veličković et al., ICLR 2018) does not use separate queries and
+keys. It scores each edge with one shared weight matrix and one attention vector, and as a result every
+node ranks its neighbours in the same order, whichever node is asking. Brody, Alon and Yahav call this
+*static* attention (*How Attentive are Graph Attention Networks?*, ICLR 2022). The query&ndash;key
+version above, where the ranking can change with the asking node's own state, is the GATv2 and graph
+transformer line. The optional last part of Lab 5 measures the difference on a traffic rule where the
+neighbour that matters flips with the receiving link's own density.
 :::
 
 ## Three results worth carrying out of the companion
