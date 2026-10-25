@@ -37,8 +37,12 @@ effectiveness evaluation. The agent links crash, roadway and volume data, runs t
 functions, reads crash narratives, and retrieves crash modification factors. The engineer approves the
 site list and the countermeasures.
 
-**Data engineering for AI agents.** Transportation data was collected for people to read. Agents are a
-new kind of user, and they need three things:
+**Data engineering for AI agents.** Transportation data was collected for people to read. AI now uses it
+in three places, and each improves only through a feedback loop: a model learns from a *checker* that grades
+its answers, a harness learns from *graded runs*, and a vendor's AI tool is judged by *your own local tests*.
+The most valuable data at each place is the data that closes its loop, and our field already holds many
+checkers: exact calculations, simulators, rubrics written into the MUTCD and the HSM, expert review, and
+real outcomes. As users of the data, agents need three things:
 
 - *Data they can use:* data dictionaries with units and codes, written like a skill; IDs that link crash
   records, roadway inventory, traffic counts and weather; access through tools with privacy rules built in.
@@ -62,14 +66,15 @@ By the end of this module you will be able to:
 - Describe any transportation agent with the harness template, and spot the field a design has left empty.
 - Lay out an AI workflow for traffic simulation and one for safety analysis, with the agent's steps, the
   person's steps, and the checkpoints.
-- Say what would make a transportation dataset easier for an agent to use, and what would make the
-  agent's "findings" trustworthy.
+- Say what would make a transportation dataset easier for an agent to use, what data would let a model, a
+  harness or a vendor tool improve, and what would make the agent's "findings" trustworthy.
 
 ## Topics
 
 - The harness template
 - An AI workflow for traffic simulation in SUMO
 - An AI workflow for transportation safety analysis
+- Data that closes the loop: checkers for models, test tracks and run logs for harnesses, local tests for vendor tools
 - Data engineering for AI agents: making existing data usable, writing down expert knowledge, new data to collect
 - Many tests, false findings, and how to guard against them
 - *(Optional)* a review harness for papers and projects
