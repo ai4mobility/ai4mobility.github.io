@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.9</span>
-    <span class="notes-card-session">Session: Oct 15</span>
+    <span class="notes-card-session">Session: ViT extensions and fusion</span>
   </div>
   <p class="notes-card-lede">BERT reads text, a ViT reads images, and neither knows the other exists. Cross-attention connects them with one change to attention: the questions come from one sequence, the keys and values from another. This section tests it on real Florida crash narratives and diagrams, where a 224-million-parameter model loses to OCR and a word count, then opens the encoder&ndash;decoder on a traveler alert translated into Spanish.</p>
   <div class="notes-card-cols">

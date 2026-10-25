@@ -1,24 +1,24 @@
 (agent-tools)=
-# 4.3 Tools: what an agent can reach
+# 5.3 Tools: what an agent can reach
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.3</span>
-    <span class="notes-card-session">Session: Oct 29</span>
+    <span class="notes-card-eyebrow">Module 5 &middot; Section 5.3</span>
+    <span class="notes-card-session">Session: How an agent works</span>
   </div>
   <p class="notes-card-lede">An agent is only as useful as what it can reach. This section is about the tools: how a tool is described to a model, how a model learned to decide when to call one (the milestone paper Toolformer, read in depth), code as a richer kind of action, the protocol that lets one tool serve many agents (MCP), and what the first published traffic agents show and do not show. It ends with how to grade an agent's tool use against a baseline that needs no model.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it first</h4>
       <ul>
-      <li><a href="notes2-loop.html">4.2 A model in a loop</a></li>
-      <li><a href="notes1-workflow.html">4.1 The workflow is the unit of work</a></li>
+      <li><a href="notes2-loop.html">5.2 A model in a loop</a></li>
+      <li><a href="notes1-workflow.html">5.1 The workflow is the unit of work</a></li>
       </ul>
     </div>
     <div>
       <h4>Used again in</h4>
       <ul>
-      <li><a href="notes4-context.html">4.4 Context: what the model reads</a></li>
+      <li><a href="notes4-context.html">5.4 Context: what the model reads</a></li>
       <li><a href="../module8/index.html">Module 8 &mdash; Building transportation harnesses</a></li>
       </ul>
     </div>
@@ -64,7 +64,7 @@ must read at every step, and one more way for the agent to go wrong.
 :alt: Three panels. Left, the run_simulation tool description with its name, description and two integer parameters in seconds. Middle, the tool call the model wrote in a recorded run. Right, the result the harness pasted back, with the cycle, vehicles and average delay.
 :width: 100%
 
-The real tool from the recorded runs of 4.2: what the model is told, what it wrote, and what came back. The call is only text until the harness parses and runs it.
+The real tool from the recorded runs of 5.2: what the model is told, what it wrote, and what came back. The call is only text until the harness parses and runs it.
 ```
 
 A tool is described to the model by a **schema**: a name, a description in plain English, and a list of
@@ -92,7 +92,7 @@ Three parts of the contract matter most.
 
 The harness can always check the **form** of a call. It can check that the values are **allowed**, but only if
 you write the rule. No program can check whether the call was the **right** thing to do; that is the engineer's
-job, and it is why the checkpoint rule of {doc}`4.1 <notes1-workflow>` still applies.
+job, and it is why the checkpoint rule of {doc}`5.1 <notes1-workflow>` still applies.
 
 Typed tool descriptions pay off even without a person. The SUMO-MCP paper (below) wrapped SUMO's command-line
 tools in typed descriptions and compared an agent using them with an agent calling the raw command lines. On the
@@ -102,7 +102,7 @@ retries", and some runs stalled until a person stepped in (Ye et al., 2025, Tabl
 
 ## Milestone paper: Toolformer
 
-ReAct ({doc}`4.2 <notes2-loop>`) prompted a frozen model to use tools. **Toolformer** (Schick, Dwivedi-Yu,
+ReAct ({doc}`5.2 <notes2-loop>`) prompted a frozen model to use tools. **Toolformer** (Schick, Dwivedi-Yu,
 Dessì, Raileanu, Lomeli, Zettlemoyer, Cancedda and Scialom; Meta AI Research and Universitat Pompeu Fabra; NeurIPS
 2023) asked a different
 question: can a model learn, by itself, *when* a tool call is worth making?
@@ -133,7 +133,7 @@ Toolformer's training recipe with the paper's own example (redrawn from Schick e
    the ordinary language-modeling loss.
 
 At inference, when the fine-tuned model writes a call, generation pauses at the arrow, the tool runs, its answer is
-pasted in, and generation continues: the loop of 4.2, inside a single reply.
+pasted in, and generation continues: the loop of 5.2, inside a single reply.
 
 **The filter, the one equation.** Let L⁺ be the model's loss on the words after position *i* when the call *and
 its result* are written in. Let L⁻ be the lower of two losses: with no call at all, or with the call written in
@@ -197,11 +197,11 @@ final. It makes **one call per input**. And in their tests (GPT-2 models, three 
 parameters did not learn to use the tools at all, search excepted; read that as a caution about small models, not a
 rule. So the two milestone papers fit together. Toolformer:
 a model can be trained to decide when to call. ReAct: a loop lets it chain calls and recover. The models you use
-today are trained to write tool calls in a fixed format and run in a loop; the Qwen model of 4.2 is one of them.
+today are trained to write tool calls in a fixed format and run in a loop; the Qwen model of 5.2 is one of them.
 
 ## Code as the action
 
-In 4.2 every action was one tool call written as JSON. **CodeAct** (Wang, Chen, Yuan, Zhang, Li, Peng and Ji,
+In 5.2 every action was one tool call written as JSON. **CodeAct** (Wang, Chen, Yuan, Zhang, Li, Peng and Ji,
 ICML 2024) lets the action be a short Python program instead. The program can call several tools, loop, keep
 variables and use any Python package; whatever it prints, or the error it raises, is the observation.
 
@@ -312,7 +312,7 @@ marked "below threshold: for review", so the inspector sees them listed rather t
 ## Grading tool use
 
 Grade an agent's tool use the way you would grade any method: against a baseline, over repeated runs, with the
-failures counted. Here are our own twelve recorded runs from {doc}`4.2 <notes2-loop>`, three per harness setting.
+failures counted. Here are our own twelve recorded runs from {doc}`5.2 <notes2-loop>`, three per harness setting.
 Condition D was added after we saw A to C: the harness also checks the agent's claim, accepting a submission only if
 the plan was simulated and beats the current plan, whose delay the harness measures itself.
 

@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.5</span>
-    <span class="notes-card-session">Session: Sept 24</span>
+    <span class="notes-card-session">Session: BERT</span>
   </div>
   <p class="notes-card-lede">Section 2.4 built a GPT. Four edits turn it into a BERT: every token may read both sides, a third embedding table marks which span a token is in, the training label becomes "the words we hid" plus "did span B follow span A", and two new heads sit on top. This section trains that model on the same complaint narratives, plays both pretraining games with it, and then attaches four different heads to the real <code>bert-base-uncased</code> &mdash; one for each kind of transportation text task.</p>
   <div class="notes-card-cols">

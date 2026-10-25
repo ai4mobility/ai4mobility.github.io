@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.2</span>
-    <span class="notes-card-session">Session: Sept 17</span>
+    <span class="notes-card-session">Session: Transformers and LLMs</span>
   </div>
   <p class="notes-card-lede">Module 1 ended with one fixed vector per word, per image, per road segment. That is a real limitation: <em>median</em> means one thing in a crash narrative and another in a statistics table, and a static vector cannot tell them apart. This section is the model that gives a word a different vector every time it appears &mdash; and the measurement of what that is actually worth on a real agency task.</p>
   <div class="notes-card-cols">

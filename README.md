@@ -15,16 +15,20 @@ This repository hosts the source for the *AI for Mobility* course site, built wi
 Part I — AI foundations through a transportation lens
 
 - **Module 1** — Foundations and Representation Learning
-- **Module 2** — Transformers, LLMs, and Multimodal Models (section 2.14: graph neural networks, one view of every network)
-- **Module 3** — Generative AI and World Models
+- **Module 2** — Transformers, LLMs, and Multimodal Models
+- **Module 3** — A Unified View: Graph Neural Networks
+- **Module 4** — Deep Generative Models: VAE, Diffusion, and World Models
 
-Part II — AI agents for mobility (since Oct 24, 2026; one module per lecture)
+Part II — AI agents for mobility (since Oct 24, 2026)
 
-- **Module 4** — How an Agent Works
-- **Module 5** — Skills, Memory, and Planning
+- **Module 5** — Understanding AI Agents: Reasoning, Tool Calling, Skills, Memory, Planning, and Coordination
 - **Module 6** — Making Agents Better: Evaluation and Fine-Tuning
 - **Module 7** — Agents and People in an Agency
 - **Module 8** — Building Transportation Harnesses
+
+Module pages list their session topics but carry no class dates; the dates live only on the syllabus page.
+Pages moved in the Oct 25, 2026 restructure keep working at their old addresses through the redirect stubs in
+`_redirects/` (copied into the built site by `html_extra_path` in `_config.yml`).
 
 ## First-time deployment
 

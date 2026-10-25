@@ -1,17 +1,17 @@
-# 3.4 A few hidden knobs: the variational autoencoder
+# 4.4 A few hidden knobs: the variational autoencoder
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 3 &middot; Section 3.4</span>
-    <span class="notes-card-session">Session: Oct 22</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.4</span>
+    <span class="notes-card-session">Session: Generative models, part 1</span>
   </div>
   <p class="notes-card-lede">The second answer: compress each heatmap into a few hidden numbers, learn to rebuild it from them, and make new heatmaps by drawing new numbers. A new heatmap now takes one pass instead of 400. With no labels, its knobs line up clearly with one of the simulator's own knobs and partly with another, and its blur can be measured and explained.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes2-autoregressive.html">3.2 One cell at a time</a></li>
-      <li><a href="notes2b-latent-variables.html">3.3 Latent variables: hidden causes, not hidden layers</a></li>
+      <li><a href="notes2-autoregressive.html">4.2 One cell at a time</a></li>
+      <li><a href="notes2b-latent-variables.html">4.3 Latent variables: hidden causes, not hidden layers</a></li>
       </ul>
     </div>
     <div>
@@ -82,7 +82,7 @@ the encoder from shrinking the spreads to zero; so the whole knob space becomes 
 
 **Generating.** Throw the encoder away. Draw two numbers from a standard bell curve, run the decoder
 once, and you have a new heatmap. One forward pass, against 400 for the
-autoregressive model of section 3.2.
+autoregressive model of section 4.2.
 
 ## The loss: rebuild well, keep the knobs findable
 
@@ -115,7 +115,7 @@ If the decoder is read as a Gaussian with fixed spread, $\log p(x \mid z)$ becom
 is the first term above. The lab reweights the KL term by $\beta$, so with $\beta$ = 0.6 the loss is not
 exactly the negative ELBO; it leans toward detail. Kingma &amp; Welling (2014),
 *Auto-encoding variational Bayes*. One consequence: a VAE gives a *bound* on the likelihood, not an exact
-value, so it cannot be put on the bits-per-cell ladder of section 3.2.
+value, so it cannot be put on the bits-per-cell ladder of section 4.2.
 :::
 
 ## What the knobs found
@@ -142,9 +142,9 @@ that made it.
 
 Nobody told the network about density or bottlenecks. Two knobs cannot hold five causes, and which ones it
 kept was not chosen by us. Inflow is not invisible: below capacity it does not change the free-flow speed, but
-it does change how fast queues grow and clear, and section 3.3 shows that one heatmap cuts its uncertainty roughly
+it does change how fast queues grow and clear, and section 4.3 shows that one heatmap cuts its uncertainty roughly
 in half. With two knobs it loses out to bigger causes; with eight, the VAE explains 43% of its variance. The
-dataset does not store when the bottleneck starts or how long it lasts; section 3.3 regenerates both, and two
+dataset does not store when the bottleneck starts or how long it lasts; section 4.3 regenerates both, and two
 knobs explain 16% and 1% of their variance. The core idea still holds: a compression of the traffic state was
 learned rather than written down.
 
@@ -179,7 +179,7 @@ That is not a training bug; it is what the loss asks for. If you must give one a
 possibilities and you are scored by squared error, the best answer is their average: the *conditional
 mean*. Wherever the knobs leave something open, such as exactly where a queue front sits, the decoder
 averages the possibilities, and an average of sharp fronts is a soft one. This is the same reason a
-regression would have predicted 45 mph for the cell in section 3.2 that was either jammed or free.
+regression would have predicted 45 mph for the cell in section 4.2 that was either jammed or free.
 
 When does it matter? An averaged forecast is often useful. It is harmful when the timing or position of
 a front is the point: queue-spillback warnings, signal plans, incident detection. The average of "the
@@ -223,7 +223,7 @@ the same number of components (9.85 and 4.91 mph). The VAE beats PCA
 with 2 knobs and loses to it with 8.
 
 **How was the data split, and why is that honest?** The same 3,200 / 400 /
-400 split of whole heatmaps as section 3.2. The VAE in the lab was trained on all
+400 split of whole heatmaps as section 4.2. The VAE in the lab was trained on all
 4,000; the one on this page was retrained on the training heatmaps only, for a fixed 300 epochs, so the knob and
 rebuild results are on heatmaps it never saw. No choice used the test heatmaps; they only report results.
 
@@ -257,7 +257,7 @@ diagram), or PCA's compression is good enough, as it is here at 8 components.
 ## Check yourself
 
 1. You need 1,000 synthetic corridor-days for a capacity study within an hour of computing. A VAE or
-   the autoregressive model of section 3.2? What would you check before using the output?
+   the autoregressive model of section 4.2? What would you check before using the output?
 2. Your VAE's samples look smooth and believable. A reviewer asks whether the queue fronts are
    realistic. What do you measure, and against what?
 3. An agency wants each knob to mean something physical. When does that matter, and what could you do

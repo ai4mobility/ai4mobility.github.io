@@ -1,79 +1,78 @@
-# Module 4 — How an Agent Works
+# Module 4 — Deep Generative Models: VAE, Diffusion, and World Models
 
-*Part II, AI Agents for Mobility · lecture 1 of 5 · Thursday, Oct 29, 2026. See the {doc}`../syllabus`.*
+*Part I, AI Foundations Through a Transportation Lens. The class schedule is on the {doc}`../syllabus` page.*
 
-## Class meetings
+## Session topics
 
-| Date | Session topic | Due before class |
-|---|---|---|
-| Oct 29 | How an agent works: a model in a loop, workflow vs. agent, the model and its harness, tool use and MCP, context engineering and RAG | **First project progress report** |
+- **Generative models, part 1:** what changes when a model produces data; autoregressive generation, latent
+  variables, VAE, GAN, and a first scorecard (4.1&ndash;4.5)
+- **VAE and diffusion:** one hidden cause, from mixture models to the VAE (4.6), then diffusion; world models
+  follow
 
 ## Overview
 
-Part II of the course is about **AI agents**: systems in which a language model does not just answer a
-question but works through a task — calling tools, reading the results, and deciding what to do next.
-This module covers how that works.
+Everything so far has been discriminative: given data, predict a label or a value. Generative
+models ask the harder question — what does the *distribution* of plausible traffic states look
+like, and can we sample new ones from it?
 
-Four ideas carry the whole of Part II.
+This matters in transportation for an unglamorous reason: the situations we most need to plan
+for are the ones we have the least data on. Crashes, evacuations, sensor failures, and unusual
+demand patterns are rare by definition. Generative models offer a way to reason about, and
+sometimes synthesize, the tail.
 
-- **An agent is a model in a loop.** The model writes a short, structured request to use a tool. A
-  program runs it, the result is pasted back into the model's input, and the loop repeats until the model
-  decides the task is done. The model never touches the simulator or the database itself; it only writes
-  text that something else executes.
-- **There is a scale from a fixed workflow to a free agent.** In a workflow, a person decides every step
-  in advance. In an agent, the model decides them while it runs. Signal control has the same scale:
-  fixed-time, actuated, adaptive. Adaptive control pays off when demand is unpredictable, and an agent
-  pays off only when the steps cannot be written down in advance. If you know the steps, write a workflow.
-- **An agent is a model plus a harness.** The harness is everything around the model: its instructions,
-  its tools, its memory, the loop, and its permissions. You will almost never change the model. You will
-  build harnesses, and {doc}`Module 8 <../module8/index>` builds them for transportation.
-- **What transportation adds is the lever.** Every technique in Part II — retrieval, tools, skills,
-  memory, planning, fine-tuning, evaluation, human review — was built to work in any field. For each one
-  we ask what transportation researchers and engineers can add to make it work better: traffic flow and
-  safety theory, an agency's decades of procedures and lessons, and its data. The harness is where that
-  knowledge goes. Each lecture ends with ten minutes on this question for your own project, and every idea
-  is tested against the general version without it.
-
-The examples in Part II come from across transportation research and agency practice, so you should
-find your own kind of work among them. Two topics get extra depth: **traffic simulation with SUMO** (this
-module's lab and a full workflow in Module 8) and **transportation safety analysis** (the Module 6 lab and
-a full workflow in Module 8). In this module the examples are an agent that runs a SUMO simulation
-through tools and reads the result, an agent that retrieves the right passage of an agency manual before
-it answers, and an agent that calls live traffic data such as Florida 511 incident reports.
-
-**This week's transportation question.** What should your agent compute itself, and what should it hand
-to a validated engineering tool such as SUMO or an HCM procedure? And how should traffic be described in
-its context: as raw detector data, or as the bottleneck and queue that traffic flow theory points to?
-
-Part II adapts the structure of CMU 11-768 *AI Agents* (Fall 2026, Daniel Fried and Graham Neubig) and
-rebuilds it around transportation research and agency work.
+The transportation on-ramp here is **macroscopic state reduction**. You already accept that a
+whole corridor's behavior can be summarized by a handful of numbers — density, flow, speed.
+A latent-variable model does the same thing, except it learns which few numbers to keep. This
+module builds from that idea through VAEs, GANs, and diffusion, and closes with world
+models — the attempt to learn a simulator rather than write one.
 
 ## The module, page by page
+
+:::{admonition} How to read this module
+:class: tip
+Sections 4.1&ndash;4.5 pair with the first session; skim before, read properly after. Section 4.6
+opens the VAE-and-diffusion session; diffusion and world models follow. Each page opens with a card naming its session.
+
+Every result on these pages comes from one dataset, the 4,000 cell-transmission-model speed heatmaps
+that the VAE lab is built on, split the same way everywhere, so the four answers to "how do you draw a
+realistic traffic state?" can be compared directly. Section 4.6 adds one real PeMS detector. If you read only one page before class, read
+{doc}`4.1 <notes1-producing>`: the joint-versus-marginals figure is the idea the rest builds on.
+:::
 
 <div class="practice-table-wrap">
 <table class="practice-table notes-map">
 <thead>
-<tr><th style="width:32%">Page</th><th style="width:50%">What it covers</th><th style="width:18%">Labs</th></tr>
+<tr><th style="width:30%">Page</th><th style="width:48%">What it covers</th><th style="width:22%">Labs</th></tr>
 </thead>
 <tbody>
 <tr>
-  <td><a href="notes1-workflow.html"><strong>4.1 The workflow is the unit of work</strong></a><br><em>Aug 27, revisited Oct 29</em></td>
-  <td>The workflow anatomy; the six leverage labels; the checkpoint rule; the Traffic Incident Management case; from a workflow to an agent.</td>
+  <td><a href="notes1-producing.html"><strong>4.1 From predicting to producing</strong></a><br><em>Generative models, part 1</em></td>
+  <td>Four requests that need new data rather than a label; p(y | x) versus p(x); why a realistic traffic state is a matter of the <em>joint</em> distribution; the four answers.</td>
   <td>&mdash;</td>
 </tr>
 <tr>
-  <td><a href="notes2-loop.html"><strong>4.2 A model in a loop</strong></a><br><em>Oct 29</em></td>
-  <td>From answering to acting; a tool call is just text; recorded runs of a small model retiming a signal in SUMO; <strong>milestone paper: ReAct</strong>; workflow or agent, and Agentless; a model plus a harness.</td>
-  <td>Agent lab <em>(in development)</em></td>
-</tr>
-<tr>
-  <td><a href="notes3-tools.html"><strong>4.3 Tools: what an agent can reach</strong></a><br><em>Oct 29</em></td>
-  <td>Tool descriptions as contracts; what a harness can check; <strong>milestone paper: Toolformer</strong>; code as the action; MCP; the published traffic agents and the gap they leave; a detector as a tool; grading tool use.</td>
+  <td><a href="notes2-autoregressive.html"><strong>4.2 One cell at a time</strong></a><br><em>Generative models, part 1</em></td>
+  <td>The chain rule; next-cell prediction over 25 speed bins; why the training loss is the likelihood; bits per cell against a CTM-shaped baseline; where the model is uncertain.</td>
   <td>&mdash;</td>
 </tr>
 <tr>
-  <td><a href="notes4-context.html"><strong>4.4 Context: what the model reads</strong></a><br><em>Oct 29</em></td>
-  <td>The context measured and its growth; lost in the middle; four ways to keep context useful; summaries that drop a rule; <strong>milestone paper: retrieval-augmented generation</strong>; RAG for a safety analyst.</td>
+  <td><a href="notes2b-latent-variables.html"><strong>4.3 Latent variables: hidden causes, not hidden layers</strong></a><br><em>Generative models, part 1</em></td>
+  <td>A latent representation (BERT, ViT) against a latent variable; the two-step story and the latent variables you already use; PCA becomes probabilistic PCA; finding hidden causes without labels, and which can be found; learning their distribution; generating and steering.</td>
+  <td><a href="../labs.html">VAE on traffic heatmaps</a></td>
+</tr>
+<tr>
+  <td><a href="notes3-vae.html"><strong>4.4 A few hidden knobs: the VAE</strong></a><br><em>Generative models, part 1</em></td>
+  <td>Macroscopic state reduction, learned; encoder, decoder and the two-term loss; the knobs it rediscovers; why it blurs, measured; VAE against PCA.</td>
+  <td><a href="../labs.html">VAE on traffic heatmaps</a></td>
+</tr>
+<tr>
+  <td><a href="notes4-gan.html"><strong>4.5 A forger, a critic, and a first scorecard</strong></a><br><em>Generative models, part 1</em></td>
+  <td>The two-player game; precision and recall for generators; how much a GAN wanders between runs; the first three answers scored on the same held-out heatmaps.</td>
+  <td><a href="../labs.html">From VAE to diffusion</a></td>
+</tr>
+<tr>
+  <td><a href="notes5-hidden-cause.html"><strong>4.6 One hidden cause: mixture models</strong></a><br><em>VAE and diffusion session</em></td>
+  <td>One detector&rsquo;s speeds as two hidden regimes; the two-step recipe; the soft guess; fitting without labels (EM); the same idea on the heatmaps and where it breaks; mixture, VAE and diffusion as three choices of hidden cause.</td>
   <td>&mdash;</td>
 </tr>
 </tbody>
@@ -84,31 +83,35 @@ rebuilds it around transportation research and agency work.
 
 By the end of this module you will be able to:
 
-- Explain an agent as a language model running in a loop, and say what happens, step by step, when it
-  calls a tool.
-- Tell a task that needs an agent from one that needs a fixed workflow, and justify the choice.
-- Name the parts of a harness — instructions, tools, memory, the loop, permissions — and say which part
-  to change for a given failure.
-- Describe a tool to a model with a schema, and say what a schema can and cannot guarantee.
-- Explain what MCP is, how it differs from calling a web API directly, and why the model should never
-  see an agency's credentials.
-- Decide what belongs in an agent's context window, build retrieval (RAG) over transportation
-  documents, and explain why an agent's cost grows with every step it takes.
+- Explain latent-variable modeling as a learned generalization of macroscopic state reduction.
+- Tell a latent representation (BERT, ViT) from a latent variable, and explain how a latent-variable model
+  finds its hidden causes, learns their distribution, and uses it to generate.
+- Describe the VAE — encoder, decoder, reconstruction loss, and the KL term — and interpret
+  the structure of a latent space fitted to real traffic states.
+- Contrast GAN and diffusion training dynamics, and explain why diffusion largely displaced
+  GANs for high-fidelity generation.
+- Explain forward and reverse diffusion, and state precisely what the denoising network is
+  trained to predict.
+- Describe what a world model is, and what "learning the simulator" would require for traffic.
+- Assess a mobility world-model application — scenario generation, driving-video prediction,
+  learned simulation — against what a calibrated conventional model already gives you.
+- Evaluate a synthetic-data claim: does the generated data improve a downstream task relative
+  to a classical generator or simple augmentation?
 
 ## Topics
 
-- What agents can do today, and which tasks an agent may do alone, must ask about first, or must never do
-- The words of Part II: what counts as an agent, the six capabilities an agent needs, training the model vs.
-  engineering the harness, and the system around the model (sandbox, inference, monitoring)
-- The agent loop: a tool call is text the model writes; ReAct
-- Workflow vs. agent: the scale from fixed steps to model-chosen steps
-- The model and its harness
-- Tool use: function calling, schemas, web APIs, one-at-a-time and parallel calls
-- MCP (Model Context Protocol), and keeping credentials away from the model
-- Context engineering: what fills the context window, and what it costs
-- Retrieval-augmented generation: chunking, embedding, retrieving, grounding — and checking the
-  retriever on its own before judging any answer
-- Summaries that drift: how an agent loses an exact constraint when its history is compressed
+- What changes when a model produces data: the joint distribution, and how to score a generator
+- Autoregressive generation: the chain rule and next-cell prediction
+- Latent variables, manifolds, and dimensionality reduction
+- Autoencoders → variational autoencoders; the ELBO (referenced, not re-derived)
+- Reading a latent space: structure, interpolation, and fragmentation
+- Generative adversarial networks; mode collapse and training instability
+- Forward and reverse diffusion; denoising diffusion probabilistic models
+- What the denoiser actually learns, and why the conditional mean explains the blur
+- Latent diffusion and conditional generation
+- World models: learned dynamics, imagination-based rollout
+- Synthetic data for rare events — and how to tell whether it helped
+- Evaluating generative models when there's no ground-truth label
 
 ## Video lectures
 
@@ -116,20 +119,24 @@ By the end of this module you will be able to:
 
 ## Recommended readings
 
-- Yao, S., et al. (2023). ReAct: Synergizing reasoning and acting in language models. *ICLR*.
-- Schick, T., et al. (2023). Toolformer: Language models can teach themselves to use tools. *NeurIPS*.
-- Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. *NeurIPS*.
-- Anthropic (2024). [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents).
-- Anthropic (2024). [Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol).
-- Liu, N. F., et al. (2024). Lost in the middle: How language models use long contexts. *Transactions of the ACL*.
-- Xia, C. S., et al. (2025). Demystifying LLM-based software engineering agents (preprint title: Agentless). *FSE*.
-- Ye, C., et al. (2025). [SUMO-MCP: Leveraging the Model Context Protocol for autonomous traffic simulation and optimization](https://arxiv.org/abs/2506.03548). *China Automation Congress*.
-- Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures 1–3.
+- Tipping, M. E., & Bishop, C. M. (1999). Probabilistic principal component analysis. *Journal of the Royal Statistical Society: Series B*, 61(3), 611–622.
+- Kingma, D. P., & Welling, M. (2014). Auto-encoding variational Bayes. *ICLR*.
+- Goodfellow, I., et al. (2014). Generative adversarial nets. *NeurIPS*.
+- Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. *NeurIPS*.
+- Rombach, R., Blattmann, A., Lorenz, D., Esser, P., & Ommer, B. (2022). High-resolution image synthesis with latent diffusion models. *CVPR*.
+- Ha, D., & Schmidhuber, J. (2018). World models. *NeurIPS*.
+- Hafner, D., Lillicrap, T., Ba, J., & Norouzi, M. (2020). Dream to control: Learning behaviors by latent imagination. *ICLR*. *(Dreamer.)*
 
 ## Labs
 
-- **An agent that tunes a signal plan** *(in development)*. Run the agent of {doc}`4.2 <notes2-loop>` on its
-  SUMO intersection with the timing limits (minimum green, pedestrian clearance) hidden, shown, and enforced by
-  the harness; read every trace; then change one tool description or error message and measure what changes:
-  tokens read per step, plans tested, plans that broke a limit, and the gap to the best valid plan of a grid
-  search.
+- **VAE on traffic state heatmaps.** Train an image VAE on speed heatmaps generated by a cell
+  transmission model, then read the latent space — what does the model choose to encode when
+  forced through a narrow bottleneck, and what does it throw away?
+
+- **From VAE to diffusion.** Rather than asserting that diffusion is better, this lab measures
+  where the VAE actually breaks on the same traffic data, then motivates the diffusion
+  formulation as a response to those specific, observed failures.
+
+- **Training the denoiser.** Build and train the denoising network in numpy, then confront the
+  payoff question: what is the network really predicting at each noise level, and why does the
+  conditional-mean answer explain everything you see in the samples?

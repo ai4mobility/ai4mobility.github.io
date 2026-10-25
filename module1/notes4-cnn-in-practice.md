@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 1 &middot; Section 1.4</span>
-    <span class="notes-card-session">Sessions: Sept 3 &amp; Sept 10</span>
+    <span class="notes-card-session">Sessions: Neural network basics; representation learning</span>
   </div>
   <p class="notes-card-lede">The engineering half of section 1.3. Which architecture fits which mobility task and what each one costs in parameters, latency and roadside power; then saliency maps &mdash; what the network is actually looking at, and the honest limits of that answer. The saliency material is Sept 10 content, kept here so the CNN thread stays in one place.</p>
   <div class="notes-card-cols">

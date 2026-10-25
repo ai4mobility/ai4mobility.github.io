@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.1</span>
-    <span class="notes-card-session">Session: Sept 17</span>
+    <span class="notes-card-session">Session: Transformers and LLMs</span>
   </div>
   <p class="notes-card-lede">Before a transformer can attend to anything, something has to decide what the pieces <em>are</em>. This section is about that decision &mdash; how text is cut into subword tokens, what happens to transportation jargon when it is, and why the answer sets the price of everything that comes after it.</p>
   <div class="notes-card-cols">

@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.13</span>
-    <span class="notes-card-session">Session: Sept 17</span>
+    <span class="notes-card-session">Session: Transformers and LLMs</span>
   </div>
   <p class="notes-card-lede">A transformer is only worth its cost if it beats the method it would replace, on data the agency actually has. This section is that test, run eight ways on 399 real Florida crash narratives &mdash; and the classical baseline wins more often than the literature would lead you to expect.</p>
   <div class="notes-card-cols">

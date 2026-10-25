@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.6</span>
-    <span class="notes-card-session">Session: Sept 17</span>
+    <span class="notes-card-session">Session: Transformers and LLMs</span>
   </div>
   <p class="notes-card-lede">The encoder stack does not know what a word is. Once you see that, the three decisions that matter become yours &mdash; what is one token, what may attend to what, and what "position" means in your problem. This section is the transformer pointed at detector series, trajectories and networks rather than at text, worked on 207 real loop detectors.</p>
   <div class="notes-card-cols">

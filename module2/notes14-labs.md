@@ -3,16 +3,15 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Practice</span>
-    <span class="notes-card-session">Sessions: Sept 17 &ndash; Oct 15, and the GNN week</span>
+    <span class="notes-card-session">Sessions: all of Module 2</span>
   </div>
-  <p class="notes-card-lede">What the labs that go with this module <em>prove</em>, the bridge lab from Module 1 you should run first, the questions this module arms you with, and where transformers go from here. Everything on this page is practice &mdash; the explanations live in sections 2.1&ndash;2.14.</p>
+  <p class="notes-card-lede">What the labs that go with this module <em>prove</em>, the bridge lab from Module 1 you should run first, the questions this module arms you with, and where transformers go from here. Everything on this page is practice &mdash; the explanations live in sections 2.1&ndash;2.13.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Notebooks that go with it</h4>
       <ul>
       <li><a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4 &mdash; CLIP versus traditional computer vision</a></li>
       <li><a href="../module6/lab6_vit_finetune.html">Lab 6 &mdash; Fine-tuning a Vision Transformer</a></li>
-      <li><a href="lab5_graph_attention.html">Lab 5 &mdash; Attention on a road network</a></li>
       <li>Cross-attention sanity check &mdash; <em>in development</em></li>
       </ul>
     </div>
@@ -38,14 +37,8 @@ that 2.7 dissects on FL511 camera frames. *Proves:* a fine-tune's accuracy split
 the pretrained features gave you for free and what you had to buy by unfreezing &mdash; and that an
 after-dark score can rise while the model gets worse, because the label source failed first.
 
-**{doc}`Lab 5 — Attention on a Road Network <lab5_graph_attention>`** reads with section 2.14. One
-message-passing layer, six ways to combine what the neighbours send: mean, sum, max, attention, and two
-that encode what you know at no cost in parameters &mdash; the worst downstream neighbour (queues back
-up) and the average upstream one (flow arrives from upstream). *Proves:* the right set of neighbours
-matters more than learning the weights. On the merge rule, reading only upstream links takes the error
-from 0.0214 to 0.0122 for free; attention gets to 0.0110 with twice the parameters. On the spillback rule,
-attention only ties the worst-downstream rule (0.0080 against 0.0081). Runs in about three minutes with
-nothing to install.
+**{doc}`Lab 5 — Attention on a Road Network <../module3/lab5_graph_attention>`** goes with
+{doc}`Module 3 <../module3/index>`, where graph neural networks are the topic.
 
 **Cross-attention sanity check** *(in development)*. Build a small cross-attention model on
 paired mobility data and ask a question you can actually answer: *does the attention pattern we
@@ -78,20 +71,20 @@ weight, and each has a section behind it:
   claim to test with a deletion or an edit, not an explanation.
 
 The workflow framing those questions sit inside &mdash; the anatomy, the six leverage labels, the
-checkpoint rule &mdash; is in {doc}`4.1 The workflow is the unit of work <../module4/notes1-workflow>`.
+checkpoint rule &mdash; is in {doc}`5.1 The workflow is the unit of work <../module5/notes1-workflow>`.
 
 ## Where this goes next
 
 Apart from the fine-tuning in section 2.5 and Lab 6, this module uses pretrained transformers as
-they come. Part II of the course is about changing that: {doc}`Module 4 <../module4/index>` puts a
+they come. Part II of the course is about changing that: {doc}`Module 5 <../module5/index>` puts a
 model in a loop with tools and retrieval, and {doc}`Module 6 <../module6/index>` fine-tunes it.
-{doc}`Module 3 <../module3/index>` takes the generative half &mdash; the decoder-only models sketched
+{doc}`Module 4 <../module4/index>` takes the generative half &mdash; the decoder-only models sketched
 in section 2.6 &mdash; into diffusion and world models. The lane-anchor hub of section 2.11 is a graph
-with attention on its edges, which is where {doc}`2.14 <notes15-gnn>` picks up: every network in this
+with attention on its edges, which is where {doc}`Module 3 <../module3/index>` picks up: every network in this
 module drawn as one update on a graph, and then the road network as that graph.
 
 The reading list for this module is on the {doc}`module page <index>`.
 
 ---
 
-Next: {doc}`Module 3 — Generative AI and World Models <../module3/index>`.
+Next: {doc}`Module 3 — A Unified View: Graph Neural Networks <../module3/index>`.

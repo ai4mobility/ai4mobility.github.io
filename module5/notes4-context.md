@@ -1,24 +1,24 @@
 (agent-context)=
-# 4.4 Context: what the model reads
+# 5.4 Context: what the model reads
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.4</span>
-    <span class="notes-card-session">Session: Oct 29</span>
+    <span class="notes-card-eyebrow">Module 5 &middot; Section 5.4</span>
+    <span class="notes-card-session">Session: How an agent works</span>
   </div>
   <p class="notes-card-lede">A language model has no memory between calls. Every time the harness asks for the next step, it sends everything again: the instructions, the tool descriptions, the whole history. That bundle is the context. This section measures the context of our recorded SUMO runs, shows why a longer context is not a better one, and teaches the milestone paper on bringing knowledge in from outside, retrieval-augmented generation (RAG), in depth.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it first</h4>
       <ul>
-      <li><a href="notes2-loop.html">4.2 A model in a loop</a></li>
+      <li><a href="notes2-loop.html">5.2 A model in a loop</a></li>
       <li><a href="../module2/notes5-bert.html">2.5 BERT</a> (the retriever's encoder)</li>
       </ul>
     </div>
     <div>
       <h4>Used again in</h4>
       <ul>
-      <li><a href="../module5/index.html">Module 5 &mdash; Skills, memory, and planning</a></li>
+      <li><a href="index.html">Module 5 &mdash; skills, memory, and planning (the second session)</a></li>
       <li><a href="../module6/index.html">Module 6 &mdash; Evaluation and fine-tuning</a></li>
       </ul>
     </div>
@@ -44,7 +44,7 @@
 The context of the longest recorded run (condition D, seed 0) at its first and last step, counted with the model's own tokenizer.
 ```
 
-The longest of our recorded runs ({doc}`4.2 <notes2-loop>`) ran out of steps after ten calls. At step 1 the model
+The longest of our recorded runs ({doc}`5.2 <notes2-loop>`) ran out of steps after ten calls. At step 1 the model
 read 510 tokens: 80 of instructions, 382 describing the three tools, and 48 for the task. At step 10 it read 2,298:
 the same 510, plus 1,788 tokens of history, every reply the model wrote and every result the harness pasted back.
 
@@ -106,7 +106,7 @@ end, and the middle is where old, unimportant steps sit, or better, where they l
 | **Split the work** | give a sub-task its own short context | one agent screens the crash records; another writes the memo from its findings |
 
 All four are harness design, and each has a cost. Leaving out can drop something you needed. Retrieval can bring
-back the wrong page. Splitting the work is {doc}`Module 5 <../module5/index>`. And summaries can drop the one rule
+back the wrong page. Splitting the work comes later in {doc}`this module <index>`. And summaries can drop the one rule
 that mattered, which we measured.
 
 ## Summaries can drop the rule
@@ -140,7 +140,7 @@ not depend on the size of the model: a summary is a new context that nobody chec
 :::
 
 The fix that always works is to keep rules out of the summary: put them in the instructions, repeat them where they
-apply, and enforce them in the harness, as condition C of {doc}`4.2 <notes2-loop>` did.
+apply, and enforce them in the harness, as condition C of {doc}`5.2 <notes2-loop>` did.
 
 ## Milestone paper: retrieval-augmented generation
 
@@ -253,7 +253,7 @@ our past studies used one?
 - **What the answer must carry.** The document, section and date of every passage it used, so the engineer can
   open the source. That turns "the model said" into "chapter 13 says".
 - **What to keep out.** Crash records that name people or give their addresses. Records are queried through a
-  tool with permissions ({doc}`4.3 <notes3-tools>`), not copied into an index that anyone with access to the
+  tool with permissions ({doc}`5.3 <notes3-tools>`), not copied into an index that anyone with access to the
   assistant can search. The index is a copy, and every copy is one more place personal data can leak from.
 
 ## Where retrieval breaks
@@ -299,4 +299,4 @@ fix it. That is evaluation, and it is {doc}`Module 6 <../module6/index>`.
 
 ---
 
-Next: {doc}`../module5/index` &mdash; skills, memory and planning: what an agent keeps between tasks.
+Next: skills, memory and planning, the second half of {doc}`this module <index>`: what an agent keeps between tasks.

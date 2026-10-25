@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 1 &middot; Section 1.3</span>
-    <span class="notes-card-session">Session: Sept 3</span>
+    <span class="notes-card-session">Session: Neural network basics</span>
   </div>
   <p class="notes-card-lede">The same neuron from sections 1.1 and 1.2, wired to reuse its weights. Convolution arrived at from a moving average you already trust; two traffic models that turn out to be convolutions already; then a worked case: a stock detector meeting a child on a scooter on a real Tampa street. This is the first page where the mechanism stops being an idea and starts being a thing that can be wrong.</p>
   <div class="notes-card-cols">
@@ -165,7 +165,7 @@ The three results worth carrying out of it:
 - **Convolution assumes the road is the same everywhere.** That holds for a shockwave and fails for a
   bottleneck at a fixed milepost, which is why geometry belongs in the input as extra channels.
 
-This is the corridor half of a question that {doc}`2.14 <../module2/notes15-gnn>` asks for a whole
+This is the corridor half of a question that {doc}`3.1 <../module3/notes1-gnn>` asks for a whole
 network: can a learned model stand in for one you would otherwise write down?
 
 (scooter-kid-case)=

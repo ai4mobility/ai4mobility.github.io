@@ -1,116 +1,75 @@
-# Module 3 — Generative AI and World Models
+# Module 3 — A Unified View: Graph Neural Networks
 
-*Generative models open on Oct 22. See the {doc}`../syllabus`. Graph neural networks, taught the week before, are now the last section of Module 2: {doc}`2.14 <../module2/notes15-gnn>`.*
+*Part I, AI Foundations Through a Transportation Lens. The class schedule is on the {doc}`../syllabus` page.*
 
-## Class meetings
+## Session topics
 
-| Date | Session topic | Due before class |
-|---|---|---|
-| Oct 22 | Generative models, part 1: what changes when a model produces data; autoregressive generation, latent variables, VAE, GAN, and a first scorecard (3.1&ndash;3.5) | **Rotating project progress report: Team 4** |
+- **Graph neural networks:** every network so far as one update on a graph; nodes and edges on a road network;
+  the cell transmission model as message passing; aggregators and depth; graph attention
 
 ## Overview
 
-Everything so far has been discriminative: given data, predict a label or a value. Generative
-models ask the harder question — what does the *distribution* of plausible traffic states look
-like, and can we sample new ones from it?
+Modules 1 and 2 introduced one architecture after another: the dense layer, the convolution, the recurrent
+network, self-attention, Swin's windows, and cross-attention. This module puts all of them in one picture.
+Each one lets a token mix in what some other tokens carry; only *who may be read* and *how much each counts*
+differ. Draw "may read" as lines, and every one of those networks is a graph. A **graph neural network** is
+the version where the graph comes from the problem itself.
 
-This matters in transportation for an unglamorous reason: the situations we most need to plan
-for are the ones we have the least data on. Crashes, evacuations, sensor failures, and unusual
-demand patterns are rare by definition. Generative models offer a way to reason about, and
-sometimes synthesize, the tail.
-
-The transportation on-ramp here is **macroscopic state reduction**. You already accept that a
-whole corridor's behavior can be summarized by a handful of numbers — density, flow, speed.
-A latent-variable model does the same thing, except it learns which few numbers to keep. This
-module builds from that idea through VAEs, GANs, and diffusion, and closes with world
-models — the attempt to learn a simulator rather than write one.
+In transportation that problem is often the road network. Detectors, road segments or intersections become
+the nodes, and the roads and turning movements that join them become the edges. The cell transmission model
+already works this way: each cell is updated from what its neighbours send, by one rule shared everywhere. A
+graph network learns that kind of rule from data. Because the rule is shared, a model whose parameter count
+does not depend on the number of nodes can be moved to another city. **Graph attention** is the attention of
+BERT and ViT, with the road network deciding who may read whom.
 
 ## The module, page by page
 
 :::{admonition} How to read this module
 :class: tip
-Sections 3.1&ndash;3.5 pair with the Oct 22 meeting; skim before, read properly after. Section 3.6
-opens the VAE-and-diffusion session; diffusion and world models follow. Each page opens with a card naming its session.
-
-Every result on these pages comes from one dataset, the 4,000 cell-transmission-model speed heatmaps
-that the VAE lab is built on, split the same way everywhere, so the four answers to "how do you draw a
-realistic traffic state?" can be compared directly. Section 3.6 adds one real PeMS detector. If you read only one page before class, read
-{doc}`3.1 <notes1-producing>`: the joint-versus-marginals figure is the idea the rest builds on.
+The module is one section page, the interactive companion embedded in it, and one lab. Skim
+{doc}`3.1 <notes1-gnn>` before class and read it properly after, then run Lab 5. The section leans on
+everything before it, so keep {doc}`1.3 <../module1/notes3-cnn>` (convolution) and the attention sections of
+{doc}`Module 2 <../module2/index>` at hand.
 :::
 
 <div class="practice-table-wrap">
 <table class="practice-table notes-map">
 <thead>
-<tr><th style="width:30%">Page</th><th style="width:48%">What it covers</th><th style="width:22%">Labs</th></tr>
+<tr><th style="width:26%">Page</th><th style="width:44%">What it covers</th><th style="width:30%">Companions &amp; notebooks</th></tr>
 </thead>
 <tbody>
 <tr>
-  <td><a href="notes1-producing.html"><strong>3.1 From predicting to producing</strong></a><br><em>Oct 22</em></td>
-  <td>Four requests that need new data rather than a label; p(y | x) versus p(x); why a realistic traffic state is a matter of the <em>joint</em> distribution; the four answers.</td>
-  <td>&mdash;</td>
-</tr>
-<tr>
-  <td><a href="notes2-autoregressive.html"><strong>3.2 One cell at a time</strong></a><br><em>Oct 22</em></td>
-  <td>The chain rule; next-cell prediction over 25 speed bins; why the training loss is the likelihood; bits per cell against a CTM-shaped baseline; where the model is uncertain.</td>
-  <td>&mdash;</td>
-</tr>
-<tr>
-  <td><a href="notes2b-latent-variables.html"><strong>3.3 Latent variables: hidden causes, not hidden layers</strong></a><br><em>Oct 22</em></td>
-  <td>A latent representation (BERT, ViT) against a latent variable; the two-step story and the latent variables you already use; PCA becomes probabilistic PCA; finding hidden causes without labels, and which can be found; learning their distribution; generating and steering.</td>
-  <td><a href="../labs.html">VAE on traffic heatmaps</a></td>
-</tr>
-<tr>
-  <td><a href="notes3-vae.html"><strong>3.4 A few hidden knobs: the VAE</strong></a><br><em>Oct 22</em></td>
-  <td>Macroscopic state reduction, learned; encoder, decoder and the two-term loss; the knobs it rediscovers; why it blurs, measured; VAE against PCA.</td>
-  <td><a href="../labs.html">VAE on traffic heatmaps</a></td>
-</tr>
-<tr>
-  <td><a href="notes4-gan.html"><strong>3.5 A forger, a critic, and a first scorecard</strong></a><br><em>Oct 22</em></td>
-  <td>The two-player game; precision and recall for generators; how much a GAN wanders between runs; the first three answers scored on the same held-out heatmaps.</td>
-  <td><a href="../labs.html">From VAE to diffusion</a></td>
-</tr>
-<tr>
-  <td><a href="notes5-hidden-cause.html"><strong>3.6 One hidden cause: mixture models</strong></a><br><em>VAE and diffusion session</em></td>
-  <td>One detector&rsquo;s speeds as two hidden regimes; the two-step recipe; the soft guess; fitting without labels (EM); the same idea on the heatmaps and where it breaks; mixture, VAE and diffusion as three choices of hidden cause.</td>
-  <td>&mdash;</td>
+  <td><a href="notes1-gnn.html"><strong>3.1 One view of every network: graph neural networks</strong></a><br><em>Graph neural networks</em></td>
+  <td>Every network so far as one update with two choices: who may be read, and how much each counts. Who-reads-whom as a graph; what a node is on a road network; the cell transmission model as message passing; depth and aggregators; graph attention; the parameter-count test for moving a model to another city.</td>
+  <td><a href="../_static/companions/GNN_On_A_Road_Network_Companion.html" target="_blank" rel="noopener">A GNN on a road network &#8599;</a><br><a href="lab5_graph_attention.html">Lab 5</a></td>
 </tr>
 </tbody>
 </table>
 </div>
 
+Start with {doc}`3.1 One view of every network <notes1-gnn>`.
+
 ## Learning objectives
 
 By the end of this module you will be able to:
 
-- Explain latent-variable modeling as a learned generalization of macroscopic state reduction.
-- Tell a latent representation (BERT, ViT) from a latent variable, and explain how a latent-variable model
-  finds its hidden causes, learns their distribution, and uses it to generate.
-- Describe the VAE — encoder, decoder, reconstruction loss, and the KL term — and interpret
-  the structure of a latent space fitted to real traffic states.
-- Contrast GAN and diffusion training dynamics, and explain why diffusion largely displaced
-  GANs for high-fidelity generation.
-- Explain forward and reverse diffusion, and state precisely what the denoising network is
-  trained to predict.
-- Describe what a world model is, and what "learning the simulator" would require for traffic.
-- Assess a mobility world-model application — scenario generation, driving-video prediction,
-  learned simulation — against what a calibrated conventional model already gives you.
-- Evaluate a synthetic-data claim: does the generated data improve a downstream task relative
-  to a classical generator or simple augmentation?
+- Describe every architecture in Modules 1 and 2 as one update with two choices &mdash; who may be
+  read, and how the weights are set &mdash; and say what a node and an edge should be when the system
+  is a road network.
+- Explain message passing as one shared rule applied per connection, choose a graph network's
+  depth and aggregator from the traffic problem, and tell whether a network model can move to
+  another city from its parameter count.
+- Explain graph attention as transformer attention restricted to the road's connections, and say when it
+  earns its extra parameters over a fixed aggregator that carries what you already know about traffic.
 
 ## Topics
 
-- What changes when a model produces data: the joint distribution, and how to score a generator
-- Autoregressive generation: the chain rule and next-cell prediction
-- Latent variables, manifolds, and dimensionality reduction
-- Autoencoders → variational autoencoders; the ELBO (referenced, not re-derived)
-- Reading a latent space: structure, interpolation, and fragmentation
-- Generative adversarial networks; mode collapse and training instability
-- Forward and reverse diffusion; denoising diffusion probabilistic models
-- What the denoiser actually learns, and why the conditional mean explains the blur
-- Latent diffusion and conditional generation
-- World models: learned dynamics, imagination-based rollout
-- Synthetic data for rare events — and how to tell whether it helped
-- Evaluating generative models when there's no ground-truth label
+- One view of every network: who may be read, and how much each counts; graph convolution and graph attention on that map
+- Nodes as tokens on a road network: detectors, directed road segments, intersections; the line graph
+- The cell transmission model as message passing; aggregators (sum, mean, max, attention) as modelling choices, and depth as reach
+- Transferability: does the number of nodes appear in the parameter count?
+- Graph attention: BERT's attention with the road network as the mask; static (GAT) versus dynamic (GATv2)
+  attention
 
 ## Video lectures
 
@@ -118,24 +77,28 @@ By the end of this module you will be able to:
 
 ## Recommended readings
 
-- Tipping, M. E., & Bishop, C. M. (1999). Probabilistic principal component analysis. *Journal of the Royal Statistical Society: Series B*, 61(3), 611–622.
-- Kingma, D. P., & Welling, M. (2014). Auto-encoding variational Bayes. *ICLR*.
-- Goodfellow, I., et al. (2014). Generative adversarial nets. *NeurIPS*.
-- Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. *NeurIPS*.
-- Rombach, R., Blattmann, A., Lorenz, D., Esser, P., & Ommer, B. (2022). High-resolution image synthesis with latent diffusion models. *CVPR*.
-- Ha, D., & Schmidhuber, J. (2018). World models. *NeurIPS*.
-- Hafner, D., Lillicrap, T., Ba, J., & Norouzi, M. (2020). Dream to control: Learning behaviors by latent imagination. *ICLR*. *(Dreamer.)*
+- Bishop, C. M., & Bishop, H. (2024). *Deep Learning: Foundations and Concepts*. Springer. Chapter 13 (graph neural networks).
+- Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2018). Graph attention networks. *ICLR*.
+- Xu, K., Hu, W., Leskovec, J., & Jegelka, S. (2019). How powerful are graph neural networks? *ICLR*.
+- Brody, S., Alon, U., & Yahav, E. (2022). How attentive are graph attention networks? *ICLR*. *(GATv2.)*
 
 ## Labs
 
-- **VAE on traffic state heatmaps.** Train an image VAE on speed heatmaps generated by a cell
-  transmission model, then read the latent space — what does the model choose to encode when
-  forced through a narrow bottleneck, and what does it throw away?
+Full descriptions, setup notes, and every lab in the course are on the {doc}`All Labs <../labs>` page.
 
-- **From VAE to diffusion.** Rather than asserting that diffusion is better, this lab measures
-  where the VAE actually breaks on the same traffic data, then motivates the diffusion
-  formulation as a response to those specific, observed failures.
+| Notebook | What you build | Read alongside |
+| --- | --- | --- |
+| {doc}`Lab 5 — Attention on a Road Network <lab5_graph_attention>` | One message-passing layer with six aggregators on two traffic rules: where a learned weighting beats a fixed one, and where the right set of neighbours beats both | 3.1 |
 
-- **Training the denoiser.** Build and train the denoising network in numpy, then confront the
-  payoff question: what is the network really predicting at each noise level, and why does the
-  conditional-mean answer explain everything you see in the samples?
+**Inside Lab 5:** one
+message-passing layer, six ways to combine what the neighbours send: mean, sum, max, attention, and two
+that encode what you know at no cost in parameters &mdash; the worst downstream neighbour (queues back
+up) and the average upstream one (flow arrives from upstream). *Proves:* the right set of neighbours
+matters more than learning the weights. On the merge rule, reading only upstream links takes the error
+from 0.0214 to 0.0122 for free; attention gets to 0.0110 with twice the parameters. On the spillback rule,
+attention only ties the worst-downstream rule (0.0080 against 0.0081). Runs in about three minutes with
+nothing to install.
+
+## Interactive companion
+
+- <a href="../_static/companions/GNN_On_A_Road_Network_Companion.html" target="_blank" rel="noopener">A GNN on a road network: one shared rule, any number of intersections</a> &mdash; embedded in <a href="notes1-gnn.html">3.1 One view of every network</a>

@@ -1,12 +1,11 @@
 # Module 7 — Agents and People in an Agency
 
-*Part II, AI Agents for Mobility · lecture 4 of 5 · Thursday, Nov 19, 2026. See the {doc}`../syllabus`.*
+*Part II, AI Agents for Mobility · lecture 4 of 5. The class schedule is on the {doc}`../syllabus` page.*
 
-## Class meetings
+## Session topics
 
-| Date | Session topic | Due before class |
-|---|---|---|
-| Nov 19 | Agents and people in an agency: orchestration and monitoring, safety and permissions, human-in-the-loop design under agency AI policy, and agents that interact | **Draft final project materials** · *final project preparation and short team updates* |
+- **Agents and people in an agency:** orchestration and monitoring, safety and permissions,
+  human-in-the-loop design under agency AI policy, and agents that interact
 
 ## Overview
 

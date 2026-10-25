@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 1 &middot; Practice</span>
-    <span class="notes-card-session">Sessions: Sept 3 &amp; Sept 10</span>
+    <span class="notes-card-session">Sessions: Neural network basics; representation learning</span>
   </div>
   <p class="notes-card-lede">What each of the four notebooks <em>proves</em>; how to use this module in front of a vendor or a review board; the reading list; and four exercises. Everything here is practice &mdash; the explanations live in sections 1.1&ndash;1.5.</p>
   <div class="notes-card-cols">
@@ -67,7 +67,7 @@ bridge into multimodal models.
 
 The workflow-level questions — which step is being automated, where the
 checkpoint goes, what the current process costs today — are in
-{doc}`4.1 The workflow is the unit of work <../module4/notes1-workflow>`, together with the workflow audit
+{doc}`5.1 The workflow is the unit of work <../module5/notes1-workflow>`, together with the workflow audit
 exercise. What follows is the foundations half.
 
 **When you have low-dimensional tabular data,** the answer is often not a

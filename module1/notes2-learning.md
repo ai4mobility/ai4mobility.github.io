@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 1 &middot; Section 1.2</span>
-    <span class="notes-card-session">Session: Sept 3</span>
+    <span class="notes-card-session">Session: Neural network basics</span>
   </div>
   <p class="notes-card-lede">Inside the box, continuing section 1.1. What a weight, a bias and an activation each do, one at a time; why one boundary is not enough; backpropagation traced number by number on a congestion classifier; where training goes wrong, measured; and the same machinery pointed at a regression question.</p>
   <div class="notes-card-cols">

@@ -1,13 +1,12 @@
 # Module 8 — Building Transportation Harnesses
 
-*Part II, AI Agents for Mobility · lecture 5 of 5 · Tuesday, Nov 24, 2026 (an added session). Final
-presentations follow on Dec 3. See the {doc}`../syllabus`.*
+*Part II, AI Agents for Mobility · lecture 5 of 5, followed by the final presentations. The class schedule is on
+the {doc}`../syllabus` page.*
 
-## Class meetings
+## Session topics
 
-| Date | Session topic | Due before class |
-|---|---|---|
-| Tue, Nov 24 | Building transportation harnesses: a harness template, the SUMO simulation workflow, the safety analysis workflow, and data engineering for AI agents | &mdash; |
+- **Building transportation harnesses:** a harness template, the SUMO simulation workflow, the safety
+  analysis workflow, and data engineering for AI agents
 
 ## Overview
 

@@ -1,9 +1,9 @@
-# 4.1 The workflow is the unit of work
+# 5.1 The workflow is the unit of work
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.1</span>
-    <span class="notes-card-session">Session: Aug 27, revisited Oct 29</span>
+    <span class="notes-card-eyebrow">Module 5 &middot; Section 5.1</span>
+    <span class="notes-card-session">Session: Course introduction, revisited in How an agent works</span>
   </div>
   <p class="notes-card-lede">Where AI actually enters a transportation task. The workflow anatomy <strong>trigger &rarr; ingest &rarr; transform &rarr; act &rarr; checkpoint &rarr; record</strong>; the six leverage labels used across the course; the checkpoint rule; and a Florida-anchored Traffic Incident Management case worked all the way through. An AI agent is software that runs this loop by itself, which is why the agents part of the course starts here.</p>
   <div class="notes-card-cols">
@@ -17,7 +17,7 @@
     <div>
       <h4>Where it leads</h4>
       <ul>
-      <li><a href="index.html">Module 4 &mdash; How an agent works</a></li>
+      <li><a href="index.html">Module 5 &mdash; Understanding AI agents</a></li>
       <li><a href="../module7/index.html">Module 7 &mdash; Agents and people in an agency</a></li>
       </ul>
     </div>
@@ -164,5 +164,5 @@ reads the result, and repeats until it decides the task is done.
 Nothing in this section stops applying when that happens. The six labels still describe what each step
 contributes. Judgment is still not a step you can hand over. The checkpoint still sits immediately before
 the first irreversible action. What changes is that the model, not the engineer, now chooses the path.
-The rest of {doc}`Module 4 <index>` is about how it does that, and Modules 5&ndash;8 are about making it
+The rest of {doc}`Module 5 <index>` is about how it does that, and Modules 6&ndash;8 are about making it
 reliable enough that an agency would let it.

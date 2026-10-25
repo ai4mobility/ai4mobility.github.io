@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-10-24
+  updated: 2026-10-25
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -1524,10 +1524,10 @@ items:
   - id: m2-gnn-intro-slides
     file: GNN_Intro_Slides.pptx + .md
     kind: deck
-    module: 2
+    module: 3
     session: gnn-week
     status: integrated
-    dest: site/module2/notes15-gnn.md
+    dest: site/module3/notes1-gnn.md
     notes: 'GNN part 1, "what is a node?": 10 slides (tokens you already chose, who reads whom, a graph
       is two tables, put the node where the state lives, one intersection two tokenizations, edges are a
       claim, infrastructure as a heterogeneous graph, fit card, check yourself). Reproducer gnn_intro/ (20/20
@@ -1536,10 +1536,10 @@ items:
   - id: m2-gnn-message-passing-slides
     file: GNN_Message_Passing_Slides.pptx + .md
     kind: deck
-    module: 2
+    module: 3
     session: gnn-week
     status: raw
-    dest: site/module2/notes15-gnn.md
+    dest: site/module3/notes1-gnn.md
     notes: 'GNN part 2: 19 slides from the kernel breaking at a junction through the CTM, GCN, aggregators,
       depth, oversmoothing and node/edge/graph tasks. Reproducer gnn_mp/. Not yet folded into 2.14 beyond
       what the section already said; its node/edge/graph-task half is the obvious next addition.'
@@ -1547,22 +1547,22 @@ items:
   - id: m2-encode-mix-compress-slides
     file: Encode_Mix_Compress_Slides.pptx + .md
     kind: deck
-    module: 2
+    module: 3
     session: unscheduled
     status: integrated
-    dest: site/module2/notes15-gnn.md
+    dest: site/module3/notes1-gnn.md
     notes: 'The summary session after cross-attention: every model as encode, mix, compress, then five design
       tips. Reproducer mixing_recap/. Its "one update" and "two dials" figures open 2.14 as EMC_One_Update
       and EMC_Two_Dials; the design-tips half is not on the site.'
 
 # -----------------------------------------------------------------------------
-# MODULE 3 — Generative AI and World Models (Oct 22; the GNN week moved to Module 2 as 2.14 on 2026-10-25)
+# MODULE 4 — Deep Generative Models (was Module 3 until 2026-10-25; the Module 3 GNN rows, ex-2.14, sit just above)
 # -----------------------------------------------------------------------------
 
   - id: m3-notes
-    file: site/module3/notes.md
+    file: site/module4/notes.md
     kind: notes
-    module: 3
+    module: 4
     session: [2026-09-24, 2026-11-19]
     status: debt
     notes: >-
@@ -1572,14 +1572,14 @@ items:
   - id: m3-vae-traffic-lab-companion
     file: VAE_Traffic_Lab.html
     kind: companion
-    module: 3
+    module: 4
     session: 2026-09-24
     status: raw
 
   - id: m3-vae-to-diffusion
     file: VAE_to_Diffusion_Lab.html
     kind: companion
-    module: 3
+    module: 4
     session: 2026-09-24
     status: raw
     notes: ~2 MB. Check repo weight before mounting into _static/companions/.
@@ -1587,21 +1587,21 @@ items:
   - id: m3-forward-diffusion
     file: Forward_Diffusion_Lab.html
     kind: companion
-    module: 3
+    module: 4
     session: 2026-09-24
     status: raw
 
   - id: m3-reverse-diffusion
     file: Reverse_Diffusion_Intuition.html
     kind: companion
-    module: 3
+    module: 4
     session: 2026-09-24
     status: raw
 
   - id: m3-decoder-training
     file: Decoder_Training_Companion.html
     kind: companion
-    module: 3
+    module: 4
     session: 2026-09-24
     status: raw
     notes: Siblings Decoder_Crafts_Detail.html and Decoder_Patch_Dictionary.html.
@@ -1609,7 +1609,7 @@ items:
   - id: m3-image-vae-lab
     file: Labs/image_vae_lab_notebook.ipynb
     kind: lab
-    module: 3
+    module: 4
     session: 2026-09-24
     status: raw
     notes: Depends on ctm_simulation.py, ctm_vae.py, data.npz, vae.npz.
@@ -1617,15 +1617,15 @@ items:
   - id: m3-dashcam-vae-lab
     file: Labs/dashcam_vae_lab_notebook.ipynb
     kind: lab
-    module: 3
+    module: 4
     session: 2026-09-24
     status: raw
     notes: Solution notebook exists (dashcam_vae_lab_SOLUTION.ipynb) — keep off the site.
 
   - id: m3-notes1-producing
-    file: site/module3/notes1-producing.md
+    file: site/module4/notes1-producing.md
     kind: notes
-    module: 3
+    module: 4
     session: 2026-10-22
     status: drafted
     notes: >-
@@ -1634,9 +1634,9 @@ items:
       Figures copied to _static/figures/ from genmodels/fig/.
 
   - id: m3-notes2-autoregressive
-    file: site/module3/notes2-autoregressive.md
+    file: site/module4/notes2-autoregressive.md
     kind: notes
-    module: 3
+    module: 4
     session: 2026-10-22
     status: drafted
     notes: >-
@@ -1645,9 +1645,9 @@ items:
       Figures copied to _static/figures/ from genmodels/fig/.
 
   - id: m3-notes2b-latent-variables
-    file: site/module3/notes2b-latent-variables.md
+    file: site/module4/notes2b-latent-variables.md
     kind: notes
-    module: 3
+    module: 4
     session: 2026-10-22
     status: drafted
     notes: >-
@@ -1660,9 +1660,9 @@ items:
       GenLV_* from lv_figures.py, copied to _static/figures/ from genmodels/book/. No deck yet.
 
   - id: m3-notes3-vae
-    file: site/module3/notes3-vae.md
+    file: site/module4/notes3-vae.md
     kind: notes
-    module: 3
+    module: 4
     session: 2026-10-22
     status: drafted
     notes: >-
@@ -1671,9 +1671,9 @@ items:
       Figures copied to _static/figures/ from genmodels/fig/.
 
   - id: m3-notes4-gan
-    file: site/module3/notes4-gan.md
+    file: site/module4/notes4-gan.md
     kind: notes
-    module: 3
+    module: 4
     session: 2026-10-22
     status: drafted
     notes: >-
@@ -1684,7 +1684,7 @@ items:
   - id: m3-deck-generative-models-intro
     file: Generative_Models_Intro_Slides.pptx
     kind: deck
-    module: 3
+    module: 4
     session: 2026-10-22
     status: drafted
     notes: >-
@@ -1693,7 +1693,7 @@ items:
   - id: m3-deck-generative-image-transformers
     file: Generative_Image_Transformers_Slides.pptx
     kind: deck
-    module: 3
+    module: 4
     session: 2026-10-22
     status: drafted
     notes: >-
@@ -1702,7 +1702,7 @@ items:
   - id: m3-deck-vae-hidden-knobs
     file: VAE_Hidden_Knobs_Slides.pptx
     kind: deck
-    module: 3
+    module: 4
     session: 2026-10-22
     status: drafted
     notes: >-
@@ -1711,7 +1711,7 @@ items:
   - id: m3-deck-gan-forger-critic
     file: GAN_Forger_Critic_Slides.pptx
     kind: deck
-    module: 3
+    module: 4
     session: 2026-10-22
     status: drafted
     notes: >-
@@ -1720,7 +1720,7 @@ items:
   - id: m3-genmodels
     file: genmodels/
     kind: internal
-    module: 3
+    module: 4
     session: 2026-10-22
     status: integrated
     notes: >-
@@ -1733,21 +1733,21 @@ items:
   - id: m3-decoder-training-lab
     file: Labs/decoder_training_lab.ipynb
     kind: lab
-    module: 3
+    module: 4
     session: 2026-09-24
     status: raw
 
   - id: m3-vae-motivation
     file: VAE_motivation_fragmented_latent_space.ipynb
     kind: lab
-    module: 3
+    module: 4
     session: 2026-09-24
     status: raw
 
   - id: m3-representation-quality
     file: Representation_Quality_Companion.html
     kind: companion
-    module: 3
+    module: 4
     session: 2026-09-24
     status: raw
     notes: >
@@ -1758,9 +1758,9 @@ items:
 
 # -----------------------------------------------------------------------------
   - id: m3-notes5-hidden-cause
-    file: site/module3/notes5-hidden-cause.md
+    file: site/module4/notes5-hidden-cause.md
     kind: notes
-    module: 3
+    module: 4
     session: unscheduled (VAE-and-diffusion lecture, after Oct 22)
     status: drafted
     notes: '3.6 (was 3.5 until Oct 18) One hidden cause: mixture models. Expanded from Hidden_Cause_Mixture_Slides. Rendered by
@@ -1772,7 +1772,7 @@ items:
   - id: m3-deck-hidden-cause-mixture
     file: Hidden_Cause_Mixture_Slides.pptx
     kind: deck
-    module: 3
+    module: 4
     session: unscheduled (VAE-and-diffusion lecture, after Oct 22)
     status: drafted
     notes: 'Opener of the VAE-and-diffusion lecture: a real PeMS detector (I-405 N, station 772455, May
@@ -1784,7 +1784,7 @@ items:
   - id: m3-deck-vae-label-to-knobs
     file: VAE_Label_To_Knobs_Slides.pptx
     kind: deck
-    module: 3
+    module: 4
     session: unscheduled (VAE-and-diffusion lecture, after Oct 22)
     status: drafted
     notes: 'VAE-and-diffusion lecture: the VAE through the hidden-cause lens, on the Evening A model (not
@@ -1797,7 +1797,7 @@ items:
   - id: m3-deck-diffusion-denoise
     file: Diffusion_Denoise_Slides.pptx
     kind: deck
-    module: 3
+    module: 4
     session: unscheduled (VAE-and-diffusion lecture, after Oct 22)
     status: drafted
     notes: 'VAE-and-diffusion lecture: Answer 4. A small conv U-Net (609,665 weights) trained on the CTM
@@ -1806,7 +1806,7 @@ items:
       table. 13 slides + header + 1 backup. Outline Diffusion_Denoise_Slides.md; built from genmodels/slides_content.py
       (part_dm); numbers dm_results.json.'
 
-# MODULES 4-8 — PART II, AI AGENTS (since 2026-10-24): one module per lecture, Oct 29 to Tue Nov 24
+# MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------
 
   - id: m4-notes-1-adaptation
@@ -1841,9 +1841,9 @@ items:
     notes: Module 4 = How an Agent Works (Oct 29). Section pages, not one notes.md - 4.1 (m4-notes-1-workflow), 4.2 loop, 4.3 tools, 4.4 context, drafted 2026-10-24 (m4-notes-2-loop, m4-notes-3-tools, m4-notes-4-context).
 
   - id: m4-notes-2-loop
-    file: site/module4/notes2-loop.md
+    file: site/module5/notes2-loop.md
     kind: notes
-    module: 4
+    module: 5
     session: '2026-10-29'
     status: drafted
     notes: >-
@@ -1855,9 +1855,9 @@ items:
       fit card. Every number traced by agents_m4/audit.py; paper claims checked against the PDFs by an independent pass.
 
   - id: m4-notes-3-tools
-    file: site/module4/notes3-tools.md
+    file: site/module5/notes3-tools.md
     kind: notes
-    module: 4
+    module: 5
     session: '2026-10-29'
     status: drafted
     notes: >-
@@ -1868,9 +1868,9 @@ items:
       runs with the grid search as the no-model baseline.
 
   - id: m4-notes-4-context
-    file: site/module4/notes4-context.md
+    file: site/module5/notes4-context.md
     kind: notes
-    module: 4
+    module: 5
     session: '2026-10-29'
     status: drafted
     notes: >-
@@ -1883,10 +1883,10 @@ items:
   - id: m4-deck-agents-intro
     file: Agents_Intro_Slides.md
     kind: deck
-    module: 4
+    module: 5
     session: '2026-10-29'
     status: drafted
-    dest: site/module4/index.md
+    dest: site/module5/index.md
     notes: >-
       AI agents 0: an introduction. Section header and 16 slides, about 30 min: what agents can do today (the C
       compiler, SUMO-MCP, the inbox incident), alone / ask first / never, what counts as an agent, LM recap, actions
@@ -1898,10 +1898,10 @@ items:
   - id: m4-deck-agents-loop
     file: Agents_Loop_Slides.md
     kind: deck
-    module: 4
+    module: 5
     session: '2026-10-29'
     status: drafted
-    dest: site/module4/notes2-loop.md
+    dest: site/module5/notes2-loop.md
     notes: >-
       AI agents 1: a model in a loop. Section header, 18 slides, 1 backup, about 48 min (figure-only slides for the
       ReAct figure and the B/C pair); the sorting exercise and the agent definition moved to the introduction deck
@@ -1911,20 +1911,20 @@ items:
   - id: m4-deck-agents-tools
     file: Agents_Tools_Slides.md
     kind: deck
-    module: 4
+    module: 5
     session: '2026-10-29'
     status: drafted
-    dest: site/module4/notes3-tools.md
+    dest: site/module5/notes3-tools.md
     notes: >-
       AI agents 2: tools. Section header, 17 slides, 1 backup, about 50 min. Figures AGT_*.
 
   - id: m4-deck-agents-context
     file: Agents_Context_Slides.md
     kind: deck
-    module: 4
+    module: 5
     session: '2026-10-29'
     status: drafted
-    dest: site/module4/notes4-context.md
+    dest: site/module5/notes4-context.md
     notes: >-
       AI agents 3: context. Section header, 15 slides, 1 backup, about 50 min with the lab launch. Figures AGC_*.
       The summary test (slide 5) is measured: 12 summaries of run D/0; the 21 s pedestrian minimum kept 1/6 and 1/6.
@@ -1932,7 +1932,7 @@ items:
   - id: m4-agents-repro
     file: agents_m4/
     kind: internal
-    module: 4
+    module: 5
     session: '2026-10-29'
     status: integrated
     notes: >-
@@ -2021,10 +2021,10 @@ items:
   - id: m7-gnn-road-network
     file: GNN_On_A_Road_Network_Companion.html
     kind: companion
-    module: 2
+    module: 3
     session: gnn-week
     status: published
-    dest: site/module2/notes15-gnn.md#graph-neural-networks
+    dest: site/module3/notes1-gnn.md#graph-neural-networks
     mounted: site/_static/companions/GNN_On_A_Road_Network_Companion.html
     notes: 'SIX tabs since 2026-09-21 (tab 5 "Attention: a learned aggregator" inserted before the fit
       card; see the tail of this note). A random irregular street network is generated in the browser (perturbed lattice,
@@ -2079,9 +2079,9 @@ items:
       in 10 minutes, batched it is ~25.
 
   - id: m7-lab5-graph-attention
-    file: site/module2/lab5_graph_attention.ipynb
+    file: site/module3/lab5_graph_attention.ipynb
     kind: lab
-    module: 2
+    module: 3
     session: gnn-week
     status: published
     dest: site/labs.md + _toc.yml Labs part
@@ -2149,9 +2149,9 @@ items:
       numbers that do not match.'
 
   - id: m3-notes-7-gnn
-    file: site/module2/notes15-gnn.md
+    file: site/module3/notes1-gnn.md
     kind: notes
-    module: 2
+    module: 3
     session: gnn-week
     status: integrated
     notes: '3.7 When the thing you model is a network: graph neural networks. Moved 2026-10-24 from module7/notes.md
@@ -2170,9 +2170,9 @@ items:
       GNN_Two_Tokenizations (re-rendered from gnn_intro/fig/ without title or caption). Id kept for history.'
 
   - id: m4-notes-1-workflow
-    file: site/module4/notes1-workflow.md
+    file: site/module5/notes1-workflow.md
     kind: notes
-    module: 4
+    module: 5
     session:
     - '2026-08-27'
     - '2026-10-29'

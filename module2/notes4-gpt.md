@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.4</span>
-    <span class="notes-card-session">Session: Sept 17</span>
+    <span class="notes-card-session">Session: Transformers and LLMs</span>
   </div>
   <p class="notes-card-lede">Section 2.3 showed the mechanism on a trained model's weights. This one writes it out. A complete decoder-only transformer in a single readable file &mdash; Q, K and V as three matrices, the scaled dot product, the causal mask, softmax implemented rather than imported &mdash; trained here on 42,650 vehicle-owner complaint narratives, and checked twice: against counting baselines, and against the same attention head re-derived in plain NumPy.</p>
   <div class="notes-card-cols">

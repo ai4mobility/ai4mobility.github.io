@@ -1,15 +1,13 @@
 # Module 1 — Foundations and Representation Learning
 
-*Weeks 2–3 of the {doc}`../syllabus` — Sept 3 and Sept 10, 2026.*
+*Part I, AI Foundations Through a Transportation Lens. The class schedule is on the {doc}`../syllabus` page.*
 
-The Aug 27 opening session has its own page: {doc}`../course-intro`.
+The opening session has its own page: {doc}`../course-intro`.
 
-## Class meetings
+## Session topics
 
-| Date | Session topic | Due before class |
-|---|---|---|
-| Sept 3 | Neural network basics and deep learning foundations | **Project interest survey** |
-| Sept 10 | Representation learning, embeddings, transfer learning, contrastive learning, and mobility representations | Preliminary project idea memo; lab preparation as assigned |
+- **Neural network basics** and deep learning foundations
+- **Representation learning**, embeddings, transfer learning, contrastive learning, and mobility representations
 
 ## Why the foundations come first
 
@@ -37,7 +35,7 @@ breaks without it.
 
 :::{admonition} How to read this module
 :class: tip
-Sections 1.1&ndash;1.4 pair with the Sept 3 meeting and section 1.5 with Sept 10;
+Sections 1.1&ndash;1.4 pair with the neural-network session and section 1.5 with the representation-learning session;
 skim before, read properly after, run the labs in between. Each page opens with
 a card naming its session, the interactive companions embedded in it, and the
 notebooks that go with it.
@@ -48,8 +46,8 @@ the sliders yourself.
 
 Looking for the workflow framing from the first class &mdash; the anatomy, the six
 leverage labels, the checkpoint rule, the Traffic Incident Management case? It
-opens the AI agents part of the course, in {doc}`4.1 The workflow is the unit of work <../module4/notes1-workflow>`. The
-{doc}`Week 1 course introduction <../course-intro>` carries the rest of Aug 27.
+opens the AI agents part of the course, in {doc}`5.1 The workflow is the unit of work <../module5/notes1-workflow>`. The
+{doc}`Week 1 course introduction <../course-intro>` carries the rest of the opening session.
 :::
 
 <div class="practice-table-wrap">
@@ -59,27 +57,27 @@ opens the AI agents part of the course, in {doc}`4.1 The workflow is the unit of
 </thead>
 <tbody>
 <tr>
-  <td><a href="notes1-networks.html"><strong>1.1 From the logit to the network</strong></a><br><em>Sept 3</em></td>
+  <td><a href="notes1-networks.html"><strong>1.1 From the logit to the network</strong></a><br><em>Neural network basics</em></td>
   <td>The binary logit <em>is</em> a sigmoid; tanh; softmax <em>is</em> the MNL; IIA; saturation; the loss function; stacking layers; two results that argue against a network; what one costs.</td>
   <td><a href="../_static/companions/Sigmoid_Tanh_Companion.html" target="_blank" rel="noopener">Sigmoid, tanh, softmax &#8599;</a><br><a href="../_static/companions/Multilayer_Networks_Companion.html" target="_blank" rel="noopener">Multilayer networks &#8599;</a><br><a href="lab1.html">Lab 1</a></td>
 </tr>
 <tr>
-  <td><a href="notes2-learning.html"><strong>1.2 How a network learns</strong></a><br><em>Sept 3</em></td>
+  <td><a href="notes2-learning.html"><strong>1.2 How a network learns</strong></a><br><em>Neural network basics</em></td>
   <td>Weights, biases and activations one at a time; when one boundary is not enough; backpropagation traced number by number; where training goes wrong, measured.</td>
   <td><a href="../_static/companions/Neural_Networks_and_Backprop_Companion.html" target="_blank" rel="noopener">Network basics and backprop &#8599;</a><br><a href="../_static/companions/Loss_Reward_Design_Companion.html" target="_blank" rel="noopener">Loss and reward design &#8599;</a><br><a href="lab1.html">Lab 1</a></td>
 </tr>
 <tr>
-  <td><a href="notes3-cnn.html"><strong>1.3 Convolution, and a network that sees</strong></a><br><em>Sept 3</em></td>
+  <td><a href="notes3-cnn.html"><strong>1.3 Convolution, and a network that sees</strong></a><br><em>Neural network basics</em></td>
   <td>Convolution from a moving average; weight sharing; Newell's model and the cell transmission model as convolutions; a worked case &mdash; a child on a scooter, seen by a stock detector.</td>
   <td><a href="../_static/companions/Convolution_Kernels_Companion.html" target="_blank" rel="noopener">Convolution kernels &#8599;</a><br><a href="../_static/companions/Newell_LWR_CNN_Companion.html" target="_blank" rel="noopener">Newell and LWR as convolutions &#8599;</a><br><a href="../_static/companions/Scooter_Kid_CNN_Case.html" target="_blank" rel="noopener">The scooter-kid case &#8599;</a><br><a href="lab3_image_embeddings.html">Lab 3</a></td>
 </tr>
 <tr>
-  <td><a href="notes4-cnn-in-practice.html"><strong>1.4 Choosing a network, and interrogating it</strong></a><br><em>Sept 3 &amp; 10</em></td>
+  <td><a href="notes4-cnn-in-practice.html"><strong>1.4 Choosing a network, and interrogating it</strong></a><br><em>Both sessions</em></td>
   <td>Which architecture, and what it costs in parameters, latency and roadside power; saliency maps and the honest limits of what they prove.</td>
   <td><a href="../_static/companions/CNN_Architectures_Companion.html" target="_blank" rel="noopener">CNN architectures &#8599;</a><br><a href="../_static/companions/Saliency_Maps_Companion.html" target="_blank" rel="noopener">Saliency maps &#8599;</a><br><a href="lab3_image_embeddings.html">Lab 3</a></td>
 </tr>
 <tr>
-  <td><a href="notes5-embeddings.html"><strong>1.5 Representation learning and embeddings</strong></a><br><em>Sept 10</em></td>
+  <td><a href="notes5-embeddings.html"><strong>1.5 Representation learning and embeddings</strong></a><br><em>Representation learning</em></td>
   <td>One-hot and its three failures; embeddings as geometry; Word2Vec &rarr; Road2Vec; transfer learning; contrastive learning; CLIP; how to check a representation; what the backbone owes the head.</td>
   <td><a href="../_static/companions/Deep_Net_Anatomy_Companion.html" target="_blank" rel="noopener">The anatomy of a deep network &#8599;</a><br><a href="../_static/companions/Linear_Head_Companion.html" target="_blank" rel="noopener">What the backbone owes the head &#8599;</a><br><a href="lab2_word_embeddings.html">Lab 2</a>, <a href="lab3_image_embeddings.html">Lab 3</a>, <a href="lab4_clip_vs_traditional_cv.html">Lab 4</a></td>
 </tr>
@@ -98,8 +96,8 @@ Start with {doc}`1.1 From the logit to the network <notes1-networks>`.
 
 This module establishes the foundation for the rest of the course, and it does so in two
 steps. What "AI" covers, where it is deployed in mobility today, and how to read a capability
-claim were the {doc}`Aug 27 opening session <../course-intro>`; the workflow framing that goes
-with them is developed in {doc}`Module 4 <../module4/notes1-workflow>`, where the AI agents part of
+claim were the {doc}`opening session <../course-intro>`; the workflow framing that goes
+with them is developed in {doc}`Module 5 <../module5/notes1-workflow>`, where the AI agents part of
 the course begins.
 
 We start by building the **neural network** from the ground up: a composition of linear maps and
@@ -135,7 +133,7 @@ By the end of this module you will be able to:
 
 ## Topics
 
-**Sept 3 — Neural network basics and deep learning foundations**
+**Neural network basics and deep learning foundations**
 
 - The supervised-learning pipeline: data → model → loss → optimization → evaluation
 - From linear and logistic regression to the single neural unit
@@ -147,7 +145,7 @@ By the end of this module you will be able to:
 - Underfitting, overfitting, and honest evaluation on mobility data
 - Two results that argue *against* reaching for a network, and when they apply
 
-**Sept 10 — Representation learning and embeddings**
+**Representation learning and embeddings**
 
 - Hand-engineered features, one-hot encodings, and their limits
 - Embeddings as dense learned vectors; distance and similarity in embedding space
@@ -199,7 +197,7 @@ bridge into multimodal models.
 
 ## Interactive companions
 
-Eleven interactive companions support the Sept 3 and Sept 10 sessions. Each is
+Eleven interactive companions support this module's two sessions. Each is
 embedded in the section it belongs to and is also linked here: one walks the sigmoid, tanh and softmax activations
 from the binary-logit starting point; one works through the learned-versus-fixed basis
 comparison and the point where a multilayer network becomes the cheaper option; one takes

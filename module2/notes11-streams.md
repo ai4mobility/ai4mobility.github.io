@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.11</span>
-    <span class="notes-card-session">Session: Oct 15</span>
+    <span class="notes-card-session">Session: ViT extensions and fusion</span>
   </div>
   <p class="notes-card-lede">In 2.9 one sequence asked and one answered. A signalized intersection has four streams &mdash; camera, loops, probe-vehicle CAN and connected-vehicle messages &mdash; each with its own rate, clock and map, and which should ask depends on the task. This section starts with a model that reads synthetic camera and CAN clips to write a crash warning, then works out what encoders hand over, how streams line up and who reads whom. The answer is a graph.</p>
   <div class="notes-card-cols">
@@ -17,7 +17,7 @@
     <div>
       <h4>Notebooks that go with it</h4>
       <ul>
-      <li><a href="lab5_graph_attention.html">Lab 5 &mdash; Attention on a road network</a></li>
+      <li><a href="../module3/lab5_graph_attention.html">Lab 5 &mdash; Attention on a road network</a></li>
       <li>Cross-attention sanity check &mdash; <em>in development</em></li>
       </ul>
     </div>
@@ -422,9 +422,9 @@ The model can still learn a relation you did not draw, and the CTM rule becomes 
 :::
 
 The anchors are now nodes of different kinds joined by edges of different kinds, with attention on
-each edge: a heterogeneous graph with graph attention. That is where {doc}`section 2.14 <notes15-gnn>`
+each edge: a heterogeneous graph with graph attention. That is where {doc}`section 3.1 <../module3/notes1-gnn>`
 picks up in {ref}`graph neural networks <graph-neural-networks>`, starting from the cell transmission
-model, and where {doc}`Lab 5 <lab5_graph_attention>` puts attention on a road network. How
+model, and where {doc}`Lab 5 <../module3/lab5_graph_attention>` puts attention on a road network. How
 a stream's history becomes one token, with a GRU or a temporal transformer, is
 {doc}`2.12 <notes12-history>`.
 

@@ -1,12 +1,12 @@
 (graph-neural-networks)=
-# 2.14 One view of every network: graph neural networks
+# 3.1 One view of every network: graph neural networks
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 2 &middot; Section 2.14</span>
-    <span class="notes-card-session">Session: the GNN week</span>
+    <span class="notes-card-eyebrow">Module 3 &middot; Section 3.1</span>
+    <span class="notes-card-session">Session: Graph neural networks</span>
   </div>
-  <p class="notes-card-lede">Every network in Modules 1 and 2 does the same thing: each token takes a weighted mix of what some other tokens carry. Only two choices differ &mdash; which tokens it may read, and how much each one counts. Draw &ldquo;may read&rdquo; as lines and every one of those networks is a graph. A graph neural network is the version where the graph comes from the problem. That makes it both the summary of this module and the right tool when the thing you model is a road network.</p>
+  <p class="notes-card-lede">Every network in Modules 1 and 2 does the same thing: each token takes a weighted mix of what some other tokens carry. Only two choices differ &mdash; which tokens it may read, and how much each one counts. Draw &ldquo;may read&rdquo; as lines and every one of those networks is a graph. A graph neural network is the version where the graph comes from the problem. That makes it both the summary of Modules 1 and 2 and the right tool when the thing you model is a road network.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Interactive companion on this page</h4>
@@ -23,10 +23,10 @@
   </div>
 </div>
 
-:::{admonition} Why this section comes last
+:::{admonition} Why this comes after Modules 1 and 2
 :class: tip
 It needs everything before it: the convolution of {doc}`1.3 <../module1/notes3-cnn>`, the recurrence
-of {doc}`2.12 <notes12-history>`, self-attention in 2.3&ndash;2.8 and cross-attention in 2.9&ndash;2.11.
+of {doc}`2.12 <../module2/notes12-history>`, self-attention in 2.3&ndash;2.8 and cross-attention in 2.9&ndash;2.11.
 The first half puts all of them in one picture. The second half uses that picture to read a road
 network.
 :::
@@ -79,10 +79,10 @@ Here is every network in Modules 1 and 2 written the same way.
 | --- | --- | --- | --- |
 | Dense layer (MLP) | one input number | every input | one learned weight for every pair |
 | CNN ({doc}`1.3 <../module1/notes3-cnn>`) | a pixel, or a time&ndash;space cell | a fixed 3 &times; 3 window | one learned weight per window slot, the same everywhere |
-| RNN, GRU ({doc}`2.12 <notes12-history>`) | one time step | the step before, through a running state | learned once, the same at every step |
+| RNN, GRU ({doc}`2.12 <../module2/notes12-history>`) | one time step | the step before, through a running state | learned once, the same at every step |
 | BERT, ViT (2.3, 2.5, 2.7) | a word piece; a 16 &times; 16 patch | every token | computed from the content: softmax of $q \cdot k / \sqrt{d}$ |
-| GPT ({doc}`2.4 <notes4-gpt>`) | a word piece | every earlier token | computed from the content |
-| Swin ({doc}`2.8 <notes8-locality>`) | a patch | the tokens in its own window | computed from the content |
+| GPT ({doc}`2.4 <../module2/notes4-gpt>`) | a word piece | every earlier token | computed from the content |
+| Swin ({doc}`2.8 <../module2/notes8-locality>`) | a patch | the tokens in its own window | computed from the content |
 | Cross-attention, DETR (2.9, 2.10) | a query, and the tokens of another source | every token in the other source | computed from the content |
 | Graph convolution (this section) | a detector, a road segment, an intersection | its neighbours on the road | fixed in advance by how many links each node has |
 | Graph attention (this section) | the same | its neighbours on the road | computed from the content |
@@ -114,11 +114,11 @@ the road and fixed weights, and you have a graph convolution.
   than attention itself.
 - **Position is what you add back after you throw the graph away.** When every token reads every
   token, the wiring says nothing about order, so BERT and ViT add position embeddings
-  ({doc}`2.1 <notes1-tokens>`, {doc}`2.7 <notes7-vision>`). In a graph network the edges carry the
-  structure. Swin's relative position bias ({doc}`2.8 <notes8-locality>`) is already a feature on an
+  ({doc}`2.1 <../module2/notes1-tokens>`, {doc}`2.7 <../module2/notes7-vision>`). In a graph network the edges carry the
+  structure. Swin's relative position bias ({doc}`2.8 <../module2/notes8-locality>`) is already a feature on an
   edge.
 - **Cross-attention is a graph with two kinds of node.** Queries sit on one side, keys and values on
-  the other, and the edges go one way. The lane-anchor hub of {doc}`2.11 <notes11-streams>` is the
+  the other, and the edges go one way. The lane-anchor hub of {doc}`2.11 <../module2/notes11-streams>` is the
   same idea with many kinds of node.
 :::
 
@@ -136,7 +136,7 @@ One intersection, two graphs. With intersections as nodes, the roads are the edg
 ```
 
 - **Speed at a sensor:** make the detector station the node. The METR-LA data set in
-  {doc}`2.6 <notes6-architecture>` is 207 detectors, each with about six and a half road neighbours.
+  {doc}`2.6 <../module2/notes6-architecture>` is 207 detectors, each with about six and a half road neighbours.
 - **Density or travel time on a road:** make the directed road segment the node. On the map a
   segment is an edge between two intersections; in the graph network it is a node, and the turning
   movements become its edges. This is called the *line graph*.
@@ -148,7 +148,7 @@ One intersection, two graphs. With intersections as nodes, the roads are the edg
 
 ## From one picture to a road network
 
-Section {doc}`2.11 <notes11-streams>` already ended at a graph: lane cells of different kinds joined
+Section {doc}`2.11 <../module2/notes11-streams>` already ended at a graph: lane cells of different kinds joined
 by edges of different kinds, with attention on each edge. The rest of this section starts that idea
 again from traffic flow theory and asks a narrow question: **can a learned model stand in for a model
 you would otherwise write down?**
@@ -271,7 +271,7 @@ reproduce in a street network in about ten seconds.
 ## Graph attention: BERT's weights on the road's wiring
 
 On the two-dials map, graph attention sits next to Swin: the road fixes who may be read, and the
-content sets the weights. In code it is one line added to the attention of {doc}`2.3 <notes3-attention>`:
+content sets the weights. In code it is one line added to the attention of {doc}`2.3 <../module2/notes3-attention>`:
 
 ```python
 scores = Q @ K.T / d**0.5                           # every token scores every token, as in BERT
@@ -281,7 +281,7 @@ H_new  = alpha @ V
 ```
 
 With A all ones this is BERT or ViT. A lower-triangular A gives GPT's causal mask
-({doc}`2.4 <notes4-gpt>`). Window blocks give Swin. The road's adjacency, with each node also reading
+({doc}`2.4 <../module2/notes4-gpt>`). Window blocks give Swin. The road's adjacency, with each node also reading
 itself, gives graph attention. Keep those self-links: in the METR-LA road graph six detectors have no
 neighbour at all, and a softmax over an empty row has no answer. The mask is the teaching version.
 Graph libraries compute scores only along the edges that exist, which is why they scale to a whole

@@ -1,9 +1,9 @@
-# 3.1 From predicting to producing
+# 4.1 From predicting to producing
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 3 &middot; Section 3.1</span>
-    <span class="notes-card-session">Session: Oct 22</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.1</span>
+    <span class="notes-card-session">Session: Generative models, part 1</span>
   </div>
   <p class="notes-card-lede">Every model so far looked at data and returned a label. A generative model returns the data itself. This page says what that changes, what "realistic" has to mean for a traffic state, and lays out the four answers this module works through. The running example for the whole module is a set of 4,000 simulated speed heatmaps.</p>
   <div class="notes-card-cols">
@@ -46,7 +46,7 @@ futures lets you plan for the bad ones.
 drivers but belong to nobody could leave the agency where the real ones cannot.
 
 None of these asks for a label. Each asks for *more data that looks real*. That is a different job
-from every model in Modules 1 and 2, and it needs a different kind of model.
+from every model in Modules 1 to 3, and it needs a different kind of model.
 
 ## The arrow turns around
 
@@ -162,18 +162,18 @@ The question for the rest of the module is always the same: *a traffic state has
 that depend on each other, so how do you draw a realistic new one?* Each family of generative model is
 one answer.
 
-1. **One cell at a time** ({doc}`3.2 <notes2-autoregressive>`). Decide the first cell, then the second
+1. **One cell at a time** ({doc}`4.2 <notes2-autoregressive>`). Decide the first cell, then the second
    given the first, and so on. This is how GPT writes text, applied to a heatmap.
-2. **A few hidden knobs** ({doc}`3.4 <notes3-vae>`). Compress each heatmap into a few numbers, learn to
+2. **A few hidden knobs** ({doc}`4.4 <notes3-vae>`). Compress each heatmap into a few numbers, learn to
    rebuild it from them, then make new heatmaps by drawing new numbers. This is the variational
-   autoencoder (VAE). Section {doc}`3.3 <notes2b-latent-variables>` first sets out the idea it rests on: a
+   autoencoder (VAE). Section {doc}`4.3 <notes2b-latent-variables>` first sets out the idea it rests on: a
    *latent variable*, a hidden cause you can draw from.
-3. **A forger and a critic** ({doc}`3.5 <notes4-gan>`). Train one network to make fakes and another to
+3. **A forger and a critic** ({doc}`4.5 <notes4-gan>`). Train one network to make fakes and another to
    catch them, until the fakes are hard to catch. This is the generative adversarial network (GAN).
 4. **Clean up noise, step by step** (next session). Start from pure noise and remove a little at a time.
    This is diffusion.
 
-Each answer fixes a weakness of the one before it, so the order matters. At the end of section 3.5 the first
+Each answer fixes a weakness of the one before it, so the order matters. At the end of section 4.5 the first
 three are scored side by side on the same held-out heatmaps.
 
 ## Check yourself

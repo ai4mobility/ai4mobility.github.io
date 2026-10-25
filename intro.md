@@ -73,9 +73,9 @@ download from Canvas.
   <article class="resource-card">
     <div class="resource-card-top"><p class="resource-category">Part II</p></div>
     <h3>AI agents for transportation</h3>
-    <p>The last five lectures cover how AI agents work and how to build them for transportation work: tools, memory, planning, evaluation, fine-tuning, human review, and full workflows for SUMO simulation and safety analysis.</p>
+    <p>The last five lectures cover how AI agents work and how to build them for transportation work: reasoning, tools, memory, planning, evaluation, fine-tuning, human review, and full workflows for SUMO simulation and safety analysis.</p>
     <div class="tag-row"><span>Five lectures</span><span>Research and agency practice</span></div>
-    <a class="resource-link" href="module4/index.html">Start Part II</a>
+    <a class="resource-link" href="module5/index.html">Start Part II</a>
   </article>
 </div>
 
@@ -133,22 +133,22 @@ the {doc}`syllabus` page, and every notebook in the course is listed on the {doc
 
 **Part I — AI foundations through a transportation lens**
 
-| Module | Topic | Class dates |
-|---|---|---|
-| {doc}`course-intro` | Course Introduction | Aug 27 |
-| {doc}`module1/index` | Foundations and Representation Learning | Sept 3 · Sept 10 |
-| {doc}`module2/index` | Transformers, LLMs, and Multimodal Models, ending with graph neural networks | Sept 17 · Oct 8 · Oct 15 · GNN week |
-| {doc}`module3/index` | Generative AI and World Models | Oct 22 |
+| Module | Topic |
+|---|---|
+| {doc}`Week 1 <course-intro>` | Course Introduction |
+| {doc}`Module 1 <module1/index>` | Foundations and Representation Learning |
+| {doc}`Module 2 <module2/index>` | Transformers, LLMs, and Multimodal Models |
+| {doc}`Module 3 <module3/index>` | A Unified View: Graph Neural Networks |
+| {doc}`Module 4 <module4/index>` | Deep Generative Models: VAE, Diffusion, and World Models |
 
 **Part II — AI agents for mobility**
 
-| Module | Topic | Class date |
-|---|---|---|
-| {doc}`module4/index` | How an Agent Works | Thu, Oct 29 |
-| {doc}`module5/index` | Skills, Memory, and Planning | Thu, Nov 5 |
-| {doc}`module6/index` | Making Agents Better: Evaluation and Fine-Tuning | Thu, Nov 12 |
-| {doc}`module7/index` | Agents and People in an Agency | Thu, Nov 19 |
-| {doc}`module8/index` | Building Transportation Harnesses | Tue, Nov 24 |
+| Module | Topic |
+|---|---|
+| {doc}`Module 5 <module5/index>` | Understanding AI Agents: Reasoning, Tool Calling, Skills, Memory, Planning, and Coordination |
+| {doc}`Module 6 <module6/index>` | Making Agents Better: Evaluation and Fine-Tuning |
+| {doc}`Module 7 <module7/index>` | Agents and People in an Agency |
+| {doc}`Module 8 <module8/index>` | Building Transportation Harnesses |
 
 Part II draws its examples from across transportation research and agency practice: traffic flow,
 safety, operations, driving automation, infrastructure, EVs, transit and air mobility. Traffic simulation
@@ -198,9 +198,9 @@ your browser, with nothing to install. Here are six to start with.
     <a class="resource-link" href="_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Open the companion</a>
   </article>
   <article class="resource-card">
-    <div class="resource-card-top"><p class="resource-category">Module 2 &middot; Section 2.14</p></div>
+    <div class="resource-card-top"><p class="resource-category">Module 3 &middot; Section 3.1</p></div>
     <h3>A graph neural network on a road network</h3>
-    <p>Generate a street network in your browser and watch one shared rule run at every intersection, and how a rule that only looks one hop away ends up modelling a disturbance that travels for miles. Read it in context in <a href="module2/notes15-gnn.html">section 2.14</a>.</p>
+    <p>Generate a street network in your browser and watch one shared rule run at every intersection, and how a rule that only looks one hop away ends up modelling a disturbance that travels for miles. Read it in context in <a href="module3/notes1-gnn.html">section 3.1</a>.</p>
     <div class="tag-row"><span>Road networks</span><span>GNN</span></div>
     <a class="resource-link" href="_static/companions/GNN_On_A_Road_Network_Companion.html" target="_blank" rel="noopener">Open the companion</a>
   </article>

@@ -1,9 +1,9 @@
-# 3.3 Latent variables: hidden causes, not hidden layers
+# 4.3 Latent variables: hidden causes, not hidden layers
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 3 &middot; Section 3.3</span>
-    <span class="notes-card-session">Session: Oct 22</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.3</span>
+    <span class="notes-card-session">Session: Generative models, part 1</span>
   </div>
   <p class="notes-card-lede">Before the VAE, the idea it rests on. You have met "latent" before: the vectors BERT and a ViT compute inside. A latent variable is something else. It is a hidden cause that the model assumes made the data, and it comes with a distribution you can draw from. This page follows four questions on the CTM heatmaps, where all five true causes are known: what a latent variable is, how a model finds one without labels, how the distribution of the hidden cause is learned, and how it is used to make a new heatmap.</p>
   <div class="notes-card-cols">
@@ -12,7 +12,7 @@
       <ul>
       <li><a href="../module2/notes5-bert.html">2.5 BERT: pretrain, then adapt</a></li>
       <li><a href="../module2/notes7-vision.html">2.7 Transformers that see: the Vision Transformer</a></li>
-      <li><a href="notes2-autoregressive.html">3.2 One cell at a time</a></li>
+      <li><a href="notes2-autoregressive.html">4.2 One cell at a time</a></li>
       </ul>
     </div>
     <div>
@@ -57,7 +57,7 @@ get new data.
 
 | | latent representation | latent variable |
 |---|---|---|
-| examples | BERT's token vectors, a ViT's `[CLS]`, an autoencoder's code | the regime in a mixture (3.6), the knobs of a VAE (3.4), diffusion's noise |
+| examples | BERT's token vectors, a ViT's `[CLS]`, an autoencoder's code | the regime in a mixture (4.6), the knobs of a VAE (4.4), diffusion's noise |
 | which way the arrow points | data → numbers: computed from the input | cause → data: assumed to have made the input |
 | for one input | one exact vector, every time | a guess with a spread |
 | a distribution to draw from | none | yes, part of the model |
@@ -74,7 +74,7 @@ scored on the 400 test heatmaps.
 |---|---|---|---|
 | predict bottleneck capacity: one task, like a fine-tuned ViT | 0.25 | 0.85 | 19.6 mph |
 | rebuild the heatmap: a plain autoencoder | 0.82 | 0.17 | 7.29 mph |
-| rebuild it and keep every code inside one bell: the VAE of section 3.4 | 0.90 | 0.32 | 7.68 mph |
+| rebuild it and keep every code inside one bell: the VAE of section 4.4 | 0.90 | 0.32 | 7.68 mph |
 
 For the task encoder, a decoder was trained afterwards on its frozen numbers. For scale, answering every heatmap
 with the average heatmap is 23.76 mph off.
@@ -94,7 +94,7 @@ Every latent-variable model tells the same two-step story about how one piece of
 
 The CTM heatmaps were made exactly this way. For each run, five knobs were drawn at random (starting density, upstream
 inflow, bottleneck capacity, when the bottleneck starts, how long it lasts), and the CTM turned them into 400 speeds.
-Section 3.4 shows the five knobs as dials. Here the data maker is the CTM, written down from physics, and the knobs
+Section 4.4 shows the five knobs as dials. Here the data maker is the CTM, written down from physics, and the knobs
 are known. A latent-variable model has to learn both from the 400 speeds alone.
 
 Written as one line, the probability of a heatmap adds up every way it could have been made:
@@ -113,7 +113,7 @@ $$
 
 *In words:* a heatmap could have come from many knob settings, so its probability adds them all up: how often each
 setting happens, times how likely that setting is to make this heatmap. When the hidden cause is a label, as in the
-mixture of section 3.6, the integral becomes a sum.
+mixture of section 4.6, the integral becomes a sum.
 
 **You already use latent variables.** Transportation models have had hidden causes for decades:
 
@@ -164,8 +164,8 @@ strong that bottleneck is (R² 0.22).
 
 The samples show what such a simple data maker costs. With the noise, 17% of cells fall outside 0&ndash;75 mph:
 a bell does not know that speeds have limits. Those samples look real 0.220 of the time on the scorecard of
-section 3.5. Without the noise they are smooth averages: they look real (0.875) but cover almost none of the
-variety (0.033). The VAE of section 3.4 keeps the story and replaces "average plus two straight directions" with a
+section 4.5. Without the noise they are smooth averages: they look real (0.875) but cover almost none of the
+variety (0.033). The VAE of section 4.4 keeps the story and replaces "average plus two straight directions" with a
 network.
 
 :::{admonition} Going deeper &mdash; probabilistic PCA in symbols
@@ -199,12 +199,12 @@ loop:
 
 Two things are found at once. For each heatmap, its value of the hidden cause comes from the guess. For the whole
 dataset, what each hidden number *does* to a heatmap comes from the refit. Neither comes with a name. You name them
-afterwards, by checking them against things you can measure. In section 3.6 the two regimes found at one I-405
+afterwards, by checking them against things you can measure. In section 4.6 the two regimes found at one I-405
 detector, 28.4 and 70.2 mph, are checked against the clock, which the model never saw: they line up with
 the peak periods. Here, the numbers can be checked against the simulator's own knobs.
 
 The three models differ most in how hard the guess is. For a mixture it is Bayes' rule, exact; the loop is the EM
-algorithm of section 3.6. For probabilistic PCA it is a formula, exact. For a VAE no formula exists, so an encoder
+algorithm of section 4.6. For probabilistic PCA it is a formula, exact. For a VAE no formula exists, so an encoder
 network learns to make the guess, and it is trained together with the decoder by gradient descent.
 
 ### Which hidden causes can be found?
@@ -229,7 +229,7 @@ exactly from the dataset's random seed.) For each knob, three measurements:
   the knob's full spread. This is an estimate of the true $p(z \mid x)$: the best guess any model could make. Starting
   density is pinned down to 0.12 of its spread. Bottleneck length keeps 0.68: a heatmap says little about
   how long the bottleneck lasted.
-- **How much the VAE found.** The R² of each knob from the VAE's numbers: the 2-knob VAE of section 3.4, and the same
+- **How much the VAE found.** The R² of each knob from the VAE's numbers: the 2-knob VAE of section 4.4, and the same
   VAE with 8 knobs.
 
 Three lessons come out of it.
@@ -262,7 +262,7 @@ draws, at one and two spreads. Each panel has its own scale.
 A latent-variable model has two distributions to learn: how often each hidden cause happens, $p(z)$, and what data
 each cause makes, $p(x \mid z)$. The models in this module split that work differently.
 
-- **Mixture (section 3.6): both are learned.** Each round of EM refits the regimes' shares (here 52% congested,
+- **Mixture (section 4.6): both are learned.** Each round of EM refits the regimes' shares (here 52% congested,
   48% free flow) and each regime's own bell.
 - **Probabilistic PCA, VAE and diffusion: $p(z)$ is not learned at all.** It is fixed to a standard bell (for
   diffusion, to pure noise). All the learning goes into the data maker, which has to bend that bell into the shape of
@@ -275,7 +275,7 @@ models with the same 400 &rarr; 96 &rarr; 2 &rarr; 96 &rarr; 400 shape.
   of 2.81 and 5.04. Only 12% of them fall inside the bell's 2-spread circle, where a true bell puts
   86%. Draw from the bell and decode, and every draw lands in the same small part of the cloud: the samples look real
   (1.000) but cover only 0.025 of the variety. It makes one kind of heatmap.
-- **The VAE's KL term pulls the codes onto the bell** (section 3.4 explains how). Its codes are centred at
+- **The VAE's KL term pulls the codes onto the bell** (section 4.4 explains how). Its codes are centred at
   (0.03, -0.09) with spreads 0.97 and 0.89, and 95% sit inside the circle. The match is not perfect. The codes are more
   bunched than a true bell, so 15.5% of bell draws land in *holes*: places farther from every training code than
   99% of training codes are from their nearest neighbour. Those are the rings in the figure.
@@ -299,7 +299,7 @@ Diffusion, works at scale: an autoencoder squeezes images into codes, then a dif
 of the codes (Rombach et al., 2022).
 
 Every row covers little of the variety, because every row shares a two-number decoder that returns averages
-(section 3.4). A better distribution for the codes cannot fix a data maker that blurs.
+(section 4.4). A better distribution for the codes cannot fix a data maker that blurs.
 
 :::{admonition} Going deeper &mdash; why the VAE leaves holes
 :class: dropdown
@@ -347,11 +347,11 @@ was here, and the result checked against real examples of that kind.
 None of this is possible with BERT's or a ViT's vectors: there is no distribution to draw them from and no decoder
 back to a sentence or a camera frame. (BERT can fill in a masked word, which makes one piece of text from the rest of
 it. That is not drawing a hidden cause.) And not every generator needs a latent variable. The transformer of section
-3.2 makes heatmaps one cell at a time with none at all.
+4.2 makes heatmaps one cell at a time with none at all.
 
 ## The whole story in one table
 
-| | mixture (3.6) | probabilistic PCA (3.3) | VAE (3.4) | diffusion (next) |
+| | mixture (4.6) | probabilistic PCA (4.3) | VAE (4.4) | diffusion (next) |
 |---|---|---|---|---|
 | the hidden cause $z$ | one label: the regime or class | a few numbers | a few numbers | a noisy copy of the data, the same size |
 | its distribution $p(z)$ | learned shares | fixed: a standard bell | fixed: a standard bell | fixed: pure noise |
@@ -370,7 +370,7 @@ to learn it. Diffusion makes that step trivial and puts all the learning into th
 - **Discovered causes follow variation, not meaning.** With two slots, inflow lost out to bigger causes. A knob you care
   about may not be among the ones the model keeps.
 - **The numbers are not unique.** Rotate probabilistic PCA's two numbers and the fit is exactly as good; a VAE's knobs
-  can come out flipped or mixed between training runs (section 3.4). Never write a rule on "knob 1" without checking it
+  can come out flipped or mixed between training runs (section 4.4). Never write a rule on "knob 1" without checking it
   against a quantity you can measure.
 - **The distribution can miss the codes.** The plain autoencoder's codes sit far from the bell; the VAE leaves
   15.5% of its draws in holes.
@@ -383,10 +383,10 @@ to learn it. Diffusion makes that step trivial and puts all the learning into th
 :class: warning
 **What is the baseline?** For what the numbers keep: the same encoder body trained for a task, and as a plain
 autoencoder. For what can be found at all: the simulator itself, run 200,000 more times. For samples: the real
-validation heatmaps (0.945 looks real, 0.953 covers the variety) and the scorecard of section 3.5.
+validation heatmaps (0.945 looks real, 0.953 covers the variety) and the scorecard of section 4.5.
 
 **How was the data split, and why is that honest?** The same 3,200 / 400 / 400 split of whole heatmaps
-as everywhere in Module 3. Every network, every fitted distribution and every steering bell saw only the training
+as everywhere in Module 4. Every network, every fitted distribution and every steering bell saw only the training
 heatmaps; every R², hole share and score is on the test heatmaps. The extra simulator runs use fresh random seeds,
 none from the dataset.
 

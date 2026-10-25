@@ -1,22 +1,22 @@
-# 3.2 One cell at a time: autoregressive generation
+# 4.2 One cell at a time: autoregressive generation
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 3 &middot; Section 3.2</span>
-    <span class="notes-card-session">Session: Oct 22</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.2</span>
+    <span class="notes-card-session">Session: Generative models, part 1</span>
   </div>
   <p class="notes-card-lede">The first answer: generate a heatmap one cell at a time, each cell drawn from a distribution that depends on every cell already decided. It is the training objective of the GPT in 2.4 with a new kind of token. Every result here comes from a 379,033-weight transformer trained on 3,200 of the CTM heatmaps and scored on 400 it never saw.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes1-producing.html">3.1 From predicting to producing</a></li>
+      <li><a href="notes1-producing.html">4.1 From predicting to producing</a></li>
       <li><a href="../module2/notes4-gpt.html">2.4 Building one: a GPT you can read</a></li>
       </ul>
     </div>
     <div>
       <h4>Read it after</h4>
-      <ul><li><a href="notes2b-latent-variables.html">3.3 Latent variables: hidden causes, not hidden layers</a></li></ul>
+      <ul><li><a href="notes2b-latent-variables.html">4.3 Latent variables: hidden causes, not hidden layers</a></li></ul>
     </div>
   </div>
 </div>
@@ -125,7 +125,7 @@ models can be scored exactly, which the next sections use.
 :class: dropdown
 Take logs of the chain rule. The log of a product is the sum of the logs, so
 $\log p(x) = \sum_i \log p(x_i \mid x_{<i})$. Each term is conditioned on everything before it; drop
-the conditioning and the sum becomes $\sum_i \log p(x_i)$, the marginals from section 3.1, which describes the
+the conditioning and the sum becomes $\sum_i \log p(x_i)$, the marginals from section 4.1, which describes the
 shuffled panel of the joint-versus-marginals figure. Measured in bits (logs base 2), the average of
 $-\log_2 p(x_i \mid x_{<i})$ over cells is the *bits per cell* used below.
 :::
@@ -167,7 +167,7 @@ The ladder has three baselines, all scored on the same test heatmaps and the sam
 
 - **Knows nothing: 4.64 bits.** Twenty-five equally likely bins; $2^{4.64} \approx 25$.
 - **Each cell on its own: 3.20 bits.** Each cell's own histogram from the training
-  heatmaps, cells independent. These are the marginals from section 3.1.
+  heatmaps, cells independent. These are the marginals from section 4.1.
 - **A local rule: 0.64 bits.** A small network (27,609 weights) that
   predicts each cell from three cells only: the speeds of itself and its two road neighbours one time step
   earlier, plus which road cell it is. Those are the cells a CTM update reads, but this is a limited version: one
@@ -224,7 +224,7 @@ The transformer made A, B, F, G. The real held-out heatmaps are C, D, E, H.
 
 Being hard to tell apart by eye is necessary and not nearly sufficient. People judge a handful of
 samples on how sharp they look. They cannot see whether the model covers *all* the kinds of traffic in
-the data, or whether it is quietly copying training heatmaps. Section 3.5 measures both.
+the data, or whether it is quietly copying training heatmaps. Section 4.5 measures both.
 
 :::{admonition} Before you trust this result
 :class: warning

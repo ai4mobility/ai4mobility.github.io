@@ -60,42 +60,43 @@ parts:
             title: "2.12 Where history enters"
           - file: module2/notes13-evaluation
             title: "2.13 Does it earn its keep?"
-          # The unified view: every network so far as one update on a graph. Taught in the GNN week.
-          - file: module2/notes15-gnn
-            title: "2.14 One view of every network: graph neural networks"
           - file: module2/notes14-labs
             title: "Practice, exercises, and further reading"
+      # Module 3 became its own module on 2026-10-25: the unified view, graph neural networks.
       - file: module3/index
+        sections:
+          - file: module3/notes1-gnn
+            title: "3.1 One view of every network: graph neural networks"
+      - file: module4/index
         sections:
           # Same flat shape as Modules 1 and 2 -- section pages directly under the
           # module index, which carries the map. See NOTES_GUIDE.md.
-          - file: module3/notes1-producing
-            title: "3.1 From predicting to producing"
-          - file: module3/notes2-autoregressive
-            title: "3.2 One cell at a time"
-          - file: module3/notes2b-latent-variables
-            title: "3.3 Latent variables: hidden causes"
-          - file: module3/notes3-vae
-            title: "3.4 A few hidden knobs: the VAE"
-          - file: module3/notes4-gan
-            title: "3.5 A forger, a critic, a scorecard"
-          - file: module3/notes5-hidden-cause
-            title: "3.6 One hidden cause: mixture models"
+          - file: module4/notes1-producing
+            title: "4.1 From predicting to producing"
+          - file: module4/notes2-autoregressive
+            title: "4.2 One cell at a time"
+          - file: module4/notes2b-latent-variables
+            title: "4.3 Latent variables: hidden causes"
+          - file: module4/notes3-vae
+            title: "4.4 A few hidden knobs: the VAE"
+          - file: module4/notes4-gan
+            title: "4.5 A forger, a critic, a scorecard"
+          - file: module4/notes5-hidden-cause
+            title: "4.6 One hidden cause: mixture models"
 
-  # Part II became the AI agents unit on 2026-10-24: five lectures, one module each.
+  # Part II became the AI agents unit on 2026-10-24; its first two modules merged into Module 5 on 2026-10-25.
   - caption: Part II — AI Agents for Mobility
     chapters:
-      - file: module4/index
-        sections:
-          - file: module4/notes1-workflow
-            title: "4.1 The workflow is the unit of work"
-          - file: module4/notes2-loop
-            title: "4.2 A model in a loop"
-          - file: module4/notes3-tools
-            title: "4.3 Tools: what an agent can reach"
-          - file: module4/notes4-context
-            title: "4.4 Context: what the model reads"
       - file: module5/index
+        sections:
+          - file: module5/notes1-workflow
+            title: "5.1 The workflow is the unit of work"
+          - file: module5/notes2-loop
+            title: "5.2 A model in a loop"
+          - file: module5/notes3-tools
+            title: "5.3 Tools: what an agent can reach"
+          - file: module5/notes4-context
+            title: "5.4 Context: what the model reads"
       - file: module6/index
         sections:
           - file: module6/notes1-adaptation
@@ -118,7 +119,7 @@ parts:
             title: "Lab 3 — Image Embeddings with a Deep CNN"
           - file: module1/lab4_clip_vs_traditional_cv
             title: "Lab 4 — CLIP vs. Traditional Computer Vision"
-          - file: module2/lab5_graph_attention
+          - file: module3/lab5_graph_attention
             title: "Lab 5 — Attention on a Road Network"
           - file: module6/lab6_vit_finetune
             title: "Lab 6 — Fine-tuning a Vision Transformer"

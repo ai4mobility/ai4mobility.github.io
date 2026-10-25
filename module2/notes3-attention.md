@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.3</span>
-    <span class="notes-card-session">Session: Sept 17</span>
+    <span class="notes-card-session">Session: Transformers and LLMs</span>
   </div>
   <p class="notes-card-lede">A signal controller arbitrates among competing approaches, weighting each by how much demand it is carrying right now. Self-attention does the same thing over tokens, learns the weighting from data, and does it many times in parallel. This section is that mechanism, read off a real model rather than drawn &mdash; including the two-thirds of its heads that turn out to mean nothing at all.</p>
   <div class="notes-card-cols">

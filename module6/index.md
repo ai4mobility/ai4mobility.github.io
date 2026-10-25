@@ -1,12 +1,11 @@
 # Module 6 — Making Agents Better: Evaluation and Fine-Tuning
 
-*Part II, AI Agents for Mobility · lecture 3 of 5 · Thursday, Nov 12, 2026. See the {doc}`../syllabus`.*
+*Part II, AI Agents for Mobility · lecture 3 of 5. The class schedule is on the {doc}`../syllabus` page.*
 
-## Class meetings
+## Session topics
 
-| Date | Session topic | Due before class |
-|---|---|---|
-| Nov 12 | Making agents better: evaluating agents; fine-tuning — full fine-tuning, LoRA, instruction tuning, training on agent runs; agents that learn from experience | Project progress update |
+- **Making agents better:** evaluating agents; fine-tuning — full fine-tuning, LoRA, instruction tuning,
+  training on agent runs; agents that learn from experience
 
 ## Overview
 
@@ -48,12 +47,12 @@ calibrated to trust as a judge?
 </thead>
 <tbody>
 <tr>
-  <td><a href="notes1-adaptation.html"><strong>6.1 The adaptation ladder: what your corpus actually needs</strong></a><br><em>Nov 12</em></td>
+  <td><a href="notes1-adaptation.html"><strong>6.1 The adaptation ladder: what your corpus actually needs</strong></a><br><em>Making agents better</em></td>
   <td>Three different things called fine-tuning; the ladder rung by rung, with what each changes and costs; why retrieval beats a fine-tune for most agency documents; whether your corpus is big enough, and allowed; what &ldquo;it worked&rdquo; has to mean.</td>
   <td><a href="lab6_vit_finetune.html">Lab 6</a></td>
 </tr>
 <tr>
-  <td><strong>Further sections</strong><br><em>Nov 12</em></td>
+  <td><strong>Further sections</strong><br><em>Making agents better</em></td>
   <td>Evaluating agents, LoRA and instruction tuning, training on agent runs, agents that learn from experience &mdash; written up after the session.</td>
   <td>LoRA lab <em>(in development)</em></td>
 </tr>

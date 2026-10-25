@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.7</span>
-    <span class="notes-card-session">Session: Oct 8</span>
+    <span class="notes-card-session">Session: Vision transformers</span>
   </div>
   <p class="notes-card-lede">Cut a camera frame into 16-pixel patches, call each one a token, add a [CLS] token, and the encoder from 2.3 classifies images. This section trains one to read congestion from FL511 frames, shows why the ViT paper needed 303 million images to pass the best CNNs on ImageNet, and measures where a ViT looks, against the Grad-CAM you built in Module 1.</p>
   <div class="notes-card-cols">

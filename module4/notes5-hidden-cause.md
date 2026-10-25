@@ -1,8 +1,8 @@
-# 3.6 One hidden cause: mixture models
+# 4.6 One hidden cause: mixture models
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 3 &middot; Section 3.6</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.6</span>
     <span class="notes-card-session">Session: VAE and diffusion</span>
   </div>
   <p class="notes-card-lede">Before the VAE and diffusion, the simplest model with a hidden cause. A real detector's speeds come from two traffic regimes the detector never records; a mixture model finds them, guesses which one made each reading, and makes new readings in two steps. The same recipe, scaled to the 400-cell heatmaps, shows exactly why a single hidden label is not enough, and sets up the VAE and diffusion as two better choices of hidden cause.</p>
@@ -10,9 +10,9 @@
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes1-producing.html">3.1 From predicting to producing</a></li>
-      <li><a href="notes2b-latent-variables.html">3.3 Latent variables: hidden causes, not hidden layers</a></li>
-      <li><a href="notes3-vae.html">3.4 A few hidden knobs: the VAE</a></li>
+      <li><a href="notes1-producing.html">4.1 From predicting to producing</a></li>
+      <li><a href="notes2b-latent-variables.html">4.3 Latent variables: hidden causes, not hidden layers</a></li>
+      <li><a href="notes3-vae.html">4.4 A few hidden knobs: the VAE</a></li>
       </ul>
     </div>
     <div>
@@ -133,13 +133,13 @@ reading. Over the June readings, 95% get a guess above 99% one way or the other,
 and only 1.0% land between 20% and 80%.
 
 The output is a probability for each regime, a **soft label**, not a hard one. That matters for the fitting loop
-below, and it is the same kind of object as the VAE encoder's output in section 3.4.
+below, and it is the same kind of object as the VAE encoder's output in section 4.4.
 
 **A check the model could not cheat on.** The model never saw the time of day. Average its soft guess over the
 21 June weekdays, hour by hour: it is at most 1% overnight,
 70% from 6 to 7 am, above 97% from 7 am to 4 pm, at least
 76% until 7 pm, and 34% from 7 to 8 pm. It found this road's
-peak periods from speeds alone. Like the VAE's knobs in section 3.4, the hidden cause it learned lines up with
+peak periods from speeds alone. Like the VAE's knobs in section 4.4, the hidden cause it learned lines up with
 something real, though nobody labelled it.
 
 ## Fitting without labels: the EM loop
@@ -173,7 +173,7 @@ The goal is to make $\log p(x) = \log \sum_k \pi_k \, p(x \mid k)$, summed over 
 possible. A log of a sum is awkward to maximise directly. For any soft labels $q(k)$,
 $\log p(x) \ge \sum_k q(k) \log \frac{\pi_k \, p(x \mid k)}{q(k)}$: the *evidence lower bound* (ELBO). The E-step
 sets $q$ to the Bayes soft guess, which makes the bound touch the true value; the M-step then pushes the bound
-up. So every round of EM can only improve the fit to the training data. The VAE of section 3.4 trains on the same
+up. So every round of EM can only improve the fit to the training data. The VAE of section 4.4 trains on the same
 bound. With continuous knobs the exact soft guess can no longer be computed, so an encoder network learns to
 approximate it, and gradient descent replaces the loop. Bishop &amp; Bishop (2024), *Deep Learning: Foundations
 and Concepts*, chapters 15 and 19.
@@ -205,7 +205,7 @@ The CTM heatmaps as a mixture of 50 classes. The four classes shown are, after s
 slowest to fastest average speed, the largest one in each quarter; the samples are the first draw from each.
 ```
 
-Now the running example of sections 3.1&ndash;3.5: the 4,000 CTM speed heatmaps, each 400 cells on
+Now the running example of sections 4.1&ndash;4.5: the 4,000 CTM speed heatmaps, each 400 cells on
 the 25 speed bins of 3 mph, with the same 3,200 / 400 / 400 split. The recipe is
 unchanged. Each heatmap belongs to one hidden class; each class has its own histogram over the 25 bins for every
 one of the 400 cells. To make a heatmap, pick a class, then draw every cell from that class's
@@ -214,7 +214,7 @@ it exactly as before. Two details: a small pseudo-count is added to every histog
 probability zero, and both it and the number of classes were chosen on the validation heatmaps
 (50 classes, pseudo-count 0.1).
 
-One class is exactly the "each cell on its own" baseline of section 3.2. So the bits-per-cell ladder shows what a
+One class is exactly the "each cell on its own" baseline of section 4.2. So the bits-per-cell ladder shows what a
 single shared hidden label buys:
 
 | model | bits per cell, test heatmaps |
@@ -222,8 +222,8 @@ single shared hidden label buys:
 | each cell on its own (1 class) | 3.20 |
 | 3 classes | 2.27 |
 | 50 classes | 1.84 (1.83&ndash;1.84 over three starts) |
-| the local rule of section 3.2 | 0.64 |
-| the transformer of section 3.2 | 0.40 |
+| the local rule of section 4.2 | 0.64 |
+| the transformer of section 4.2 | 0.40 |
 
 A shared class closes about half of the gap between "each cell on its own" and the transformer. The cells now
 agree on the big picture: whether there is a queue, roughly how big, roughly where. The average jump between
@@ -233,7 +233,7 @@ The rest is speckle: inside a class, each cell is still drawn on its own.
 
 Two things look familiar from earlier pages. A class's *typical* heatmap, the expected speed in every cell, is an
 average over the heatmaps in that class; where their fronts sit in slightly different places, the average front is
-soft, which is the VAE's blur from section 3.4 in another form. And with 400 cells of evidence, the soft
+soft, which is the VAE's blur from section 4.4 in another form. And with 400 cells of evidence, the soft
 guess is almost always certain: 97% of the test heatmaps are assigned to one class with more
 than 99% probability.
 
@@ -257,10 +257,10 @@ The reason is in the traffic. A queue can end at any road cell and start at any 
 *smoothly*. A list of labels can only cover a smooth range by listing more and more cases, each seen in fewer
 training heatmaps.
 
-There is a second limit that more classes do not fix. On the scorecard of section 3.5, the 50-class
+There is a second limit that more classes do not fix. On the scorecard of section 4.5, the 50-class
 mixture covers the variety well (recall 0.98&ndash;0.99 over three
 starts) but its samples never look real: precision is 0.003 or less for every
-mixture tried. It is the same pattern as the local rule in 3.4: noise fools "covers the variety" but not
+mixture tried. It is the same pattern as the local rule in 4.4: noise fools "covers the variety" but not
 "looks real". Inside a class the cells are drawn independently, so neighbouring cells do not agree.
 
 So a better generator needs two things: a hidden cause that can vary smoothly, and a way to make all the cells
@@ -280,9 +280,9 @@ and with it how hard each direction is.
 
 - **Mixture.** One label. Going back from data to the hidden cause is exact: Bayes' rule, the soft guess. So is the
   likelihood: a sum over the classes, which is why the mixture can go on the bits-per-cell ladder.
-- **VAE** (section 3.4). A few continuous knobs. The sum over classes becomes an integral over every possible knob
+- **VAE** (section 4.4). A few continuous knobs. The sum over classes becomes an integral over every possible knob
   setting, which cannot be computed. So the VAE learns an encoder to make the guess, and trains on a lower bound,
-  the ELBO. That is why section 3.4 could not put the VAE on the bits ladder.
+  the ELBO. That is why section 4.4 could not put the VAE on the bits ladder.
 - **Diffusion** (next). The hidden cause is a chain of noisier and noisier copies of the heatmap, each the same size
   as the data. Going from data to hidden cause needs no learning at all: you add noise. All the learning goes into
   the reverse, removing the noise a little at a time. Like the VAE, it trains on a lower bound.
@@ -295,12 +295,12 @@ the work into generating.
 **What is the baseline?** For the detector, one bell curve: the two-regime model is
 0.89 bits per June reading better. For the heatmaps, each cell on its own
 (3.20 bits per cell), with the local rule (0.64) and the transformer
-(0.40) of section 3.2 for scale.
+(0.40) of section 4.2 for scale.
 
 **How was the data split, and why is that honest?** The detector model was fitted on May and checked on June, a
 later month it never saw; splitting readings at random would have let neighbouring five-minute readings sit on both
 sides. The heatmaps use the same 3,200 / 400 / 400 split of whole heatmaps as section
-3.2; the number of classes and the pseudo-count were chosen on validation, and the test heatmaps only report.
+4.2; the number of classes and the pseudo-count were chosen on validation, and the test heatmaps only report.
 
 **What does it do on the ugly cases?** Bell curves are the wrong shape for speed regimes: they put
 0.8% of the probability below 0 mph and still over-predict the in-between speeds

@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.8</span>
-    <span class="notes-card-session">Sessions: Oct 8 &amp; 15</span>
+    <span class="notes-card-session">Sessions: Vision transformers; ViT extensions</span>
   </div>
   <p class="notes-card-lede">The Vision Transformer of 2.7 reads a 224-pixel square with global attention and no built-in sense of what is near what. Three designs put locality back: Swin attends inside small shifting windows, MobileViT tucks a little attention inside a phone-sized CNN, and ConvNeXt rebuilds a 2015 ResNet with transformer-era choices and no attention at all. The section closes on a camera-to-alert pipeline where convolution, attention and classical code each do what suits the signal.</p>
   <div class="notes-card-cols">

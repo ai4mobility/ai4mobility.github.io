@@ -45,7 +45,7 @@ Two rules with no exceptions:
 ```markdown
 # Module N — <title>
 
-*Sessions: <dates>. <One line on what the module is for.>*
+*<Part I or II>. The class schedule is on the syllabus page.*   <- module pages carry no dates
 
 :::{admonition} How to read this chapter
 :class: tip
@@ -99,8 +99,9 @@ split. Use the same shape:
   (`module1/notes.md`, titled "Notes") and it was removed on 2026-09-05: it
   made students click twice to reach a section, and "Notes → 1.3" reads as a
   folder rather than as a chapter. `moduleN/index.md` is the landing page.
-- `moduleN/index.md` therefore carries, in this order: the class-meetings
-  table, a *Why this module comes first* / framing section, a **The module,
+- `moduleN/index.md` therefore carries, in this order: a **Session topics**
+  list (topics only, no dates or due items &mdash; class dates live only on the
+  syllabus page, because they move), a *Why this module comes first* / framing section, a **The module,
   page by page** section holding the *How to read this module* admonition and
   the **map table** (page | what it covers | companions & notebooks, one row
   per section page, `class="practice-table notes-map"`), then the objectives,
@@ -115,13 +116,13 @@ split. Use the same shape:
 ### The header card
 
 Every split page opens with one, immediately under the H1. It answers "what am
-I looking at, when is it, and what do I run" before the reader scrolls:
+I looking at, which session is it, and what do I run" before the reader scrolls:
 
 ```html
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 1 &middot; Section 1.1</span>
-    <span class="notes-card-session">Session: Aug 27</span>
+    <span class="notes-card-session">Session: Neural network basics</span>
   </div>
   <p class="notes-card-lede">Two or three sentences on what this page covers.</p>
   <div class="notes-card-cols">

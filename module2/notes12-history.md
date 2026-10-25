@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.12</span>
-    <span class="notes-card-session">Session: Oct 15</span>
+    <span class="notes-card-session">Session: ViT extensions and fusion</span>
   </div>
   <p class="notes-card-lede">A driver, or an operator in a traffic management center, never fuses only the present: each carries what happened over the last minutes. This section shows the three places a model can carry the past into cross-attention &mdash; baked into each stream's token, kept as keys and values the current query can search, or carried as a memory rewritten every second &mdash; starting from the recurrent network you know and ending at a learned gate that rediscovers the Kalman gain.</p>
   <div class="notes-card-cols">
@@ -18,7 +18,7 @@
       <h4>Where it leads</h4>
       <ul>
       <li><a href="notes13-evaluation.html">2.13 Does it earn its keep?</a></li>
-      <li><a href="notes15-gnn.html">2.14 One view of every network: graph neural networks</a></li>
+      <li><a href="../module3/notes1-gnn.html">3.1 One view of every network: graph neural networks</a></li>
       </ul>
     </div>
   </div>
@@ -95,7 +95,7 @@ began, and fell to 0.44 as the speed settled. Individual numbers' gates ranged f
 **The last state is the token.** The same cell reads message 1, then 2, up to 30; the final summary,
 projected to 768, is the token. Keep the GRU small: 768 wide it has 1,785,600 weights; 128 wide plus a
 projection, 150,912. Recurrent encoders were the default for years, from DCRNN (2018, a graph
-convolution inside a GRU cell; graph networks are in {ref}`section 2.14 <graph-neural-networks>`) to Waymo's MultiPath++
+convolution inside a GRU cell; graph networks are in {ref}`section 3.1 <graph-neural-networks>`) to Waymo's MultiPath++
 (2022, LSTMs).
 
 **Gaps and streaming: read only arrivals.** A fixed-slot encoder turns a lost message into a zero plus

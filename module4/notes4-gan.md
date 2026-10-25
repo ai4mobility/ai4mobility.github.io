@@ -1,16 +1,16 @@
-# 3.5 A forger and a critic, and a first scorecard
+# 4.5 A forger and a critic, and a first scorecard
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 3 &middot; Section 3.5</span>
-    <span class="notes-card-session">Session: Oct 22</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.5</span>
+    <span class="notes-card-session">Session: Generative models, part 1</span>
   </div>
   <p class="notes-card-lede">The third answer removes squared error altogether: a forger network makes heatmaps and a critic network tries to tell them from real ones. Then the first three answers are scored side by side on the same 400 held-out heatmaps, with measures that work for any generator, including one that gives no probabilities at all.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes3-vae.html">3.4 A few hidden knobs: the VAE</a></li>
+      <li><a href="notes3-vae.html">4.4 A few hidden knobs: the VAE</a></li>
       </ul>
     </div>
     <div>
@@ -38,7 +38,7 @@
 Two networks trained against each other. Nothing in the loss rewards an average.
 ```
 
-Section 3.4 ended on a diagnosis: squared error rewards the average, and the average of sharp fronts is
+Section 4.4 ended on a diagnosis: squared error rewards the average, and the average of sharp fronts is
 a soft one. A generative adversarial network (GAN) removes squared error from the picture.
 
 It has two networks. The **forger** (the *generator*, 244,289 weights here) takes 32 random
@@ -128,7 +128,7 @@ performance, including a vendor's.
 First six samples from each model, not picked, all rounded to 3-mph bins.
 ```
 
-Before any numbers, look. The VAE's fronts are soft, as section 3.4 explained. The autoregressive model and the
+Before any numbers, look. The VAE's fronts are soft, as section 4.4 explained. The autoregressive model and the
 GAN keep them sharp. Sharpness is the part of quality the eye judges well. Coverage, whether all the
 kinds of traffic in the data appear in the samples, is the part the eye cannot judge, so it needs the
 table.
@@ -157,7 +157,7 @@ How to read it, column by column.
   fooled. *Blur fools looks real:* an average heatmap sits close to many real ones, so the 2-knob VAE
   scores 0.998, above the reference, while covering only 0.085 of the
   real variety. *Noise fools covers:* very noisy samples have very large neighbourhoods, so even the
-  independent marginals from section 3.1, which never look real (0.000), cover
+  independent marginals from section 4.1, which never look real (0.000), cover
   0.482. Read the two columns together, and with the front column.
 - **Front** is the largest jump between road neighbours, averaged over heatmaps. Real heatmaps give
   39.6 mph on the test set and 38.4 on the validation set, so a
@@ -168,7 +168,7 @@ How to read it, column by column.
 
 Three findings stand out. The autoregressive model covers the variety as well as real data does
 (0.950 against 0.953). The GAN is close behind on both columns. And
-the local rule, which scored well on bits per cell in section 3.2, makes noisy samples (fronts of
+the local rule, which scored well on bits per cell in section 4.2, makes noisy samples (fronts of
 60.9 mph against a real 39.6), most likely because it draws
 neighbouring road cells independently of each other: **a good likelihood does not guarantee good samples.** Its
 high coverage (0.938) is the same noise effect as the marginals', which is why it sits so close

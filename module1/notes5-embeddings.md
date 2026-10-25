@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 1 &middot; Section 1.5</span>
-    <span class="notes-card-session">Session: Sept 10</span>
+    <span class="notes-card-session">Session: Representation learning</span>
   </div>
   <p class="notes-card-lede">One-hot encoding and its three failures; an embedding as a geometry; Word2Vec, and the same algorithm run on a road network; image embeddings and transfer learning; contrastive learning where labels are scarce; CLIP and the open-vocabulary long tail. Closes with the two questions that matter on the job: what is the unit being embedded, and how would you know the representation is any good.</p>
   <div class="notes-card-cols">

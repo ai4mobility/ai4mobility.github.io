@@ -1,25 +1,25 @@
 (agent-loop)=
-# 4.2 A model in a loop
+# 5.2 A model in a loop
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.2</span>
-    <span class="notes-card-session">Session: Oct 29</span>
+    <span class="notes-card-eyebrow">Module 5 &middot; Section 5.2</span>
+    <span class="notes-card-session">Session: How an agent works</span>
   </div>
   <p class="notes-card-lede">What an AI agent is and how it runs: a language model whose replies can be tool calls, a program that runs them, and a loop that feeds the results back. This section opens real recorded runs of a small open model retiming a signal in SUMO, step by step and token by token, then reads the milestone paper behind the loop, ReAct, in depth. It closes with where an agent sits between a fixed workflow and full autonomy, and with the idea that organizes all of Part II: an agent is a model plus a harness.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it first</h4>
       <ul>
-      <li><a href="notes1-workflow.html">4.1 The workflow is the unit of work</a></li>
+      <li><a href="notes1-workflow.html">5.1 The workflow is the unit of work</a></li>
       <li><a href="../module2/notes4-gpt.html">2.4 GPT: generating one token at a time</a></li>
       </ul>
     </div>
     <div>
       <h4>Used again in</h4>
       <ul>
-      <li><a href="notes3-tools.html">4.3 Tools: what an agent can reach</a></li>
-      <li><a href="notes4-context.html">4.4 Context: what the model reads</a></li>
+      <li><a href="notes3-tools.html">5.3 Tools: what an agent can reach</a></li>
+      <li><a href="notes4-context.html">5.4 Context: what the model reads</a></li>
       </ul>
     </div>
   </div>
@@ -57,7 +57,7 @@ a full workflow each in {doc}`Module 8 <../module8/index>`. Look at what changes
 through a task, deciding what to look up, calling a tool, reading the result and deciding what to do next. And
 look at what does not change. Every task ends with a person: an engineer approves the timing plan, an engineer
 signs off the site list, an inspector signs the report. That is the checkpoint rule of
-{doc}`4.1 <notes1-workflow>`, and it is the thread through all of Part II.
+{doc}`5.1 <notes1-workflow>`, and it is the thread through all of Part II.
 
 ## Alone, ask first, or never?
 
@@ -115,7 +115,7 @@ the model has not run anything, it has written a request. The harness reads that
 function, and pastes the result back inside `<tool_response>` tags (197 tokens here). Then it sends the whole,
 longer text to the model again. That is all a tool call is. The model was trained to write this format; it has no
 other way to touch the world. And it knows nothing about a tool except its name, its one-sentence description and
-its parameter list ({doc}`4.3 <notes3-tools>`).
+its parameter list ({doc}`5.3 <notes3-tools>`).
 
 ## The loop you already know
 
@@ -209,7 +209,7 @@ s/veh) and the agent submitted a plan that breaks the pedestrian minimum it had 
 the harness returned an error naming the rule; the next thought read it ("The simulation returned an error because
 the pedestrian minimum for the east-west phase is set at 21 seconds"), and the agent simulated and submitted 30/21
 (18.8 s/veh). **Showing a rule is advice; checking it in the harness is a rule.** The cost of the rule here was
-0.1 s/veh. Condition D, and how to grade all four, are in {doc}`4.3 <notes3-tools>`.
+0.1 s/veh. Condition D, and how to grade all four, are in {doc}`5.3 <notes3-tools>`.
 
 **Our first two runs failed, and both failures were harness bugs.** In the first, the model's reply hit the 200-token
 limit we had set in the middle of a tool call; the harness found no complete call and stopped at step 2. In the
@@ -388,7 +388,7 @@ the tools it can call and how their results are written back, what it remembers,
 it is allowed to touch, and the log of everything it did. You can improve an agent in two ways: change the model,
 by fine-tuning ({doc}`Module 6 <../module6/index>`), or change the harness. In the runs above, moving the pedestrian limit from the
 model's reading into the harness's code changed the plan; nothing about the model changed. For the rest of Part
-II, almost everything you design is harness: tools and context here, memory, skills and planning in Module 5,
+II, almost everything you design is harness: tools and context here, memory, skills and planning later in this module,
 measurement and fine-tuning in Module 6, permissions and people in Module 7, and full workflows for SUMO simulation and safety analysis in
 Module 8.
 

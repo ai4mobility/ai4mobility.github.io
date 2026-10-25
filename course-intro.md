@@ -95,7 +95,7 @@ labelled with one of six kinds of leverage &mdash; <strong>extraction &middot; c
 generation &middot; retrieval &middot; prediction &middot; judgment</strong> &mdash; and the human review placed
 immediately before the first irreversible action. That material opens the AI agents
 part of the course, so it is written up there: see
-<a href="module4/notes1-workflow.html">4.1 The workflow is the unit of work</a> for the anatomy, the six labels, the
+<a href="module5/notes1-workflow.html">5.1 The workflow is the unit of work</a> for the anatomy, the six labels, the
 checkpoint rule, and the worked Traffic Incident Management case.
 </div>
 
@@ -105,7 +105,7 @@ checkpoint rule, and the worked Traffic Incident Management case.
 
 A recurring worry in a course like this is that the transportation background is
 the thing being replaced. It is not, and the workflow framing in
-{doc}`4.1 <module4/notes1-workflow>` is what makes that concrete.
+{doc}`5.1 <module5/notes1-workflow>` is what makes that concrete.
 
 Traffic flow theory tells you what a plausible output looks like, which is how
 you catch a model that has learned something absurd. Statistics tells you

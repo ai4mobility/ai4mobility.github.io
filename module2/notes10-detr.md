@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 2 &middot; Section 2.10</span>
-    <span class="notes-card-session">Session: Oct 15</span>
+    <span class="notes-card-session">Session: ViT extensions and fusion</span>
   </div>
   <p class="notes-card-lede">A detector must return a list of unknown length, one box per vehicle. DETR asks 100 learned questions that read the frame through the cross-attention of 2.9, trained so each vehicle is claimed by exactly one. This section opens the decoder on a real Florida intersection, measures where it breaks, and turns it into a design move for your own problems: decide what one answer is, and give it a query.</p>
   <div class="notes-card-cols">
