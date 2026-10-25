@@ -39,6 +39,10 @@ cannot be undone. Other examples come from agency practice and research: an FDOT
 skill, and a manager agent with helper agents working through a literature review (how driver-assistance
 systems change freeway capacity, say) while keeping notes in memory between sessions.
 
+**This week's transportation question.** Which parts of an agency's decades of practice — its
+procedures, after-action reviews and lessons from past storms — can become skills, memory and plan
+templates, and which cannot be written down?
+
 ## Learning objectives
 
 By the end of this module you will be able to:

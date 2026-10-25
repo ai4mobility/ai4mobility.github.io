@@ -14,7 +14,7 @@ Part II of the course is about **AI agents**: systems in which a language model 
 question but works through a task — calling tools, reading the results, and deciding what to do next.
 This module covers how that works.
 
-Three ideas carry the whole of Part II.
+Four ideas carry the whole of Part II.
 
 - **An agent is a model in a loop.** The model writes a short, structured request to use a tool. A
   program runs it, the result is pasted back into the model's input, and the loop repeats until the model
@@ -27,6 +27,12 @@ Three ideas carry the whole of Part II.
 - **An agent is a model plus a harness.** The harness is everything around the model: its instructions,
   its tools, its memory, the loop, and its permissions. You will almost never change the model. You will
   build harnesses, and {doc}`Module 8 <../module8/index>` builds them for transportation.
+- **What transportation adds is the lever.** Every technique in Part II — retrieval, tools, skills,
+  memory, planning, fine-tuning, evaluation, human review — was built to work in any field. For each one
+  we ask what transportation researchers and engineers can add to make it work better: traffic flow and
+  safety theory, an agency's decades of procedures and lessons, and its data. The harness is where that
+  knowledge goes. Each lecture ends with ten minutes on this question for your own project, and every idea
+  is tested against the general version without it.
 
 The examples in Part II come from across transportation research and agency practice, so you should
 find your own kind of work among them. Two topics get extra depth: **traffic simulation with SUMO** (this
@@ -34,6 +40,10 @@ module's lab and a full workflow in Module 8) and **transportation safety analys
 a full workflow in Module 8). In this module the examples are an agent that runs a SUMO simulation
 through tools and reads the result, an agent that retrieves the right passage of an agency manual before
 it answers, and an agent that calls live traffic data such as Florida 511 incident reports.
+
+**This week's transportation question.** What should your agent compute itself, and what should it hand
+to a validated engineering tool such as SUMO or an HCM procedure? And how should traffic be described in
+its context: as raw detector data, or as the bottleneck and queue that traffic flow theory points to?
 
 Part II adapts the structure of CMU 11-768 *AI Agents* (Fall 2026, Daniel Fried and Graham Neubig) and
 rebuilds it around transportation research and agency work.

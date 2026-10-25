@@ -82,6 +82,10 @@ download from Canvas.
 ## How the Course Teaches
 
 <div class="community-grid">
+  <div class="community-card" style="grid-column: 1 / -1;">
+    <h3>What can transportation add?</h3>
+    <p>Each AI method is taught first in its general form, so it carries over to any field. Then comes the question this course keeps asking: what can transportation researchers and engineers add to make it work better? Traffic flow and safety theory, an agency's decades of procedures and lessons, and its data can each enter a model or an agent at specific points. Every such idea is tested against the general method, because domain knowledge only counts when it beats the version without it.</p>
+  </div>
   <div class="community-card">
     <h3>Transportation examples first</h3>
     <p>You meet each AI idea through something you already know. The cell transmission model turns out to be a convolution, and later a graph neural network. Attention works like a signal controller deciding how much green each approach gets.</p>

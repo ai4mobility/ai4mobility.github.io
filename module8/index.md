@@ -18,11 +18,12 @@ harness, and the same template describes the harness every time:
 |---|---|
 | Task and trigger | What starts the agent, and what does "done" look like? |
 | Tools and data access | Which APIs or MCP servers can it call? Read-only or write? |
-| Knowledge | Which manuals or documents does it retrieve from? |
+| Documents | Which manuals or documents does it retrieve from? |
 | Skills | Which agency procedures are written as skills? |
 | Memory | What does it keep between runs, and who can edit it? |
 | Workflow or agent | Which steps are fixed in code, and which does the model decide? |
 | Checkpoints and permissions | Where must a person approve, especially before steps that cannot be undone? |
+| Transportation knowledge | Which theory, agency experience and data does it use? Where does each enter, and how do you show it beats a generic agent? |
 | Evaluation | How do we know it works, and what is the baseline? |
 | Logs and disclosure | What is recorded, and how are AI-assisted outputs labeled? |
 
@@ -59,11 +60,16 @@ crash data, where counts are small and regression to the mean is common.
 your own drafts. Funders and many journals do not allow confidential manuscripts or proposals to be
 uploaded to AI tools.
 
+**This week's transportation question.** What makes your agent measurably better than a generic one?
+Each team brings the lever cards from the earlier lectures and makes that case, with the general agent as
+the baseline the final project is compared against.
+
 ## Learning objectives
 
 By the end of this module you will be able to:
 
 - Describe any transportation agent with the harness template, and spot the field a design has left empty.
+- Make the case, against a baseline, for what transportation theory, agency experience and data add to your agent.
 - Lay out an AI workflow for traffic simulation and one for safety analysis, with the agent's steps, the
   person's steps, and the checkpoints.
 - Say what would make a transportation dataset easier for an agent to use, what data would let a model, a

@@ -40,6 +40,10 @@ language-model agents acting as simulated travelers or drivers.
 Other examples: traffic management center operators approving the dynamic message sign messages an
 agent drafts, and automated vehicles and human drivers as agents with different goals.
 
+**This week's transportation question.** Where does the engineer's judgment belong in the loop, and which
+agency rules become features of the harness? And when language-model agents play drivers, does traffic
+flow theory say they behave like real ones — do they reproduce the fundamental diagram?
+
 ## Learning objectives
 
 By the end of this module you will be able to:

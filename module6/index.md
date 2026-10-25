@@ -34,6 +34,11 @@ The examples: fine-tuning a small model to turn crash narratives into structured
 lab), scoring an agent that drafts post-storm damage reports from dashcam frames against inspectors'
 labels, and SimSkill, a published agent that builds up a library of skills from its own SUMO runs.
 
+**This week's transportation question.** Transportation has unusually good graders: simulators, exact
+calculations such as HCM procedures, conservation of vehicles, and decades of recorded outcomes. Where do
+they give better training data, rewards and judges than generic ones — and when is a simulator too poorly
+calibrated to trust as a judge?
+
 ## The module, page by page
 
 <div class="practice-table-wrap">
