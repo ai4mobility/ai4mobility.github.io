@@ -165,7 +165,7 @@ The three results worth carrying out of it:
 - **Convolution assumes the road is the same everywhere.** That holds for a shockwave and fails for a
   bottleneck at a fixed milepost, which is why geometry belongs in the input as extra channels.
 
-This is the corridor half of a question that {doc}`3.1 <../module3/notes1-gnn>` asks for a whole
+This is the corridor half of a question that {doc}`3.8 <../module3/notes8-ctm>` asks for a whole
 network: can a learned model stand in for one you would otherwise write down?
 
 (scooter-kid-case)=

@@ -198,9 +198,9 @@ your browser, with nothing to install. Here are six to start with.
     <a class="resource-link" href="_static/companions/Crash_Narrative_BERT_Companion.html" target="_blank" rel="noopener">Open the companion</a>
   </article>
   <article class="resource-card">
-    <div class="resource-card-top"><p class="resource-category">Module 3 &middot; Section 3.1</p></div>
+    <div class="resource-card-top"><p class="resource-category">Module 3 &middot; Section 3.6</p></div>
     <h3>A graph neural network on a road network</h3>
-    <p>Generate a street network in your browser and watch one shared rule run at every intersection, and how a rule that only looks one hop away ends up modelling a disturbance that travels for miles. Read it in context in <a href="module3/notes1-gnn.html">section 3.1</a>.</p>
+    <p>Generate a street network in your browser and watch one shared rule run at every intersection, and how a rule that only looks one hop away ends up modelling a disturbance that travels for miles. Read it in context in <a href="module3/notes6-message-passing.html">section 3.6</a>.</p>
     <div class="tag-row"><span>Road networks</span><span>GNN</span></div>
     <a class="resource-link" href="_static/companions/GNN_On_A_Road_Network_Companion.html" target="_blank" rel="noopener">Open the companion</a>
   </article>

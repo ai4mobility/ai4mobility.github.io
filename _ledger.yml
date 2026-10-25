@@ -91,8 +91,8 @@ items:
       signal control and the operations material still follow the Nov 5 session.
       SPLIT 2026-10-24 when Part II became the AI agents unit: section 7.1 went
       to site/module4/notes1-workflow.md (now 4.1, row m4-notes-1-workflow) and the
-      GNN half of 7.2 to site/module3/notes7-gnn.md (then 3.7; since 2026-10-25 it is 2.14,
-      site/module2/notes15-gnn.md, row m3-notes-7-gnn).
+      GNN half of 7.2 to site/module3/notes7-gnn.md (then 3.7; on 2026-10-25 it became 2.14,
+      then Module 3, split into site/module3/notes1-graph-data.md ... notes10-labs.md, rows m3-gnn-notes-*).
       The old file was moved out of the repo to _to_delete/site-restructure-20261024/.
 
   - id: course-intro
@@ -1527,22 +1527,24 @@ items:
     module: 3
     session: gnn-week
     status: integrated
-    dest: site/module3/notes1-gnn.md
+    dest: site/module3/notes2-graph-basics.md
     notes: 'GNN part 1, "what is a node?": 10 slides (tokens you already chose, who reads whom, a graph
       is two tables, put the node where the state lives, one intersection two tokenizations, edges are a
       claim, infrastructure as a heterogeneous graph, fit card, check yourself). Reproducer gnn_intro/ (20/20
-      audit). GNN_Who_Reads_Whom and GNN_Two_Tokenizations are on the site in 2.14.'
+      audit). On the site since the 2026-10-25 split: GNN_Two_Tokenizations in 3.2, GNN_Who_Reads_Whom in 3.7 and
+      GNN_Infrastructure_Graph in 3.4.'
 
   - id: m2-gnn-message-passing-slides
     file: GNN_Message_Passing_Slides.pptx + .md
     kind: deck
     module: 3
     session: gnn-week
-    status: raw
-    dest: site/module3/notes1-gnn.md
+    status: drafted
+    dest: site/module3/notes6-message-passing.md
     notes: 'GNN part 2: 19 slides from the kernel breaking at a junction through the CTM, GCN, aggregators,
-      depth, oversmoothing and node/edge/graph tasks. Reproducer gnn_mp/. Not yet folded into 2.14 beyond
-      what the section already said; its node/edge/graph-task half is the obvious next addition.'
+      depth, oversmoothing and node/edge/graph tasks. Reproducer gnn_mp/. Folded into 3.6, 3.8 and 3.9 on
+      2026-10-25 by way of the v2 handout (row m3-gnn-handout-v2); GNN_MP_Three_Heads and GNN_MP_Same_Numbers
+      are on the site in 3.9.'
 
   - id: m2-encode-mix-compress-slides
     file: Encode_Mix_Compress_Slides.pptx + .md
@@ -1550,10 +1552,146 @@ items:
     module: 3
     session: unscheduled
     status: integrated
-    dest: site/module3/notes1-gnn.md
+    dest: site/module3/notes3-one-view.md
     notes: 'The summary session after cross-attention: every model as encode, mix, compress, then five design
-      tips. Reproducer mixing_recap/. Its "one update" and "two dials" figures open 2.14 as EMC_One_Update
+      tips. Reproducer mixing_recap/. Its "one update" and "two dials" figures open 3.3 as EMC_One_Update
       and EMC_Two_Dials; the design-tips half is not on the site.'
+
+  - id: m3-gnn-handout-v2
+    file: 'Claude Docs artifact "Graph Neural Networks: Learning on Graph-Structured Data - Student Handout (v2)"'
+    kind: handout
+    module: 3
+    session: gnn-week
+    status: integrated
+    dest: site/module3/notes1-graph-data.md ... notes10-labs.md
+    notes: 'Student handout, ten sections, written from Hao''s outline and revised against his 17 Word comments
+      (v1 superseded). Graph data in research and agency practice (hurricane data graph, implicit graphs);
+      graph basics on a 3x3 grid of road cells; RNN/CNN/transformer as graphs; node/edge/graph tasks; the
+      language bridge; node embeddings; message passing with GCN, max pressure and attention; the CTM as
+      message passing; node/edge/graph classification; fit card. The module 3 site pages are this handout,
+      one section per page, merged with the old 3.1 page. Reproducer gnn_handout_v2/ (row m3-gnn-handout-v2-repro).'
+
+  - id: m3-gnn-graph-data-slides
+    file: GNN_Graph_Data_Slides.pptx + .md
+    kind: deck
+    module: 3
+    session: gnn-week
+    status: integrated
+    dest: site/module3/notes1-graph-data.md
+    notes: 'GNN part 0, before GNN_Intro_Slides: 8 slides (section header, graphs everywhere, real road graphs,
+      an intersection scene, a hurricane system of systems, one signal''s data after a storm, implicit graphs,
+      check yourself). Figures from gnn_handout_v2/deck/. Its check-yourself questions are on the practice page.'
+
+  - id: m3-gnn-handout-v2-repro
+    file: gnn_handout_v2/
+    kind: internal
+    module: 3
+    session: gnn-week
+    status: integrated
+    notes: 'Reproducer for the v2 handout, the GNN_Graph_Data deck and the module 3 site figures.
+      gnn_v2_numbers.py writes numbers.json: the grid CTM step (cell 5, 30 -> 32.0 veh/mi), GCN weights
+      (0.224 / 0.200; corner 0.289 / 0.333), the attention example (0.337 / 0.323 / 0.205 / 0.134; flip at
+      0.325), max pressure (EW 15.1, NS 2.9), USF degree counts, METR-LA rebuilt the DCRNN way, line-graph
+      counts. figs_a.py, figs_b.py and figs_c.py write fig/GNN2_*.svg; render.py --deck strips title, subtitle
+      and caption and crops to y 140-835 for deck/ and for the site copies (downscaled to 1600 px). TRAPS:
+      METR-LA has 1,515 directed edges and 1 isolated detector in the undirected union; the older "mean degree
+      6.52, 6 isolated" from gnn_intro is wrong and is no longer on the site. The site copy of GNN2_Same_Recipe
+      says "section 3.4" where the handout says "Section 4" (sed on a copy before rendering).'
+
+  - id: m3-gnn-notes-1
+    file: site/module3/notes1-graph-data.md
+    kind: notes
+    module: 3
+    session: gnn-week
+    status: drafted
+    notes: '3.1 Graphs everywhere in transportation. Handout section 1. Carries the (graph-neural-networks)= target.
+      Figures GNN2_Real_Networks, GNN2_Intersection_Interactions, GNN2_Hurricane_Infrastructure,
+      GNN2_Hurricane_Data_Graph.'
+
+  - id: m3-gnn-notes-2
+    file: site/module3/notes2-graph-basics.md
+    kind: notes
+    module: 3
+    session: gnn-week
+    status: drafted
+    notes: '3.2 Graph basics. Handout section 2: the 3x3 grid, three tables, road as node or edge (line graph),
+      heterogeneous graphs. Figures GNN2_Grid_Graph, GNN2_Grid_Adjacency, GNN2_Node_Or_Edge, GNN_Two_Tokenizations.'
+
+  - id: m3-gnn-notes-3
+    file: site/module3/notes3-one-view.md
+    kind: notes
+    module: 3
+    session: gnn-week
+    status: drafted
+    notes: '3.3 One view of every network. Handout section 3 merged with the old 3.1 opening (one update, nine-row
+      table, two dials, "too neat" caveats). Figures EMC_One_Update, GNN2_Architectures_As_Graphs,
+      GNN2_Attention_As_Graphs, EMC_Two_Dials.'
+
+  - id: m3-gnn-notes-4
+    file: site/module3/notes4-questions.md
+    kind: notes
+    module: 3
+    session: gnn-week
+    status: drafted
+    notes: '3.4 Three kinds of questions. Handout section 4: node, edge and graph questions, percolation, one storm
+      at three levels. Figures GNN2_Three_Levels, GNN_Infrastructure_Graph.'
+
+  - id: m3-gnn-notes-5
+    file: site/module3/notes5-node-embeddings.md
+    kind: notes
+    module: 3
+    session: gnn-week
+    status: drafted
+    notes: '3.5 From tokens to node embeddings. Handout sections 5 and 6. Figures GNN2_Same_Recipe (site copy says
+      section 3.4), GNN2_Multimodal_Nodes.'
+
+  - id: m3-gnn-notes-6
+    file: site/module3/notes6-message-passing.md
+    kind: notes
+    module: 3
+    session: gnn-week
+    status: drafted
+    notes: '3.6 Message passing and graph convolution. Handout section 7 (general form, GCN, max pressure, three
+      knobs, why "convolution") plus the old page''s companion embed, layer pseudo-code, WL dropdown,
+      parameter-count litmus test and evaluation close. Embeds m7-gnn-road-network. Target (message-passing)=.
+      Figures GNN2_Message_Passing_Cell5, GNN2_Max_Pressure.'
+
+  - id: m3-gnn-notes-7
+    file: site/module3/notes7-graph-attention.md
+    kind: notes
+    module: 3
+    session: gnn-week
+    status: drafted
+    notes: '3.7 Graph attention. Handout section 7 (attention filter, the flip, masks, filters at a glance) plus
+      the old masked_fill code and GAT/GATv2 dropdown; evaluation close on tab 5 and Lab 5. Target
+      (graph-attention)=. Figures GNN2_Conv_vs_Attention_Cell5, GNN_Who_Reads_Whom.'
+
+  - id: m3-gnn-notes-8
+    file: site/module3/notes8-ctm.md
+    kind: notes
+    module: 3
+    session: gnn-week
+    status: drafted
+    notes: '3.8 The CTM already passes messages. Handout section 8 plus the old CTM-vs-GNN bridge block; the merge
+      box. module1/notes3-cnn.md points here for the network half of its question. Figure GNN2_CTM_Grid_Update.'
+
+  - id: m3-gnn-notes-9
+    file: site/module3/notes9-classification.md
+    kind: notes
+    module: 3
+    session: gnn-week
+    status: drafted
+    notes: '3.9 Node, edge and graph classification. Handout section 9, then where it breaks, the fit card and
+      the evaluation close. Figures GNN_MP_Three_Heads, GNN_MP_Same_Numbers.'
+
+  - id: m3-gnn-notes-10
+    file: site/module3/notes10-labs.md
+    kind: notes
+    module: 3
+    session: gnn-week
+    status: drafted
+    notes: 'Module 3 practice page: what Lab 5 and the companion prove, the module in six lines, six judgment
+      questions, the parameter-count exercise, on the job, further reading, where it goes next.'
 
 # -----------------------------------------------------------------------------
 # MODULE 4 — Deep Generative Models (was Module 3 until 2026-10-25; the Module 3 GNN rows, ex-2.14, sit just above)
@@ -2024,7 +2162,7 @@ items:
     module: 3
     session: gnn-week
     status: published
-    dest: site/module3/notes1-gnn.md#graph-neural-networks
+    dest: site/module3/notes6-message-passing.md#message-passing
     mounted: site/_static/companions/GNN_On_A_Road_Network_Companion.html
     notes: 'SIX tabs since 2026-09-21 (tab 5 "Attention: a learned aggregator" inserted before the fit
       card; see the tail of this note). A random irregular street network is generated in the browser (perturbed lattice,
@@ -2153,7 +2291,7 @@ items:
     kind: notes
     module: 3
     session: gnn-week
-    status: integrated
+    status: superseded
     notes: '3.7 When the thing you model is a network: graph neural networks. Moved 2026-10-24 from module7/notes.md
       section 7.2 when Part II became the agents unit; numbered last so 3.1-3.6 keep their numbers (the
       page and the module index say it was taught first). Keeps the (graph-neural-networks)= target, so
@@ -2167,7 +2305,15 @@ items:
       = two kinds of node), node = token with the line graph, and a graph-attention subsection (one masked_fill
       line; self-loops because 6 METR-LA detectors are isolated; GAT-2018 static vs GATv2 dropdown). Site figures
       EMC_One_Update, EMC_Two_Dials (1600-px copies of the mixing-recap figures) and GNN_Who_Reads_Whom,
-      GNN_Two_Tokenizations (re-rendered from gnn_intro/fig/ without title or caption). Id kept for history.'
+      GNN_Two_Tokenizations (re-rendered from gnn_intro/fig/ without title or caption). Id kept for history.
+      SPLIT 2026-10-25 (same day) into nine section pages and a practice page built from the v2 handout,
+      rows m3-gnn-notes-1 to m3-gnn-notes-10. Its text was folded in: the one-update equation, the nine-row
+      table and the "too neat" caveats into 3.3; the companion embed, the layer pseudo-code, the WL dropdown
+      and the parameter-count litmus test into 3.6; masked_fill and the GAT/GATv2 dropdown into 3.7; the
+      CTM bridge into 3.8; the exercise and on-the-job questions into the practice page. Dropped: the
+      METR-LA "six and a half road neighbours" and "six detectors have no neighbour" figures (the DCRNN
+      rebuild gives 1,515 directed edges and 1 isolated detector). The file went to
+      _to_delete/module3-gnn-split-2026-10-25/; _redirects/module3/notes1-gnn.html points to 3.1.'
 
   - id: m4-notes-1-workflow
     file: site/module5/notes1-workflow.md

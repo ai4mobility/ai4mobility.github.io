@@ -55,7 +55,7 @@ latex:
   latex_documents:
     targetname: book.tex
 
-# Old addresses of pages moved on 2026-10-25 (Module 3 -> 4, agents Module 4 -> 5, GNN 2.14 -> 3.1)
+# Old addresses of pages moved on 2026-10-25 (Module 3 -> 4, agents Module 4 -> 5, GNN 2.14 -> 3.1, then GNN 3.1 split into 3.1-3.9)
 # redirect to the new ones. The stubs in _redirects/ are copied into the built site as-is.
 sphinx:
   config:

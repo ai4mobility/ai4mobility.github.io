@@ -18,7 +18,7 @@
       <h4>Where it leads</h4>
       <ul>
       <li><a href="notes13-evaluation.html">2.13 Does it earn its keep?</a></li>
-      <li><a href="../module3/notes1-gnn.html">3.1 One view of every network: graph neural networks</a></li>
+      <li><a href="../module3/notes3-one-view.html">3.3 One view of every network</a></li>
       </ul>
     </div>
   </div>
@@ -95,7 +95,7 @@ began, and fell to 0.44 as the speed settled. Individual numbers' gates ranged f
 **The last state is the token.** The same cell reads message 1, then 2, up to 30; the final summary,
 projected to 768, is the token. Keep the GRU small: 768 wide it has 1,785,600 weights; 128 wide plus a
 projection, 150,912. Recurrent encoders were the default for years, from DCRNN (2018, a graph
-convolution inside a GRU cell; graph networks are in {ref}`section 3.1 <graph-neural-networks>`) to Waymo's MultiPath++
+convolution inside a GRU cell; graph convolution is in {doc}`section 3.6 <../module3/notes6-message-passing>`) to Waymo's MultiPath++
 (2022, LSTMs).
 
 **Gaps and streaming: read only arrivals.** A fixed-slot encoder turns a lost message into a zero plus

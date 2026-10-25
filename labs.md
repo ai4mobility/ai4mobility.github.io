@@ -94,7 +94,7 @@
       <h3>Lab 5 &mdash; Attention on a Road Network</h3>
       <p>Build one message-passing layer with six interchangeable aggregators and run it against two ground-truth traffic rules taken from flow theory. Four aggregators are generic; two of them encode what a traffic engineer already knows &mdash; that a queue backs up from downstream, that arriving flow comes from upstream. Those two are the real competition, and they cost no extra parameters.</p>
       <p><strong>Proves:</strong> attention wins only where the weighting is genuinely unknown &mdash; and even there, knowing <em>which</em> neighbours to listen to is worth more than learning <em>how much</em> to weight them. <strong>Check it against:</strong> not the mean aggregator, which anything beats, but the fixed aggregator carrying your own domain knowledge. On the spillback rule it ties attention at half the parameters and a third of the seed variance.</p>
-      <div class="tag-row"><span>Reads with 3.1</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~3 min</span></div>
+      <div class="tag-row"><span>Reads with 3.6 and 3.7</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~3 min</span></div>
       <a class="resource-link" href="module3/lab5_graph_attention.html">Open Lab 5</a>
     </article>
     <article class="resource-card">

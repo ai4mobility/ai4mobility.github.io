@@ -63,10 +63,29 @@ parts:
           - file: module2/notes14-labs
             title: "Practice, exercises, and further reading"
       # Module 3 became its own module on 2026-10-25: the unified view, graph neural networks.
+      # Split the same day into nine section pages plus a practice page, from the v2 GNN handout.
       - file: module3/index
         sections:
-          - file: module3/notes1-gnn
-            title: "3.1 One view of every network: graph neural networks"
+          - file: module3/notes1-graph-data
+            title: "3.1 Graphs everywhere in transportation"
+          - file: module3/notes2-graph-basics
+            title: "3.2 Graph basics: nodes, edges and the whole graph"
+          - file: module3/notes3-one-view
+            title: "3.3 One view of every network"
+          - file: module3/notes4-questions
+            title: "3.4 Three kinds of questions you can ask a graph"
+          - file: module3/notes5-node-embeddings
+            title: "3.5 From tokens to node embeddings"
+          - file: module3/notes6-message-passing
+            title: "3.6 Message passing and graph convolution"
+          - file: module3/notes7-graph-attention
+            title: "3.7 Graph attention"
+          - file: module3/notes8-ctm
+            title: "3.8 The cell transmission model already passes messages"
+          - file: module3/notes9-classification
+            title: "3.9 Node, edge and graph classification"
+          - file: module3/notes10-labs
+            title: "Practice, exercises, and further reading"
       - file: module4/index
         sections:
           # Same flat shape as Modules 1 and 2 -- section pages directly under the
