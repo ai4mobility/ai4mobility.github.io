@@ -1944,6 +1944,22 @@ items:
       table. 13 slides + header + 1 backup. Outline Diffusion_Denoise_Slides.md; built from genmodels/slides_content.py
       (part_dm); numbers dm_results.json.'
 
+  - id: m4-generative-reading-library
+    file: Generative_Models_Transportation_Handout/Reading_Library_v2.html
+    kind: companion
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/index.md
+    mounted: site/_static/companions/Generative_Models_Reading_Library.html
+    notes: 'Thirty-four papers on generative models in transportation (Oct 26 2026), 2.6 MB single file in the
+      fusion-papers style: key figure, five facts (generates / conditioned on / model / steered by / used for),
+      sample-steer-fill glyph, what they found, for mobility, watch out; grouped by the eight problems of the
+      applications handout. Web copy drops the local-PDF links. Paper figures are reproduced for all 34 papers at
+      the request of the instructor (licenses ignored), unlike the fusion page. Every number checked by script
+      against the paper text. Reproducer Generative_Models_Transportation_Handout/build_v2/library/. Mounted at
+      anchor (generative-reading-library)= on the module index until a diffusion or world-model notes page exists.'
+
 # MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------
 

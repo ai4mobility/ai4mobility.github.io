@@ -79,6 +79,33 @@ realistic traffic state?" can be compared directly. Section 4.6 adds one real Pe
 </table>
 </div>
 
+(generative-reading-library)=
+## Reading library: generative models in transportation
+
+What do researchers actually do with these models in transportation? This library answers with
+34 papers, grouped by eight problems: several possible futures for road users, trip and OD data you
+can share, crashes and near-misses for testing automated vehicles, rare cases in ADAS and crash data,
+detector gaps, digital twins built from a few cameras, lidar generated from a camera, and storm damage
+from a small dataset, plus three surveys. Each card shows the paper&rsquo;s key figure and answers the
+same five questions: what it generates, from what, with which model, how the output is steered, and
+what it is used for. A small diagram marks the move each paper makes: **sample** (more of the same),
+**steer** (more of what you ask for), or **fill in** (complete what you saw).
+
+Use it alongside this module. After 4.4 and 4.5, filter by **VAE** and **GAN** to see where those models
+are still used; after the diffusion session, filter by **Diffusion**, the family most papers since 2023
+use. Read the **Watch out** line on every card: it names the trap, such as a realism score that says
+nothing about safety, or synthetic trips that are not automatically private. End at **What the papers
+share**, which lists the four steps most of these papers follow.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Reading library &mdash; Thirty-four papers on generative models in transportation</span>
+    <a href="../_static/companions/Generative_Models_Reading_Library.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Generative_Models_Reading_Library.html"
+          title="Thirty-four papers on generative models in transportation, and what each one generates" loading="lazy"></iframe>
+</div>
+
 ## Learning objectives
 
 By the end of this module you will be able to:
