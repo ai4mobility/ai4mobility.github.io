@@ -58,7 +58,7 @@ get new data.
 
 | | latent representation | latent variable |
 |---|---|---|
-| examples | BERT's token vectors, a ViT's `[CLS]`, an autoencoder's code | the regime in a mixture (4.9), the knobs of a VAE (4.7), diffusion's noise |
+| examples | BERT's token vectors, a ViT's `[CLS]`, an autoencoder's code | the regime in a mixture (4.10), the knobs of a VAE (4.7), diffusion's noise |
 | which way the arrow points | data → numbers: computed from the input | cause → data: assumed to have made the input |
 | for one input | one exact vector, every time | a guess with a spread |
 | a distribution to draw from | none | yes, part of the model |
@@ -114,7 +114,7 @@ $$
 
 *In words:* a heatmap could have come from many knob settings, so its probability adds them all up: how often each
 setting happens, times how likely that setting is to make this heatmap. When the hidden cause is a label, as in the
-mixture of section 4.9, the integral becomes a sum.
+mixture of section 4.10, the integral becomes a sum.
 
 **You already use latent variables.** Transportation models have had hidden causes for decades:
 
@@ -165,7 +165,7 @@ strong that bottleneck is (R² 0.22).
 
 The samples show what such a simple data maker costs. With the noise, 17% of cells fall outside 0&ndash;75 mph:
 a bell does not know that speeds have limits. Those samples look real 0.220 of the time on the scorecard of
-section 4.8. Without the noise they are smooth averages: they look real (0.875) but cover almost none of the
+section 4.9. Without the noise they are smooth averages: they look real (0.875) but cover almost none of the
 variety (0.033). The VAE of section 4.7 keeps the story and replaces "average plus two straight directions" with a
 network.
 
@@ -200,12 +200,12 @@ loop:
 
 Two things are found at once. For each heatmap, its value of the hidden cause comes from the guess. For the whole
 dataset, what each hidden number *does* to a heatmap comes from the refit. Neither comes with a name. You name them
-afterwards, by checking them against things you can measure. In section 4.9 the two regimes found at one I-405
+afterwards, by checking them against things you can measure. In section 4.10 the two regimes found at one I-405
 detector, 28.4 and 70.2 mph, are checked against the clock, which the model never saw: they line up with
 the peak periods. Here, the numbers can be checked against the simulator's own knobs.
 
 The three models differ most in how hard the guess is. For a mixture it is Bayes' rule, exact; the loop is the EM
-algorithm of section 4.9. For probabilistic PCA it is a formula, exact. For a VAE no formula exists, so an encoder
+algorithm of section 4.10. For probabilistic PCA it is a formula, exact. For a VAE no formula exists, so an encoder
 network learns to make the guess, and it is trained together with the decoder by gradient descent.
 
 ### Which hidden causes can be found?
@@ -263,7 +263,7 @@ draws, at one and two spreads. Each panel has its own scale.
 A latent-variable model has two distributions to learn: how often each hidden cause happens, $p(z)$, and what data
 each cause makes, $p(x \mid z)$. The models in this module split that work differently.
 
-- **Mixture (section 4.9): both are learned.** Each round of EM refits the regimes' shares (here 52% congested,
+- **Mixture (section 4.10): both are learned.** Each round of EM refits the regimes' shares (here 52% congested,
   48% free flow) and each regime's own bell.
 - **Probabilistic PCA, VAE and diffusion: $p(z)$ is not learned at all.** It is fixed to a standard bell (for
   diffusion, to pure noise). All the learning goes into the data maker, which has to bend that bell into the shape of
@@ -352,7 +352,7 @@ it. That is not drawing a hidden cause.) And not every generator needs a latent 
 
 ## The whole story in one table
 
-| | mixture (4.9) | probabilistic PCA (4.3) | VAE (4.7) | diffusion (next) |
+| | mixture (4.10) | probabilistic PCA (4.3) | VAE (4.7) | diffusion (next) |
 |---|---|---|---|---|
 | the hidden cause $z$ | one label: the regime or class | a few numbers | a few numbers | a noisy copy of the data, the same size |
 | its distribution $p(z)$ | learned shares | fixed: a standard bell | fixed: a standard bell | fixed: pure noise |
@@ -384,7 +384,7 @@ to learn it. Diffusion makes that step trivial and puts all the learning into th
 :class: warning
 **What is the baseline?** For what the numbers keep: the same encoder body trained for a task, and as a plain
 autoencoder. For what can be found at all: the simulator itself, run 200,000 more times. For samples: the real
-validation heatmaps (0.945 looks real, 0.953 covers the variety) and the scorecard of section 4.8.
+validation heatmaps (0.945 looks real, 0.953 covers the variety) and the scorecard of section 4.9.
 
 **How was the data split, and why is that honest?** The same 3,200 / 400 / 400 split of whole heatmaps
 as everywhere in Module 4. Every network, every fitted distribution and every steering bell saw only the training

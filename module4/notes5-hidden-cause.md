@@ -1,8 +1,8 @@
-# 4.9 One hidden cause: mixture models
+# 4.10 One hidden cause: mixture models
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.9</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.10</span>
     <span class="notes-card-session">Session: VAE and diffusion</span>
   </div>
   <p class="notes-card-lede">Before the VAE and diffusion, the simplest model with a hidden cause. A real detector's speeds come from two traffic regimes the detector never records; a mixture model finds them, guesses which one made each reading, and makes new readings in two steps. The same recipe, scaled to the 400-cell heatmaps, shows exactly why a single hidden label is not enough, and sets up the VAE and diffusion as two better choices of hidden cause.</p>
@@ -205,7 +205,7 @@ The CTM heatmaps as a mixture of 50 classes. The four classes shown are, after s
 slowest to fastest average speed, the largest one in each quarter; the samples are the first draw from each.
 ```
 
-Now the running example of sections 4.1&ndash;4.8: the 4,000 CTM speed heatmaps, each 400 cells on
+Now the running example of sections 4.1&ndash;4.9: the 4,000 CTM speed heatmaps, each 400 cells on
 the 25 speed bins of 3 mph, with the same 3,200 / 400 / 400 split. The recipe is
 unchanged. Each heatmap belongs to one hidden class; each class has its own histogram over the 25 bins for every
 one of the 400 cells. To make a heatmap, pick a class, then draw every cell from that class's
@@ -257,7 +257,7 @@ The reason is in the traffic. A queue can end at any road cell and start at any 
 *smoothly*. A list of labels can only cover a smooth range by listing more and more cases, each seen in fewer
 training heatmaps.
 
-There is a second limit that more classes do not fix. On the scorecard of section 4.8, the 50-class
+There is a second limit that more classes do not fix. On the scorecard of section 4.9, the 50-class
 mixture covers the variety well (recall 0.98&ndash;0.99 over three
 starts) but its samples never look real: precision is 0.003 or less for every
 mixture tried. It is the same pattern as the local rule on that scorecard: noise fools "covers the variety" but not

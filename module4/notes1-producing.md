@@ -169,12 +169,12 @@ one answer.
    autoencoder (VAE). Section {doc}`4.3 <notes2b-latent-variables>` first sets out the idea it rests on: a
    *latent variable*, a hidden cause you can draw from. Sections {doc}`4.4 <notes2c-autoencoders>` to 4.6 then
    build the plain autoencoder it extends, from PCA to masked autoencoders.
-3. **A forger and a critic** ({doc}`4.8 <notes4-gan>`). Train one network to make fakes and another to
+3. **A forger and a critic** ({doc}`4.9 <notes4-gan>`). Train one network to make fakes and another to
    catch them, until the fakes are hard to catch. This is the generative adversarial network (GAN).
 4. **Clean up noise, step by step** (next session). Start from pure noise and remove a little at a time.
    This is diffusion.
 
-Each answer fixes a weakness of the one before it, so the order matters. At the end of section 4.8 the first
+Each answer fixes a weakness of the one before it, so the order matters. At the end of section 4.9 the first
 three are scored side by side on the same held-out heatmaps.
 
 ## Check yourself

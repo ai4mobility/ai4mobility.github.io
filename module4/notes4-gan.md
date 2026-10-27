@@ -1,8 +1,8 @@
-# 4.8 A forger and a critic, and a first scorecard
+# 4.9 A forger and a critic, and a first scorecard
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.8</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.9</span>
     <span class="notes-card-session">Session: Generative models, part 1</span>
   </div>
   <p class="notes-card-lede">The third answer removes squared error altogether: a forger network makes heatmaps and a critic network tries to tell them from real ones. Then the first three answers are scored side by side on the same 400 held-out heatmaps, with measures that work for any generator, including one that gives no probabilities at all.</p>

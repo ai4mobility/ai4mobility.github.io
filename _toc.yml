@@ -108,10 +108,14 @@ parts:
             title: "4.6 Stopping the copy: sparse, denoising, masked"
           - file: module4/notes3-vae
             title: "4.7 A few hidden knobs: the VAE"
+          # 4.8, the VAE basics handout as a page, added 2026-10-27 after the autoencoder pages; GAN and mixture
+          # pages moved to 4.9-4.10.
+          - file: module4/notes3b-vae-basics
+            title: "4.8 Variational autoencoders: the basics"
           - file: module4/notes4-gan
-            title: "4.8 A forger, a critic, a scorecard"
+            title: "4.9 A forger, a critic, a scorecard"
           - file: module4/notes5-hidden-cause
-            title: "4.9 One hidden cause: mixture models"
+            title: "4.10 One hidden cause: mixture models"
 
   # Part II became the AI agents unit on 2026-10-24; its first two modules merged into Module 5 on 2026-10-25.
   - caption: Part II — AI Agents for Mobility

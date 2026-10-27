@@ -5,9 +5,9 @@
 ## Session topics
 
 - **Generative models, part 1:** what changes when a model produces data; autoregressive generation, latent
-  variables, VAE, GAN, and a first scorecard (4.1&ndash;4.3, 4.7&ndash;4.8)
+  variables, VAE, GAN, and a first scorecard (4.1&ndash;4.3, 4.7&ndash;4.9)
 - **Autoencoders:** from PCA worked by hand to deep, sparse, denoising and masked autoencoders (4.4&ndash;4.6)
-- **VAE and diffusion:** one hidden cause, from mixture models to the VAE (4.9), then diffusion; world models
+- **VAE and diffusion:** one hidden cause, from mixture models to the VAE (4.10), then diffusion; world models
   follow
 
 ## Overview
@@ -33,16 +33,19 @@ models — the attempt to learn a simulator rather than write one.
 :class: tip
 Read the pages in order; each builds on the one before. Sections 4.1&ndash;4.3 set up the question and the idea of a
 hidden cause. Sections 4.4&ndash;4.6 build the plain autoencoder, from PCA worked by hand to masked autoencoders.
-Sections 4.7 and 4.8 are the VAE and the GAN, scored side by side. Section 4.9 opens the VAE-and-diffusion session;
+Sections 4.7 and 4.8 are the VAE (4.8 takes it one step at a time, with a VAE trained on real detector data), and 4.9 is
+the GAN, scored side by side with it. Section 4.10 opens the VAE-and-diffusion session;
 diffusion and world models follow. Each page opens with a card naming its session. If multivariate Gaussians are
 rusty, start with the warm-up page before 4.3: it revisits one bell, slicing, fitting and mixtures of bells on three
-I-405 detectors, one of them the detector of 4.9.
+I-405 detectors, one of them the detector of 4.10.
 
 Most results on these pages come from one dataset, the 4,000 cell-transmission-model speed heatmaps that the VAE lab
 is built on, split the same way everywhere, so the four answers to "how do you draw a realistic traffic state?" can
 be compared directly. Section 4.4 adds two real PeMS detectors on I-405, small enough to work by hand; 4.5 and 4.6 add
-a synthetic fundamental diagram; 4.9 adds one real PeMS detector. The companion in 4.5 uses the I-405 pair, the
-fundamental diagram and the heatmaps; the one in 4.7 adds a second simulator, a grid network. If you read only one
+a synthetic fundamental diagram; 4.8 adds real daily flow curves from 170 PeMS District 8 stations; 4.10 adds one
+real PeMS detector. The companion in 4.5 uses the I-405 pair, the
+fundamental diagram and the heatmaps; the one in 4.7 adds a second simulator, a grid network; the one in 4.8 lets you turn the three knobs of a VAE trained
+on the District 8 flow curves. If you read only one
 page before class, read {doc}`4.1 <notes1-producing>`: the joint-versus-marginals figure is the idea the rest builds
 on.
 :::
@@ -94,12 +97,17 @@ on.
   <td><a href="../labs.html">VAE on traffic heatmaps</a></td>
 </tr>
 <tr>
-  <td><a href="notes4-gan.html"><strong>4.8 A forger, a critic, and a first scorecard</strong></a><br><em>Generative models, part 1</em></td>
+  <td><a href="notes3b-vae-basics.html"><strong>4.8 Variational autoencoders: the basics</strong></a><br><em>Generative models, part 1</em></td>
+  <td>The VAE one step at a time: from the autoencoder to a generator; three knobs of a VAE trained on real PeMS flow curves (interactive companion); a small cloud and the reparameterization trick; the loss and where it comes from; a &beta; sweep; generating and steering; where it breaks, including events missing from the training data.</td>
+  <td><a href="../labs.html">VAE on traffic heatmaps</a></td>
+</tr>
+<tr>
+  <td><a href="notes4-gan.html"><strong>4.9 A forger, a critic, and a first scorecard</strong></a><br><em>Generative models, part 1</em></td>
   <td>The two-player game; precision and recall for generators; how much a GAN wanders between runs; the first three answers scored on the same held-out heatmaps.</td>
   <td><a href="../labs.html">From VAE to diffusion</a></td>
 </tr>
 <tr>
-  <td><a href="notes5-hidden-cause.html"><strong>4.9 One hidden cause: mixture models</strong></a><br><em>VAE and diffusion session</em></td>
+  <td><a href="notes5-hidden-cause.html"><strong>4.10 One hidden cause: mixture models</strong></a><br><em>VAE and diffusion session</em></td>
   <td>One detector&rsquo;s speeds as two hidden regimes; the two-step recipe; the soft guess; fitting without labels (EM); the same idea on the heatmaps and where it breaks; mixture, VAE and diffusion as three choices of hidden cause.</td>
   <td>&mdash;</td>
 </tr>
@@ -129,7 +137,7 @@ same five questions: what it generates, from what, with which model, how the out
 what it is used for. A small diagram marks the move each paper makes: **sample** (more of the same),
 **steer** (more of what you ask for), or **fill in** (complete what you saw).
 
-Use it alongside this module. After 4.7 and 4.8, filter by **VAE** and **GAN** to see where those models
+Use it alongside this module. After 4.7 to 4.9, filter by **VAE** and **GAN** to see where those models
 are still used; after the diffusion session, filter by **Diffusion**, the family most papers since 2023
 use. Read the **Watch out** line on every card: it names the trap, such as a realism score that says
 nothing about safety, or synthetic trips that are not automatically private. End at **What the papers

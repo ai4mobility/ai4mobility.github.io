@@ -309,4 +309,4 @@ Five results to look for:
 
 ---
 
-Next: {doc}`notes4-gan` &mdash; the third answer removes squared error altogether.
+Next: {doc}`notes3b-vae-basics` &mdash; the same VAE one step at a time, with three knobs of a VAE trained on real detector data.
