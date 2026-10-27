@@ -1968,11 +1968,13 @@ items:
     status: integrated
     dest: site/module4/notes3-vae.md
     mounted: site/_static/companions/Same_VAE_Different_Traffic_Companion.html
-    notes: Same VAE, different traffic (Oct 27 2026), 2.6 MB, 8 tabs. One plain VAE (beta 1, Bernoulli,
+    notes: Same VAE, different traffic (Oct 27 2026), 2.7 MB, 9 tabs. One plain VAE (beta 1, Bernoulli,
       1,008-cell snapshots of the torus-grid network simulator traffic_sim/torus_sim.py) trained on light
       only, heavy only, half and half, all three regimes, and 5% heavy; 2 and 16 knobs, 3 seeds. Shows that
       knob meanings, knobs used, off-diet behaviour and generated mix depend on the training traffic, plus
-      leakage (random vs whole-run split) and a simulator-bug artifact; ends in seven data-collection lessons.
+      leakage (random vs whole-run split), a simulator-bug artifact, and a physics check (generated networks
+      carry more flow than real ones; knob walk); full latent distribution with a change-the-mix demo and
+      the sign-flip argument; ends in eight data-collection lessons.
       In-browser int8 decoder explorer. Every number filled by genmodels/torus_vae/build_companion.py from
       results/numbers.json; independent reviewer traced about 150 numbers. Mounted at anchor (same-vae-different-traffic)=
       in 4.4.

@@ -262,9 +262,10 @@ Everything above used one dataset. What the knobs mean, how many of them get use
 generates all depend on the traffic it was trained on. The companion below trains one plain VAE
 ($\beta$ = 1) on 1,008-cell snapshots of the course's torus-grid network simulator: on light traffic,
 on heavy congestion, on both, and on a mix where congestion is only 5% of the data. It then compares the
-latent maps those diets produce. Its last tabs turn the results into rules for collecting VAE training data.
+latent maps those diets produce. A physics tab checks whether generated networks move like real
+traffic, and the last tabs turn the results into rules for collecting VAE training data.
 
-Four results to look for:
+Five results to look for:
 
 - One knob tracks the load every time, much like knob 1 above. The other knob picks up whatever pattern
   is left over: most often the signal clock in light traffic, and where the jam sits in heavy traffic.
@@ -272,6 +273,8 @@ Four results to look for:
   near its centre and still rebuilds them badly. The score, not the position on the map, is the alarm.
 - With congestion at 5% of the training data, only 1.3&ndash;1.8% of generated networks are congested.
 - With no near-capacity data, the model does worse on near-capacity traffic than a per-cell average table.
+- Generated networks carry more flow than real ones at the same load. The decoder scatters vehicles
+  instead of queuing them, and neither the score nor the latent map shows it; a physics check does.
 
 <div class="companion-embed">
   <div class="companion-embed-bar">
@@ -291,7 +294,7 @@ Four results to look for:
 3. An agency wants each knob to mean something physical. When does that matter, and what could you do
    about it?
 4. Your detector archive is 80% overnight free flow. What will a VAE trained on it generate, and what
-   would you change in the data before training? (The companion's tabs 6 and 7 help.)
+   would you change in the data before training? (The companion's tabs 6 and 8 help.)
 
 ---
 
