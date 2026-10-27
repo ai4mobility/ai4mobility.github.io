@@ -29,6 +29,7 @@
 - What the knobs learned on this data, checked against the simulator's real knobs
 - Why the VAE blurs, measured: the decoder returns an average
 - Whether more knobs fix it, and how the VAE compares with plain PCA
+- How the knobs change when the training traffic changes, and what that means for collecting data (interactive companion)
 
 ## You already compress traffic states
 
@@ -254,6 +255,33 @@ asked to mean something physical, which nothing guarantees.
 diagram), or PCA's compression is good enough, as it is here at 8 components.
 :::
 
+(same-vae-different-traffic)=
+## Same VAE, different traffic: the knobs depend on the data
+
+Everything above used one dataset. What the knobs mean, how many of them get used, and what the model
+generates all depend on the traffic it was trained on. The companion below trains one plain VAE
+($\beta$ = 1) on 1,008-cell snapshots of the course's torus-grid network simulator: on light traffic,
+on heavy congestion, on both, and on a mix where congestion is only 5% of the data. It then compares the
+latent maps those diets produce. Its last tabs turn the results into rules for collecting VAE training data.
+
+Four results to look for:
+
+- One knob tracks the load every time, much like knob 1 above. The other knob picks up whatever pattern
+  is left over: most often the signal clock in light traffic, and where the jam sits in heavy traffic.
+- A light-only model throws heavy snapshots far outside the bell. A heavy-only model keeps light snapshots
+  near its centre and still rebuilds them badly. The score, not the position on the map, is the alarm.
+- With congestion at 5% of the training data, only 1.3&ndash;1.8% of generated networks are congested.
+- With no near-capacity data, the model does worse on near-capacity traffic than a per-cell average table.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion &mdash; Same VAE, different traffic</span>
+    <a href="../_static/companions/Same_VAE_Different_Traffic_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Same_VAE_Different_Traffic_Companion.html"
+          title="Same VAE, different traffic: how the training data shape a VAE's latent space" loading="lazy"></iframe>
+</div>
+
 ## Check yourself
 
 1. You need 1,000 synthetic corridor-days for a capacity study within an hour of computing. A VAE or
@@ -262,6 +290,8 @@ diagram), or PCA's compression is good enough, as it is here at 8 components.
    realistic. What do you measure, and against what?
 3. An agency wants each knob to mean something physical. When does that matter, and what could you do
    about it?
+4. Your detector archive is 80% overnight free flow. What will a VAE trained on it generate, and what
+   would you change in the data before training? (The companion's tabs 6 and 7 help.)
 
 ---
 
