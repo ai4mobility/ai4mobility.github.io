@@ -13,6 +13,7 @@
       <li><a href="../module2/notes5-bert.html">2.5 BERT: pretrain, then adapt</a></li>
       <li><a href="../module2/notes7-vision.html">2.7 Transformers that see: the Vision Transformer</a></li>
       <li><a href="notes2-autoregressive.html">4.2 One cell at a time</a></li>
+      <li><a href="notes2a-gaussians.html">Before 4.3: Gaussians and their mixtures</a></li>
       </ul>
     </div>
     <div>

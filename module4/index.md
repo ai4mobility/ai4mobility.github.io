@@ -31,7 +31,7 @@ models — the attempt to learn a simulator rather than write one.
 :::{admonition} How to read this module
 :class: tip
 Sections 4.1&ndash;4.5 pair with the first session; skim before, read properly after. Section 4.6
-opens the VAE-and-diffusion session; diffusion and world models follow. Each page opens with a card naming its session.
+opens the VAE-and-diffusion session; diffusion and world models follow. Each page opens with a card naming its session. If multivariate Gaussians are rusty, start with the warm-up page before 4.3: it revisits one bell, slicing, fitting and mixtures of bells on three I-405 detectors, one of them the detector of 4.6.
 
 Every result on these pages comes from one dataset, the 4,000 cell-transmission-model speed heatmaps
 that the VAE lab is built on, split the same way everywhere, so the four answers to "how do you draw a
@@ -53,6 +53,11 @@ realistic traffic state?" can be compared directly. Section 4.6 adds one real Pe
 <tr>
   <td><a href="notes2-autoregressive.html"><strong>4.2 One cell at a time</strong></a><br><em>Generative models, part 1</em></td>
   <td>The chain rule; next-cell prediction over 25 speed bins; why the training loss is the likelihood; bits per cell against a CTM-shaped baseline; where the model is uncertain.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes2a-gaussians.html"><strong>Before 4.3: Gaussians and their mixtures</strong></a><br><em>Warm-up, read before 4.3 and the VAE</em></td>
+  <td>One bell in one, two and three dimensions; every Gaussian as a reshaped round one; slicing, squashing and fitting a bell; why one bell fails over a whole day and what a mixture of bells does instead; where each idea returns in the VAE and diffusion (interactive companion).</td>
   <td>&mdash;</td>
 </tr>
 <tr>

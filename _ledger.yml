@@ -1997,6 +1997,33 @@ items:
       private Claude artifact. Mounted at anchor (autoencoder-latent-layer)= in 4.4, after "Squeeze, then
       expand".'
 
+  - id: m4-gaussians-mixtures-companion
+    file: Gaussians_Mixtures_Companion.html
+    kind: companion
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes2a-gaussians.md
+    mounted: site/_static/companions/Gaussians_Mixtures_Companion.html
+    notes: 'Gaussians and their mixtures (Oct 27 2026), 210 KB, 6 tabs + recap: one bell (2D contour map
+      with marginals, surface, 3D ellipsoid), reshaping a round bell (x = mu + L eps, Sigma shapes and their
+      sizes), slice and squash (night bell and whole-day 3-bell mixture), maximum likelihood landscape,
+      mix bells (pi / mu / sigma / r sliders, components, mixture, surface, live June score, soft guess),
+      VAE decoder as infinite mixture and diffusion noised data as a mixture of round bells. Three I-405
+      N detectors from PeMSD7(M): 717790, 772437, 772455; fit May, score June. Built by Gaussian_Mixtures_Handout/companion/build_gm_companion.py;
+      verify_companion.py checks 31 live numbers against output/gm_numbers.json and gm_vae_curve_het.json.'
+
+  - id: m4-notes2a-gaussians
+    file: module4/notes2a-gaussians.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes2a-gaussians.md
+    notes: 'Warm-up page "Before 4.3: Gaussians and their mixtures" (Oct 27 2026), condensed from the student
+      handout (a Claude doc) with four GM_* figures in _static/figures; mounts the companion at anchor (gaussians-companion)=.
+      Reproducers in Gaussian_Mixtures_Handout/.'
+
 # MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------
 

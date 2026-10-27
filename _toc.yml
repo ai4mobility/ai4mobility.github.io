@@ -94,6 +94,8 @@ parts:
             title: "4.1 From predicting to producing"
           - file: module4/notes2-autoregressive
             title: "4.2 One cell at a time"
+          - file: module4/notes2a-gaussians
+            title: "Before 4.3: Gaussians and their mixtures"
           - file: module4/notes2b-latent-variables
             title: "4.3 Latent variables: hidden causes"
           - file: module4/notes3-vae
