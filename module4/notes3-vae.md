@@ -25,6 +25,7 @@
 
 - Macroscopic state reduction as the idea behind a latent-variable model
 - The VAE's shape: an encoder that squeezes, a decoder that expands, and why the knobs need a spread
+- From PCA to the VAE, hands on: what the code layer looks like, and why a plain autoencoder cannot generate (interactive companion)
 - The two-term loss, and what each term buys
 - What the knobs learned on this data, checked against the simulator's real knobs
 - Why the VAE blurs, measured: the decoder returns an average
@@ -84,6 +85,40 @@ the encoder from shrinking the spreads to zero; so the whole knob space becomes 
 **Generating.** Throw the encoder away. Draw two numbers from a standard bell curve, run the decoder
 once, and you have a new heatmap. One forward pass, against 400 for the
 autoregressive model of section 4.2.
+
+(autoencoder-latent-layer)=
+## Inside the latent layer: from PCA to the VAE, hands on
+
+The section above makes two claims: a plain autoencoder can put each heatmap at its own isolated spot,
+and the spreads and the KL term fix that. The companion below lets you check both, one step at a time,
+starting from a model you already know. It begins with PCA on two real PeMS detectors on I-405, trains
+the same model as a two-layer network in your browser, bends it with depth on a synthetic fundamental
+diagram, and then asks whether you can draw new codes. Its last tab uses the 2-knob autoencoder and VAE
+from this page.
+
+Five results to look for:
+
+- PCA is an autoencoder with a straight-line decoder. A two-layer network trained on the rebuild loss
+  lands on the same line, with the same 4.41 mph RMS error per station.
+- Each reading's code is computed from the input with the current weights, so every training step moves
+  all of the codes.
+- With tanh and with no activation, the network rebuilds equally well, but its codes end on very
+  different scales: from &minus;0.24 to 0.23, against &minus;2.41 to 1.48. Nothing in the rebuild loss
+  decides where the codes live.
+- A deep autoencoder bends the line to follow the fundamental diagram. But codes between its clumps decode
+  to states no road produces, and codes drawn from a standard bell curve miss the real mix of densities
+  by 45%.
+- The VAE pulls its codes into the bell: 94.6% of its training codes sit inside the radius-2 circle, against
+  11.7% for the plain autoencoder on these heatmaps.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion &mdash; Inside the latent layer</span>
+    <a href="../_static/companions/Autoencoder_Latent_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Autoencoder_Latent_Companion.html"
+          title="Inside the latent layer: from PCA to autoencoders to the VAE" loading="lazy"></iframe>
+</div>
 
 ## The loss: rebuild well, keep the knobs findable
 

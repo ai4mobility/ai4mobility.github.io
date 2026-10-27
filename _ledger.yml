@@ -1978,6 +1978,24 @@ items:
       In-browser int8 decoder explorer. Every number filled by genmodels/torus_vae/build_companion.py from
       results/numbers.json; independent reviewer traced about 150 numbers. Mounted at anchor (same-vae-different-traffic)=
       in 4.4.
+  - id: m4-autoencoder-latent-companion
+    file: Autoencoder_Latent_Companion.html
+    kind: companion
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes3-vae.md
+    mounted: site/_static/companions/Autoencoder_Latent_Companion.html
+    notes: 'Inside the latent layer (Oct 27 2026), 0.9 MB, 5 tabs + recap: PCA as a linear autoencoder on
+      two real PeMSD7(M) I-405 N detectors (every 6th of 12,672 readings); a 2-1-2 network trained live
+      in the browser (tanh / none, 1 or 2 hidden units; same rebuild 4.41 mph, different code scales); a
+      deep AE on a synthetic triangular fundamental diagram with 22 weight snapshots x 3 runs, encoder field
+      and decoder curve (dashed where no reading is rebuilt); AE vs 1-D VAE sampling (beta 0.003-0.1); the
+      course 2-knob AE and VAE (lv_ae_z2.pt, vae_z2.pt, float16 decoders) on the CTM heatmaps with hover-to-decode,
+      bell draws and walks. Goes with the autoencoder and VAE basics handouts (Claude Docs). Reproducer
+      and the source of every stated number: genmodels/autoenc/companion/README.md. Also published as a
+      private Claude artifact. Mounted at anchor (autoencoder-latent-layer)= in 4.4, after "Squeeze, then
+      expand".'
 
 # MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------

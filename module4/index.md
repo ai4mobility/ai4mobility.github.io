@@ -35,7 +35,7 @@ opens the VAE-and-diffusion session; diffusion and world models follow. Each pag
 
 Every result on these pages comes from one dataset, the 4,000 cell-transmission-model speed heatmaps
 that the VAE lab is built on, split the same way everywhere, so the four answers to "how do you draw a
-realistic traffic state?" can be compared directly. Section 4.6 adds one real PeMS detector, and the companion in 4.4 a second simulator, a grid network. If you read only one page before class, read
+realistic traffic state?" can be compared directly. Section 4.6 adds one real PeMS detector. The two companions in 4.4 add two real PeMS detectors on I-405, a synthetic fundamental diagram, and a second simulator, a grid network. If you read only one page before class, read
 {doc}`4.1 <notes1-producing>`: the joint-versus-marginals figure is the idea the rest builds on.
 :::
 
@@ -62,7 +62,7 @@ realistic traffic state?" can be compared directly. Section 4.6 adds one real Pe
 </tr>
 <tr>
   <td><a href="notes3-vae.html"><strong>4.4 A few hidden knobs: the VAE</strong></a><br><em>Generative models, part 1</em></td>
-  <td>Macroscopic state reduction, learned; encoder, decoder and the two-term loss; the knobs it rediscovers; why it blurs, measured; VAE against PCA; how the knobs change with the training traffic (interactive companion).</td>
+  <td>Macroscopic state reduction, learned; encoder, decoder and the two-term loss; from PCA to the VAE, hands on (interactive companion); the knobs it rediscovers; why it blurs, measured; VAE against PCA; how the knobs change with the training traffic (interactive companion).</td>
   <td><a href="../labs.html">VAE on traffic heatmaps</a></td>
 </tr>
 <tr>
