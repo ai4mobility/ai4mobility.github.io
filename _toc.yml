@@ -98,12 +98,20 @@ parts:
             title: "Before 4.3: Gaussians and their mixtures"
           - file: module4/notes2b-latent-variables
             title: "4.3 Latent variables: hidden causes"
+          # 4.4-4.6 added 2026-10-27 from the autoencoder handout; the VAE, GAN and mixture pages moved from
+          # 4.4-4.6 to 4.7-4.9. Diffusion and world models come next.
+          - file: module4/notes2c-autoencoders
+            title: "4.4 Autoencoders: PCA and the linear network"
+          - file: module4/notes2d-deep-autoencoders
+            title: "4.5 Deep autoencoders: bending the line"
+          - file: module4/notes2e-copying
+            title: "4.6 Stopping the copy: sparse, denoising, masked"
           - file: module4/notes3-vae
-            title: "4.4 A few hidden knobs: the VAE"
+            title: "4.7 A few hidden knobs: the VAE"
           - file: module4/notes4-gan
-            title: "4.5 A forger, a critic, a scorecard"
+            title: "4.8 A forger, a critic, a scorecard"
           - file: module4/notes5-hidden-cause
-            title: "4.6 One hidden cause: mixture models"
+            title: "4.9 One hidden cause: mixture models"
 
   # Part II became the AI agents unit on 2026-10-24; its first two modules merged into Module 5 on 2026-10-25.
   - caption: Part II — AI Agents for Mobility

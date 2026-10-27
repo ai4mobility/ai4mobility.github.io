@@ -1,8 +1,8 @@
-# 4.5 A forger and a critic, and a first scorecard
+# 4.8 A forger and a critic, and a first scorecard
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.5</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.8</span>
     <span class="notes-card-session">Session: Generative models, part 1</span>
   </div>
   <p class="notes-card-lede">The third answer removes squared error altogether: a forger network makes heatmaps and a critic network tries to tell them from real ones. Then the first three answers are scored side by side on the same 400 held-out heatmaps, with measures that work for any generator, including one that gives no probabilities at all.</p>
@@ -10,7 +10,7 @@
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes3-vae.html">4.4 A few hidden knobs: the VAE</a></li>
+      <li><a href="notes3-vae.html">4.7 A few hidden knobs: the VAE</a></li>
       </ul>
     </div>
     <div>
@@ -38,7 +38,7 @@
 Two networks trained against each other. Nothing in the loss rewards an average.
 ```
 
-Section 4.4 ended on a diagnosis: squared error rewards the average, and the average of sharp fronts is
+Section 4.7 ended on a diagnosis: squared error rewards the average, and the average of sharp fronts is
 a soft one. A generative adversarial network (GAN) removes squared error from the picture.
 
 It has two networks. The **forger** (the *generator*, 244,289 weights here) takes 32 random
@@ -128,7 +128,7 @@ performance, including a vendor's.
 First six samples from each model, not picked, all rounded to 3-mph bins.
 ```
 
-Before any numbers, look. The VAE's fronts are soft, as section 4.4 explained. The autoregressive model and the
+Before any numbers, look. The VAE's fronts are soft, as section 4.7 explained. The autoregressive model and the
 GAN keep them sharp. Sharpness is the part of quality the eye judges well. Coverage, whether all the
 kinds of traffic in the data appear in the samples, is the part the eye cannot judge, so it needs the
 table.
@@ -236,4 +236,5 @@ the GAN's sharpness without the two-player game.
 
 ---
 
-Next session: diffusion, the fourth answer &mdash; start from pure noise and clean it up step by step.
+Next: {doc}`notes5-hidden-cause` &mdash; the simplest model with a hidden cause, which opens the session on the fourth
+answer, diffusion: start from pure noise and clean it up step by step.

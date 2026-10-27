@@ -224,7 +224,7 @@ The transformer made A, B, F, G. The real held-out heatmaps are C, D, E, H.
 
 Being hard to tell apart by eye is necessary and not nearly sufficient. People judge a handful of
 samples on how sharp they look. They cannot see whether the model covers *all* the kinds of traffic in
-the data, or whether it is quietly copying training heatmaps. Section 4.5 measures both.
+the data, or whether it is quietly copying training heatmaps. Section 4.8 measures both.
 
 :::{admonition} Before you trust this result
 :class: warning

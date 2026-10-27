@@ -1693,6 +1693,67 @@ items:
     notes: 'Module 3 practice page: what Lab 5 and the companion prove, the module in six lines, six judgment
       questions, the parameter-count exercise, on the job, further reading, where it goes next.'
 
+  - id: m3-gnn-deck-part2
+    file: GNN_Part2_Graph_Basics_Slides.pptx + .md
+    kind: deck
+    module: 3
+    session: gnn-week
+    status: drafted
+    dest: site/module3/notes2-graph-basics.md + notes3-one-view.md
+    notes: 'v2 deck part 2 of 6 (handout sections 2-3), 17 slides: the 3x3 grid as a graph, vocabulary, three tables,
+      reading A, road as node or edge (line graph), node where the state lives, one intersection two graphs,
+      heterogeneous graphs; one update; architectures and attention patterns as graphs; two dials; why a general model.
+      Built by gnn_handout_v2/build_part2.py.'
+
+  - id: m3-gnn-deck-part3
+    file: GNN_Part3_Questions_Embeddings_Slides.pptx + .md
+    kind: deck
+    module: 3
+    session: gnn-week
+    status: drafted
+    dest: site/module3/notes4-questions.md + notes5-node-embeddings.md
+    notes: 'v2 deck part 3 of 6 (sections 4-6), 18 slides: three levels of question, cascade, percolation (new synthetic
+      figure: 10x10 grid, seed 22, largest free cluster 98/110 at 40% congested vs 22/74 in 12 pieces at 60%), one storm at
+      three levels, the language recipe, input embeddings, modalities, Road2Vec vs GNN, one layer one hop (new figure).
+      Built by build_part3.py.'
+
+  - id: m3-gnn-deck-part4
+    file: GNN_Part4_Message_Passing_Slides.pptx + .md
+    kind: deck
+    module: 3
+    session: gnn-week
+    status: drafted
+    dest: site/module3/notes6-message-passing.md
+    notes: 'v2 deck part 4 of 6 (section 7, first half), 18 slides: message passing, general form (KaTeX), parameter-count
+      litmus test, GCN at cell 5, max pressure as a graph convolution, three fixes, the three knobs incl. a new
+      oversmoothing figure (spread 85 / 42 / 20 / 2 veh/mi after 0, 1, 3, 10 rounds), why "convolution", evaluation close.
+      Built by build_part4.py.'
+
+  - id: m3-gnn-deck-part5
+    file: GNN_Part5_Graph_Attention_Slides.pptx + .md
+    kind: deck
+    module: 3
+    session: gnn-week
+    status: drafted
+    dest: site/module3/notes7-graph-attention.md
+    notes: 'v2 deck part 5 of 6 (section 7, second half), 17 slides: three weight tables, the attention rule, worked scores
+      at cell 5, the flip (new figure, 0.325), GCN vs attention, the mask as a table, masked_fill, GAT vs GATv2 (ranking
+      4,8,6,2 empty vs 6,2,4,8 full), edge and graph embeddings, mask practices, companion and Lab 5 evidence,
+      evaluation close, filters at a glance, applications (GMAN, CoLight, VectorNet, intersection conflicts), fit card.
+      Built by build_part5.py.'
+
+  - id: m3-gnn-deck-part6
+    file: GNN_Part6_CTM_Classification_Slides.pptx + .md
+    kind: deck
+    module: 3
+    session: gnn-week
+    status: drafted
+    dest: site/module3/notes8-ctm.md + notes9-classification.md + notes10-labs.md
+    notes: 'v2 deck part 6 of 6 (sections 8-10), 20 slides: one CTM step at cell 5 (face flows, aggregate, update to 32.0),
+      CTM vs GNN slot by slot, four lessons, derived vs fitted, the merge (2,250 + 1,500 into 2,500 -> 1,500 / 1,000);
+      one backbone three heads, node / edge (link prediction) / graph heads (KaTeX), same 40 numbers (A 16, B 0), heads side
+      by side, evaluation close, the module in six lines, fit card, check yourself, where to go next. Built by build_part6.py.'
+
 # -----------------------------------------------------------------------------
 # MODULE 4 — Deep Generative Models (was Module 3 until 2026-10-25; the Module 3 GNN rows, ex-2.14, sit just above)
 # -----------------------------------------------------------------------------
@@ -1977,14 +2038,15 @@ items:
       the sign-flip argument; ends in eight data-collection lessons.
       In-browser int8 decoder explorer. Every number filled by genmodels/torus_vae/build_companion.py from
       results/numbers.json; independent reviewer traced about 150 numbers. Mounted at anchor (same-vae-different-traffic)=
-      in 4.4.
+      in 4.7 (the VAE page, numbered 4.4 until Oct 27 2026).
+
   - id: m4-autoencoder-latent-companion
     file: Autoencoder_Latent_Companion.html
     kind: companion
     module: 4
     session: unscheduled
     status: integrated
-    dest: site/module4/notes3-vae.md
+    dest: site/module4/notes2d-deep-autoencoders.md
     mounted: site/_static/companions/Autoencoder_Latent_Companion.html
     notes: 'Inside the latent layer (Oct 27 2026), 0.9 MB, 5 tabs + recap: PCA as a linear autoencoder on
       two real PeMSD7(M) I-405 N detectors (every 6th of 12,672 readings); a 2-1-2 network trained live
@@ -1994,8 +2056,8 @@ items:
       course 2-knob AE and VAE (lv_ae_z2.pt, vae_z2.pt, float16 decoders) on the CTM heatmaps with hover-to-decode,
       bell draws and walks. Goes with the autoencoder and VAE basics handouts (Claude Docs). Reproducer
       and the source of every stated number: genmodels/autoenc/companion/README.md. Also published as a
-      private Claude artifact. Mounted at anchor (autoencoder-latent-layer)= in 4.4, after "Squeeze, then
-      expand".'
+      private Claude artifact. Mounted at anchor (autoencoder-latent-layer)= at the end of 4.5 (moved Oct 27
+      2026 from the VAE page, now 4.7, which links to it).'
 
   - id: m4-gaussians-mixtures-companion
     file: Gaussians_Mixtures_Companion.html
@@ -2023,6 +2085,54 @@ items:
     notes: 'Warm-up page "Before 4.3: Gaussians and their mixtures" (Oct 27 2026), condensed from the student
       handout (a Claude doc) with four GM_* figures in _static/figures; mounts the companion at anchor (gaussians-companion)=.
       Reproducers in Gaussian_Mixtures_Handout/.'
+
+  - id: m4-notes2c-autoencoders
+    file: module4/notes2c-autoencoders.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes2c-autoencoders.md
+    notes: '4.4 Autoencoders: keep a few numbers, rebuild the rest (Oct 27 2026), from the autoencoder basics
+      handout (Claude Doc, after Revision 1), sections 1-4: the hourglass and loss, five uses, PCA by hand
+      on six I-405 readings (definition figure with kept/lost against angle), the linear autoencoder (Bishop
+      Fig 19.1), one training step by hand and in PyTorch, where training ends. Figures AEB_* from ae_slides/figs.py;
+      every number traced by ae_slides/audit.py.'
+
+  - id: m4-notes2d-deep-autoencoders
+    file: module4/notes2d-deep-autoencoders.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes2d-deep-autoencoders.md
+    notes: '4.5 Deep autoencoders (Oct 27 2026), handout section 5: Bishop Fig 19.2, manifold, price of
+      depth, synthetic FD (315 vs 47-87 veh/h; latent vs true density, Spearman 0.996 / 0.84), heatmaps
+      PCA vs AE, choosing M, downstream use of latents, when to keep PCA. The Inside the latent layer companion
+      moved here from the VAE page, keeping anchor (autoencoder-latent-layer)=.'
+
+  - id: m4-notes2e-copying
+    file: module4/notes2e-copying.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes2e-copying.md
+    notes: '4.6 Stopping the copy (Oct 27 2026), handout sections 6-10: copying in 400 dimensions, sparse
+      (lambda sweep), denoising (vs tuned blur and ASM; the score), masked autoencoders (BERT bridge; random
+      vs outage masks), where it breaks, fit card, applications, seven lines, label-the-picture (AEB_Label_Step),
+      check yourself, references. VAE, GAN and mixture pages renumbered 4.4-4.6 -> 4.7-4.9 the same day.'
+
+  - id: m4-deck-autoencoder-basics
+    file: Autoencoder_Basics_Slides.pptx + .md
+    kind: deck
+    module: 4
+    session: unscheduled
+    status: drafted
+    dest: site/module4/notes2c-autoencoders.md + notes2d + notes2e
+    notes: 55-slide lecture deck on the course template (Oct 27 2026), the slide twin of 4.4-4.6; built
+      by ae_slides/ (make_arrays, make_numbers, figs, build_deck, audit). For Hao to trim; the outline lists
+      a 75-minute cut.
 
 # MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------

@@ -1,8 +1,8 @@
-# 4.4 A few hidden knobs: the variational autoencoder
+# 4.7 A few hidden knobs: the variational autoencoder
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.4</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.7</span>
     <span class="notes-card-session">Session: Generative models, part 1</span>
   </div>
   <p class="notes-card-lede">The second answer: compress each heatmap into a few hidden numbers, learn to rebuild it from them, and make new heatmaps by drawing new numbers. A new heatmap now takes one pass instead of 400. With no labels, its knobs line up clearly with one of the simulator's own knobs and partly with another, and its blur can be measured and explained.</p>
@@ -12,6 +12,7 @@
       <ul>
       <li><a href="notes2-autoregressive.html">4.2 One cell at a time</a></li>
       <li><a href="notes2b-latent-variables.html">4.3 Latent variables: hidden causes, not hidden layers</a></li>
+      <li><a href="notes2c-autoencoders.html">4.4&ndash;4.6 Autoencoders, from PCA to masked autoencoders</a></li>
       </ul>
     </div>
     <div>
@@ -25,7 +26,7 @@
 
 - Macroscopic state reduction as the idea behind a latent-variable model
 - The VAE's shape: an encoder that squeezes, a decoder that expands, and why the knobs need a spread
-- From PCA to the VAE, hands on: what the code layer looks like, and why a plain autoencoder cannot generate (interactive companion)
+- Why a plain autoencoder cannot generate, and what the spreads fix (checked hands on in the companion at the end of 4.5)
 - The two-term loss, and what each term buys
 - What the knobs learned on this data, checked against the simulator's real knobs
 - Why the VAE blurs, measured: the decoder returns an average
@@ -86,39 +87,14 @@ the encoder from shrinking the spreads to zero; so the whole knob space becomes 
 once, and you have a new heatmap. One forward pass, against 400 for the
 autoregressive model of section 4.2.
 
-(autoencoder-latent-layer)=
-## Inside the latent layer: from PCA to the VAE, hands on
+## From the plain autoencoder to the VAE
 
-The section above makes two claims: a plain autoencoder can put each heatmap at its own isolated spot,
-and the spreads and the KL term fix that. The companion below lets you check both, one step at a time,
-starting from a model you already know. It begins with PCA on two real PeMS detectors on I-405, trains
-the same model as a two-layer network in your browser, bends it with depth on a synthetic fundamental
-diagram, and then asks whether you can draw new codes. Its last tab uses the 2-knob autoencoder and VAE
-from this page.
-
-Five results to look for:
-
-- PCA is an autoencoder with a straight-line decoder. A two-layer network trained on the rebuild loss
-  lands on the same line, with the same 4.41 mph RMS error per station.
-- Each reading's code is computed from the input with the current weights, so every training step moves
-  all of the codes.
-- With tanh and with no activation, the network rebuilds equally well, but its codes end on very
-  different scales: from &minus;0.24 to 0.23, against &minus;2.41 to 1.48. Nothing in the rebuild loss
-  decides where the codes live.
-- A deep autoencoder bends the line to follow the fundamental diagram. But codes between its clumps decode
-  to states no road produces, and codes drawn from a standard bell curve miss the real mix of densities
-  by 45%.
-- The VAE pulls its codes into the bell: 94.6% of its training codes sit inside the radius-2 circle, against
-  11.7% for the plain autoencoder on these heatmaps.
-
-<div class="companion-embed">
-  <div class="companion-embed-bar">
-    <span>Interactive companion &mdash; Inside the latent layer</span>
-    <a href="../_static/companions/Autoencoder_Latent_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
-  </div>
-  <iframe src="../_static/companions/Autoencoder_Latent_Companion.html"
-          title="Inside the latent layer: from PCA to autoencoders to the VAE" loading="lazy"></iframe>
-</div>
+Sections {doc}`4.4 <notes2c-autoencoders>` to {doc}`4.6 <notes2e-copying>` built the plain autoencoder. The
+section above makes two claims about it: a plain autoencoder can put each heatmap at its own isolated spot, and the
+spreads and the KL term fix that. The companion at the end of {ref}`section 4.5 <autoencoder-latent-layer>` lets you
+check both, one tab at a time; its last tab uses the 2-knob autoencoder and the VAE of this page. The number to
+remember: the VAE pulls its codes into the bell, with 94.6% of its training codes inside the radius-2 circle, against
+11.7% for the plain autoencoder on these heatmaps.
 
 ## The loss: rebuild well, keep the knobs findable
 

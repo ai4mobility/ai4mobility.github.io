@@ -164,16 +164,17 @@ one answer.
 
 1. **One cell at a time** ({doc}`4.2 <notes2-autoregressive>`). Decide the first cell, then the second
    given the first, and so on. This is how GPT writes text, applied to a heatmap.
-2. **A few hidden knobs** ({doc}`4.4 <notes3-vae>`). Compress each heatmap into a few numbers, learn to
+2. **A few hidden knobs** ({doc}`4.7 <notes3-vae>`). Compress each heatmap into a few numbers, learn to
    rebuild it from them, then make new heatmaps by drawing new numbers. This is the variational
    autoencoder (VAE). Section {doc}`4.3 <notes2b-latent-variables>` first sets out the idea it rests on: a
-   *latent variable*, a hidden cause you can draw from.
-3. **A forger and a critic** ({doc}`4.5 <notes4-gan>`). Train one network to make fakes and another to
+   *latent variable*, a hidden cause you can draw from. Sections {doc}`4.4 <notes2c-autoencoders>` to 4.6 then
+   build the plain autoencoder it extends, from PCA to masked autoencoders.
+3. **A forger and a critic** ({doc}`4.8 <notes4-gan>`). Train one network to make fakes and another to
    catch them, until the fakes are hard to catch. This is the generative adversarial network (GAN).
 4. **Clean up noise, step by step** (next session). Start from pure noise and remove a little at a time.
    This is diffusion.
 
-Each answer fixes a weakness of the one before it, so the order matters. At the end of section 4.5 the first
+Each answer fixes a weakness of the one before it, so the order matters. At the end of section 4.8 the first
 three are scored side by side on the same held-out heatmaps.
 
 ## Check yourself

@@ -5,8 +5,9 @@
 ## Session topics
 
 - **Generative models, part 1:** what changes when a model produces data; autoregressive generation, latent
-  variables, VAE, GAN, and a first scorecard (4.1&ndash;4.5)
-- **VAE and diffusion:** one hidden cause, from mixture models to the VAE (4.6), then diffusion; world models
+  variables, VAE, GAN, and a first scorecard (4.1&ndash;4.3, 4.7&ndash;4.8)
+- **Autoencoders:** from PCA worked by hand to deep, sparse, denoising and masked autoencoders (4.4&ndash;4.6)
+- **VAE and diffusion:** one hidden cause, from mixture models to the VAE (4.9), then diffusion; world models
   follow
 
 ## Overview
@@ -23,20 +24,27 @@ sometimes synthesize, the tail.
 The transportation on-ramp here is **macroscopic state reduction**. You already accept that a
 whole corridor's behavior can be summarized by a handful of numbers — density, flow, speed.
 A latent-variable model does the same thing, except it learns which few numbers to keep. This
-module builds from that idea through VAEs, GANs, and diffusion, and closes with world
+module builds from that idea through autoencoders, VAEs, GANs, and diffusion, and closes with world
 models — the attempt to learn a simulator rather than write one.
 
 ## The module, page by page
 
 :::{admonition} How to read this module
 :class: tip
-Sections 4.1&ndash;4.5 pair with the first session; skim before, read properly after. Section 4.6
-opens the VAE-and-diffusion session; diffusion and world models follow. Each page opens with a card naming its session. If multivariate Gaussians are rusty, start with the warm-up page before 4.3: it revisits one bell, slicing, fitting and mixtures of bells on three I-405 detectors, one of them the detector of 4.6.
+Read the pages in order; each builds on the one before. Sections 4.1&ndash;4.3 set up the question and the idea of a
+hidden cause. Sections 4.4&ndash;4.6 build the plain autoencoder, from PCA worked by hand to masked autoencoders.
+Sections 4.7 and 4.8 are the VAE and the GAN, scored side by side. Section 4.9 opens the VAE-and-diffusion session;
+diffusion and world models follow. Each page opens with a card naming its session. If multivariate Gaussians are
+rusty, start with the warm-up page before 4.3: it revisits one bell, slicing, fitting and mixtures of bells on three
+I-405 detectors, one of them the detector of 4.9.
 
-Every result on these pages comes from one dataset, the 4,000 cell-transmission-model speed heatmaps
-that the VAE lab is built on, split the same way everywhere, so the four answers to "how do you draw a
-realistic traffic state?" can be compared directly. Section 4.6 adds one real PeMS detector. The two companions in 4.4 add two real PeMS detectors on I-405, a synthetic fundamental diagram, and a second simulator, a grid network. If you read only one page before class, read
-{doc}`4.1 <notes1-producing>`: the joint-versus-marginals figure is the idea the rest builds on.
+Most results on these pages come from one dataset, the 4,000 cell-transmission-model speed heatmaps that the VAE lab
+is built on, split the same way everywhere, so the four answers to "how do you draw a realistic traffic state?" can
+be compared directly. Section 4.4 adds two real PeMS detectors on I-405, small enough to work by hand; 4.5 and 4.6 add
+a synthetic fundamental diagram; 4.9 adds one real PeMS detector. The companion in 4.5 uses the I-405 pair, the
+fundamental diagram and the heatmaps; the one in 4.7 adds a second simulator, a grid network. If you read only one
+page before class, read {doc}`4.1 <notes1-producing>`: the joint-versus-marginals figure is the idea the rest builds
+on.
 :::
 
 <div class="practice-table-wrap">
@@ -66,18 +74,43 @@ realistic traffic state?" can be compared directly. Section 4.6 adds one real Pe
   <td><a href="../labs.html">VAE on traffic heatmaps</a></td>
 </tr>
 <tr>
-  <td><a href="notes3-vae.html"><strong>4.4 A few hidden knobs: the VAE</strong></a><br><em>Generative models, part 1</em></td>
-  <td>Macroscopic state reduction, learned; encoder, decoder and the two-term loss; from PCA to the VAE, hands on (interactive companion); the knobs it rediscovers; why it blurs, measured; VAE against PCA; how the knobs change with the training traffic (interactive companion).</td>
+  <td><a href="notes2c-autoencoders.html"><strong>4.4 Autoencoders: keep a few numbers, rebuild the rest</strong></a><br><em>Autoencoders</em></td>
+  <td>Encoder, latents, decoder and the rebuild loss; a data-driven compression, not a theory-based one; PCA worked by hand on two real I-405 detectors; the linear autoencoder and why it can only find PCA; one training step by hand and in PyTorch.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes2d-deep-autoencoders.html"><strong>4.5 Deep autoencoders: bending the line</strong></a><br><em>Autoencoders</em></td>
+  <td>Nonlinear layers that bend the line; what a manifold is; the price of depth; a synthetic fundamental diagram, and whether the one latent is density; PCA against a deep autoencoder on the heatmaps; choosing the number of latents; reusing latents for another task; inside the latent layer, from PCA to the VAE (interactive companion).</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes2e-copying.html"><strong>4.6 Stopping the copy: sparse, denoising and masked autoencoders</strong></a><br><em>Autoencoders</em></td>
+  <td>Why a good rebuild proves little; the sparse penalty; denoising against a tuned blur and the ASM, and why its arrows lead to diffusion; masked autoencoders, BERT's idea for heatmaps, filling detector gaps; where autoencoders break, fit card and applications.</td>
+  <td><a href="../labs.html">Training the denoiser</a></td>
+</tr>
+<tr>
+  <td><a href="notes3-vae.html"><strong>4.7 A few hidden knobs: the VAE</strong></a><br><em>Generative models, part 1</em></td>
+  <td>Macroscopic state reduction, learned; encoder, decoder and the two-term loss; from the plain autoencoder to the VAE; the knobs it rediscovers; why it blurs, measured; VAE against PCA; how the knobs change with the training traffic (interactive companion).</td>
   <td><a href="../labs.html">VAE on traffic heatmaps</a></td>
 </tr>
 <tr>
-  <td><a href="notes4-gan.html"><strong>4.5 A forger, a critic, and a first scorecard</strong></a><br><em>Generative models, part 1</em></td>
+  <td><a href="notes4-gan.html"><strong>4.8 A forger, a critic, and a first scorecard</strong></a><br><em>Generative models, part 1</em></td>
   <td>The two-player game; precision and recall for generators; how much a GAN wanders between runs; the first three answers scored on the same held-out heatmaps.</td>
   <td><a href="../labs.html">From VAE to diffusion</a></td>
 </tr>
 <tr>
-  <td><a href="notes5-hidden-cause.html"><strong>4.6 One hidden cause: mixture models</strong></a><br><em>VAE and diffusion session</em></td>
+  <td><a href="notes5-hidden-cause.html"><strong>4.9 One hidden cause: mixture models</strong></a><br><em>VAE and diffusion session</em></td>
   <td>One detector&rsquo;s speeds as two hidden regimes; the two-step recipe; the soft guess; fitting without labels (EM); the same idea on the heatmaps and where it breaks; mixture, VAE and diffusion as three choices of hidden cause.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><strong>Coming: diffusion</strong><br><em>VAE and diffusion session</em></td>
+  <td>The fourth answer: start from pure noise and remove a little at a time, the denoising arrows of 4.6 turned into a generator.</td>
+  <td><a href="../labs.html">From VAE to diffusion; Training the denoiser</a></td>
+</tr>
+<tr>
+  <td><strong>Coming: world models</strong></td>
+  <td>Learning the simulator instead of writing it: learned dynamics and imagined rollouts, and how to judge one against a calibrated conventional model.</td>
   <td>&mdash;</td>
 </tr>
 </tbody>
@@ -96,7 +129,7 @@ same five questions: what it generates, from what, with which model, how the out
 what it is used for. A small diagram marks the move each paper makes: **sample** (more of the same),
 **steer** (more of what you ask for), or **fill in** (complete what you saw).
 
-Use it alongside this module. After 4.4 and 4.5, filter by **VAE** and **GAN** to see where those models
+Use it alongside this module. After 4.7 and 4.8, filter by **VAE** and **GAN** to see where those models
 are still used; after the diffusion session, filter by **Diffusion**, the family most papers since 2023
 use. Read the **Watch out** line on every card: it names the trap, such as a realism score that says
 nothing about safety, or synthetic trips that are not automatically private. End at **What the papers
@@ -116,6 +149,12 @@ share**, which lists the four steps most of these papers follow.
 By the end of this module you will be able to:
 
 - Explain latent-variable modeling as a learned generalization of macroscopic state reduction.
+- Work PCA by hand as the simplest autoencoder, train a two-layer autoencoder one step at a time, and explain why it
+  can only find PCA.
+- Explain what depth buys an autoencoder (a curved manifold) and what it costs, choose the number of latents on
+  validation data, and explain why a latent is not a physical variable.
+- Explain the copying trap and the three ways out (sparse, denoising and masked autoencoders), and judge a learned
+  gap filler against a classical baseline such as adaptive smoothing.
 - Tell a latent representation (BERT, ViT) from a latent variable, and explain how a latent-variable model
   finds its hidden causes, learns their distribution, and uses it to generate.
 - Describe the VAE — encoder, decoder, reconstruction loss, and the KL term — and interpret
@@ -135,7 +174,9 @@ By the end of this module you will be able to:
 - What changes when a model produces data: the joint distribution, and how to score a generator
 - Autoregressive generation: the chain rule and next-cell prediction
 - Latent variables, manifolds, and dimensionality reduction
-- Autoencoders → variational autoencoders; the ELBO (referenced, not re-derived)
+- Autoencoders: PCA as the linear autoencoder, deep autoencoders and manifolds, choosing the number of latents
+- Stopping the copy: sparse, denoising and masked autoencoders; filling detector gaps
+- Variational autoencoders; the ELBO (referenced, not re-derived)
 - Reading a latent space: structure, interpolation, and fragmentation
 - Generative adversarial networks; mode collapse and training instability
 - Forward and reverse diffusion; denoising diffusion probabilistic models
@@ -152,6 +193,9 @@ By the end of this module you will be able to:
 ## Recommended readings
 
 - Tipping, M. E., & Bishop, C. M. (1999). Probabilistic principal component analysis. *Journal of the Royal Statistical Society: Series B*, 61(3), 611–622.
+- Bishop, C. M., & Bishop, H. (2024). *Deep Learning: Foundations and Concepts*. Springer. Chapter 19, sections 19.1.1&ndash;19.1.5 (autoencoders).
+- Vincent, P., Larochelle, H., Bengio, Y., & Manzagol, P.-A. (2008). Extracting and composing robust features with denoising autoencoders. *ICML*.
+- He, K., Chen, X., Xie, S., Li, Y., Dollár, P., & Girshick, R. (2022). Masked autoencoders are scalable vision learners. *CVPR*.
 - Kingma, D. P., & Welling, M. (2014). Auto-encoding variational Bayes. *ICLR*.
 - Goodfellow, I., et al. (2014). Generative adversarial nets. *NeurIPS*.
 - Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. *NeurIPS*.
