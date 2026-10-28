@@ -152,6 +152,31 @@ share**, which lists the four steps most of these papers follow.
           title="Thirty-four papers on generative models in transportation, and what each one generates" loading="lazy"></iframe>
 </div>
 
+(diffusion-papers-library)=
+## How diffusion works in 35 transportation papers
+
+The reading library above asks what each paper generates. This companion asks how the diffusion part works. It takes
+the recipe of {doc}`4.11 <notes6-diffusion-basics>` into 35 published papers: safety-critical driving scenarios,
+whole-scene simulation, motion prediction and planning, camera and lidar data for automated driving, traffic data
+(detector gaps, OD flows, trips), and road-damage images. Each card shows the paper&rsquo;s architecture figure and
+answers six questions in the same order: what is noised, what the network reads besides the noisy data, which network
+does the denoising, how it is trained, how it samples, and how the output is steered.
+
+Read it after 4.11, and keep one idea from that page in mind: diffusion is a way to train a network, not a network.
+The same recipe runs on a transformer that denoises vehicle paths and on a U-Net that denoises camera images. Filter by
+**Steering** to compare how papers push a model of normal traffic toward conflicts, or by **Denoises in** to see which
+papers first compress their data. End at **Which steering for which job**, a table that matches each steering method
+to a transportation task.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Diffusion papers &mdash; How diffusion works in thirty-five transportation papers</span>
+    <a href="../_static/companions/Diffusion_Transportation_Papers_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Diffusion_Transportation_Papers_Companion.html"
+          title="How diffusion works in thirty-five transportation papers: what is noised, the network, training, sampling and steering" loading="lazy"></iframe>
+</div>
+
 ## Learning objectives
 
 By the end of this module you will be able to:

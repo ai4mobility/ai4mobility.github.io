@@ -639,6 +639,7 @@ There is no single right answer to the first eight; each asks for a judgment you
 - The forward-diffusion and decoder-training labs ({doc}`all labs <../labs>`): build the noise schedule and train a small denoiser yourself.
 - *Generating Crash Data from Near-Misses*: why sampling a generator is not enough for rare events, and what to do instead.
 - *Generative Models in Transportation* (applications handout) and the {ref}`reading library <generative-reading-library>` on the Module 4 page.
+- The {ref}`diffusion papers companion <diffusion-papers-library>` on the Module 4 page: this page&rsquo;s recipe inside 35 transportation papers, each with its architecture figure and how it is trained, sampled and steered.
 - Bishop & Bishop, *Deep Learning: Foundations and Concepts* (2024), Chapter 20.
 
 ## References for 4.11
