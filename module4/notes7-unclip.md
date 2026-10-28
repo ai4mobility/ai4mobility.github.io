@@ -1,9 +1,9 @@
 (unclip)=
-# 4.11 Reading unCLIP: from a CLIP embedding back to an image
+# 4.9 Reading unCLIP: from a CLIP embedding back to an image
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.11</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.9</span>
     <span class="notes-card-session">Session: Diffusion</span>
   </div>
   <p class="notes-card-lede">unCLIP, the model behind DALL&middot;E 2, makes an image from a caption in two moves. A prior guesses the CLIP image embedding that a matching image would have, and a diffusion decoder turns that embedding into pixels. This page reads the paper with that split in mind: how the decoder learns with no hand labels, why it needs a prior, and what CLIP&rsquo;s embedding quietly drops on Tampa camera frames. It ends by running the same recipe on crash narratives and sketches.</p>
@@ -11,7 +11,7 @@
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes6-diffusion-basics.html">4.10 Diffusion models: the basics</a></li>
+      <li><a href="notes6-diffusion-basics.html">4.8 Diffusion models: the basics</a></li>
       <li><a href="../module1/notes5-embeddings.html">1.5 Representation learning and embeddings</a> (CLIP) and <a href="../module1/lab4_clip_vs_traditional_cv.html">Lab 4</a></li>
       </ul>
     </div>
@@ -41,7 +41,7 @@ This page spends most of its time on two questions:
 1. How can a diffusion model be trained to turn a CLIP image embedding back into an image?
 2. Why does the decoder need a prior, and how does the prior work?
 
-**Read first.** You know CLIP from Module 1 ({doc}`1.5 <../module1/notes5-embeddings>` and {doc}`Lab 4 <../module1/lab4_clip_vs_traditional_cv>`) and Assignment 2. For diffusion, {ref}`Just enough diffusion <unclip-diffusion>` below gives just enough. The full story is in {doc}`4.10 Diffusion models: the basics <notes6-diffusion-basics>`, especially its sections on {ref}`training <diffusion-training>` and on {ref}`where the prompt comes in <diffusion-prompt>`.
+**Read first.** You know CLIP from Module 1 ({doc}`1.5 <../module1/notes5-embeddings>` and {doc}`Lab 4 <../module1/lab4_clip_vs_traditional_cv>`) and Assignment 2. For diffusion, {ref}`Just enough diffusion <unclip-diffusion>` below gives just enough. The full story is in {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>`, especially its sections on {ref}`training <diffusion-training>` and on {ref}`where the prompt comes in <diffusion-prompt>`.
 
 **After this page you should be able to:**
 
@@ -51,7 +51,7 @@ This page spends most of its time on two questions:
 4. Explain why the prior is needed, and how its two versions (autoregressive and diffusion) work.
 5. Judge when a two-stage generator like this fits a transportation task, and what its CLIP embedding will quietly drop. Apply the same recipe to another pair of transportation data, such as a crash narrative and its sketch.
 
-**A note on symbols.** The paper writes zᵢ for the CLIP image embedding and zₜ for the CLIP text embedding. In 4.10, zₜ means something else: the image after t steps of noise. This page keeps 4.10's meaning and renames the two CLIP embeddings c\_img and c\_txt. We use c because each embedding plays the role of 4.10's prompt c: c\_img prompts the decoder, and c\_txt prompts the prior.
+**A note on symbols.** The paper writes zᵢ for the CLIP image embedding and zₜ for the CLIP text embedding. In 4.8, zₜ means something else: the image after t steps of noise. This page keeps 4.8's meaning and renames the two CLIP embeddings c\_img and c\_txt. We use c because each embedding plays the role of 4.8's prompt c: c\_img prompts the decoder, and c\_txt prompts the prior.
 
 | This page | The paper | What it is |
 | --- | --- | --- |
@@ -59,7 +59,7 @@ This page spends most of its time on two questions:
 | y | y | its caption |
 | c\_img | zᵢ | the CLIP image embedding of x: 1,024 numbers in the paper's CLIP |
 | c\_txt | zₜ | the CLIP text embedding of y |
-| zₜ | xₜ | the image after t steps of noise (4.10, Bishop & Bishop Ch. 20) |
+| zₜ | xₜ | the image after t steps of noise (4.8, Bishop & Bishop Ch. 20) |
 | ε | ε | the static mixed in |
 | g(zₜ, w, t, c) | ε\_θ | the decoder network's guess of the static; w = its weights |
 | f | f\_θ | the prior network |
@@ -135,14 +135,14 @@ The gap does not stop CLIP from working. CLIP's training only asks a matching pa
 (unclip-diffusion)=
 ## Just enough diffusion
 
-A diffusion model learns one skill, removing noise, and generates by using that skill many times on pure static. Four ideas are all you need for unCLIP. Each one is worked out in full in {doc}`4.10 <notes6-diffusion-basics>`.
+A diffusion model learns one skill, removing noise, and generates by using that skill many times on pure static. Four ideas are all you need for unCLIP. Each one is worked out in full in {doc}`4.8 <notes6-diffusion-basics>`.
 
 1. **Noise is added by a fixed recipe.** Take a clean image x, draw static ε, and blend them to a chosen noise level t: zₜ = √αₜ x + √(1 − αₜ) ε. A small t leaves the image nearly clean; t = T leaves pure static. Nothing here is learned. unCLIP's decoder uses T = 1,000 levels.
 2. **The network learns to name the noise.** A network g sees the noisy image zₜ and the level t, and guesses ε. The loss is the squared error between its guess and the real ε. You drew ε yourself, so the answer key comes free with every training example.
 3. **Sampling runs the skill backwards.** Start from pure static. At each step, the network guesses the noise and a small part of it is removed. Many small steps later (250 for unCLIP's decoder), an image remains.
 4. **A prompt is just one more input.** Give the network a prompt c, so it becomes g(zₜ, w, t, c), and train on pairs (x, c). Every step is then pulled toward images that fit c. If c is hidden for a share of training examples, one network learns to work with and without it. *Guidance* then asks it both ways at each step and pushes further toward the prompt: g = g\_without + (1 + λ)(g\_with − g\_without). In words: see how far the prompt moves the answer, then move λ times further in that direction.
 
-One more fact from {doc}`4.10 <notes6-diffusion-basics>` matters below. At any step, the network's best guess of the clean image is a weighted **average** of the training images that could have produced zₜ. When the noise is heavy, that guess is a blur. A sample is not that guess, though. Each step removes only part of the noise, which rules out some candidates, so the guess sharpens step by step until one sharp image is left. {ref}`The decoder section <unclip-sampler>` shows why this matters: for traffic, a single best guess erases the cars.
+One more fact from {doc}`4.8 <notes6-diffusion-basics>` matters below. At any step, the network's best guess of the clean image is a weighted **average** of the training images that could have produced zₜ. When the noise is heavy, that guess is a blur. A sample is not that guess, though. Each step removes only part of the noise, which rules out some candidates, so the guess sharpens step by step until one sharp image is left. {ref}`The decoder section <unclip-sampler>` shows why this matters: for traffic, a single best guess erases the cars.
 
 **Where diffusion appears in unCLIP.** Twice. The decoder is a conditional diffusion model whose prompt c is the CLIP image embedding. The diffusion prior is a conditional diffusion model whose "image" is the CLIP image embedding itself, with the caption as its prompt.
 
@@ -155,12 +155,12 @@ The decoder is a conditional diffusion model whose main prompt is c\_img. The fr
 
 Take any image x from the training set and run it through CLIP's frozen image encoder. Out comes c\_img, and (c\_img, x) is a training pair: "this embedding came from this image." Nobody has to label anything, so the decoder can learn from all 250 million images. (The paper's decoder also reads each image's caption, dropped half the time. A decoder that used c\_img alone could be trained on images with no captions at all.)
 
-You have seen this shape in the course notes on autoencoders ({doc}`4.5 <notes2c-autoencoders>`): an autoencoder, x → code → x. Here the encoder is CLIP, trained earlier for a different job and then frozen. The code is CLIP's 1,024 numbers. Only the decoder is trained, and it is a diffusion model instead of a network that returns one image.
+You have seen this shape in the course notes on autoencoders ({doc}`4.4 <notes2c-autoencoders>`): an autoencoder, x → code → x. Here the encoder is CLIP, trained earlier for a different job and then frozen. The code is CLIP's 1,024 numbers. Only the decoder is trained, and it is a diffusion model instead of a network that returns one image.
 
 ### One training step
 
 ```{figure} ../_static/figures/UC_Decoder_Training.png
-:alt: Flow diagram. Training image x (CLIP sees 256 x 256; the decoder, 64 x 64) splits two ways. Left: the frozen CLIP image encoder gives c_img, 1,024 numbers; an arrow labelled c_img: the prompt (set to null 10% of the time) goes into the U-Net. Right: draw a level t from 1 to 1,000 and static epsilon the size of x, then mix them into a noisy image z_t = root(alpha_t) x + root(1 - alpha_t) epsilon; an arrow labelled z_t and t goes into the U-Net. The U-Net g, the only learned box (blue), reads z_t, t, c_img and the caption and outputs a guess of epsilon. The guess goes to the loss, the squared length of guess minus epsilon, squared error as in 4.10; a dashed arrow from the static box brings epsilon, the answer key, to the loss. Last box: nudge w; then a new x, t and epsilon.
+:alt: Flow diagram. Training image x (CLIP sees 256 x 256; the decoder, 64 x 64) splits two ways. Left: the frozen CLIP image encoder gives c_img, 1,024 numbers; an arrow labelled c_img: the prompt (set to null 10% of the time) goes into the U-Net. Right: draw a level t from 1 to 1,000 and static epsilon the size of x, then mix them into a noisy image z_t = root(alpha_t) x + root(1 - alpha_t) epsilon; an arrow labelled z_t and t goes into the U-Net. The U-Net g, the only learned box (blue), reads z_t, t, c_img and the caption and outputs a guess of epsilon. The guess goes to the loss, the squared length of guess minus epsilon, squared error as in 4.8; a dashed arrow from the static box brings epsilon, the answer key, to the loss. Last box: nudge w; then a new x, t and epsilon.
 :width: 100%
 
 Decoder training, one pass: only the U-Net learns.
@@ -181,7 +181,7 @@ $$
 | g | the decoder network: GLIDE's U-Net, 3.5 billion weights |
 | w | its weights, the only thing that learns |
 
-*In words:* this is 4.10's loss (guess the noise), except that the network is also told the CLIP embedding of the image it is cleaning.
+*In words:* this is 4.8's loss (guess the noise), except that the network is also told the CLIP embedding of the image it is cleaning.
 
 ```text
 Training the unCLIP decoder: one pass
@@ -210,7 +210,7 @@ How the decoder&rsquo;s U-Net reads the CLIP image embedding: c_img gets in twic
 
 Read the figure in three passes.
 
-1. **Ignore c\_img.** The U-Net is the plain denoiser of {doc}`4.10 <notes6-diffusion-basics>`. A noisy image and its step t go in; a guess of the static comes out. The squared error against the static we drew trains every green box. No image needs a hand label: we drew the static ourselves, and frozen CLIP writes c\_img.
+1. **Ignore c\_img.** The U-Net is the plain denoiser of {doc}`4.8 <notes6-diffusion-basics>`. A noisy image and its step t go in; a guess of the static comes out. The squared error against the static we drew trains every green box. No image needs a hand label: we drew the static ourselves, and frozen CLIP writes c\_img.
 2. **Door 1.** c\_img is projected to 2,048 numbers and added to the time signal. Every ResBlock turns that vector into a scale and a shift for each channel, so c\_img nudges every feature map in the network.
 3. **Door 2.** c\_img also becomes 4 extra tokens beside the 256 caption tokens. In each attention layer, every image position can look up these 260 tokens, as DETR's queries look up the encoder's tokens.
 
@@ -235,14 +235,14 @@ CLIP keeps what captions talk about, not where each car is. So many images share
 Frames CLIP calls almost the same point, and their pixel average. FL511 camera at Fowler Ave / 50th St, Tampa, Oct 26, 2026.
 ```
 
-Now suppose you trained a plain network to map c\_img to an image with squared error, like the autoencoders in the course notes. For one embedding it must return one image, and the image with the smallest squared error is the *average* of all images with that embedding. That is the VAE's blur from {ref}`4.8 <vae-basics-breaks>`. The pixel average of the 8 frames nearest in CLIP space shows what it looks like. The road and buildings stay sharp, because every frame agrees on them. Every vehicle fades to a ghost, because the frames disagree. For traffic this is a bad failure: the average erases exactly the objects you care about.
+Now suppose you trained a plain network to map c\_img to an image with squared error, like the autoencoders in the course notes. For one embedding it must return one image, and the image with the smallest squared error is the *average* of all images with that embedding. That is the VAE's blur from {ref}`4.6 <vae-basics-breaks>`. The pixel average of the 8 frames nearest in CLIP space shows what it looks like. The road and buildings stay sharp, because every frame agrees on them. Every vehicle fades to a ghost, because the frames disagree. For traffic this is a bad failure: the average erases exactly the objects you care about.
 
 The diffusion decoder learns the whole set, P(x | c\_img), and draws one member of it. Run it twice from different static and you get two different sharp frames, both fitting the same embedding. The paper calls the decoder "non-deterministic" for this reason (Section 1). *A caveat on the figure:* no decoder was trained here. The 8 nearest frames stand in for "all images with this embedding," and their average stands in for what a squared-error decoder would learn.
 
 (unclip-guidance)=
 ### Guidance, and the 64 → 256 → 1024 cascade
 
-**Guidance.** In training, c\_img is replaced by a null value 10% of the time and the caption is dropped 50% of the time. One network thus learns to work with and without each input, which is what guidance needs ({ref}`Just enough diffusion <unclip-diffusion>`). The paper reports guidance as a *scale* s, where s = 1 + λ in 4.10's terms. Its MS-COCO results use s = 1.25 for the decoder (λ = 0.25). *Read critically:* Section 5.1 of the paper says 5%, not 10%. The two agree if the drops are independent: 10% × 50% = 5% of training steps see the caption without c\_img, which is the text-only task Section 5.1 describes.
+**Guidance.** In training, c\_img is replaced by a null value 10% of the time and the caption is dropped 50% of the time. One network thus learns to work with and without each input, which is what guidance needs ({ref}`Just enough diffusion <unclip-diffusion>`). The paper reports guidance as a *scale* s, where s = 1 + λ in 4.8's terms. Its MS-COCO results use s = 1.25 for the decoder (λ = 0.25). *Read critically:* Section 5.1 of the paper says 5%, not 10%. The two agree if the drops are independent: 10% × 50% = 5% of training steps see the caption without c\_img, which is the text-only task Section 5.1 describes.
 
 **The cascade.** The decoder above makes a 64 × 64 image. Two more diffusion models enlarge it: 64 → 256 (700 million weights) and 256 → 1024 (300 million). Each one's prompt is the smaller image, not c\_img and not the caption. During training that smaller image is slightly damaged first (a blur, or a mix of blur, noise and compression), so the upsampler learns to repair what the stage before it gets wrong. They use convolutions only, no attention.
 
@@ -300,7 +300,7 @@ Both priors are transformers that read the caption and c\_txt. The first writes 
 (unclip-ar-prior)=
 ### Version 1: the autoregressive prior (GPT on a compressed embedding)
 
-1. **Compress with PCA.** Keep the first 319 of the 1,024 principal components of c\_img. The average error of rebuilding c\_img from them is under 1%. It works because this CLIP was trained with sharpness-aware minimization (SAM, a training method, not Segment Anything), which left its embeddings using far fewer than 1,024 directions. This is the PCA from the autoencoder notes ({doc}`4.5 <notes2c-autoencoders>`).
+1. **Compress with PCA.** Keep the first 319 of the 1,024 principal components of c\_img. The average error of rebuilding c\_img from them is under 1%. It works because this CLIP was trained with sharpness-aware minimization (SAM, a training method, not Segment Anything), which left its embeddings using far fewer than 1,024 directions. This is the PCA from the autoencoder notes ({doc}`4.4 <notes2c-autoencoders>`).
 2. **Turn numbers into tokens.** Split the range of each of the 319 numbers into 1,024 buckets. c\_img becomes a sentence of 319 tokens from a vocabulary of 1,024, largest component first.
 3. **Predict token by token.** A transformer with a causal mask, the GPT of Module 2, predicts each bucket from the ones before it. It reads a prefix first: the caption's tokens, c\_txt, and one token for how well caption and image fit (below).
 4. **Ask for a good fit.** In training, that extra token holds the dot product c\_img · c\_txt, cut into buckets. A higher value means the caption describes the image better. When generating, the authors draw this value from the top half of the values seen in training. They tried the top 50%, 30%, 15% and 5%; the top half was best in every test.
@@ -509,12 +509,12 @@ appears. If you are enrolled, look up any crash ID in your copy of the dataset t
 
 ### Where to go next
 
-- {doc}`4.10 Diffusion models: the basics <notes6-diffusion-basics>` for every diffusion step used here, and the *Training the denoiser* lab ({doc}`all labs <../labs>`).
+- {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>` for every diffusion step used here, and the *Training the denoiser* lab ({doc}`all labs <../labs>`).
 - The *Generative models in transportation* handout for uses organized by transportation problem.
 - World models later in the course: GAIA-1 reuses unCLIP's two-stage shape for driving video.
 
 (unclip-references)=
-## References for 4.11
+## References for 4.9
 
 - Ramesh, A., Dhariwal, P., Nichol, A., Chu, C., & Chen, M. (2022). [Hierarchical text-conditional image generation with CLIP latents](https://arxiv.org/abs/2204.06125). arXiv:2204.06125. *The paper; figure, section and table numbers above refer to it.*
 - Radford, A., et al. (2021). [Learning transferable visual models from natural language supervision](https://arxiv.org/abs/2103.00020) (CLIP).
@@ -530,4 +530,4 @@ appears. If you are enrolled, look up any crash ID in your copy of the dataset t
 
 ---
 
-Next: {doc}`4.12 Diffusion in the literature: from image generators to safety scenarios <notes8-diffusion-literature>`. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`4.10 Diffusion in the literature: from image generators to safety scenarios <notes8-diffusion-literature>`. Back to the {doc}`Module 4 map <index>`.

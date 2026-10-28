@@ -1,9 +1,9 @@
 (knowledge-guided)=
-# 4.13 How transportation knowledge guides diffusion
+# 4.11 How transportation knowledge guides diffusion
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.13</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.11</span>
     <span class="notes-card-session">Session: Diffusion</span>
   </div>
   <p class="notes-card-lede">A diffusion model learns traffic only from its data, but you know things the data show weakly or not at all: a braking limit, a lane closure, the worth of one near-miss. This page shows five doors where that knowledge can enter a diffusion model, what your data must contain for each door, and how to test whether the knowledge helped. A worked test on a simulated road with four loop detectors adds one piece of knowledge at a time.</p>
@@ -11,9 +11,9 @@
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes6-diffusion-basics.html">4.10 Diffusion models: the basics</a></li>
-      <li><a href="notes8-diffusion-literature.html">4.12 Diffusion in the literature</a>: the papers, and five ways to get a dangerous scenario out</li>
-      <li><a href="notes7-unclip.html">4.11 Reading unCLIP</a>, for the unCLIP-style prior and the crash-sketch run</li>
+      <li><a href="notes6-diffusion-basics.html">4.8 Diffusion models: the basics</a></li>
+      <li><a href="notes8-diffusion-literature.html">4.10 Diffusion in the literature</a>: the papers, and five ways to get a dangerous scenario out</li>
+      <li><a href="notes7-unclip.html">4.9 Reading unCLIP</a>, for the unCLIP-style prior and the crash-sketch run</li>
       </ul>
     </div>
     <div>
@@ -37,7 +37,7 @@
 
 A diffusion model learns what traffic looks like only from its training data. You know things the data may show weakly or not at all: a car cannot brake much harder than 1 g, vehicles are conserved on a road, a lane closure caps the flow, and a near-miss matters more than a thousand ordinary passes. This page shows **where that knowledge can enter a diffusion model, what your data must contain for each entry point, and how to test whether the knowledge helped.**
 
-It builds on {doc}`4.10 Diffusion models: the basics <notes6-diffusion-basics>`, {doc}`4.12 Diffusion in the literature <notes8-diffusion-literature>`, {doc}`4.11 Reading unCLIP <notes7-unclip>`, and the {ref}`35-paper diffusion companion <diffusion-papers-library>`. It also takes three ideas from the *unCLIP and Conditional Generation* handout further: the two ways to steer the denoiser (train a condition in, or guide while sampling), the sorting of conditions by the kind of information they carry, and engineering costs as guides.
+It builds on {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>`, {doc}`4.10 Diffusion in the literature <notes8-diffusion-literature>`, {doc}`4.9 Reading unCLIP <notes7-unclip>`, and the {ref}`35-paper diffusion companion <diffusion-papers-library>`. It also takes three ideas from the *unCLIP and Conditional Generation* handout further: the two ways to steer the denoiser (train a condition in, or guide while sampling), the sorting of conditions by the kind of information they carry, and engineering costs as guides.
 
 **After this page you should be able to:**
 
@@ -47,7 +47,7 @@ It builds on {doc}`4.10 Diffusion models: the basics <notes6-diffusion-basics>`,
 4. Write an engineering cost for guidance, and say which way it should push for a given task.
 5. Design a test that shows whether the knowledge helped, against a classical method.
 
-**Symbols.** The same as {doc}`4.10 <notes6-diffusion-basics>` and {doc}`4.12 <notes8-diffusion-literature>`.
+**Symbols.** The same as {doc}`4.8 <notes6-diffusion-basics>` and {doc}`4.10 <notes8-diffusion-literature>`.
 
 | Symbol | What it is |
 | --- | --- |
@@ -60,7 +60,7 @@ It builds on {doc}`4.10 Diffusion models: the basics <notes6-diffusion-basics>`,
 | J(x), λ\_J | An engineering cost (low = what you want), and how hard sampling leans on it |
 | m | A mask: 1 where a value is observed, 0 where the model must fill it in |
 
-The sections on {ref}`door ③ <kg-door3>` and {ref}`door ④ <kg-door4>` also use α\_t (the share of signal variance left at step t, as in {ref}`4.10 <diffusion-math>`), y (observed values), γ (how far a physics step moves) and S (a physics smoother). The {ref}`worked example <kg-worked>` is synthetic: a simulated road where the true traffic state is known, so every number can be checked.
+The sections on {ref}`door ③ <kg-door3>` and {ref}`door ④ <kg-door4>` also use α\_t (the share of signal variance left at step t, as in {ref}`4.8 <diffusion-math>`), y (observed values), γ (how far a physics step moves) and S (a physics smoother). The {ref}`worked example <kg-worked>` is synthetic: a simulated road where the true traffic state is known, so every number can be checked.
 
 (kg-map)=
 ## The map: five doors for your knowledge
@@ -74,7 +74,7 @@ Knowledge can enter a diffusion model at five places. Two are set at training ti
 Five doors for transportation knowledge (course diagram).
 ```
 
-Door ③ acts on the clean guess x̂ at every denoising step. Door ④ holds values fixed in the sample at every step, or sets where sampling starts. Door ⑤ acts on the finished samples. {doc}`4.12 Diffusion in the literature <notes8-diffusion-literature>` counted five ways to get a dangerous scenario out. Here the lens is wider (any knowledge, not only danger): the representation becomes a door (①), and fill-in, hard limits and head starts share one door (④). Its five ways map onto the doors as: cost guidance → ③, head start and fill-in → ④, condition → ②, select → ⑤.
+Door ③ acts on the clean guess x̂ at every denoising step. Door ④ holds values fixed in the sample at every step, or sets where sampling starts. Door ⑤ acts on the finished samples. {doc}`4.10 Diffusion in the literature <notes8-diffusion-literature>` counted five ways to get a dangerous scenario out. Here the lens is wider (any knowledge, not only danger): the representation becomes a door (①), and fill-in, hard limits and head starts share one door (④). Its five ways map onto the doors as: cost guidance → ③, head start and fill-in → ④, condition → ②, select → ⑤.
 
 **Two questions help pick the door.** Does the knowledge describe *this one case* (a lane closure today) or *traffic in general* (a car cannot brake at 3 g)? And must it *always* hold, or only *usually*?
 
@@ -110,7 +110,7 @@ Every door depends on data you prepare before training. Conditioning asks the mo
 3. **Label events with engineering measures.** Store PET, TTC, minimum gap and peak deceleration for every interaction, and a crash type from a standard typology. Such labels become conditions or costs. [Wang et al.](https://arxiv.org/abs/2506.08459) condition on a wanted minimum gap, then ask for zero. [DiffScene](https://ojs.aaai.org/index.php/AAAI/article/view/32951) builds its test scenarios around three NHTSA pre-crash types. [Safe-Sim](https://arxiv.org/abs/2401.00391)'s cost sets a target time to collision with the tested vehicle.
 4. **Record what is missing, and why.** A mask, the cause (detector down, occluded, outside the camera view), and the sensor error. [PMA-Diffusion](https://arxiv.org/abs/2512.06183) trains with masks and hides extra observed cells (a "double mask") so the model also learns to fill in detector rows that are always observed in the data. Trained only on sparse data, that cut its error in the sparsest case (5% of rows) from 0.0364 to 0.0289. Real outages are rarely random: if a detector fails more often in congestion, a test with random gaps flatters the model. [PriSTI](https://arxiv.org/abs/2302.09746)'s traffic gaps were injected at random, so test any imputer on your own real outage patterns before trusting it.
 5. **Keep units, frames and scaling constants.** A cost is computed on the clean guess x̂ at every step, so the model's numbers must turn back into meters, seconds and mph. Store the normalization constants, the frame rate and the coordinate frame with the data.
-6. **Keep the ordinary with the rare.** The model learns realism from ordinary traffic; steering finds the rare. Do not train on crashes alone. An unsteered model can be even rarer than reality: in the worked example of {doc}`4.12 <notes8-diffusion-literature>`, it made 29 conflicts per 100,000 samples, against 83 per 100,000 recorded interactions.
+6. **Keep the ordinary with the rare.** The model learns realism from ordinary traffic; steering finds the rare. Do not train on crashes alone. An unsteered model can be even rarer than reality: in the worked example of {doc}`4.10 <notes8-diffusion-literature>`, it made 29 conflicts per 100,000 samples, against 83 per 100,000 recorded interactions.
 7. **Split by site and time, and keep real data for the final test.** Hold out whole corridors, intersections or days, as the course crash data does by corridor. A generated sample counts as evidence only after it improves a result on held-out real data.
 8. **Mark simulated data as simulated.** Simulation widens the coverage of dangerous cases: [Nexus](https://arxiv.org/abs/2504.10485) trains partly on simulated safety-critical scenes. But simulated data carry the simulator's simplifications, and generated crashes still need checking: some of Nexus's have overlapping vehicle boxes. Keep a column that says where each example came from.
 
@@ -162,7 +162,7 @@ A condition is any hint about x that you can hand the denoiser both in training 
 Four inlets for a condition (course diagram; the examples come from the 35-paper diffusion companion).
 ```
 
-The training loss is the one from {ref}`4.10 <diffusion-training>` with one more input:
+The training loss is the one from {ref}`4.8 <diffusion-training>` with one more input:
 
 $$
 L(\mathbf{w}) \;=\; \left\| \, g(\mathbf{z}_t, \mathbf{w}, t, \mathbf{c}) - \boldsymbol{\epsilon} \, \right\|^2
@@ -211,7 +211,7 @@ Papers write the dial in different ways, so always read the formula. [DiffTraj](
 
 ### Cost guidance: write the knowledge as a cost
 
-Choose a cost J that is low for what you want, computed from the clean guess x̂ in physical units. At every step, change the noise guess so that the next, less noisy step slides downhill on J. This is the equation of {doc}`4.12 <notes8-diffusion-literature>` (in “Five ways to get a dangerous scenario out”), where the strength is written λ:
+Choose a cost J that is low for what you want, computed from the clean guess x̂ in physical units. At every step, change the noise guess so that the next, less noisy step slides downhill on J. This is the equation of {doc}`4.10 <notes8-diffusion-literature>` (in “Five ways to get a dangerous scenario out”), where the strength is written λ:
 
 $$
 g_{J} \;=\; g(\mathbf{z}_t, \mathbf{w}, t, \mathbf{c}) \;+\; \lambda_J \sqrt{1-\alpha_t}\; \nabla_{\mathbf{z}_t} J(\hat{\mathbf{x}})
@@ -298,7 +298,7 @@ $$
 \mathbf{z}_t \;\leftarrow\; \mathbf{m} \odot \left( \sqrt{\alpha_t}\, \mathbf{y} + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}^{\prime} \right) \;+\; (1-\mathbf{m}) \odot \mathbf{z}_t
 $$
 
-*In words:* y holds the observations (detector speeds, the logged history), m marks where they are, and ε′ is fresh noise. Before each denoising step, the observed cells are overwritten by the observation, noised to the step's level, and the model fills in the rest to match. In {ref}`4.10 <diffusion-steering>`, the course heatmap model filled a four-cell detector outage this way with 2.34 mph error, against 5.16 mph for interpolation.
+*In words:* y holds the observations (detector speeds, the logged history), m marks where they are, and ε′ is fresh noise. Before each denoising step, the observed cells are overwritten by the observation, noised to the step's level, and the model fills in the rest to match. In {ref}`4.8 <diffusion-steering>`, the course heatmap model filled a four-cell detector outage this way with 2.34 mph error, against 5.16 mph for interpolation.
 
 Papers paste in different things: PMA-Diffusion pastes sparse detector rows and probe traces; SceneDiffuser keeps the logged history; SceneDiffuser++ keeps the test vehicle that a separate planner drives; SLEDGE keeps a real lane map and generates the traffic on it; [RoadFusion](https://arxiv.org/abs/2507.15346) uses a mask to say where a pavement defect may appear.
 
@@ -378,8 +378,8 @@ On a simulated 4-mile road watched by four detectors, giving the diffusion model
 
 - **The road.** The course's 4,000 simulated speed maps (the CTM data of the VAE and diffusion labs): a 4-mile road over 9.6 minutes, free-flow speed 75 mph, congested wave speed 15 mph, jam density 200 veh/mi, drawn on 20 road cells × 20 time steps (each cell 0.2 mi × 28.8 s). Each map has its own starting density, demand at the upstream end, and a bottleneck at the downstream end with its own capacity, start and duration. In the 50 test maps, 43% of cells are below 40 mph.
 - **The task.** Four loop detectors at mileposts 0.5, 1.5, 2.5 and 3.5 report speed at every time step. Fill in the other 320 cells of each map.
-- **The model.** The course heatmap diffusion model from {doc}`4.10 <notes6-diffusion-basics>` (765,153 weights), not retrained. It learned the three settings as a condition, dropped 20% of the time, so it runs with or without them. Each estimate is the average of 8 fills of 1,000 denoising steps.
-- **The test.** 50 test maps the model never saw, the same 50 as the gap-filling example in {ref}`4.10 <diffusion-steering>`. Every tuning choice was made on separate validation maps.
+- **The model.** The course heatmap diffusion model from {doc}`4.8 <notes6-diffusion-basics>` (765,153 weights), not retrained. It learned the three settings as a condition, dropped 20% of the time, so it runs with or without them. Each estimate is the average of 8 fills of 1,000 denoising steps.
+- **The test.** 50 test maps the model never saw, the same 50 as the gap-filling example in {ref}`4.8 <diffusion-steering>`. Every tuning choice was made on separate validation maps.
 
 ### The ladder
 
@@ -423,7 +423,7 @@ One test map, picked by a rule (the one whose share of cells below 40 mph is clo
 | + context with errors | 31% | 13 |
 | + context + physics step | 52% | 49 |
 
-The range is checked on hidden cells below free flow, as in {doc}`4.10 <notes6-diffusion-basics>`. With 8 fills, an honest range holds the truth about 7 times in 9 (78%).
+The range is checked on hidden cells below free flow, as in {doc}`4.8 <notes6-diffusion-basics>`. With 8 fills, an honest range holds the truth about 7 times in 9 (78%).
 
 ### What the numbers say
 
@@ -511,7 +511,7 @@ Two &ldquo;Try it&rdquo; panels show a law built into what the model generates a
 worked example fills a simulated 4-mile road from four loop detectors, adding one kind of knowledge at a time, and lets
 you open each of the 50 test maps. Three context numbers roughly halve the error, wrong context makes it worse than
 straight-line interpolation, and a classical smoother with the right wave speeds is a hard baseline to beat. Read it
-after the {ref}`diffusion papers companion <diffusion-papers-library>` in 4.12.
+after the {ref}`diffusion papers companion <diffusion-papers-library>` in 4.10.
 
 <div class="companion-embed">
   <div class="companion-embed-bar">
@@ -543,15 +543,15 @@ after the {ref}`diffusion papers companion <diffusion-papers-library>` in 4.12.
 
 ### Where to go next
 
-- {doc}`4.10 Diffusion models: the basics <notes6-diffusion-basics>`
-- {doc}`4.11 Reading unCLIP: from a CLIP embedding back to an image <notes7-unclip>`
-- {doc}`4.12 Diffusion in the literature: from image generators to safety scenarios <notes8-diffusion-literature>`
-- The {ref}`diffusion papers companion <diffusion-papers-library>` (35 papers) in 4.12
+- {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>`
+- {doc}`4.9 Reading unCLIP: from a CLIP embedding back to an image <notes7-unclip>`
+- {doc}`4.10 Diffusion in the literature: from image generators to safety scenarios <notes8-diffusion-literature>`
+- The {ref}`diffusion papers companion <diffusion-papers-library>` (35 papers) in 4.10
 - The *Generating Crash Data from Near-Misses* handout
 - The *Generative Models in Transportation* handout
 - The *unCLIP and Conditional Generation* handout
 
-## References for 4.13
+## References for 4.11
 
 *Foundations:*
 

@@ -1,9 +1,9 @@
 (vae-basics)=
-# 4.8 Variational autoencoders
+# 4.6 Variational autoencoders
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.8</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.6</span>
     <span class="notes-card-session">Session: The VAE and the GAN</span>
   </div>
   <p class="notes-card-lede">The VAE one step at a time, with the math kept light. An autoencoder can rebuild a traffic state but cannot make a new one; a VAE fixes that with two changes, a small cloud instead of a point in the middle and one extra term in the loss. This page walks through both on the course heatmaps, turns three knobs of a VAE trained on real PeMS flow, tunes &beta;, shows how the knobs change with the traffic a VAE is trained on, and ends with where a VAE should not be trusted.</p>
@@ -11,8 +11,8 @@
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes2b-latent-variables.html">4.4 Latent variables: hidden causes, not hidden layers</a></li>
-      <li><a href="notes2c-autoencoders.html">4.5&ndash;4.7 Autoencoders</a></li>
+      <li><a href="notes2b-latent-variables.html">4.3 Latent variables: hidden causes, not hidden layers</a></li>
+      <li><a href="notes2c-autoencoders.html">4.4&ndash;4.5 Autoencoders</a></li>
       </ul>
     </div>
     <div>
@@ -50,7 +50,7 @@ An autoencoder can rebuild a traffic state from a few latents, but it cannot mak
 From autoencoder to VAE: a point becomes a cloud. The course models on one test heatmap; same shape for both, 400 &rarr; 96 &rarr; 2 &rarr; 96 &rarr; 400.
 ```
 
-**What you already have.** The autoencoder of {doc}`4.5–4.7 <notes2c-autoencoders>` squeezes each input x into a few latents z and rebuilds it: x → z → x̂. It is trained only to rebuild. So each x gets one exact point z, placed wherever rebuilding is easiest.
+**What you already have.** The autoencoder of {doc}`4.4–4.5 <notes2c-autoencoders>` squeezes each input x into a few latents z and rebuilds it: x → z → x̂. It is trained only to rebuild. So each x gets one exact point z, placed wherever rebuilding is easiest.
 
 **What it cannot do.** To make a new heatmap you need new latents. The autoencoder never says where its latents live: their spread and shape are whatever training happened to produce, with empty gaps between them. Pick a z at random and you may land far from every training example, in a region the decoder never learned. The section {ref}`Why a plain autoencoder cannot generate <vae-basics-cannot-generate>` measures this.
 
@@ -193,7 +193,7 @@ A good generator scores high on both. For scale, real validation heatmaps scored
 | VAE + the standard bell | 0.998 | 0.085 |
 | real validation heatmaps, for scale | 0.945 | 0.953 |
 
-The fitted bell covers more variety, but its samples look less real. 14.5% of its draws fall in empty space between latents, and the plain autoencoder's decoder was never trained on the space around its latents. The VAE's bell draws hit empty space about as often (15.5%), but its decoder learned that space during training, so they still look real. Fitting a distribution to the latents afterwards is a real strategy: latent diffusion models, such as Stable Diffusion, do exactly that with a far stronger model than one bell. The VAE takes the other route. It builds the rule into training, so the map of where to draw exists by design. To check all this hands on, use the companion at the end of {ref}`4.6 <autoencoder-latent-layer>`: its last tab uses the plain autoencoder and the VAE of this page. The {ref}`next section <vae-basics-cloud>` shows how, and {ref}`Where it breaks <vae-basics-breaks>` explains why its samples still cover so little variety.
+The fitted bell covers more variety, but its samples look less real. 14.5% of its draws fall in empty space between latents, and the plain autoencoder's decoder was never trained on the space around its latents. The VAE's bell draws hit empty space about as often (15.5%), but its decoder learned that space during training, so they still look real. Fitting a distribution to the latents afterwards is a real strategy: latent diffusion models, such as Stable Diffusion, do exactly that with a far stronger model than one bell. The VAE takes the other route. It builds the rule into training, so the map of where to draw exists by design. To check all this hands on, use the companion at the end of {ref}`4.5 <autoencoder-latent-layer>`: its last tab uses the plain autoencoder and the VAE of this page. The {ref}`next section <vae-basics-cloud>` shows how, and {ref}`Where it breaks <vae-basics-breaks>` explains why its samples still cover so little variety.
 
 (vae-basics-cloud)=
 ## The VAE fix: a small cloud instead of a point
@@ -491,14 +491,14 @@ E: decoder. F: the bell term, the KL between the encoder's cloud and the standar
 
 ### Where to go next
 
-- Back: {doc}`4.4 Latent variables <notes2b-latent-variables>` and {doc}`4.5–4.7 Autoencoders <notes2c-autoencoders>`. Ahead: {doc}`4.9 <notes4-gan>` scores this VAE against a GAN, and {doc}`4.10 <notes6-diffusion-basics>` shows how diffusion avoids the blur.
+- Back: {doc}`4.3 Latent variables <notes2b-latent-variables>` and {doc}`4.4–4.5 Autoencoders <notes2c-autoencoders>`. Ahead: {doc}`4.7 <notes4-gan>` scores this VAE against a GAN, and {doc}`4.8 <notes6-diffusion-basics>` shows how diffusion avoids the blur.
 - The VAE Traffic Lab ({doc}`all labs <../labs>`): look inside the encoder, shift a heatmap and watch its latents move, and referee generated heatmaps against the admissible wave speeds.
 - The VAE-to-Diffusion Lab: why VAEs blur when an outcome can go two ways.
 - The longer handout, *Deep Generative Models: VAE and Diffusion*: diffusion models, and VAEs on real dashcam and FL511 camera data.
 - The {ref}`interactive three-knob figure <vae-three-knobs>` on this page: turn the knobs of a VAE trained on real PeMS flow curves.
 - The handout Generating Crash Data from Near-Misses: what to use when the events you need are rare.
 
-## References for 4.8
+## References for 4.6
 
 - Kingma, D. P., and Welling, M. (2014). Auto-encoding variational Bayes. ICLR. [arXiv:1312.6114](https://arxiv.org/abs/1312.6114)
 - Bishop, C. M., and Bishop, H. (2024). *Deep Learning: Foundations and Concepts*. Springer. Chapter 19, Autoencoders.
@@ -516,4 +516,4 @@ which uses the course's torus-grid network simulator.
 
 ---
 
-Next: {doc}`4.9 Generative Adversarial Networks (GAN) <notes4-gan>`. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`4.7 Generative Adversarial Networks (GAN) <notes4-gan>`. Back to the {doc}`Module 4 map <index>`.

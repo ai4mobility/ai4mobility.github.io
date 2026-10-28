@@ -103,7 +103,7 @@
       <h3>Lab 7 &mdash; Four Ways to Predict the Next 5 Seconds</h3>
       <p>A simulated intersection where each driver picks left, straight or right by a logit rule you can read, and a referee that re-runs every car 200 times from the same moment, so you know what really could happen next. Train regression, a conditional VAE, a word-by-word translator and diffusion on the same 20,000 trajectories with the same encoder design and the same training budget, and score all four on one card.</p>
       <p><strong>Proves:</strong> squared error alone returns the <em>average</em> future &mdash; 22.5% of regression&rsquo;s paths leave the pavement &mdash; while diffusion, trained with the same kind of loss plus a noisy draft of the answer as an extra input, draws futures that almost never do (0.2%). Run with a single pass, diffusion <em>is</em> regression. <strong>Check it against:</strong> constant velocity, a perfect model built from the referee, and the tuned VAE, which ties diffusion on the movement mix at one pass per future instead of 25 but leaves the road about ten times as often.</p>
-      <div class="tag-row"><span>Reads with 4.8, 4.10</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~20 min on CPU, or load the 3.6 MB weights</span></div>
+      <div class="tag-row"><span>Reads with 4.6, 4.8</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~20 min on CPU, or load the 3.6 MB weights</span></div>
       <a class="resource-link" href="module4/lab7_four_answers.html">Open Lab 7</a>
     </article>
     <article class="resource-card">

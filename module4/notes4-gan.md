@@ -1,9 +1,9 @@
 (gan)=
-# 4.9 Generative Adversarial Networks (GAN)
+# 4.7 Generative Adversarial Networks (GAN)
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.9</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.7</span>
     <span class="notes-card-session">Session: The VAE and the GAN</span>
   </div>
   <p class="notes-card-lede">The third answer replaces the hand-written loss with a learned one. Squared error needs a partner to compare with, and a generator fed random numbers has none; a GAN trains a second network, the critic, to judge whether a sample looks real, and trains the generator against it. This page builds the two losses in Bishop&rsquo;s notation, watches the two networks play on a real I-405 detector pair, uses the critic as an add-on that sharpens an autoencoder, and scores the first three answers side by side on the same held-out heatmaps.</p>
@@ -11,13 +11,13 @@
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes3b-vae-basics.html">4.8 Variational autoencoders</a></li>
-      <li><a href="notes2c-autoencoders.html">4.5 Autoencoders</a>, for the detector pair</li>
+      <li><a href="notes3b-vae-basics.html">4.6 Variational autoencoders</a></li>
+      <li><a href="notes2c-autoencoders.html">4.4 Autoencoders</a>, for the detector pair</li>
       </ul>
     </div>
     <div>
       <h4>Read it after</h4>
-      <ul><li><a href="notes6-diffusion-basics.html">4.10 Diffusion models: the basics</a></li></ul>
+      <ul><li><a href="notes6-diffusion-basics.html">4.8 Diffusion models: the basics</a></li></ul>
     </div>
   </div>
 </div>
@@ -35,7 +35,7 @@
 
 A generative adversarial network (GAN) is a training method. It keeps the generator you already know, a decoder that turns random numbers into data, and replaces the hand-written loss with a second network that learns to judge whether its output looks real. The two networks are trained together, each against the other.
 
-This page comes after {doc}`4.8 Variational autoencoders <notes3b-vae-basics>` and before {doc}`4.10 Diffusion models <notes6-diffusion-basics>`. It goes slowly through three things: why a learned loss is needed, how its two losses are built, and how the two networks train against each other. It ends with the first scorecard of this module, which puts the GAN beside the autoregressive model and the VAE on the same held-out heatmaps.
+This page comes after {doc}`4.6 Variational autoencoders <notes3b-vae-basics>` and before {doc}`4.8 Diffusion models <notes6-diffusion-basics>`. It goes slowly through three things: why a learned loss is needed, how its two losses are built, and how the two networks train against each other. It ends with the first scorecard of this module, which puts the GAN beside the autoregressive model and the VAE on the same held-out heatmaps.
 
 By the end you should be able to:
 
@@ -62,7 +62,7 @@ One caution on the word *critic*. In everyday GAN talk it means the discriminato
 
 ### Two running examples
 
-The same two datasets run through the autoencoder, VAE and diffusion pages ({doc}`4.5 <notes2c-autoencoders>`, {doc}`4.8 <notes3b-vae-basics>` and {doc}`4.10 <notes6-diffusion-basics>`), so you can compare the methods on the same data.
+The same two datasets run through the autoencoder, VAE and diffusion pages ({doc}`4.4 <notes2c-autoencoders>`, {doc}`4.6 <notes3b-vae-basics>` and {doc}`4.8 <notes6-diffusion-basics>`), so you can compare the methods on the same data.
 
 1. **Real: one detector pair on I-405 N.** PeMSD7(M) 5-minute speeds at station 717790 (upstream) and station 772455 (downstream), 0.73 mi apart, on 44 weekdays in May and June 2012. Models are fitted on May (6,624 readings) and scored on June (6,048 readings). Each reading is one point with two numbers, so every real reading, every fake and the critic's whole judgment fit on one plot. In May, 51.4% of readings are free-flowing at both stations (55 mph or more), 37.2% are slow at both (under 40 mph), and 3.4% show a **queue between the stations**: fast upstream, slow downstream.
 2. **Synthetic: 4,000 CTM speed heatmaps.** Each is 20 road cells × 20 time steps (4 miles × 9.6 minutes) from the course's cell transmission model, split into 3,200 training, 400 validation and 400 test heatmaps. These are simulated, not observed, and they show the sharp shockwave fronts that a good generator has to keep.
@@ -85,7 +85,7 @@ In the autoencoder and the VAE, the decoder's loss compares its output x̂ with 
 
 ### Problem one: squared error rewards the average
 
-{doc}`4.8 <notes3b-vae-basics>` diagnosed this. When several outputs are plausible for the same latents, the output with the lowest squared error is their average, and the average of many sharp fronts is one soft front. In the {ref}`first scorecard <gan-heatmap-scorecard>` below, the 2-knob VAE's samples have fronts of 22.5 mph (the largest jump between neighbouring road cells, averaged over heatmaps), against 39.6 mph in real test heatmaps.
+{doc}`4.6 <notes3b-vae-basics>` diagnosed this. When several outputs are plausible for the same latents, the output with the lowest squared error is their average, and the average of many sharp fronts is one soft front. In the {ref}`first scorecard <gan-heatmap-scorecard>` below, the 2-knob VAE's samples have fronts of 22.5 mph (the largest jump between neighbouring road cells, averaged over heatmaps), against 39.6 mph in real test heatmaps.
 
 (gan-no-answer-key)=
 ### Problem two: random numbers come with no answer key
@@ -495,7 +495,7 @@ You will meet this use often, sometimes inside models that are not called GANs:
 - **pix2pix** (Isola et al., 2017) translates one image into another, such as a street-scene label map into a photo, with an L1 loss plus a critic.
 - **SRGAN** (Ledig et al., 2017) adds a critic to super-resolution, so upscaled images keep fine texture.
 - **VAE-GAN** (Larsen et al., 2016) puts a critic on a VAE's output.
-- **The autoencoder inside latent diffusion** (Rombach et al., 2022, the model behind Stable Diffusion) is "trained by combination of a perceptual loss and a patch-based adversarial objective" (their section 3.1). So the diffusion models of {doc}`4.10 <notes6-diffusion-basics>` often decode through a decoder that a critic helped train.
+- **The autoencoder inside latent diffusion** (Rombach et al., 2022, the model behind Stable Diffusion) is "trained by combination of a perceptual loss and a patch-based adversarial objective" (their section 3.1). So the diffusion models of {doc}`4.8 <notes6-diffusion-basics>` often decode through a decoder that a critic helped train.
 
 **Measured: the critic as an add-on, on the CTM heatmaps.** Take an autoencoder with 4 latents. Its encoder has 145,348 weights, and its decoder (154,689 weights) is the course GAN's generator with a 4-number input. Train it for 6,000 rounds with squared error alone, then again with the critic term at four weights, keeping everything else the same, seed included. Score each on the 400 test heatmaps.
 
@@ -514,7 +514,7 @@ This is the *perception-distortion trade-off* (Blau and Michaeli, 2018): an outp
 
 The same trick works whenever you can say what "real" means.
 
-- **Conditional GAN** (Mirza and Osindero, 2014; Bishop section 17.1). Give both networks a condition c, such as the CTM settings, the time of day or the weather. The generator makes a heatmap for that c, and the critic judges "real for this c?". This is how a GAN is steered, much as {ref}`4.10 <diffusion-steering>` steers diffusion with settings.
+- **Conditional GAN** (Mirza and Osindero, 2014; Bishop section 17.1). Give both networks a condition c, such as the CTM settings, the time of day or the weather. The generator makes a heatmap for that c, and the critic judges "real for this c?". This is how a GAN is steered, much as {ref}`4.8 <diffusion-steering>` steers diffusion with settings.
 - **CycleGAN** (Zhu et al., 2017; Bishop section 17.2.1). Two generators and two critics translate between two collections that are not paired, such as daytime and night-time dashcam frames, with a cycle-consistency loss that makes the round trip return the original. CyCADA (Hoffman et al., 2018) used this idea to make frames from a driving video game look like real city streets (GTA5 to Cityscapes), so that a perception model trained on synthetic frames works better on real ones.
 - **Adversarial imitation (GAIL)** (Ho and Ermon, 2016). The generator is a driving policy, and the critic tells human driving from the policy's driving by judging what the car does in each situation (state-action pairs). Kuefler et al. (2017) trained highway driving policies this way on NGSIM US-101 and I-80 trajectories, and found lower collision and off-road rates than the other learned policies they compared, though behavioural cloning did better over short horizons.
 
@@ -530,7 +530,7 @@ Since the losses cannot judge ({ref}`Reading the losses <gan-losses>`), a GAN is
 - **Covers the variety (recall).** The same in reverse: neighbourhoods around the fakes, and the share of real readings that land inside one. A generator that makes one perfect reading over and over scores high on looks real and near zero on covers. That failure is *mode collapse*.
 - **Traffic regimes.** The share of samples that are free at both stations, slow at both, or show a queue between, compared with the data. A model can score well on both measures and still get a rare regime wrong.
 
-The two measures follow Kynkäänniemi et al. (2019). Here distance is in mph, with 6,048 fakes against the 6,048 June readings, as in {ref}`4.10 <diffusion-scorecard>`; the {ref}`heatmap scorecard <gan-heatmap-scorecard>` below uses the same measures on whole heatmaps. Each can be fooled, so read them together: an average fools *looks real*, and noise fools *covers* (see the table).
+The two measures follow Kynkäänniemi et al. (2019). Here distance is in mph, with 6,048 fakes against the 6,048 June readings, as in {ref}`4.8 <diffusion-scorecard>`; the {ref}`heatmap scorecard <gan-heatmap-scorecard>` below uses the same measures on whole heatmaps. Each can be fooled, so read them together: an average fools *looks real*, and noise fools *covers* (see the table).
 
 (gan-pair-scorecard)=
 ### Scorecard on the detector pair
@@ -542,7 +542,7 @@ The two measures follow Kynkäänniemi et al. (2019). Here distance is in mph, w
 | Squared-error generator ({ref}`no answer key <gan-no-answer-key>`) | 1.000 | 0.000 | 0.0 | 0.0 |
 | GAN, plain recipe, three seeds, round 10,000 | 0.970 to 0.979 | 0.29 to 0.52 | 2.8 to 3.3 | 37.1 to 40.1 |
 | GAN, k = 5, three seeds, round 10,000 | 0.967 to 0.978 | 0.73 to 0.92 | 3.2 to 3.5 | 36.4 to 37.9 |
-| Diffusion, 1,000 steps ({doc}`4.10 <notes6-diffusion-basics>`) | 0.955 | 0.977 | 3.6 | 37.5 |
+| Diffusion, 1,000 steps ({doc}`4.8 <notes6-diffusion-basics>`) | 0.955 | 0.977 | 3.6 | 37.5 |
 
 For comparison, June itself has 2.6% queue readings and 33.6% slow at both.
 
@@ -572,8 +572,8 @@ First six samples from each model, not picked, all rounded to 3-mph bins.
 ```
 
 The detector pair is one test; the course heatmaps are another, and here the GAN is scored against the first two
-answers of this module. Before any numbers, look. The VAE's fronts are soft, as {doc}`4.8 <notes3b-vae-basics>`
-explained. The autoregressive model of {doc}`4.2 <notes2-autoregressive>` and the GAN keep them sharp. Sharpness is
+answers of this module. Before any numbers, look. The VAE's fronts are soft, as {doc}`4.6 <notes3b-vae-basics>`
+explained. The autoregressive model of {ref}`4.1 <gen-autoregressive>` and the GAN keep them sharp. Sharpness is
 the part of quality the eye judges well. Coverage, whether all the kinds of traffic in the data appear in the samples,
 is the part the eye cannot judge, so it needs the table.
 
@@ -608,7 +608,7 @@ How to read it, column by column.
 
 Three findings stand out. The autoregressive model covers the variety as well as real data does (0.950 against 0.953).
 The GAN is close behind on both columns. And the local rule, which scored well on bits per cell in
-{doc}`4.2 <notes2-autoregressive>`, makes noisy samples (fronts of 60.9 mph against a real 39.6), most likely because it
+{ref}`4.1 <gen-autoregressive>`, makes noisy samples (fronts of 60.9 mph against a real 39.6), most likely because it
 draws neighbouring road cells independently of each other: **a good likelihood does not guarantee good samples.**
 
 Unlike the detector pair, this GAN was steady. The same code (6,000 training steps) run with three seeds ended at looks
@@ -662,7 +662,7 @@ check how close samples sit to their nearest training heatmap: real test heatmap
 
 **Breaks when.** Training wanders or collapses onto strands or a few kinds of output. Rare states can be under-produced, because each batch holds only a few of them (on the detector pair the queue state survived, so count yours). There is no likelihood, so it cannot score how unusual an observation is. The critic only knows what real data looked like, so it cannot certify physics (conservation of vehicles, admissible wave speeds) or corner cases nobody recorded.
 
-**Keep the classical method when.** A calibrated simulator (CTM, SUMO) already gives the variety you need with the physics guaranteed. You need probabilities, as in crash-frequency models or extreme-value analysis of surrogate measures. You must explain *why*, since a GAN's random inputs have no physical meaning. (If you simply want sharp samples without the two-player game, the other option is a diffusion model, {doc}`4.10 <notes6-diffusion-basics>`.)
+**Keep the classical method when.** A calibrated simulator (CTM, SUMO) already gives the variety you need with the physics guaranteed. You need probabilities, as in crash-frequency models or extreme-value analysis of surrogate measures. You must explain *why*, since a GAN's random inputs have no physical meaning. (If you simply want sharp samples without the two-player game, the other option is a diffusion model, {doc}`4.8 <notes6-diffusion-basics>`.)
 :::
 
 
@@ -721,9 +721,9 @@ Six things to keep.
 - Gupta, A. et al. (2018). [Social GAN: Socially acceptable trajectories with generative adversarial networks](https://arxiv.org/abs/1803.10892). CVPR.
 - Liang, Y. et al. (2018). [A deep generative adversarial architecture for network-wide spatial-temporal traffic state estimation](https://arxiv.org/abs/1801.03818). arXiv preprint.
 
-*Data:* PeMSD7(M) speeds from the STGCN repository (Yu, Yin and Zhu, 2018, [Spatio-temporal graph convolutional networks](https://arxiv.org/abs/1709.04875), IJCAI), I-405 N stations 717790 and 772455; CTM heatmaps from the course's cell transmission model. Every number on this page was computed by the reproducer scripts in the course folder (`genmodels/gan_basics/`), or is quoted from the course scorecard (`genmodels/numbers.json`) and {doc}`4.10 <notes6-diffusion-basics>`.
+*Data:* PeMSD7(M) speeds from the STGCN repository (Yu, Yin and Zhu, 2018, [Spatio-temporal graph convolutional networks](https://arxiv.org/abs/1709.04875), IJCAI), I-405 N stations 717790 and 772455; CTM heatmaps from the course's cell transmission model. Every number on this page was computed by the reproducer scripts in the course folder (`genmodels/gan_basics/`), or is quoted from the course scorecard (`genmodels/numbers.json`) and {doc}`4.8 <notes6-diffusion-basics>`.
 
 ---
 
-Next: {doc}`4.10 Diffusion models: the basics <notes6-diffusion-basics>` &mdash; the fourth answer keeps the GAN's
+Next: {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>` &mdash; the fourth answer keeps the GAN's
 sharpness without the two-player game: its answer key is the noise it added itself. Back to the {doc}`Module 4 map <index>`.

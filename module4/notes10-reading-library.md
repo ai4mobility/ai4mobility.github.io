@@ -11,8 +11,8 @@
     <div>
       <h4>Read it after</h4>
       <ul>
-      <li><a href="notes3b-vae-basics.html">4.8 Variational autoencoders</a> and <a href="notes4-gan.html">4.9 Generative Adversarial Networks (GAN)</a>, for the VAE and GAN papers</li>
-      <li><a href="notes6-diffusion-basics.html">4.10 Diffusion models: the basics</a>, for the diffusion papers</li>
+      <li><a href="notes3b-vae-basics.html">4.6 Variational autoencoders</a> and <a href="notes4-gan.html">4.7 Generative Adversarial Networks (GAN)</a>, for the VAE and GAN papers</li>
+      <li><a href="notes6-diffusion-basics.html">4.8 Diffusion models: the basics</a>, for the diffusion papers</li>
       </ul>
     </div>
     <div>
@@ -32,7 +32,7 @@ same five questions: what it generates, from what, with which model, how the out
 what it is used for. A small diagram marks the move each paper makes: **sample** (more of the same),
 **steer** (more of what you ask for), or **fill in** (complete what you saw).
 
-Use it alongside this module. After 4.8 and 4.9, filter by **VAE** and **GAN** to see where those models
+Use it alongside this module. After 4.6 and 4.7, filter by **VAE** and **GAN** to see where those models
 are still used; after the diffusion pages, filter by **Diffusion**, the family most papers since 2023
 use. Read the **Watch out** line on every card: it names the trap, such as a realism score that says
 nothing about safety, or synthetic trips that are not automatically private. End at **What the papers
@@ -49,7 +49,7 @@ share**, which lists the four steps most of these papers follow.
 
 **Two other ways into the papers.** For how the diffusion part of a paper works (what is noised, what the network
 reads, how it is trained, sampled and steered), use the {ref}`diffusion papers companion <diffusion-papers-library>`
-in {doc}`4.12 <notes8-diffusion-literature>`. For the applications in more depth, organised by transportation problem,
+in {doc}`4.10 <notes8-diffusion-literature>`. For the applications in more depth, organised by transportation problem,
 see the handout *Generative Models in Transportation*.
 
 ---

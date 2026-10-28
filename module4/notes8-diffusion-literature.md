@@ -1,9 +1,9 @@
 (diffusion-literature)=
-# 4.12 Diffusion in the literature: from image generators to safety scenarios
+# 4.10 Diffusion in the literature: from image generators to safety scenarios
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.12</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.10</span>
     <span class="notes-card-session">Session: Diffusion</span>
   </div>
   <p class="notes-card-lede">The recipe that turns a sentence into a picture now generates driving scenarios, including the rare, dangerous ones that safety testing needs. Part A reads the handful of papers that taught diffusion to make images, one change at a time. Part B shows how transportation research reuses the same recipe for agent motion, whole scenes and camera or LiDAR data, works one synthetic left-turn example, and lists the checks a generated scenario must pass before you trust it.</p>
@@ -11,8 +11,8 @@
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes6-diffusion-basics.html">4.10 Diffusion models: the basics</a></li>
-      <li><a href="notes7-unclip.html">4.11 Reading unCLIP</a>: from a CLIP embedding back to an image</li>
+      <li><a href="notes6-diffusion-basics.html">4.8 Diffusion models: the basics</a></li>
+      <li><a href="notes7-unclip.html">4.9 Reading unCLIP</a>: from a CLIP embedding back to an image</li>
       </ul>
     </div>
     <div>
@@ -35,7 +35,7 @@
 
 The training recipe that lets a model turn a sentence into a picture is now used to generate driving scenarios, including the rare, dangerous ones that safety testing needs. This page follows that path in two parts. Part A walks through the handful of papers that taught diffusion models to make images. Part B shows how transportation research reuses the same recipe, with most of the space on generating driving and intersection scenarios for safety.
 
-This page comes after {doc}`4.10 Diffusion models: the basics <notes6-diffusion-basics>`, which built one noise step, the training loss and sampling on real I-405 speeds and the course's CTM heatmaps. Here we do not re-derive any of that; we read papers. It also builds on the *Generating Crash Data from Near-Misses* handout, which explained why a generated crash is not a crash rate. That point comes back in {ref}`Judging a generated scenario <dlit-judging>`.
+This page comes after {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>`, which built one noise step, the training loss and sampling on real I-405 speeds and the course's CTM heatmaps. Here we do not re-derive any of that; we read papers. It also builds on the *Generating Crash Data from Near-Misses* handout, which explained why a generated crash is not a crash rate. That point comes back in {ref}`Judging a generated scenario <dlit-judging>`.
 
 **After this page you can:**
 
@@ -45,9 +45,9 @@ This page comes after {doc}`4.10 Diffusion models: the basics <notes6-diffusion-
 4. Read a scenario-generation paper and ask the right questions: what is generated, what steers it, and how realism and danger were judged.
 5. Decide when diffusion is the right tool for a safety study, and when a simulator, a crash database or extreme-value statistics is the better one.
 
-**Words and symbols.** We keep the notation of 4.10. Papers use different letters for the same things, so here is the translation:
+**Words and symbols.** We keep the notation of 4.8. Papers use different letters for the same things, so here is the translation:
 
-| On this page (and in 4.10) | In most papers | What it is |
+| On this page (and in 4.8) | In most papers | What it is |
 | --- | --- | --- |
 | x | x₀ | A clean training example: an image, or a scenario |
 | z\_t | x\_t | The noisy version of x after t noise steps |
@@ -80,9 +80,9 @@ One measuring stick first. Most papers report **FID** (Fréchet Inception distan
 
 ### Learn to name the noise (2020–2021)
 
-[DDPM](https://arxiv.org/abs/2006.11239) (Ho, Jain & Abbeel, NeurIPS 2020) made diffusion work. Earlier versions of the idea gave poor samples. DDPM trained one network to name the noise at a random step, with plain squared error and no weighting, over T = 1,000 steps. That is the loss in {ref}`4.10, Training <diffusion-training>`. It reached an FID of 3.17 on CIFAR-10, the best unconditional score at the time, and made 256×256 faces, bedrooms and churches.
+[DDPM](https://arxiv.org/abs/2006.11239) (Ho, Jain & Abbeel, NeurIPS 2020) made diffusion work. Earlier versions of the idea gave poor samples. DDPM trained one network to name the noise at a random step, with plain squared error and no weighting, over T = 1,000 steps. That is the loss in {ref}`4.8, Training <diffusion-training>`. It reached an FID of 3.17 on CIFAR-10, the best unconditional score at the time, and made 256×256 faces, bedrooms and churches.
 
-[Score-based SDEs](https://arxiv.org/abs/2011.13456) (Song et al., ICLR 2021) showed that the noise guess and the *score* are the same direction (the going-deeper box in {ref}`4.10, Training <diffusion-training>`), in continuous time. That is why papers say "score-based" and "diffusion" for one family.
+[Score-based SDEs](https://arxiv.org/abs/2011.13456) (Song et al., ICLR 2021) showed that the noise guess and the *score* are the same direction (the going-deeper box in {ref}`4.8, Training <diffusion-training>`), in continuous time. That is why papers say "score-based" and "diffusion" for one family.
 
 Two 2021 papers cut the cost of sampling. [DDIM](https://arxiv.org/abs/2010.02502) (Song, Meng & Ermon, ICLR 2021) kept the trained network and changed only the sampler: it skips steps and runs 10 to 50 times faster. [Improved DDPM](https://arxiv.org/abs/2102.09672) (Nichol & Dhariwal, ICML 2021) added the cosine noise schedule the course models use. It also learned each step's spread, so 50 to 100 steps gave good samples. [Consistency models](https://arxiv.org/abs/2303.01469) (Song et al., ICML 2023) later went to a single step.
 
@@ -93,7 +93,7 @@ Two 2021 papers cut the cost of sampling. [DDIM](https://arxiv.org/abs/2010.0250
 
 [Diffusion Models Beat GANs](https://arxiv.org/abs/2105.05233) (Dhariwal & Nichol, NeurIPS 2021) introduced **classifier guidance**. Diffusion still trailed GANs on ImageNet, with no way to trade variety for quality. The fix: a separately trained classifier looks at the noisy image, and at each step its gradient pushes the noise guess toward the requested class. With guidance, ImageNet 256×256 FID fell from 10.94 to 4.59, the first time diffusion beat the best GAN. Turning the guidance up traded diversity for fidelity.
 
-[Classifier-free guidance](https://arxiv.org/abs/2207.12598) (Ho & Salimans; NeurIPS 2021 workshop, full paper 2022) dropped the second network. One network learns with and without the condition, because the condition is hidden at random during training. Hiding it 10% or 20% of the time worked about equally; 50% was worse. At sampling, ask twice and push on the gap, exactly as in {ref}`4.10, Steering <diffusion-steering>`: g = g\_without + (1 + λ)(g\_with − g\_without). A little guidance gave the best FID; strong guidance gave the most typical-looking images.
+[Classifier-free guidance](https://arxiv.org/abs/2207.12598) (Ho & Salimans; NeurIPS 2021 workshop, full paper 2022) dropped the second network. One network learns with and without the condition, because the condition is hidden at random during training. Hiding it 10% or 20% of the time worked about equally; 50% was worse. At sampling, ask twice and push on the gap, exactly as in {ref}`4.8, Steering <diffusion-steering>`: g = g\_without + (1 + λ)(g\_with − g\_without). A little guidance gave the best FID; strong guidance gave the most typical-looking images.
 
 Papers write the strength differently. Ho & Salimans' w is our λ. GLIDE and Stable Diffusion use a "guidance scale" s = 1 + λ, so Stable Diffusion's common default of 7.5 means λ = 6.5.
 
@@ -105,7 +105,7 @@ Papers write the strength differently. Ho & Salimans' w is our λ. GLIDE and Sta
 
 [Stable Diffusion v1](https://github.com/CompVis/stable-diffusion) is the openly released version: an 860M-weight U-Net and a frozen 123M-weight CLIP ViT-L/14 text encoder, trained on subsets of LAION-2B(en). Its later v1 checkpoints hid the text 10% of the time to enable classifier-free guidance ([model card](https://huggingface.co/CompVis/stable-diffusion-v1-4)).
 
-*For transportation:* the AE and VAE of {doc}`4.5–4.8 <notes2c-autoencoders>` become a component, and driving-video generators ({ref}`sensor data <dlit-sensor>`) denoise latents too, since six cameras of video dwarf one photo. Note the two ways a condition enters. A bird's-eye road map lines up with the scene, so it can be stacked; a list of boxes or a sentence does not, so the network attends to it.
+*For transportation:* the AE and VAE of {doc}`4.4–4.6 <notes2c-autoencoders>` become a component, and driving-video generators ({ref}`sensor data <dlit-sensor>`) denoise latents too, since six cameras of video dwarf one photo. Note the two ways a condition enters. A bird's-eye road map lines up with the scene, so it can be stacked; a list of boxes or a sentence does not, so the network attends to it.
 
 ### Read a sentence: text to image (2022–2023)
 
@@ -191,21 +191,21 @@ Put the 35 papers side by side and four patterns stand out:
 
 - **The network follows the data.** 16 papers denoise with a U-Net, 15 with a transformer, and 4 do not say. Trajectory and scene models mostly use transformers that attend across agents and time. Camera and LiDAR models mostly reuse an image U-Net, often Stable Diffusion's.
 - **Big data is compressed first.** 12 papers denoise an autoencoder's latents, among them nearly every camera and LiDAR generator. Trajectory models usually denoise the raw numbers, which are small to begin with.
-- **Three ways to grade, one idea.** 15 papers grade the network on the noise, 11 on the clean data, 4 on a velocity, and 5 do not say. As {ref}`4.10 <diffusion-training>` showed, these carry the same information.
+- **Three ways to grade, one idea.** 15 papers grade the network on the noise, 11 on the clean data, 4 on a velocity, and 5 do not say. As {ref}`4.8 <diffusion-training>` showed, these carry the same information.
 - **Steering is where the transportation problem lives.** 12 papers push every step with a cost or a classifier, including 8 of the 9 safety-scenario papers. Sampling takes from 2 steps (DiffusionDrive) to 500 (PMA-Diffusion).
 
 (diffusion-papers-library)=
 ## How diffusion works in 35 transportation papers
 
 The {ref}`reading library <generative-reading-library>` on the closing page of this module asks what each paper
-generates. This companion asks how the diffusion part works. It takes the recipe of {doc}`4.10 <notes6-diffusion-basics>`
+generates. This companion asks how the diffusion part works. It takes the recipe of {doc}`4.8 <notes6-diffusion-basics>`
 into 35 published papers: safety-critical driving scenarios, whole-scene simulation, motion prediction and planning,
 camera and lidar data for automated driving, traffic data (detector gaps, OD flows, trips), and road-damage images.
 Each card shows the paper&rsquo;s architecture figure and answers the six questions of the recipe figure above, in the
 same order: what is noised, what the network reads besides the noisy data, which network does the denoising, how it
 is trained, how it samples, and how the output is steered.
 
-Keep one idea from 4.10 in mind: diffusion is a way to train a network, not a network. The same recipe runs on a
+Keep one idea from 4.8 in mind: diffusion is a way to train a network, not a network. The same recipe runs on a
 transformer that denoises vehicle paths and on a U-Net that denoises camera images. Filter by **Steering** to compare
 how papers push a model of normal traffic toward conflicts, or by **Denoises in** to see which papers first compress
 their data. End at **How a hint reaches the model**: the five places a hint (a map, a sentence, a cost, observed
@@ -263,7 +263,7 @@ $$
 
 | Symbol | Meaning |
 | --- | --- |
-| g(z\_t, w, t) | The network's guess of the noise, as in 4.10 |
+| g(z\_t, w, t) | The network's guess of the noise, as in 4.8 |
 | x̂ | The clean scenario that guess implies at this step: every agent's positions over time |
 | J(x̂) | The cost, in metres or seconds: low for the scenario you want |
 | ∇\_{z\_t} J | The direction that would raise J fastest, found by backpropagating through the network |
@@ -383,9 +383,9 @@ On a synthetic left turn where the truth is known, guidance raised conflicts fro
 
 **The intersection.** We reuse the permissive left turn of the *Generating Crash Data from Near-Misses* handout: a turner crosses one oncoming through car (35 mph on average), whose driver brakes if the turner would block the lane. Everything is simulated, so every driver's true behaviour is known. The model learns from 400,000 interactions, about seven years at that handout's 55,000 a year. They hold 328 conflicts (PET under 1 s), 4 of them crashes.
 
-**A scenario as data.** Each interaction becomes two time–space traces over 7 s, one point every 0.25 s: the through car's distance to the conflict point, and the turner's distance along its path. That is 58 numbers. Then we compress first, as Stable Diffusion does with its autoencoder and MotionDiffuser does with PCA. Each trace is cut to its leading principal components, 12 for the through car and 8 for the turner: the linear autoencoder of {doc}`4.5 <notes2c-autoencoders>`. They rebuild the traces to about a millimetre.
+**A scenario as data.** Each interaction becomes two time–space traces over 7 s, one point every 0.25 s: the through car's distance to the conflict point, and the turner's distance along its path. That is 58 numbers. Then we compress first, as Stable Diffusion does with its autoencoder and MotionDiffuser does with PCA. Each trace is cut to its leading principal components, 12 for the through car and 8 for the turner: the linear autoencoder of {doc}`4.4 <notes2c-autoencoders>`. They rebuild the traces to about a millimetre.
 
-**The model.** A small network with 638,228 weights learns to name the noise in those 20 numbers, exactly as in {doc}`4.10 <notes6-diffusion-basics>`: cosine schedule, T = 1,000 steps, 20,000 training passes of 1,024 scenarios (31 minutes on two CPU cores). Sampling uses 50 steps.
+**The model.** A small network with 638,228 weights learns to name the noise in those 20 numbers, exactly as in {doc}`4.8 <notes6-diffusion-basics>`: cosine schedule, T = 1,000 steps, 20,000 training passes of 1,024 scenarios (31 minutes on two CPU cores). Sampling uses 50 steps.
 
 **The steering.** The conflict cost J is the closest distance between the two cars over the 7 s, smoothed so it has a gradient. A second set of runs adds a *support cost*: a penalty whenever the turner's accepted gap is shorter than any gap in the data, 3.0 s. Both enter through the guidance equation {ref}`above <dlit-five-ways>`.
 
@@ -394,7 +394,7 @@ On a synthetic left turn where the truth is known, guidance raised conflicts fro
 - *PET*, by the rule of the *Generating Crash Data from Near-Misses* handout. On all 400,000 training interactions it labels conflicts and crashes exactly as the simulator does.
 - *Physics:* no reversing, no braking harder than 1 g or accelerating harder than 0.5 g, no implausible speeds, no turner speed change larger than any recorded.
 - *Set-up support:* the accepted gap and the through car's speed lie inside the recorded range.
-- *Looks real*, the score from {ref}`4.10 <diffusion-scorecard>`.
+- *Looks real*, the score from {ref}`4.8 <diffusion-scorecard>`.
 
 ```{figure} ../_static/figures/DL_TimeSpace.png
 :alt: Five time-space panels and a key. Each panel plots the through car's distance to the conflict point in metres against time since the turner starts (0 to 7 s); a sand band marks when the turner is in the through car's lane, and a grey band just below zero marks the conflict area. Top left, recorded, an everyday turn: PET 2.68 s, accepted gap 6.2 s, through car slowed 0.0 m/s. Top middle, recorded, a near-miss: PET 0.49 s, accepted gap 3.8 s, slowed 2.4 m/s. Bottom left, generated with the conflict and support cost at lambda 1, passes every check: PET 0.85 s, gap 4.2 s, slowed 6.2 m/s. Bottom middle, conflict and support cost at lambda 3, passes every check but never slows: PET 0.56 s, gap 4.9 s, slowed 0.0 m/s. Bottom right, conflict cost only at lambda 3, gap shorter than any recorded: a crash (PET at or below 0) from an accepted gap of 2.6 s, drawn in gold. Top right, the key: gold marks a set-up no recorded driver produced, and the line inside the grey band while the sand band is open means a crash.
@@ -487,9 +487,9 @@ Judge every generated scenario on five questions, and never read the share of da
 
 | Question | How the papers measure it | What a traffic-safety engineer adds |
 | --- | --- | --- |
-| Is it realistic? | The [Waymo sim-agents](https://arxiv.org/abs/2305.12032) realism score: from 1.1 s of history, 32 rollouts of 8 s per scene, scored on how likely the logged future is under them, for motion, interaction and map features. Distance between driving-profile histograms (CTG). FID for sensor data. | A physics check: no braking beyond what tyres allow, no reversing. A set-up check: speeds and gaps inside the range ever recorded. The "looks real" score from 4.10. |
+| Is it realistic? | The [Waymo sim-agents](https://arxiv.org/abs/2305.12032) realism score: from 1.1 s of history, 32 rollouts of 8 s per scene, scored on how likely the logged future is under them, for motion, interaction and map features. Distance between driving-profile histograms (CTG). FID for sensor data. | A physics check: no braking beyond what tyres allow, no reversing. A set-up check: speeds and gaps inside the range ever recorded. The "looks real" score from 4.8. |
 | Is it dangerous in a way that matters? | Collision rate, off-road rate, time-to-collision (TTC) | Post-encroachment time (PET), deceleration needed to avoid a crash, and the conflict type: left-turn opposing, rear-end, angle |
-| Is the set varied? | Coverage and diversity scores | "Covers variety" from 4.10; and whether the conflicts arise in different ways (a late brake, a short gap, a red-light runner) |
+| Is the set varied? | Coverage and diversity scores | "Covers variety" from 4.8; and whether the conflicts arise in different ways (a late brake, a short gap, a red-light runner) |
 | Did the steering do what was asked? | Controllability (CCDiff), rule violation (CTG) | The share of scenarios that meet the request and pass every check above |
 | Whose fault is it? | Rarely measured; Safe-Sim notes that some of its collisions were not the tested planner's fault | Could a competent driver have avoided it? A test of a planner should not count collisions no one could avoid. |
 
@@ -562,7 +562,7 @@ Most failures come from steering past what the data support. Nine to watch for:
 
 ### Where to go next
 
-- {doc}`4.13 How transportation knowledge guides diffusion <notes9-knowledge-guided>`: five doors where
+- {doc}`4.11 How transportation knowledge guides diffusion <notes9-knowledge-guided>`: five doors where
   transportation knowledge can enter a diffusion model (what it generates, the condition, guidance, values held fixed,
   checks), what your data must contain for each, and a worked test on four loop detectors.
 - The {ref}`reading library <generative-reading-library>` on the closing page of this module: 34 papers on generative
@@ -571,14 +571,14 @@ Most failures come from steering past what the data support. Nine to watch for:
   what to do instead.
 
 (dlit-references)=
-## References for 4.12
+## References for 4.10
 
 All links were opened on Oct 27, 2026.
 
 **Course materials**
 
 - Bishop, C. M., & Bishop, H. (2024). *Deep Learning: Foundations and Concepts*, Chapter 20 (Diffusion models). Springer.
-- {doc}`4.10 Diffusion models: the basics <notes6-diffusion-basics>`; the AI for Mobility handouts *Generating Crash Data from Near-Misses* and *Generative Models in Transportation* (applications).
+- {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>`; the AI for Mobility handouts *Generating Crash Data from Near-Misses* and *Generative Models in Transportation* (applications).
 - AI for Mobility companion: {ref}`How diffusion works in 35 transportation papers <diffusion-papers-library>` (on this page): each paper's architecture figure, the six questions answered, and how a hint reaches the model. The paper figures in {ref}`The key papers <dlit-key-papers>` and {ref}`From scenario to sensor data <dlit-sensor>` come from it.
 
 **Part A: image diffusion**
@@ -650,4 +650,4 @@ numbers come from the reproducer in the course files (`diffusion_scenarios_worke
 
 ---
 
-Next: {doc}`4.13 How transportation knowledge guides diffusion <notes9-knowledge-guided>`. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`4.11 How transportation knowledge guides diffusion <notes9-knowledge-guided>`. Back to the {doc}`Module 4 map <index>`.

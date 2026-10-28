@@ -1837,8 +1837,9 @@ items:
     kind: notes
     module: 4
     session: 2026-10-22
-    status: drafted
+    status: superseded
     notes: >-
+      SUPERSEDED Oct 28 2026 (second pass): merged into 4.1 notes1-producing (target gen-autoregressive) (row m4-reorg-2026-10-28b); this page is kept at _to_delete/retired-pages/notes2-autoregressive_before-merge-2026-10-28.md and its URL redirects. 
       3.2 One cell at a time. Expanded from Generative_Image_Transformers_Slides. Rendered by genmodels/write_notes.py from genmodels/notes_src/notes2-autoregressive.md;
       every number comes from genmodels/numbers.json. Edit the source and re-run, never the rendered page.
       Figures copied to _static/figures/ from genmodels/fig/.
@@ -1970,8 +1971,8 @@ items:
     kind: notes
     module: 4
     session: unscheduled (VAE-and-diffusion lecture, after Oct 22)
-    status: drafted
-    notes: '3.6 (was 3.5 until Oct 18) One hidden cause: mixture models. Expanded from Hidden_Cause_Mixture_Slides. Rendered by
+    status: superseded
+    notes: 'SUPERSEDED Oct 28 2026 (second pass): merged into 4.2 notes2a-gaussians (target mixture-models) (row m4-reorg-2026-10-28b); this page is kept at _to_delete/retired-pages/notes5-hidden-cause_before-merge-2026-10-28.md and its URL redirects. 3.6 (was 3.5 until Oct 18) One hidden cause: mixture models. Expanded from Hidden_Cause_Mixture_Slides. Rendered by
       genmodels/write_notes.py from genmodels/notes_src/notes5-hidden-cause.md; numbers come from genmodels/mix_detector.json,
       mix_heatmaps.json and numbers.json. Edit the source and re-run, never the rendered page. Figures copied
       to _static/figures/ from genmodels/book/. The session card says "VAE and diffusion"; add the date
@@ -2199,9 +2200,9 @@ items:
     kind: notes
     module: 4
     session: unscheduled
-    status: integrated
+    status: superseded
     dest: site/module4/notes2e-copying.md
-    notes: '4.6 Stopping the copy (Oct 27 2026), handout sections 6-10: copying in 400 dimensions, sparse
+    notes: 'SUPERSEDED Oct 28 2026 (second pass): merged into 4.5 notes2d-deep-autoencoders (target stopping-the-copy) (row m4-reorg-2026-10-28b); this page is kept at _to_delete/retired-pages/notes2e-copying_before-merge-2026-10-28.md and its URL redirects. 4.6 Stopping the copy (Oct 27 2026), handout sections 6-10: copying in 400 dimensions, sparse
       (lambda sweep), denoising (vs tuned blur and ASM; the score), masked autoencoders (BERT bridge; random
       vs outage masks), where it breaks, fit card, applications, seven lines, label-the-picture (AEB_Label_Step),
       check yourself, references. VAE, GAN and mixture pages renumbered 4.4-4.6 -> 4.7-4.9 the same day.'
@@ -2307,6 +2308,27 @@ items:
       (same anchors). Cross-references and cards renumbered on every page; the mixture page now looks ahead
       to the VAE and the scorecard instead of back. Slide decks were not touched: Diffusion_Basics_Slides
       still says section 4.11, and the autoencoder deck says 4.4-4.6.'
+
+  - id: m4-reorg-2026-10-28b
+    file: site/_toc.yml + site/module4/* + genmodels/site_reorg/reorg_module4_2026-10-28b.py
+    kind: internal
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/index.md
+    notes: 'Second pass the same day, at Hao request: three page pairs merged and Module 4 renumbered. 4.1 Introduction
+      to deep generative models = old 4.1 + 4.2 (notes1-producing; the autoregressive half under target gen-autoregressive).
+      4.2 Gaussians and mixture models = the Gaussian warm-up + old 4.3 (notes2a-gaussians; target mixture-models; the
+      two-dimensional mixture section now follows EM). 4.3 Latent variables stays its own page (notes2b). 4.4 Autoencoders
+      (notes2c). 4.5 Deep autoencoders, bending the line and stopping the copy = old 4.6 + 4.7 (notes2d; target
+      stopping-the-copy). Then 4.6 VAE, 4.7 GAN, 4.8 diffusion basics, 4.9 unCLIP, 4.10 diffusion literature, 4.11
+      knowledge-guided, 4.12 world models (to come). notes2-autoregressive, notes5-hidden-cause and notes2e-copying moved
+      to _to_delete/retired-pages; _redirects/module4 stubs send their URLs to the new targets (the module3 stubs were
+      repointed too). Every section number on the Module 4 pages, labs.md, the Lab 7 notebook, the knowledge-guided and
+      diffusion-papers companions and _toc.yml was renumbered by reorg_module4_2026-10-28b.py, which lists the numbers
+      that are not section references. The page generators in genmodels/unclip, diff_literature, hk_knowledge and
+      gan_basics site folders are now guarded like the older ones: re-running them would bring back the old numbers.
+      Not updated: the slide decks and the Claude Doc handouts and PDFs, which still use the old section numbers.'
 
   - id: m4-notes7-unclip
     file: site/module4/notes7-unclip.md
