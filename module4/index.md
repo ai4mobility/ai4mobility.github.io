@@ -177,6 +177,29 @@ to a transportation task.
           title="How diffusion works in thirty-five transportation papers: what is noised, the network, training, sampling and steering" loading="lazy"></iframe>
 </div>
 
+(unclip-crash-run)=
+## unCLIP on crash reports: a worked run
+
+The unCLIP recipe behind DALL&middot;E 2 trains three models: a pairing between two kinds of data, a decoder that
+redraws one kind from its embedding, and a prior that bridges from the other kind. This companion runs all three on the
+course crash data, turning an officer&rsquo;s narrative into a 64 &times; 64 crash sketch, and reports how each step
+was trained and how well it did. The full pipeline lands at chance, and the page shows why: the pairing step is the weak
+link. It also walks through three problems worth knowing before you train your own conditional generator: a decoder
+that ignored its condition, data that looked different at the size the model sees it, and a prior that learned no variety.
+
+Read it after {doc}`4.11 <notes6-diffusion-basics>`. Every sketch on the page was drawn by the models; no real sketch,
+narrative or personal detail from the course dataset appears. If you are enrolled, look up any crash ID in your copy of
+the dataset to compare an output with the real sketch.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Worked run &mdash; unCLIP on crash reports: from a narrative to a sketch</span>
+    <a href="../_static/companions/UnCLIP_Crash_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/UnCLIP_Crash_Companion.html"
+          title="unCLIP on crash reports: pairing, decoder and prior trained on crash narratives and sketches, with every result" loading="lazy"></iframe>
+</div>
+
 ## Learning objectives
 
 By the end of this module you will be able to:

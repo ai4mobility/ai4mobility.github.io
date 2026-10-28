@@ -2040,6 +2040,25 @@ items:
       Reproducer build_v2/diffusion_library/ (python3 build/build_diffusion_library.py out.html [--web]). Mounted
       at anchor (diffusion-papers-library)= on the module index; 4.11 Where to go next links to it.'
 
+  - id: m4-unclip-crash-companion
+    file: UnCLIP_Crash_Companion.html
+    kind: companion
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/index.md
+    mounted: site/_static/companions/UnCLIP_Crash_Companion.html
+    notes: 'unCLIP on crash reports (Oct 28 2026), 1.1 MB, 8 tabs: start here, pair, decoder, prior, full
+      pipeline, explore 38 test crashes, discussion, fit card. Runs pair (frozen CLIP, image side locked,
+      rank-32 text head), decoder (3.0 M U-Net, 64 px, two doors, v1/v2/v3) and four priors on the 288 narrative-sketch
+      pairs (corridor split 207/43/38); scored by rank of the true sketch among 38. Site build is PUBLIC-SAFE:
+      no narratives, no real sketches, no corridor codes; only generated sketches and numbers (build_companion.py
+      --public asserts no narrative text or real-sketch image is in the file). The class-only build with
+      narratives and real sketches is UnCLIP_Crash_Companion_CLASS_ONLY.html at the class-folder root and
+      must never be copied here. Reproducer genmodels/unclip_crash/ (cu_companion_data.py re-checks every
+      number). Mounted at anchor (unclip-crash-run)= on the module index; 4.11 Where to go next links to
+      it.'
+
   - id: m4-same-vae-different-traffic
     file: Same_VAE_Different_Traffic_Companion.html
     kind: companion

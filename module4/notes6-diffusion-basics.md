@@ -640,6 +640,7 @@ There is no single right answer to the first eight; each asks for a judgment you
 - *Generating Crash Data from Near-Misses*: why sampling a generator is not enough for rare events, and what to do instead.
 - *Generative Models in Transportation* (applications handout) and the {ref}`reading library <generative-reading-library>` on the Module 4 page.
 - The {ref}`diffusion papers companion <diffusion-papers-library>` on the Module 4 page: this page&rsquo;s recipe inside 35 transportation papers, each with its architecture figure and how it is trained, sampled and steered.
+- The {ref}`unCLIP crash companion <unclip-crash-run>` on the Module 4 page: the three unCLIP steps (pair, decoder, prior) run on the course crash narratives and sketches, with every result and three problems worth knowing.
 - Bishop & Bishop, *Deep Learning: Foundations and Concepts* (2024), Chapter 20.
 
 ## References for 4.11
