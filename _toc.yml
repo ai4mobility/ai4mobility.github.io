@@ -162,6 +162,8 @@ parts:
             title: "Lab 5 — Attention on a Road Network"
           - file: module6/lab6_vit_finetune
             title: "Lab 6 — Fine-tuning a Vision Transformer"
+          - file: module4/lab7_four_answers
+            title: "Lab 7 — Four Ways to Predict the Next 5 Seconds"
 
   - caption: Capstone
     chapters:

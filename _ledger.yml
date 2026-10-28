@@ -2357,6 +2357,44 @@ items:
       Holds the 34-paper reading library (anchor generative-reading-library), moved from index.md, and points
       to the 35-paper diffusion companion in 4.12.'
 
+  - id: m4-lab7-four-answers
+    file: site/module4/lab7_four_answers.ipynb
+    kind: lab
+    module: 4
+    session: unscheduled
+    status: published
+    dest: site/labs.md + _toc.yml Labs part + module4/index.md (Labs list, 4.8 and 4.10 rows)
+    mounted: site/_static/data/four_answers_weights.pt
+    notes: 'Lab 7 (Oct 28 2026), published executed (trained from scratch, 2 CPU threads). Regression, a
+      conditional VAE, a word-by-word translator (13x13 acceleration tokens, closed-loop rounding 2.4 cm
+      RMS) and diffusion (x0 prediction, cosine schedule, DDIM eta 1, 25 passes) on one simulated four-leg
+      intersection: drivers choose left/straight/right at ''now'' by an MNL of lane position and approach
+      speed, a turn needing more than 4.5 m/s2 braking is off the menu. Exact referee: 200 re-runs from
+      the same state; a second 20 re-runs is the perfect model. Same encoder design, 6,000 steps x 256 cars
+      each; VAE sigma 1.0 chosen on validation. Test (1,000 pasts x 20 draws), off-road / mix / best of
+      6 / one draw: CV 0.0% / 0.505 / 6.59 / 6.59; regression 22.5% / 0.532 / 5.48 / 5.48; VAE 2.3% / 0.143
+      / 1.70 / 6.09; translator 0.8% / 0.164 / 1.67 / 7.11; diffusion 0.2% / 0.133 / 1.63 / 6.49; perfect
+      0% / 0.111 / 1.51 / 6.53. Diffusion and the VAE TIE on the mix (one training run each); diffusion''s
+      win is staying on the road. 1-pass diffusion = regression (20.6% off-road, 0.73 m from the regression
+      answer). 500 training cars: diffusion memorises (draws 1.4 cm apart). The weights file lets TRAIN_FROM_SCRATCH
+      = False download from the site.'
+
+  - id: m4-lab7-repro
+    file: Labs/four_answers/ + Labs/build_four_answers_lab.py
+    kind: internal
+    module: 4
+    session: unscheduled
+    status: integrated
+    notes: 'Reproducer for m4-lab7-four-answers (README has the run order, ~50 min on 2 threads). The builder
+      pastes code sections from fa_sim.py / fa_models.py / fa_plots.py and every number from out/numbers.json;
+      lab_text.py holds the prose. Structure figures fig/FA_Structure_0..D (SVG + PNG, fa_structure_figs.py)
+      and data figures FA_Data / FA_Answers / FA_StepSweep / FA_Drafts / FA_Scorecard (fa_figures.py) for
+      slides. TRAPS: the first referee (kNN on raw pasts) was too coarse and let regression beat the ''perfect
+      model'' - replaced by exact re-simulation; give every model the same steps; tune the VAE sigma on
+      validation (0.03 to 3.0, best 1.0); example pasts are picked by a neutral rule (first test car with
+      both movements >= 25%), not by model performance. An independent review pass softened the diffusion-vs-VAE
+      claim to a tie.'
+
 # MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------
 

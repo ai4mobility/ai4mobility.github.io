@@ -5,7 +5,7 @@
   <h2>Hands-On Labs <span>Every Notebook in the Course</span></h2>
   <p>One page for all the labs &mdash; what each one builds, what it actually proves, and what to compare it against before you believe the result. Everything runs in Google Colab; nothing needs a local install.</p>
   <div class="resource-meta">
-    <span>6 notebooks available now</span>
+    <span>7 notebooks available now</span>
     <span>7 more planned for Modules 2&ndash;7</span>
     <span>Open data throughout</span>
   </div>
@@ -38,6 +38,7 @@
         <tr><td><a href="module1/notes3-cnn.html#newell-lwr">Learning the CTM update</a></td><td>M1</td><td>A convolution kernel carries a reaction time and a wave speed</td><td>Companion available</td></tr>
         <tr><td>Cross-attention sanity check</td><td>M2</td><td>Attention heads route; they are not the tidy alignment maps papers suggest</td><td>In development</td></tr>
         <tr><td><a href="module3/lab5_graph_attention.html">5 &mdash; Attention on a road network</a></td><td>M3</td><td>Attention earns its parameters only where the weighting is unknown &mdash; and structure beats weighting</td><td>Available</td></tr>
+        <tr><td><a href="module4/lab7_four_answers.html">7 &mdash; Four ways to predict the next 5 seconds</a></td><td>M4</td><td>Regression, a VAE, a translator and diffusion learn from the same pairs; squared error alone returns the average, and diffusion uses it to draw real futures</td><td>Available</td></tr>
         <tr><td>VAE on traffic state heatmaps</td><td>M4</td><td>What a narrow bottleneck chooses to keep, and what it throws away</td><td>In development</td></tr>
         <tr><td>From VAE to diffusion</td><td>M4</td><td>Diffusion as a response to measured VAE failures, not an assertion</td><td>In development</td></tr>
         <tr><td>Training the denoiser</td><td>M4</td><td>What the network predicts at each noise level, and why</td><td>In development</td></tr>
@@ -53,9 +54,9 @@
 <section class="resource-section" id="module1-labs">
   <div class="resource-section-header">
     <h2>Available Now</h2>
-    <span>Modules 1, 3 and 6</span>
+    <span>Modules 1, 3, 4 and 6</span>
   </div>
-  <p class="section-intro">Six notebooks, all runnable in Colab on open or synthetic data. Read each one alongside the notes section named on its card &mdash; the notebook shows the thing working, the section says why it works and where it stops working.</p>
+  <p class="section-intro">Seven notebooks, all runnable in Colab on open or synthetic data. Read each one alongside the notes section named on its card &mdash; the notebook shows the thing working, the section says why it works and where it stops working.</p>
   <div class="resource-grid">
     <article class="resource-card">
       <div class="resource-card-top"><p class="resource-category">Module 1</p><span class="level-badge level-beginner">Beginner</span></div>
@@ -96,6 +97,14 @@
       <p><strong>Proves:</strong> attention wins only where the weighting is genuinely unknown &mdash; and even there, knowing <em>which</em> neighbours to listen to is worth more than learning <em>how much</em> to weight them. <strong>Check it against:</strong> not the mean aggregator, which anything beats, but the fixed aggregator carrying your own domain knowledge. On the spillback rule it ties attention at half the parameters and a third of the seed variance.</p>
       <div class="tag-row"><span>Reads with 3.6 and 3.7</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~3 min</span></div>
       <a class="resource-link" href="module3/lab5_graph_attention.html">Open Lab 5</a>
+    </article>
+    <article class="resource-card">
+      <div class="resource-card-top"><p class="resource-category">Module 4</p><span class="level-badge level-intermediate">Intermediate</span></div>
+      <h3>Lab 7 &mdash; Four Ways to Predict the Next 5 Seconds</h3>
+      <p>A simulated intersection where each driver picks left, straight or right by a logit rule you can read, and a referee that re-runs every car 200 times from the same moment, so you know what really could happen next. Train regression, a conditional VAE, a word-by-word translator and diffusion on the same 20,000 trajectories with the same encoder design and the same training budget, and score all four on one card.</p>
+      <p><strong>Proves:</strong> squared error alone returns the <em>average</em> future &mdash; 22.5% of regression&rsquo;s paths leave the pavement &mdash; while diffusion, trained with the same kind of loss plus a noisy draft of the answer as an extra input, draws futures that almost never do (0.2%). Run with a single pass, diffusion <em>is</em> regression. <strong>Check it against:</strong> constant velocity, a perfect model built from the referee, and the tuned VAE, which ties diffusion on the movement mix at one pass per future instead of 25 but leaves the road about ten times as often.</p>
+      <div class="tag-row"><span>Reads with 4.8, 4.10</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~20 min on CPU, or load the 3.6 MB weights</span></div>
+      <a class="resource-link" href="module4/lab7_four_answers.html">Open Lab 7</a>
     </article>
     <article class="resource-card">
       <div class="resource-card-top"><p class="resource-category">Module 6</p><span class="level-badge level-intermediate">Intermediate</span></div>
