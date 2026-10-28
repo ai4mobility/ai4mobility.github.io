@@ -2194,6 +2194,18 @@ items:
       screenshots of the doc''s four diagrams (DB_Graphical_Model, DB_Training_Loop, DB_Steps_Chart, DB_Label_Picture).
       Every number traces to genmodels/diff_basics/README.md.'
 
+  - id: m4-deck-diffusion-basics
+    file: Diffusion_Basics_Slides.pptx + .md
+    kind: deck
+    module: 4
+    session: unscheduled
+    status: drafted
+    dest: site/module4/notes6-diffusion-basics.md
+    notes: 60-slide lecture deck on the course template (Oct 27 2026), the slide twin of 4.11; built by
+      diff_slides/ (make_numbers, build_deck, audit = 0). Bishop notation; carries the reviewer correction
+      that with DDPM the starting static hardly matters. For Hao to trim; the outline lists a 75-minute
+      cut.
+
 # MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------
 
