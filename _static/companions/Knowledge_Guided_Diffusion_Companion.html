@@ -201,7 +201,7 @@ pre.run{font:12.5px var(--mono);background:var(--soft);border-radius:8px;padding
   <div class="kicker">AI for Mobility · Module 4 · Deep generative models · Interactive companion</div>
   <h1>How transportation knowledge guides diffusion generation</h1>
   <p>A diffusion model learns what traffic looks like only from its training data. You know things the data may show weakly or not at all: a car cannot brake much harder than 1 g, vehicles are conserved on a road, a lane closure caps the flow, and a near-miss matters more than a thousand ordinary passes. This page shows where that knowledge can enter a diffusion model, what your data must contain for each entry point, and how to test whether the knowledge helped.</p>
-  <div class="terms">Builds on 4.11 <i>Diffusion models: the basics</i> and the 35-paper diffusion companion above. Paper numbers come from those papers (table numbers given). The worked example in tab 7 is synthetic: simulated traffic on a 4-mile road, so the truth is known and every number can be checked.</div>
+  <div class="terms">Builds on 4.10 <i>Diffusion models: the basics</i> and the 35-paper diffusion companion in 4.12. Paper numbers come from those papers (table numbers given). The worked example in tab 7 is synthetic: simulated traffic on a 4-mile road, so the truth is known and every number can be checked.</div>
 </div></header>
 
 <nav class="tabs" aria-label="Sections"><div class="wrap" role="tablist">
@@ -364,7 +364,7 @@ E0412,INT-07,train,camera,12.3,veh_5,30.1,-6.2,4.1,0.6,0.21,WB_left,green,45,rai
 </svg></div>
 </div>
 
-<p>The training loss is the one from 4.11 with one more input:</p>
+<p>The training loss is the one from 4.10 with one more input:</p>
 <div class="eq"><div class="m">L(<b>w</b>) = ‖ g(<b>z</b><sub>t</sub>, <b>w</b>, t, <b>c</b>) − <b>ε</b> ‖²</div>
 <div class="inwords">In words: name the noise that was added, now with the hint c in view. For a share of the examples, c is swapped for a "no condition" input ∅ (a learned vector, or simply zeros), so one network can run with or without the hint. Ten to twenty percent is common (the course heatmap model drops its three settings, and MagicDrive its camera pose and text, 20% of the time); LangTraj drops its text and history half the time. Classifier-free guidance (tab 4) needs this.</div></div>
 
@@ -412,7 +412,7 @@ E0412,INT-07,train,camera,12.3,veh_5,30.1,-6.2,4.1,0.6,0.21,WB_left,green,45,rai
 
 <h3>Cost guidance: write the knowledge as a cost</h3>
 <div class="eq"><div class="m">g<sub>J</sub> = g(<b>z</b><sub>t</sub>, <b>w</b>, t, <b>c</b>) + λ<sub>J</sub> √(1 − α<sub>t</sub>) ∇<sub><b>z</b><sub>t</sub></sub> J(<b>x̂</b>)</div>
-<dl class="sym"><dt>J(x̂)</dt><dd>The engineering cost of the clean guess (meters, seconds or mph, scaled to have no units); low = what you want</dd><dt>λ<sub>J</sub></dt><dd>How hard sampling leans on the cost, a number you choose (written λ in <i>Diffusion in the Literature</i>, Section 4.2)</dd><dt>√(1 − α<sub>t</sub>)</dt><dd>Scales the push with the noise level: large early, small near the end</dd><dt>∇ J</dt><dd>The direction that would raise J fastest, found by backpropagating through the network</dd></dl>
+<dl class="sym"><dt>J(x̂)</dt><dd>The engineering cost of the clean guess (meters, seconds or mph, scaled to have no units); low = what you want</dd><dt>λ<sub>J</sub></dt><dd>How hard sampling leans on the cost, a number you choose (written λ in 4.12, <i>Diffusion in the literature</i>)</dd><dt>√(1 − α<sub>t</sub>)</dt><dd>Scales the push with the noise level: large early, small near the end</dd><dt>∇ J</dt><dd>The direction that would raise J fastest, found by backpropagating through the network</dd></dl>
 <div class="inwords" style="margin:6px 0 12px;color:var(--muted)">In words: every step, score the clean guess with your cost and nudge the sample toward a lower score. Papers differ in where they push: CTG takes a few clipped Adam steps on the mean of the next, less noisy step; VBD and MotionDiffuser push on the clean guess x̂.</div></div>
 
 <div class="fig">
@@ -474,7 +474,7 @@ E0412,INT-07,train,camera,12.3,veh_5,30.1,-6.2,4.1,0.6,0.21,WB_left,green,45,rai
 <p class="lead">Some knowledge should not be a push but a fact the sample must keep. You can paste measurements back in, project the sample onto a hard limit, or start sampling from a classical model's draft. None of these needs retraining.</p>
 <h3>Paste the measurements back in</h3>
 <div class="eq"><div class="m"><b>z</b><sub>t</sub> ← <b>m</b> ⊙ ( √α<sub>t</sub> <b>y</b> + √(1 − α<sub>t</sub>) <b>ε</b>′ ) + (1 − <b>m</b>) ⊙ <b>z</b><sub>t</sub></div>
-<div class="inwords">In words: y holds the observations (detector speeds, the logged history), m marks where they are, and ε′ is fresh noise. Before each denoising step, the observed cells are overwritten by the observation, noised to the step's level, and the model fills in the rest to match. In 4.11, the course heatmap model filled a four-cell detector outage this way with 2.34 mph error, against 5.16 mph for interpolation.</div></div>
+<div class="inwords">In words: y holds the observations (detector speeds, the logged history), m marks where they are, and ε′ is fresh noise. Before each denoising step, the observed cells are overwritten by the observation, noised to the step's level, and the model fills in the rest to match. In 4.10, the course heatmap model filled a four-cell detector outage this way with 2.34 mph error, against 5.16 mph for interpolation.</div></div>
 <p>Papers paste in different things: PMA-Diffusion pastes sparse detector rows and probe traces; SceneDiffuser keeps the logged history; SceneDiffuser++ keeps the test vehicle that a separate planner drives; SLEDGE keeps a real lane map and generates the traffic on it; RoadFusion uses a mask to say where a pavement defect may appear.</p>
 <div class="callout warn"><h4>Pasting assumes the measurement is right</h4><p>A biased detector is pasted in as truth. PMA-Diffusion's ground truth came from I-24 MOTION camera data masked on purpose, and real loop and GPS data add bias and time delay, which the paper assumed away.</p></div>
 <h3>Project onto hard limits</h3>
@@ -548,8 +548,8 @@ E0412,INT-07,train,camera,12.3,veh_5,30.1,-6.2,4.1,0.6,0.21,WB_left,green,45,rai
 <ul class="plain">
 <li><b>The road.</b> The course's 4,000 simulated speed maps (the CTM data of the VAE and diffusion labs): a 4-mile road over 9.6 minutes, free-flow speed 75 mph, congested wave speed 15 mph, jam density 200 veh/mi, drawn on 20 road cells × 20 time steps (each cell 0.2 mi × 28.8 s). Each map has its own starting density, demand at the upstream end, and a bottleneck at the downstream end with its own capacity, start and duration. In the 50 test maps, <span data-f="share40"></span> of cells are below 40 mph.</li>
 <li><b>The task.</b> Four loop detectors at mileposts 0.5, 1.5, 2.5 and 3.5 report speed at every time step. Fill in the other <span data-f="hidden"></span> cells of each map.</li>
-<li><b>The model.</b> The course heatmap diffusion model from 4.11 (765,153 weights), not retrained. It learned the three settings as a condition, dropped 20% of the time, so it runs with or without them. Each estimate is the average of 8 fills of 1,000 denoising steps.</li>
-<li><b>The test.</b> 50 test maps the model never saw, the same 50 as the gap-filling example in 4.11. Every tuning choice was made on separate validation maps: adaptive smoothing widths <span data-f="asm_sigma"></span> mi and <span data-f="asm_tau"></span> min, switch speed <span data-f="asm_vc"></span> mph and width <span data-f="asm_dv"></span> mph; physics share γ = <span data-f="gamma"></span>; head start at step <span data-f="head_t0"></span>.</li>
+<li><b>The model.</b> The course heatmap diffusion model from 4.10 (765,153 weights), not retrained. It learned the three settings as a condition, dropped 20% of the time, so it runs with or without them. Each estimate is the average of 8 fills of 1,000 denoising steps.</li>
+<li><b>The test.</b> 50 test maps the model never saw, the same 50 as the gap-filling example in 4.10. Every tuning choice was made on separate validation maps: adaptive smoothing widths <span data-f="asm_sigma"></span> mi and <span data-f="asm_tau"></span> min, switch speed <span data-f="asm_vc"></span> mph and width <span data-f="asm_dv"></span> mph; physics share γ = <span data-f="gamma"></span>; head start at step <span data-f="head_t0"></span>.</li>
 </ul>
 
 <div class="fig chartfig">
@@ -588,7 +588,7 @@ E0412,INT-07,train,camera,12.3,veh_5,30.1,-6.2,4.1,0.6,0.21,WB_left,green,45,rai
 <h3>Spread and wins</h3>
 <div class="tablewrap"><table id="covTable">
 <thead><tr><th>Rung</th><th class="num">Truth inside the 8 fills' range (honest: 78%)</th><th class="num">Beats adaptive smoothing (maps of 50)</th></tr></thead><tbody></tbody></table></div>
-<p class="small">The range is checked on hidden cells below free flow, as in 4.11. With 8 fills, an honest range holds the truth about 7 times in 9 (78%).</p>
+<p class="small">The range is checked on hidden cells below free flow, as in 4.10. With 8 fills, an honest range holds the truth about 7 times in 9 (78%).</p>
 
 <h3>What the numbers say</h3>
 <ol class="lessons">

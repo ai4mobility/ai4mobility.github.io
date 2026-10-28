@@ -88,37 +88,40 @@ parts:
             title: "Practice, exercises, and further reading"
       - file: module4/index
         sections:
-          # Same flat shape as Modules 1 and 2 -- section pages directly under the
-          # module index, which carries the map. See NOTES_GUIDE.md.
+          # Reorganized 2026-10-28 into five parts: why generate (4.1-4.2), hidden causes (warm-up, 4.3-4.4),
+          # autoencoders (4.5-4.7), the VAE and the GAN (4.8-4.9), diffusion (4.10-4.13), then a closing reading page.
+          # File names were kept so URLs do not change; they no longer follow the section numbers. The old 4.7 VAE
+          # page (notes3-vae) was merged into 4.8 and redirects there.
           - file: module4/notes1-producing
             title: "4.1 From predicting to producing"
           - file: module4/notes2-autoregressive
             title: "4.2 One cell at a time"
           - file: module4/notes2a-gaussians
             title: "Before 4.3: Gaussians and their mixtures"
+          - file: module4/notes5-hidden-cause
+            title: "4.3 One hidden cause: mixture models"
           - file: module4/notes2b-latent-variables
-            title: "4.3 Latent variables: hidden causes"
-          # 4.4-4.6 added 2026-10-27 from the autoencoder handout; the VAE, GAN and mixture pages moved from
-          # 4.4-4.6 to 4.7-4.9. Diffusion and world models come next.
+            title: "4.4 Latent variables: hidden causes"
           - file: module4/notes2c-autoencoders
-            title: "4.4 Autoencoders: PCA and the linear network"
+            title: "4.5 Autoencoders: PCA and the linear network"
           - file: module4/notes2d-deep-autoencoders
-            title: "4.5 Deep autoencoders: bending the line"
+            title: "4.6 Deep autoencoders: bending the line"
           - file: module4/notes2e-copying
-            title: "4.6 Stopping the copy: sparse, denoising, masked"
-          - file: module4/notes3-vae
-            title: "4.7 A few hidden knobs: the VAE"
-          # 4.8, the VAE basics handout as a page, added 2026-10-27 after the autoencoder pages; GAN and mixture
-          # pages moved to 4.9-4.10.
+            title: "4.7 Stopping the copy: sparse, denoising, masked"
           - file: module4/notes3b-vae-basics
-            title: "4.8 Variational autoencoders: the basics"
+            title: "4.8 Variational autoencoders"
           - file: module4/notes4-gan
             title: "4.9 A forger, a critic, a scorecard"
-          - file: module4/notes5-hidden-cause
-            title: "4.10 One hidden cause: mixture models"
-          # 4.11, the diffusion basics handout (revision 1, Bishop notation) as a page, added 2026-10-27.
           - file: module4/notes6-diffusion-basics
-            title: "4.11 Diffusion models: the basics"
+            title: "4.10 Diffusion models: the basics"
+          - file: module4/notes7-unclip
+            title: "4.11 Reading unCLIP: from an embedding to an image"
+          - file: module4/notes8-diffusion-literature
+            title: "4.12 Diffusion in the literature: safety scenarios"
+          - file: module4/notes9-knowledge-guided
+            title: "4.13 How transportation knowledge guides diffusion"
+          - file: module4/notes10-reading-library
+            title: "Further reading: generative models in transportation"
 
   # Part II became the AI agents unit on 2026-10-24; its first two modules merged into Module 5 on 2026-10-25.
   - caption: Part II — AI Agents for Mobility

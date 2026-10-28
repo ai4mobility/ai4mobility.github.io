@@ -1863,8 +1863,11 @@ items:
     kind: notes
     module: 4
     session: 2026-10-22
-    status: drafted
+    status: superseded
     notes: >-
+      Oct 28 2026: MERGED into 4.8 (m4-notes3b-vae-basics) in the Module 4 reorganization. Its measured results were
+      already in 4.8; its Same VAE, different traffic companion section moved there. File moved to
+      _to_delete/retired-pages/notes3-vae.md; _redirects/module4/notes3-vae.html sends old links to 4.8.
       3.4 (was 3.3 until Oct 18) A few hidden knobs: the VAE. Expanded from VAE_Hidden_Knobs_Slides. Rendered by genmodels/write_notes.py from genmodels/notes_src/notes3-vae.md;
       every number comes from genmodels/numbers.json. Edit the source and re-run, never the rendered page.
       Figures copied to _static/figures/ from genmodels/fig/.
@@ -1923,6 +1926,9 @@ items:
     session: 2026-10-22
     status: integrated
     notes: >-
+      Oct 28 2026: write_notes.py RETIRED (exits unless --force): its sources still say 3.x and it writes into
+      module3/, while the Module 4 pages were renumbered and edited by hand. Same guard on vae_basics/site and
+      diff_basics/site make_page.py. Edit the site pages directly.
       Reproducers for Evening A (Parts 0-3): ar_train.py, baselines.py, vae_train.py, gan_train.py on data.npz
       (split 3,200/400/400, seed 7), gm_numbers.py -> numbers.json, build_figures.py + render.py --deck,
       write_outlines.py, build_decks.py, write_notes.py, audit_slides.py. Also the hidden-cause section 3.5 (Oct 18):
@@ -2011,7 +2017,7 @@ items:
     module: 4
     session: unscheduled
     status: integrated
-    dest: site/module4/index.md
+    dest: site/module4/notes10-reading-library.md
     mounted: site/_static/companions/Generative_Models_Reading_Library.html
     notes: 'Thirty-four papers on generative models in transportation (Oct 26 2026), 2.6 MB single file in the
       fusion-papers style: key figure, five facts (generates / conditioned on / model / steered by / used for),
@@ -2027,7 +2033,7 @@ items:
     module: 4
     session: unscheduled
     status: integrated
-    dest: site/module4/index.md
+    dest: site/module4/notes8-diffusion-literature.md
     mounted: site/_static/companions/Diffusion_Transportation_Papers_Companion.html
     notes: 'How diffusion works in 35 transportation papers (Oct 28 2026), 2.9 MB single file in the reading-library
       style. Each card: the paper architecture figure, six numbered questions (what is noised, condition, denoiser
@@ -2049,7 +2055,7 @@ items:
     module: 4
     session: unscheduled
     status: integrated
-    dest: site/module4/index.md
+    dest: site/module4/notes7-unclip.md
     mounted: site/_static/companions/UnCLIP_Crash_Companion.html
     notes: 'unCLIP on crash reports (Oct 28 2026), 1.1 MB, 8 tabs: start here, pair, decoder, prior, full
       pipeline, explore 38 test crashes, discussion, fit card. Runs pair (frozen CLIP, image side locked,
@@ -2068,7 +2074,7 @@ items:
     module: 4
     session: unscheduled
     status: integrated
-    dest: site/module4/index.md
+    dest: site/module4/notes9-knowledge-guided.md
     mounted: site/_static/companions/Knowledge_Guided_Diffusion_Companion.html
     notes: 'How transportation knowledge guides diffusion generation (Oct 28 2026), 0.85 MB, 9 tabs: start here
       (clickable five-doors diagram, which-door sorter), data first (what each door needs, a readiness checklist,
@@ -2279,6 +2285,77 @@ items:
       diff_slides/ (make_numbers, build_deck, audit = 0). Bishop notation; carries the reviewer correction
       that with DDPM the starting static hardly matters. For Hao to trim; the outline lists a 75-minute
       cut.
+
+  - id: m4-reorg-2026-10-28
+    file: site/_toc.yml + site/module4/*
+    kind: internal
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/index.md
+    notes: 'Module 4 reorganized Oct 28 2026 into five parts. Why generate: 4.1 notes1-producing, 4.2 notes2-autoregressive.
+      Hidden causes: warm-up notes2a-gaussians, 4.3 notes5-hidden-cause (mixtures, was 4.10), 4.4 notes2b-latent-variables
+      (was 4.3). Autoencoders: 4.5-4.7 notes2c/2d/2e (were 4.4-4.6). The VAE and the GAN: 4.8 notes3b-vae-basics
+      (old 4.7 notes3-vae merged in), 4.9 notes4-gan. Diffusion: 4.10 notes6-diffusion-basics (was 4.11),
+      4.11 notes7-unclip, 4.12 notes8-diffusion-literature, 4.13 notes9-knowledge-guided (new, from the
+      three student handouts), 4.14 world models (to come). Closing page notes10-reading-library holds the
+      34-paper reading library. File names were kept, so URLs did not change; they no longer follow section
+      numbers. The three diffusion companions and the reading library moved off index.md onto those pages
+      (same anchors). Cross-references and cards renumbered on every page; the mixture page now looks ahead
+      to the VAE and the scorecard instead of back. Slide decks were not touched: Diffusion_Basics_Slides
+      still says section 4.11, and the autoencoder deck says 4.4-4.6.'
+
+  - id: m4-notes7-unclip
+    file: site/module4/notes7-unclip.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes7-unclip.md
+    notes: '4.11 Reading unCLIP: from a CLIP embedding back to an image (Oct 28 2026), from the student
+      handout Claude Doc https://claude.ai/artifact/Ev58Xr5dWQvcxh28FAt47Y. Generated by genmodels/unclip/site/make_page.py
+      from handout_export.md (asserts every replacement). Figures UC_*.png in _static/figures (3 doc widgets
+      rendered to PNG, 4 copied from genmodels/unclip/fig and the class-folder root). Equations are LaTeX
+      from uc_equations.py. Mounts UnCLIP_Crash_Companion at anchor (unclip-crash-run)= in the pair-then-generate
+      section.'
+
+  - id: m4-notes8-diffusion-literature
+    file: site/module4/notes8-diffusion-literature.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes8-diffusion-literature.md
+    notes: '4.12 Diffusion in the literature: from image generators to safety scenarios (Oct 28 2026), from
+      the student handout Claude Doc https://claude.ai/artifact/1JUcQKeNrDPqH9YapiP8A8. Generated by genmodels/diff_literature/site/make_page.py
+      from handout_export.md. Figures DL_*.png (3 doc widgets rendered, recipe and five-routes diagrams,
+      six paper architecture figures, DL_TimeSpace). Mounts Diffusion_Transportation_Papers_Companion at
+      anchor (diffusion-papers-library)= after the 35-papers bullets.'
+
+  - id: m4-notes9-knowledge-guided
+    file: site/module4/notes9-knowledge-guided.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes9-knowledge-guided.md
+    notes: 4.13 How transportation knowledge guides diffusion (Oct 28 2026), from the student handout Claude
+      Doc https://claude.ai/artifact/M6pgnenTsV5GiSVgJH2DM5. Generated by genmodels/hk_knowledge/site/make_page.py
+      from handout_export.md. Figures HK_*.png (five doors, four inlets, ladder chart rendered from doc
+      widgets; HK_Fill_Example). Equations LaTeX from hk_equations.py. Mounts Knowledge_Guided_Diffusion_Companion
+      at anchor (knowledge-guided-diffusion)= before the practice section. The companion text was updated
+      the same day to say 4.10 and 4.12.
+
+  - id: m4-notes10-reading-library
+    file: site/module4/notes10-reading-library.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes10-reading-library.md
+    notes: 'Closing page of Module 4 (Oct 28 2026): Further reading: generative models in transportation.
+      Holds the 34-paper reading library (anchor generative-reading-library), moved from index.md, and points
+      to the 35-paper diffusion companion in 4.12.'
 
 # MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------

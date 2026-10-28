@@ -32,7 +32,7 @@
 ## Three detectors, two slices of data
 
 Three loop detectors on I-405 northbound in Los Angeles: A, then B 0.29 mi downstream, then C 0.44 mi further. C is
-the detector of section 4.10. Each reports a five-minute average speed, over 44 weekdays of May and June 2012 (PeMS,
+the detector of section 4.3. Each reports a five-minute average speed, over 44 weekdays of May and June 2012 (PeMS,
 as packaged in PeMSD7(M)). Every model on this page is fitted on May and checked on June.
 
 Each five-minute moment is one point: (speed at B, speed at C). At night (0:00&ndash;4:55 am) traffic runs in one
@@ -193,4 +193,4 @@ Six tabs, one per idea above, all on the same three detectors. Results to look f
 
 ---
 
-Next: {doc}`4.3 Latent variables <notes2b-latent-variables>`, where the hidden cause takes centre stage.
+Next: {doc}`4.3 One hidden cause: mixture models <notes5-hidden-cause>`, where detector C&rsquo;s two regimes become a hidden cause.

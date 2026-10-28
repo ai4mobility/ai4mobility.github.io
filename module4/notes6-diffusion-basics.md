@@ -1,18 +1,18 @@
 (diffusion-basics)=
-# 4.11 Diffusion models: the basics
+# 4.10 Diffusion models: the basics
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.11</span>
-    <span class="notes-card-session">Session: VAE and diffusion</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.10</span>
+    <span class="notes-card-session">Session: Diffusion</span>
   </div>
   <p class="notes-card-lede">Diffusion, built up from Bishop&rsquo;s math with every step kept plain. A fixed encoder adds noise until nothing is left; a network learns to remove it one small step at a time; and sampling turns fresh static into a new traffic state. This page works the math on two real I-405 detectors and the course heatmaps, answers where a prompt comes in when generation starts from pure noise, scores diffusion against the VAE, and ends with where it should not be trusted.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes2e-copying.html">4.6 Stopping the copy</a>: the denoising autoencoder</li>
-      <li><a href="notes3b-vae-basics.html">4.8 Variational autoencoders: the basics</a></li>
+      <li><a href="notes2e-copying.html">4.7 Stopping the copy</a>: the denoising autoencoder</li>
+      <li><a href="notes3b-vae-basics.html">4.8 Variational autoencoders</a></li>
       <li><a href="notes2a-gaussians.html">Before 4.3: Gaussians and their mixtures</a>, if bells are rusty</li>
       </ul>
     </div>
@@ -35,10 +35,10 @@
 
 A diffusion model makes a new traffic state by starting from pure static and removing a little noise at a time, many times over. Each small step is an easy cleaning job. Together, the steps rebuild the sharp queue fronts that a VAE blurs. The first three sections build the math, following Bishop &amp; Bishop&rsquo;s *Deep Learning* (Chapter 20): the noise-adding encoder, how the denoising network is trained, and how it turns pure noise into a new sample. The rest test it on traffic data and say where it fits.
 
-This page comes after the autoencoder pages ({doc}`4.4–4.6 <notes2c-autoencoders>`) and {doc}`4.8 Variational autoencoders: the basics <notes3b-vae-basics>`. It uses the same two running examples, so you can compare the three models on the same data:
+This page comes after the autoencoder pages ({doc}`4.5–4.7 <notes2c-autoencoders>`) and {doc}`4.8 Variational autoencoders <notes3b-vae-basics>`. It uses the same two running examples, so you can compare the three models on the same data:
 
-- **Real data.** Two I-405 N detectors 0.73 mi apart in Los Angeles (PeMS, May–June 2012), the pair from {doc}`4.4 <notes2c-autoencoders>`. Each reading is just two speeds, so you can see every point on one plot.
-- **Synthetic data.** The course's 4,000 speed heatmaps (road segment × time) simulated with the cell transmission model (CTM), the same heatmaps as 4.4&ndash;4.8.
+- **Real data.** Two I-405 N detectors 0.73 mi apart in Los Angeles (PeMS, May–June 2012), the pair from {doc}`4.5 <notes2c-autoencoders>`. Each reading is just two speeds, so you can see every point on one plot.
+- **Synthetic data.** The course's 4,000 speed heatmaps (road segment × time) simulated with the cell transmission model (CTM), the same heatmaps as 4.5&ndash;4.8.
 
 **After this page you should be able to:**
 
@@ -93,7 +93,7 @@ $$
 
 As a distribution, q(zₜ | x) = N(zₜ | √αₜ x, (1 − αₜ) I). Here √αₜ is how much of the clean reading is left after t steps, and αₜ is the share of zₜ’s variance that still comes from x (many papers write αₜ as ᾱₜ and the data as x₀). Training uses this shortcut: to make z₅₀₀ you do not have to run 500 steps.
 
-**Worked example: one reading, one jump.** Take the 16:30 reading on Monday 7 May 2012 from {doc}`4.4 <notes2c-autoencoders>`: (70, 18) mph. The upstream detector is fast and the downstream one is crawling: the back of a queue sits between them.
+**Worked example: one reading, one jump.** Take the 16:30 reading on Monday 7 May 2012 from {doc}`4.5 <notes2c-autoencoders>`: (70, 18) mph. The upstream detector is fast and the downstream one is crawling: the back of a queue sits between them.
 
 1. Standardize with the May mean (50.45, 48.41 mph) and spread (22.05, 22.94 mph): x = ((70 − 50.45) / 22.05, (18 − 48.41) / 22.94) = (0.89, −1.33).
 2. Draw static: ε = (−0.59, 0.63).
@@ -243,7 +243,7 @@ So the loss is not an arbitrary choice. A network that names the noise well make
 - *It is cheap.* The jump formula makes zₜ directly, so one example costs one network pass. The 1,000-step chain is never run in training.
 - *It is plain regression.* Squared error against a known target, as in Module 1. Unlike the VAE, there is no encoder to train and no KL term to balance, because the encoder is fixed.
 
-**Why naming the noise teaches denoising.** Rearrange the jump formula with the guess g in place of ε, and you get a guess of the clean data: x̂ = (zₜ − √(1 − αₜ) g) / √αₜ. Naming the noise and recovering the clean data are the same task. This is the denoising autoencoder of {doc}`4.6 <notes2e-copying>` with two changes: the noise runs from almost none to pure static, and the network is told the step t. A diffusion decoder is a denoising autoencoder trained at 1,000 noise levels at once.
+**Why naming the noise teaches denoising.** Rearrange the jump formula with the guess g in place of ε, and you get a guess of the clean data: x̂ = (zₜ − √(1 − αₜ) g) / √αₜ. Naming the noise and recovering the clean data are the same task. This is the denoising autoencoder of {doc}`4.7 <notes2e-copying>` with two changes: the noise runs from almost none to pure static, and the network is told the step t. A diffusion decoder is a denoising autoencoder trained at 1,000 noise levels at once.
 
 **Worked example: one training pair.** From {ref}`the worked example <diffusion-math>`, the input is z₅₀₀ = (0.21, −0.49) with t = 500, and the answer key is ε = (−0.59, 0.63).
 
@@ -522,7 +522,7 @@ The spread of the 8 fills is a built-in uncertainty estimate. If the spread were
 
 :::{admonition} Before you trust this result
 :class: warning
-*Baselines:* linear interpolation and persistence are the first things an agency would try, not the strongest. A stronger classical method, such as the adaptive smoothing method of {doc}`4.6 <notes2e-copying>` or a Kalman filter, was not run here, so treat the margins as upper bounds. *Split:* the 50 test heatmaps were never seen in training. *Ugly cases:* the data are simulated and the gaps are tidy blocks. The scenario settings exist only because a simulator made the data. Real detector data carry no such labels, so you would condition on what you can measure, such as time of day, weather or an incident flag.
+*Baselines:* linear interpolation and persistence are the first things an agency would try, not the strongest. A stronger classical method, such as the adaptive smoothing method of {doc}`4.7 <notes2e-copying>` or a Kalman filter, was not run here, so treat the margins as upper bounds. *Split:* the 50 test heatmaps were never seen in training. *Ugly cases:* the data are simulated and the gaps are tidy blocks. The scenario settings exist only because a simulator made the data. Real detector data carry no such labels, so you would condition on what you can measure, such as time of day, weather or an incident flag.
 :::
 
 
@@ -535,7 +535,7 @@ Diffusion fixes the VAE’s blur, not its other limits. It learns only what its 
 2. **It is slow.** One sample costs one network pass per step: 898 s for 400 small heatmaps with all 1,000 steps on 2 CPU threads. Fewer steps ({ref}`How many steps? <diffusion-steps>`) cut that 40-fold here. For large outputs, such as a city-wide network or a video, people run the diffusion on an autoencoder’s compact latents instead of the raw data. Those latents are still a small grid (for example 64 × 64 × 4 numbers for a 512 × 512 image), not two numbers. This is *latent diffusion* (Rombach et al., 2022), the idea behind Stable Diffusion.
 3. **It can copy, most of all with little data.** The best possible guess of {ref}`Training <diffusion-training>` is a weighted average of the training readings, and at very low noise it snaps to the nearest one. A network that matched it everywhere would only replay its training set. Real networks make new samples because they cannot match it exactly; with little data they come closer. Evidence: the dashcam replays in the longer *Deep Generative Models* handout. The heatmap model here shows no sign of copying heatmaps with queues ({ref}`the scorecard <diffusion-scorecard>`).
 4. **It knows no physics.** Nothing in the loss conserves vehicles or keeps flow and density on the fundamental diagram. The samples look like CTM output only because the training data were CTM output. The course models clip each clean guess to a physical speed range; without such rules a sample can hold impossible values. Some research models add a physics step to the sampler: PMA-Diffusion (Transportation Research Part C, 2026) adds a traffic smoothing step.
-5. **There are no latents to read.** A VAE at least has a few latents (the “knobs” of {doc}`4.7–4.8 <notes3b-vae-basics>`). A diffusion model’s latents are the noisy data themselves, as large as the data, and nothing in them is a cause or a parameter you can interpret. To learn which factors drive pedestrian–AV conflicts, a generator is the wrong tool (the longer *Deep Generative Models* handout explains why).
+5. **There are no latents to read.** A VAE at least has a few latents (the “knobs” of {doc}`4.8 <notes3b-vae-basics>`). A diffusion model’s latents are the noisy data themselves, as large as the data, and nothing in them is a cause or a parameter you can interpret. To learn which factors drive pedestrian–AV conflicts, a generator is the wrong tool (the longer *Deep Generative Models* handout explains why).
 6. **Good scores can mislead.** Looks real and covers variety measure distance to real data, not correctness. The one big jump scored 0.999 on looks real ({ref}`Sampling <diffusion-sampling>`). Read both scores together, and add a physics or domain check.
 
 :::{admonition} Before you trust any diffusion result in your project
@@ -638,13 +638,13 @@ There is no single right answer to the first eight; each asks for a judgment you
 - The longer handout *Deep Generative Models: VAE and Diffusion*: the 1-D detector experiment, and real dashcam and FL511 camera cases.
 - The forward-diffusion and decoder-training labs ({doc}`all labs <../labs>`): build the noise schedule and train a small denoiser yourself.
 - *Generating Crash Data from Near-Misses*: why sampling a generator is not enough for rare events, and what to do instead.
-- *Generative Models in Transportation* (applications handout) and the {ref}`reading library <generative-reading-library>` on the Module 4 page.
-- The {ref}`diffusion papers companion <diffusion-papers-library>` on the Module 4 page: this page&rsquo;s recipe inside 35 transportation papers, each with its architecture figure and how it is trained, sampled and steered.
-- The {ref}`unCLIP crash companion <unclip-crash-run>` on the Module 4 page: the three unCLIP steps (pair, decoder, prior) run on the course crash narratives and sketches, with every result and three problems worth knowing.
-- The {ref}`knowledge-guided diffusion companion <knowledge-guided-diffusion>` on the Module 4 page: five doors where transportation knowledge can enter a diffusion model (what it generates, the condition, guidance, values held fixed, checks), what your data must contain for each, and a worked test on four loop detectors.
+- {doc}`4.11 Reading unCLIP <notes7-unclip>`: how a diffusion decoder learns to draw from a CLIP embedding, and the {ref}`unCLIP crash companion <unclip-crash-run>`, which runs the three unCLIP steps (pair, decoder, prior) on the course crash narratives and sketches.
+- {doc}`4.12 Diffusion in the literature <notes8-diffusion-literature>`: the key image-generation papers, then driving and intersection scenarios for safety, with the {ref}`diffusion papers companion <diffusion-papers-library>`: this page&rsquo;s recipe inside 35 transportation papers.
+- {doc}`4.13 How transportation knowledge guides diffusion <notes9-knowledge-guided>`: five doors where transportation knowledge can enter a diffusion model, what your data must contain for each, and a worked test on four loop detectors in the {ref}`knowledge-guided companion <knowledge-guided-diffusion>`.
+- *Generative Models in Transportation* (applications handout) and the {ref}`reading library <generative-reading-library>` on the closing page of this module.
 - Bishop & Bishop, *Deep Learning: Foundations and Concepts* (2024), Chapter 20.
 
-## References for 4.11
+## References for 4.10
 
 - Bishop, C. M., & Bishop, H. (2024). [*Deep Learning: Foundations and Concepts*](https://www.bishopbook.com/), Chapter 20, Diffusion Models (Sections 20.1–20.4). Springer.
 - Sohl-Dickstein, J., et al. (2015). [Deep unsupervised learning using nonequilibrium thermodynamics](https://arxiv.org/abs/1503.03585). ICML.
@@ -668,4 +668,4 @@ the course's 4,000 CTM heatmaps. The heatmaps are simulated; the detector readin
 
 ---
 
-Next: world models, the last part of this module. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`4.11 Reading unCLIP: from a CLIP embedding back to an image <notes7-unclip>`. Back to the {doc}`Module 4 map <index>`.

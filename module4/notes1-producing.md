@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 4 &middot; Section 4.1</span>
-    <span class="notes-card-session">Session: Generative models, part 1</span>
+    <span class="notes-card-session">Session: Why generate</span>
   </div>
   <p class="notes-card-lede">Every model so far looked at data and returned a label. A generative model returns the data itself. This page says what that changes, what "realistic" has to mean for a traffic state, and lays out the four answers this module works through. The running example for the whole module is a set of 4,000 simulated speed heatmaps.</p>
   <div class="notes-card-cols">
@@ -164,15 +164,19 @@ one answer.
 
 1. **One cell at a time** ({doc}`4.2 <notes2-autoregressive>`). Decide the first cell, then the second
    given the first, and so on. This is how GPT writes text, applied to a heatmap.
-2. **A few hidden knobs** ({doc}`4.7 <notes3-vae>`). Compress each heatmap into a few numbers, learn to
+2. **A few hidden knobs** ({doc}`4.8 <notes3b-vae-basics>`). Compress each heatmap into a few numbers, learn to
    rebuild it from them, then make new heatmaps by drawing new numbers. This is the variational
-   autoencoder (VAE). Section {doc}`4.3 <notes2b-latent-variables>` first sets out the idea it rests on: a
-   *latent variable*, a hidden cause you can draw from. Sections {doc}`4.4 <notes2c-autoencoders>` to 4.6 then
-   build the plain autoencoder it extends, from PCA to masked autoencoders.
+   autoencoder (VAE). Three steps lead up to it. Section {doc}`4.3 <notes5-hidden-cause>` starts with the simplest
+   hidden cause, one label that says which traffic regime made the data. Section {doc}`4.4 <notes2b-latent-variables>`
+   sets out the general idea: a *latent variable*, a hidden cause you can draw from. Sections
+   {doc}`4.5 <notes2c-autoencoders>` to 4.7 then build the plain autoencoder the VAE extends, from PCA to masked
+   autoencoders.
 3. **A forger and a critic** ({doc}`4.9 <notes4-gan>`). Train one network to make fakes and another to
    catch them, until the fakes are hard to catch. This is the generative adversarial network (GAN).
-4. **Clean up noise, step by step** (next session). Start from pure noise and remove a little at a time.
-   This is diffusion.
+4. **Clean up noise, step by step** ({doc}`4.10 <notes6-diffusion-basics>`). Start from pure noise and remove a
+   little at a time. This is diffusion. Sections 4.11 to 4.13 then follow it into practice: a model that turns a
+   caption into a picture, the transportation papers that use diffusion, and where your own engineering knowledge
+   can steer it.
 
 Each answer fixes a weakness of the one before it, so the order matters. At the end of section 4.9 the first
 three are scored side by side on the same held-out heatmaps.

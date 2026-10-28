@@ -1,16 +1,16 @@
-# 4.5 Deep autoencoders: bending the line
+# 4.6 Deep autoencoders: bending the line
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.5</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.6</span>
     <span class="notes-card-session">Session: Autoencoders</span>
   </div>
-  <p class="notes-card-lede">Put nonlinear layers inside the decoder and the straight line of 4.4 can bend. On a synthetic fundamental diagram, one latent then cuts PCA's flow error from 315 to 47&ndash;87 veh/h, yet the latent turns out to be the network's own coordinate, not density. On the heatmaps, depth helps again; this page also shows how to choose the number of latents, and when the latents help another task.</p>
+  <p class="notes-card-lede">Put nonlinear layers inside the decoder and the straight line of 4.5 can bend. On a synthetic fundamental diagram, one latent then cuts PCA's flow error from 315 to 47&ndash;87 veh/h, yet the latent turns out to be the network's own coordinate, not density. On the heatmaps, depth helps again; this page also shows how to choose the number of latents, and when the latents help another task.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes2c-autoencoders.html">4.4 Autoencoders: keep a few numbers, rebuild the rest</a></li>
+      <li><a href="notes2c-autoencoders.html">4.5 Autoencoders: keep a few numbers, rebuild the rest</a></li>
       </ul>
     </div>
     <div>
@@ -32,7 +32,7 @@
 - Whether the latents help other tasks, and when to keep PCA
 - Inside the latent layer, hands on (interactive companion)
 
-{doc}`Section 4.4 <notes2c-autoencoders>` showed why a two-layer network can only draw a straight line: its decoder
+{doc}`Section 4.5 <notes2c-autoencoders>` showed why a two-layer network can only draw a straight line: its decoder
 is linear. Put nonlinear layers inside the decoder as well, and the output can follow a curve. That is Bishop's
 Figure 19.2, a *deep autoencoder*: two successive mappings, $F_1$ from the data to the latents and $F_2$ back.
 
@@ -73,7 +73,7 @@ The loss now has poor valleys (*local minima*) where training can stop, so diffe
 answers. You must also choose $M$ before training. PCA has neither problem. It has one best answer, and one fit
 gives every direction at once, ranked by the variance each one explains. So with PCA you can pick $M$ after the fit:
 keep the top $M$ directions for any $M$, and read the share of variance they explain off the eigenvalues, as in
-{doc}`4.4 <notes2c-autoencoders>`. With an autoencoder, each $M$ is a new training run. How to choose it comes after
+{doc}`4.5 <notes2c-autoencoders>`. With an autoencoder, each $M$ is a new training run. How to choose it comes after
 Example 2.
 
 ## Example 1: the fundamental diagram, on synthetic data
@@ -125,7 +125,7 @@ All five random starts did the same: 0.995 to 0.996 on the congested branch, 0.8
 free-flow branch always in pieces. So **the latent is the network's own coordinate along the curve, not density.**
 The loss only scores the rebuild, and every coordinate that rebuilds equally well scores the same. The dotted lines
 show a price: $z$ values between the pieces decode to states between the branches, which no road produces. The
-VAE of {doc}`4.7 <notes3-vae>` takes up that problem. With real detector data there is no true density to compare
+VAE of {doc}`4.8 <notes3b-vae-basics>` takes up that problem. With real detector data there is no true density to compare
 against, so you could not even run this check: do not read latents as physical variables.
 
 ## Example 2: the heatmaps
@@ -143,7 +143,7 @@ With the same number of latents, the deep autoencoder's error is 26% lower at 2 
 spread over all cells, and queue fronts (the 10% of cells where speed changes most between neighbours, at least
 14.6 mph) stay the hardest cells for both: at 8 latents, 9.3 mph for PCA against 5.5 mph for the autoencoder. The
 2-latent autoencoder is the course model of the VAE lab and of the companion at the end of this page; it drew the
-first figure of {doc}`4.4 <notes2c-autoencoders>`.
+first figure of {doc}`4.5 <notes2c-autoencoders>`.
 
 ## How many latents? Choosing M
 
@@ -224,18 +224,18 @@ on both, 93% and 65%. So first check whether your label is visible in the latent
 like this one. When it is not, train or fine-tune for the task, as Module 1 did with pretrained backbones and
 Module 2 with BERT.
 
-**When to keep PCA.** If the data lie close to a flat sheet, as the two-detector cloud of 4.4 does, PCA is as good.
+**When to keep PCA.** If the data lie close to a flat sheet, as the two-detector cloud of 4.5 does, PCA is as good.
 It is also exact, fast, the same on every run, and it ranks its directions by importance. Reach for depth when the
 data bend, and show the bend with a validation curve.
 
 (autoencoder-latent-layer)=
 ## Inside the latent layer: from PCA to the VAE, hands on
 
-The companion below lets you check the claims of 4.4 and of this page one step at a time, starting from a model
+The companion below lets you check the claims of 4.5 and of this page one step at a time, starting from a model
 you already know. It begins with PCA on the two I-405 detectors (here over 2,112 readings, so its numbers differ
 slightly from the six-reading example), trains the same model as a two-layer network in your browser, bends it with
 depth on a synthetic fundamental diagram, and then asks whether you can draw new latents. Its last tab uses the
-module's 2-latent autoencoder and the VAE of {doc}`4.7 <notes3-vae>`, so it doubles as the bridge to that page. The
+module's 2-latent autoencoder and the VAE of {doc}`4.8 <notes3b-vae-basics>`, so it doubles as the bridge to that page. The
 companion calls the latents *codes*, the word AI papers use.
 
 Five results to look for:
@@ -286,5 +286,5 @@ starts: 47 to 87 veh/h on the same data. And a latent that tracks density on one
 
 ---
 
-Next: {doc}`notes2e-copying` &mdash; when the middle is as wide as the input, the network can simply copy. Four ways
+Next: {doc}`4.7 Stopping the copy <notes2e-copying>` &mdash; when the middle is as wide as the input, the network can simply copy. Four ways
 to stop it.

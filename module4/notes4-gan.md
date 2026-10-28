@@ -3,19 +3,19 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 4 &middot; Section 4.9</span>
-    <span class="notes-card-session">Session: Generative models, part 1</span>
+    <span class="notes-card-session">Session: The VAE and the GAN</span>
   </div>
   <p class="notes-card-lede">The third answer removes squared error altogether: a forger network makes heatmaps and a critic network tries to tell them from real ones. Then the first three answers are scored side by side on the same 400 held-out heatmaps, with measures that work for any generator, including one that gives no probabilities at all.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes3-vae.html">4.7 A few hidden knobs: the VAE</a></li>
+      <li><a href="notes3b-vae-basics.html">4.8 Variational autoencoders</a></li>
       </ul>
     </div>
     <div>
-      <h4>Next session</h4>
-      <ul><li><a href="../labs.html">Forward and reverse diffusion; training the denoiser</a></li></ul>
+      <h4>Read it after</h4>
+      <ul><li><a href="notes6-diffusion-basics.html">4.10 Diffusion models: the basics</a></li></ul>
     </div>
   </div>
 </div>
@@ -38,7 +38,7 @@
 Two networks trained against each other. Nothing in the loss rewards an average.
 ```
 
-Section 4.7 ended on a diagnosis: squared error rewards the average, and the average of sharp fronts is
+Section 4.8 ended on a diagnosis: squared error rewards the average, and the average of sharp fronts is
 a soft one. A generative adversarial network (GAN) removes squared error from the picture.
 
 It has two networks. The **forger** (the *generator*, 244,289 weights here) takes 32 random
@@ -128,7 +128,7 @@ performance, including a vendor's.
 First six samples from each model, not picked, all rounded to 3-mph bins.
 ```
 
-Before any numbers, look. The VAE's fronts are soft, as section 4.7 explained. The autoregressive model and the
+Before any numbers, look. The VAE's fronts are soft, as section 4.8 explained. The autoregressive model and the
 GAN keep them sharp. Sharpness is the part of quality the eye judges well. Coverage, whether all the
 kinds of traffic in the data appear in the samples, is the part the eye cannot judge, so it needs the
 table.
@@ -223,7 +223,7 @@ need probabilities.
 Transportation papers used GANs widely from about 2018 to 2022: for predicting pedestrian and vehicle
 trajectories, for imputing missing detector data, and for generating driving scenarios. Read those
 papers with this section's questions: what is the coverage, against what reference, and how many seeds?
-For image generation, diffusion models have largely replaced GANs, and next session shows why: they keep
+For image generation, diffusion models have largely replaced GANs, and section 4.10 shows why: they keep
 the GAN's sharpness without the two-player game.
 
 ## Check yourself
@@ -236,5 +236,5 @@ the GAN's sharpness without the two-player game.
 
 ---
 
-Next: {doc}`notes5-hidden-cause` &mdash; the simplest model with a hidden cause, which opens the session on the fourth
-answer, diffusion: start from pure noise and clean it up step by step.
+Next: {doc}`4.10 Diffusion models: the basics <notes6-diffusion-basics>` &mdash; the fourth answer: start from pure noise
+and clean it up step by step.

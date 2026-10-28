@@ -1,23 +1,23 @@
 (autoencoders-pca)=
-# 4.4 Autoencoders: keep a few numbers, rebuild the rest
+# 4.5 Autoencoders: keep a few numbers, rebuild the rest
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.4</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.5</span>
     <span class="notes-card-session">Session: Autoencoders</span>
   </div>
-  <p class="notes-card-lede">An autoencoder squeezes a traffic state into a few numbers, the latents, and rebuilds the whole state from them. This page starts with the simplest one, PCA, worked by hand on two real I-405 detectors, then builds the same compression as a two-layer network and trains it one step at a time. Trained with its loss, the network lands exactly on PCA's answer, and the reason why sets up the deep autoencoders of 4.5.</p>
+  <p class="notes-card-lede">An autoencoder squeezes a traffic state into a few numbers, the latents, and rebuilds the whole state from them. This page starts with the simplest one, PCA, worked by hand on two real I-405 detectors, then builds the same compression as a two-layer network and trains it one step at a time. Trained with its loss, the network lands exactly on PCA's answer, and the reason why sets up the deep autoencoders of 4.6.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it before</h4>
       <ul>
       <li><a href="../module1/notes2-learning.html">1.2 How a network learns</a> (backpropagation)</li>
-      <li><a href="notes2b-latent-variables.html">4.3 Latent variables: hidden causes, not hidden layers</a></li>
+      <li><a href="notes2b-latent-variables.html">4.4 Latent variables: hidden causes, not hidden layers</a></li>
       </ul>
     </div>
     <div>
       <h4>Interactive companion</h4>
-      <ul><li><a href="../_static/companions/Autoencoder_Latent_Companion.html" target="_blank" rel="noopener">Inside the latent layer &#8599;</a>, mounted at the end of 4.5; its first two tabs follow this page</li></ul>
+      <ul><li><a href="../_static/companions/Autoencoder_Latent_Companion.html" target="_blank" rel="noopener">Inside the latent layer &#8599;</a>, mounted at the end of 4.6; its first two tabs follow this page</li></ul>
     </div>
   </div>
 </div>
@@ -39,19 +39,19 @@ an **encoder**, which outputs a few numbers, the **latent variables** (latents f
 These pages call $z$ the *latents* throughout. AI papers often call it the *code*. Earlier modules called a
 learned vector like this a *representation* or an *embedding* (BERT's contextual embeddings are one kind). In a
 plain autoencoder the latents are simply numbers the encoder computes from $x$. The VAE of
-{doc}`4.7 <notes3-vae>` gives them a probability distribution, which makes them latent variables in the full
-statistical sense of {doc}`4.3 <notes2b-latent-variables>`.
+{doc}`4.8 <notes3b-vae-basics>` gives them a probability distribution, which makes them latent variables in the full
+statistical sense of {doc}`4.4 <notes2b-latent-variables>`.
 :::
 
-Sections 4.4 to 4.6 climb from the simplest autoencoder to the ones used today:
+Sections 4.5 to 4.7 climb from the simplest autoencoder to the ones used today:
 
 1. PCA, worked by hand, as a reminder of how it works (this page).
 2. A two-layer network that rediscovers PCA, trained step by step with its loss (this page).
-3. Deeper nonlinear networks, which can follow curved data that PCA cannot ({doc}`4.5 <notes2d-deep-autoencoders>`).
+3. Deeper nonlinear networks, which can follow curved data that PCA cannot ({doc}`4.6 <notes2d-deep-autoencoders>`).
 4. Four ways to stop a network from simply copying $x$: few latents, sparse latents, a denoising task, and a
-   masking task, the BERT idea ({doc}`4.6 <notes2e-copying>`).
+   masking task, the BERT idea ({doc}`4.7 <notes2e-copying>`).
 
-They come right before the VAE of {doc}`4.7 <notes3-vae>`, which asks the next question: can the latents be
+They come right before the VAE of {doc}`4.8 <notes3b-vae-basics>`, which asks the next question: can the latents be
 used to generate new traffic states?
 
 **Running examples, smallest first.** Speeds at two neighbouring detectors on I-405 North in Los Angeles: real
@@ -78,7 +78,7 @@ number, its accumulation. An autoencoder learns the compression from data instea
 LWR and the MFD keep the numbers that a theory picks. An autoencoder is told nothing about density or
 accumulation. It tries ways to squeeze the data and keeps whichever rebuilds the data best. So it is a
 **data-driven** method, not a theory-based compression or a set of hand-picked features. The catch is that what
-it keeps need not match any variable from traffic theory. Section {doc}`4.5 <notes2d-deep-autoencoders>` checks
+it keeps need not match any variable from traffic theory. Section {doc}`4.6 <notes2d-deep-autoencoders>` checks
 this on the fundamental diagram.
 :::
 
@@ -122,14 +122,14 @@ A few numbers that rebuild a whole traffic state are useful in five ways:
 - **Store and send less.** A few latents per corridor snapshot, instead of 400 speeds, are cheap to archive or to
   send from the roadside.
 - **Feed other models.** The latents are a compact input for other models, such as a travel-time predictor or a
-  clustering of traffic states. Section {doc}`4.5 <notes2d-deep-autoencoders>` tests when this works and when it
+  clustering of traffic states. Section {doc}`4.6 <notes2d-deep-autoencoders>` tests when this works and when it
   does not.
 - **Flag the unusual.** A state the model cannot rebuild is unlike its training data, which can flag an incident
   or a broken detector.
-- **Clean and fill.** Section {doc}`4.6 <notes2e-copying>` turns the same idea into tools that remove noise and
+- **Clean and fill.** Section {doc}`4.7 <notes2e-copying>` turns the same idea into tools that remove noise and
   fill detector gaps.
 - **Learn without labels.** Training needs only raw data, so an encoder can learn from years of unlabelled
-  detector data or dashcam video, then serve a task with few labels (the masked autoencoders of 4.6).
+  detector data or dashcam video, then serve a task with few labels (the masked autoencoders of 4.7).
 
 ## PCA, worked by hand on two detectors
 
@@ -236,7 +236,7 @@ about what you can afford to lose.
 
 **Choosing how many directions.** With $M$ of $D$ directions kept, the average squared error is the sum of the
 $D - M$ dropped eigenvalues. One fit ranks every direction by the variance it explains, so with PCA you choose $M$
-after the fit, by reading the eigenvalues. Section {doc}`4.5 <notes2d-deep-autoencoders>` shows that a deep
+after the fit, by reading the eigenvalues. Section {doc}`4.6 <notes2d-deep-autoencoders>` shows that a deep
 autoencoder cannot do this.
 
 Check it yourself (the output should read 722.3 and 175.5, then (0.688, 0.726), then 9.37):
@@ -310,7 +310,7 @@ the linear network's loss has no poor valleys to get stuck in, so training reach
 the practical lesson: there is no advantage in a two-layer network for dimensionality reduction. PCA, computed
 with the singular value decomposition, gives the same subspace exactly, in finite time. It also orders the
 directions by importance and makes them perpendicular; the network's weight vectors need not be either. So why
-build the network at all? Because it is the template. Section {doc}`4.5 <notes2d-deep-autoencoders>` adds layers,
+build the network at all? Because it is the template. Section {doc}`4.6 <notes2d-deep-autoencoders>` adds layers,
 and then it can do what PCA cannot.
 
 ## Training the two layers with the loss
@@ -424,7 +424,7 @@ it is linear, because a straight line is the best it can draw anyway.
 
 **A warning sign.** Give the same network 2 hidden units, as many as there are inputs (the slate curve). Its error
 drops to 0.04 mph, because it simply copies x. That is a near-perfect score, and the network has learned nothing
-about the road. Section {doc}`4.6 <notes2e-copying>` shows how hard this trap is to see in 400 dimensions, and four
+about the road. Section {doc}`4.7 <notes2e-copying>` shows how hard this trap is to see in 400 dimensions, and four
 ways around it.
 
 :::{admonition} Before you trust this result
@@ -450,4 +450,4 @@ one station.
 
 ---
 
-Next: {doc}`notes2d-deep-autoencoders` &mdash; put nonlinear layers inside the decoder, and the line can bend.
+Next: {doc}`4.6 Deep autoencoders <notes2d-deep-autoencoders>` &mdash; put nonlinear layers inside the decoder, and the line can bend.

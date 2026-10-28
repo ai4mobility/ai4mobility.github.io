@@ -1,8 +1,8 @@
-# 4.6 Stopping the copy: sparse, denoising and masked autoencoders
+# 4.7 Stopping the copy: sparse, denoising and masked autoencoders
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.6</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.7</span>
     <span class="notes-card-session">Session: Autoencoders</span>
   </div>
   <p class="notes-card-lede">With as many latents as inputs, an autoencoder can simply copy, and a near-perfect rebuild proves nothing. This page shows the trap in 400 dimensions and the three standard ways out beyond a narrow middle: charge for every latent that fires (sparse), feed in noise and score against the clean heatmap (denoising), or hide most of the heatmap and score only what was hidden (masked, BERT's idea). The denoiser halves the best tuned blur's error; the masked autoencoder halves the classical gap filler's. The page closes with where autoencoders break, a fit card and applications.</p>
@@ -10,8 +10,8 @@
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes2c-autoencoders.html">4.4 Autoencoders: keep a few numbers, rebuild the rest</a></li>
-      <li><a href="notes2d-deep-autoencoders.html">4.5 Deep autoencoders: bending the line</a></li>
+      <li><a href="notes2c-autoencoders.html">4.5 Autoencoders: keep a few numbers, rebuild the rest</a></li>
+      <li><a href="notes2d-deep-autoencoders.html">4.6 Deep autoencoders: bending the line</a></li>
       <li><a href="../module2/notes5-bert.html">2.5 BERT: pretrain, then adapt</a>, for the masking idea</li>
       </ul>
     </div>
@@ -34,25 +34,25 @@
 ## The copying trap
 
 If $z$ has as many latents as the input has numbers, copying $x$ is a perfect answer to the loss.
-{doc}`Section 4.4 <notes2c-autoencoders>` showed it: two hidden units for two speeds gave 0.04 mph error and
+{doc}`Section 4.5 <notes2c-autoencoders>` showed it: two hidden units for two speeds gave 0.04 mph error and
 learned nothing about the road. Something has to make copying a bad answer. There are four standard ways.
 
 ```{figure} ../_static/figures/AEB_Four_Ways.png
-:alt: Four cards. 1, use few latents, an hourglass, loss the squared error, sections 4.4 to 4.5. 2, penalise the latents, a wide middle where only 3 of 11 units fire, loss plus lambda times the sum of the absolute latents. 3, corrupt the input, a noisy heatmap in and the clean heatmap as the target. 4, hide most of the input, 6 of 25 patches shown and the error scored on the hidden part.
+:alt: Four cards. 1, use few latents, an hourglass, loss the squared error, sections 4.5 to 4.6. 2, penalise the latents, a wide middle where only 3 of 11 units fire, loss plus lambda times the sum of the absolute latents. 3, corrupt the input, a noisy heatmap in and the clean heatmap as the target. 4, hide most of the input, 6 of 25 patches shown and the error scored on the hidden part.
 :width: 100%
 
 The four constraints of Bishop and Bishop (2024), sections 19.1.1 to 19.1.5.
 ```
 
-Sections 4.4 and 4.5 used the first: fewer latents than input numbers. This page covers the other three. In the
-three lines of PyTorch from 4.4, each one changes a single line: the sparse penalty adds a term to the loss (3),
+Sections 4.5 and 4.6 used the first: fewer latents than input numbers. This page covers the other three. In the
+three lines of PyTorch from 4.5, each one changes a single line: the sparse penalty adds a term to the loss (3),
 denoising changes what goes into the encoder (1), and masking changes which cells the loss scores (3).
 
 ## Copying in 400 dimensions
 
 On the heatmaps, take an *over-complete* network, one that is wider in the middle than at its ends:
 400 &rarr; 512 &rarr; 400, with ReLU. Trained only to rebuild clean heatmaps, it reaches 1.49 mph on the test
-heatmaps after 200 passes, better than any bottleneck in 4.5. Has it learned traffic, or learned to copy? Neither,
+heatmaps after 200 passes, better than any bottleneck in 4.6. Has it learned traffic, or learned to copy? Neither,
 quite. Fed a checkerboard of 30 and 70 mph cells, a pattern no road produces, it misses by 29.6 mph. A true copier
 would miss by 0, and simply answering 50 mph everywhere would miss by 20, so it is not a copier. Fed noisy heatmaps,
 it lands 3.49 mph from the truth, so by luck it removes some noise.
@@ -81,7 +81,7 @@ $$
 
 | Symbol | Meaning |
 | --- | --- |
-| $E(\mathbf{w})$ | the rebuild loss of 4.4 |
+| $E(\mathbf{w})$ | the rebuild loss of 4.5 |
 | $z_k$ | latent $k$, the activation of hidden unit $k$ for one heatmap (ReLU, so 0 or more) |
 | $K$ | the number of latents, here 512 |
 | $\lambda$ | the price per unit of activation, set by you |
@@ -110,7 +110,7 @@ differs slightly from the copier's 1.49 and 3.49 mph.
 The L1 penalty $\lambda|z|$ pushes each activation toward zero with the same force $\lambda$, however small it
 already is. An L2 penalty $\lambda z^2$ pushes with force $2\lambda z$, which fades near zero, so it shrinks
 activations without switching them off. With ReLU units, an activation pushed below zero switches off exactly. That
-is why sparse autoencoders use $|z|$. The VAE of {doc}`4.7 <notes3-vae>` regularises $z$ in yet another way: it
+is why sparse autoencoders use $|z|$. The VAE of {doc}`4.8 <notes3b-vae-basics>` regularises $z$ in yet another way: it
 asks the latents to look like draws from a bell curve. Sources: Bishop and Bishop (2024), sections 9.2.2 and 19.1.3.
 :::
 
@@ -282,7 +282,7 @@ recognisable ways, each seen on these three pages.
 1. **A small average error can hide the cases you care about.** PCA's 4.29 mph on I-405 hid the queue-edge moments:
    3.8% of readings missed by more than 10 mph. Every cleaning and filling method on this page was worst at queue
    fronts. Score the cells that matter, not only the average.
-2. **A latent is not a physical variable.** The fundamental-diagram latent of 4.5 kept density's order on the
+2. **A latent is not a physical variable.** The fundamental-diagram latent of 4.6 kept density's order on the
    congested branch only. A latent is a coordinate the network chose, not a measurement or a cause.
 3. **Different runs give different answers.** Five random starts on the same data gave 47 to 87 veh/h. Report the
    spread, not the best run.
@@ -290,9 +290,9 @@ recognisable ways, each seen on these three pages.
    from 6.0 to 8.6 mph. A model trained on simulated or one-corridor data must be re-tested on the corridor where it
    will run.
 5. **It cannot generate.** A plain autoencoder's latents leave gaps, so randomly drawn latents may decode to
-   something no road produces. The companion at the end of 4.5 measures this: only 12% of a plain autoencoder's
+   something no road produces. The companion at the end of 4.6 measures this: only 12% of a plain autoencoder's
    training latents fall inside the circle of radius 2 where 86% of draws from a standard bell curve land, against
-   95% for a VAE. That is the problem the VAE of {doc}`4.7 <notes3-vae>` solves.
+   95% for a VAE. That is the problem the VAE of {doc}`4.8 <notes3b-vae-basics>` solves.
 
 :::{admonition} Before you trust these results
 :class: warning
@@ -391,7 +391,7 @@ the decoder fills in mask tokens for the hidden ones, and the loss compares 6 wi
    and how would you find out before it matters?
 4. When would you choose the ASM over a masked autoencoder to fill gaps in a dataset your agency publishes?
 
-## References for 4.4&ndash;4.6
+## References for 4.5&ndash;4.7
 
 - Bishop, C. M. and Bishop, H. (2024). *Deep Learning: Foundations and Concepts*. Springer. Sections 16.1 and 19.1;
   sections 19.1.1 to 19.1.5 cover the ideas of these three pages in about five pages.
@@ -423,4 +423,4 @@ the decoder fills in mask tokens for the hidden ones, and the loss compares 6 wi
 
 ---
 
-Next: {doc}`notes3-vae` &mdash; give the latents a distribution, and the decoder becomes a generator.
+Next: {doc}`4.8 Variational autoencoders <notes3b-vae-basics>` &mdash; give the latents a distribution, and the decoder becomes a generator.

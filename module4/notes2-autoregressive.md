@@ -3,7 +3,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 4 &middot; Section 4.2</span>
-    <span class="notes-card-session">Session: Generative models, part 1</span>
+    <span class="notes-card-session">Session: Why generate</span>
   </div>
   <p class="notes-card-lede">The first answer: generate a heatmap one cell at a time, each cell drawn from a distribution that depends on every cell already decided. It is the training objective of the GPT in 2.4 with a new kind of token. Every result here comes from a 379,033-weight transformer trained on 3,200 of the CTM heatmaps and scored on 400 it never saw.</p>
   <div class="notes-card-cols">
@@ -16,7 +16,8 @@
     </div>
     <div>
       <h4>Read it after</h4>
-      <ul><li><a href="notes2b-latent-variables.html">4.3 Latent variables: hidden causes, not hidden layers</a></li></ul>
+      <ul><li><a href="notes2a-gaussians.html">Before 4.3: Gaussians and their mixtures</a>, if bells are rusty</li>
+      <li><a href="notes5-hidden-cause.html">4.3 One hidden cause: mixture models</a></li></ul>
     </div>
   </div>
 </div>
@@ -291,6 +292,6 @@ probabilities, and then diversity becomes something you must measure. This is wh
 
 ---
 
-Next: {doc}`notes2b-latent-variables` &mdash; what a latent variable is, and how it differs from the hidden vectors of
-BERT and the ViT. Then the second answer, the VAE, which makes a heatmap in one pass instead of
-400.
+Next: the {doc}`warm-up on Gaussians <notes2a-gaussians>` if bells are rusty, then {doc}`4.3 <notes5-hidden-cause>`,
+the simplest model with a hidden cause. The hidden cause leads to the second answer, the VAE, which makes a heatmap in
+one pass instead of 400.
