@@ -1,5 +1,5 @@
 (unclip)=
-# 4.9 Reading unCLIP: from a CLIP embedding back to an image
+# 4.9 Diffusion for text-to-image (unCLIP)
 
 <div class="notes-card">
   <div class="notes-card-head">
@@ -530,4 +530,4 @@ appears. If you are enrolled, look up any crash ID in your copy of the dataset t
 
 ---
 
-Next: {doc}`4.10 Diffusion in the literature: from image generators to safety scenarios <notes8-diffusion-literature>`. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`4.10 Diffusion in transportation literature <notes8-diffusion-literature>`. Back to the {doc}`Module 4 map <index>`.

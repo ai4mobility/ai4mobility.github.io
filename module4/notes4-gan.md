@@ -11,7 +11,7 @@
     <div>
       <h4>Read it before</h4>
       <ul>
-      <li><a href="notes3b-vae-basics.html">4.6 Variational autoencoders</a></li>
+      <li><a href="notes3b-vae-basics.html">4.6 Variational autoencoders (VAE)</a></li>
       <li><a href="notes2c-autoencoders.html">4.4 Autoencoders</a>, for the detector pair</li>
       </ul>
     </div>
@@ -35,7 +35,7 @@
 
 A generative adversarial network (GAN) is a training method. It keeps the generator you already know, a decoder that turns random numbers into data, and replaces the hand-written loss with a second network that learns to judge whether its output looks real. The two networks are trained together, each against the other.
 
-This page comes after {doc}`4.6 Variational autoencoders <notes3b-vae-basics>` and before {doc}`4.8 Diffusion models <notes6-diffusion-basics>`. It goes slowly through three things: why a learned loss is needed, how its two losses are built, and how the two networks train against each other. It ends with the first scorecard of this module, which puts the GAN beside the autoregressive model and the VAE on the same held-out heatmaps.
+This page comes after {doc}`4.6 Variational autoencoders (VAE) <notes3b-vae-basics>` and before {doc}`4.8 Diffusion models <notes6-diffusion-basics>`. It goes slowly through three things: why a learned loss is needed, how its two losses are built, and how the two networks train against each other. It ends with the first scorecard of this module, which puts the GAN beside the autoregressive model and the VAE on the same held-out heatmaps.
 
 By the end you should be able to:
 

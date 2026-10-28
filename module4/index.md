@@ -91,7 +91,7 @@ idea the rest builds on.
   <td><a href="../labs.html">Training the denoiser</a></td>
 </tr>
 <tr>
-  <td><a href="notes3b-vae-basics.html"><strong>4.6 Variational autoencoders</strong></a><br><em>The VAE and the GAN</em></td>
+  <td><a href="notes3b-vae-basics.html"><strong>4.6 Variational autoencoders (VAE)</strong></a><br><em>The VAE and the GAN</em></td>
   <td>The second answer, one step at a time: from the autoencoder to a generator; three knobs of a VAE trained on real PeMS flow curves (interactive companion); a small cloud and the reparameterization trick; the loss and where it comes from; a &beta; sweep; what the knobs learn, generating and steering; how the knobs change with the training traffic (interactive companion); where it breaks, including events missing from the training data.</td>
   <td><a href="../labs.html">VAE on traffic heatmaps</a>; <a href="lab7_four_answers.html">Lab 7: four ways to predict</a></td>
 </tr>
@@ -106,12 +106,12 @@ idea the rest builds on.
   <td><a href="../labs.html">From VAE to diffusion; Training the denoiser</a>; <a href="lab7_four_answers.html">Lab 7: four ways to predict</a></td>
 </tr>
 <tr>
-  <td><a href="notes7-unclip.html"><strong>4.9 Reading unCLIP: from a CLIP embedding back to an image</strong></a><br><em>Diffusion</em></td>
+  <td><a href="notes7-unclip.html"><strong>4.9 Diffusion for text-to-image (unCLIP)</strong></a><br><em>Diffusion</em></td>
   <td>How DALL&middot;E 2 turns a caption into a picture: CLIP as a frozen dictionary; a diffusion decoder trained to run CLIP backwards; why the way back must be a sampler, not a regression; the prior that bridges a caption to an image embedding; reading the paper&rsquo;s figure; the recipe beyond images, pair then generate the missing half, run on crash narratives and sketches (interactive companion).</td>
   <td>&mdash;</td>
 </tr>
 <tr>
-  <td><a href="notes8-diffusion-literature.html"><strong>4.10 Diffusion in the literature: from image generators to safety scenarios</strong></a><br><em>Diffusion</em></td>
+  <td><a href="notes8-diffusion-literature.html"><strong>4.10 Diffusion in transportation literature</strong></a><br><em>Diffusion</em></td>
   <td>The papers that taught diffusion to make images, then the move from pictures to driving scenarios: what the models learn from, five ways to get a dangerous scenario out, the key safety papers and their figures, a worked example at one intersection, from scenario to sensor data, and how to judge a generated scenario (interactive companion: 35 papers).</td>
   <td>&mdash;</td>
 </tr>

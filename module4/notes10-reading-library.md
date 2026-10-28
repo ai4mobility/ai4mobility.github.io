@@ -11,7 +11,7 @@
     <div>
       <h4>Read it after</h4>
       <ul>
-      <li><a href="notes3b-vae-basics.html">4.6 Variational autoencoders</a> and <a href="notes4-gan.html">4.7 Generative Adversarial Networks (GAN)</a>, for the VAE and GAN papers</li>
+      <li><a href="notes3b-vae-basics.html">4.6 Variational autoencoders (VAE)</a> and <a href="notes4-gan.html">4.7 Generative Adversarial Networks (GAN)</a>, for the VAE and GAN papers</li>
       <li><a href="notes6-diffusion-basics.html">4.8 Diffusion models: the basics</a>, for the diffusion papers</li>
       </ul>
     </div>

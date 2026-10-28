@@ -1,5 +1,5 @@
 (vae-basics)=
-# 4.6 Variational autoencoders
+# 4.6 Variational autoencoders (VAE)
 
 <div class="notes-card">
   <div class="notes-card-head">

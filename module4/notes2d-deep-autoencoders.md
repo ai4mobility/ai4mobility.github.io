@@ -680,4 +680,4 @@ the decoder fills in mask tokens for the hidden ones, and the loss compares 6 wi
 
 ---
 
-Next: {doc}`4.6 Variational autoencoders <notes3b-vae-basics>` &mdash; give the latents a distribution, and the decoder becomes a generator.
+Next: {doc}`4.6 Variational autoencoders (VAE) <notes3b-vae-basics>` &mdash; give the latents a distribution, and the decoder becomes a generator.

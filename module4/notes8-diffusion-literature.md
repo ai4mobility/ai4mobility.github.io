@@ -1,5 +1,5 @@
 (diffusion-literature)=
-# 4.10 Diffusion in the literature: from image generators to safety scenarios
+# 4.10 Diffusion in transportation literature
 
 <div class="notes-card">
   <div class="notes-card-head">
@@ -12,7 +12,7 @@
       <h4>Read it before</h4>
       <ul>
       <li><a href="notes6-diffusion-basics.html">4.8 Diffusion models: the basics</a></li>
-      <li><a href="notes7-unclip.html">4.9 Reading unCLIP</a>: from a CLIP embedding back to an image</li>
+      <li><a href="notes7-unclip.html">4.9 Diffusion for text-to-image (unCLIP)</a>: from a CLIP embedding back to an image</li>
       </ul>
     </div>
     <div>

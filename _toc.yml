@@ -103,15 +103,15 @@ parts:
           - file: module4/notes2d-deep-autoencoders
             title: "4.5 Deep autoencoders: bending the line, stopping the copy"
           - file: module4/notes3b-vae-basics
-            title: "4.6 Variational autoencoders"
+            title: "4.6 Variational autoencoders (VAE)"
           - file: module4/notes4-gan
             title: "4.7 Generative Adversarial Networks (GAN)"
           - file: module4/notes6-diffusion-basics
             title: "4.8 Diffusion models: the basics"
           - file: module4/notes7-unclip
-            title: "4.9 Reading unCLIP: from an embedding to an image"
+            title: "4.9 Diffusion for text-to-image (unCLIP)"
           - file: module4/notes8-diffusion-literature
-            title: "4.10 Diffusion in the literature: safety scenarios"
+            title: "4.10 Diffusion in transportation literature"
           - file: module4/notes9-knowledge-guided
             title: "4.11 How transportation knowledge guides diffusion"
           - file: module4/notes10-reading-library

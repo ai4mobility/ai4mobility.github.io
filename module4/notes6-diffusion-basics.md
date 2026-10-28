@@ -12,7 +12,7 @@
       <h4>Read it before</h4>
       <ul>
       <li><a href="notes2d-deep-autoencoders.html#stopping-the-copy">4.5 Stopping the copy</a>: the denoising autoencoder</li>
-      <li><a href="notes3b-vae-basics.html">4.6 Variational autoencoders</a></li>
+      <li><a href="notes3b-vae-basics.html">4.6 Variational autoencoders (VAE)</a></li>
       <li><a href="notes2a-gaussians.html">4.2 Gaussians and mixture models</a>, if bells are rusty</li>
       </ul>
     </div>
@@ -35,7 +35,7 @@
 
 A diffusion model makes a new traffic state by starting from pure static and removing a little noise at a time, many times over. Each small step is an easy cleaning job. Together, the steps rebuild the sharp queue fronts that a VAE blurs. The first three sections build the math, following Bishop &amp; Bishop&rsquo;s *Deep Learning* (Chapter 20): the noise-adding encoder, how the denoising network is trained, and how it turns pure noise into a new sample. The rest test it on traffic data and say where it fits.
 
-This page comes after the autoencoder pages ({doc}`4.4–4.5 <notes2c-autoencoders>`) and {doc}`4.6 Variational autoencoders <notes3b-vae-basics>`. It uses the same two running examples, so you can compare the three models on the same data:
+This page comes after the autoencoder pages ({doc}`4.4–4.5 <notes2c-autoencoders>`) and {doc}`4.6 Variational autoencoders (VAE) <notes3b-vae-basics>`. It uses the same two running examples, so you can compare the three models on the same data:
 
 - **Real data.** Two I-405 N detectors 0.73 mi apart in Los Angeles (PeMS, May–June 2012), the pair from {doc}`4.4 <notes2c-autoencoders>`. Each reading is just two speeds, so you can see every point on one plot.
 - **Synthetic data.** The course's 4,000 speed heatmaps (road segment × time) simulated with the cell transmission model (CTM), the same heatmaps as 4.4&ndash;4.6.
@@ -638,8 +638,8 @@ There is no single right answer to the first eight; each asks for a judgment you
 - The longer handout *Deep Generative Models: VAE and Diffusion*: the 1-D detector experiment, and real dashcam and FL511 camera cases.
 - The forward-diffusion and decoder-training labs ({doc}`all labs <../labs>`): build the noise schedule and train a small denoiser yourself.
 - *Generating Crash Data from Near-Misses*: why sampling a generator is not enough for rare events, and what to do instead.
-- {doc}`4.9 Reading unCLIP <notes7-unclip>`: how a diffusion decoder learns to draw from a CLIP embedding, and the {ref}`unCLIP crash companion <unclip-crash-run>`, which runs the three unCLIP steps (pair, decoder, prior) on the course crash narratives and sketches.
-- {doc}`4.10 Diffusion in the literature <notes8-diffusion-literature>`: the key image-generation papers, then driving and intersection scenarios for safety, with the {ref}`diffusion papers companion <diffusion-papers-library>`: this page&rsquo;s recipe inside 35 transportation papers.
+- {doc}`4.9 Diffusion for text-to-image (unCLIP) <notes7-unclip>`: how a diffusion decoder learns to draw from a CLIP embedding, and the {ref}`unCLIP crash companion <unclip-crash-run>`, which runs the three unCLIP steps (pair, decoder, prior) on the course crash narratives and sketches.
+- {doc}`4.10 Diffusion in transportation literature <notes8-diffusion-literature>`: the key image-generation papers, then driving and intersection scenarios for safety, with the {ref}`diffusion papers companion <diffusion-papers-library>`: this page&rsquo;s recipe inside 35 transportation papers.
 - {doc}`4.11 How transportation knowledge guides diffusion <notes9-knowledge-guided>`: five doors where transportation knowledge can enter a diffusion model, what your data must contain for each, and a worked test on four loop detectors in the {ref}`knowledge-guided companion <knowledge-guided-diffusion>`.
 - *Generative Models in Transportation* (applications handout) and the {ref}`reading library <generative-reading-library>` on the closing page of this module.
 - Bishop & Bishop, *Deep Learning: Foundations and Concepts* (2024), Chapter 20.
@@ -668,4 +668,4 @@ the course's 4,000 CTM heatmaps. The heatmaps are simulated; the detector readin
 
 ---
 
-Next: {doc}`4.9 Reading unCLIP: from a CLIP embedding back to an image <notes7-unclip>`. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`4.9 Diffusion for text-to-image (unCLIP) <notes7-unclip>`. Back to the {doc}`Module 4 map <index>`.

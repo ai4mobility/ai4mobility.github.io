@@ -12,8 +12,8 @@
       <h4>Read it before</h4>
       <ul>
       <li><a href="notes6-diffusion-basics.html">4.8 Diffusion models: the basics</a></li>
-      <li><a href="notes8-diffusion-literature.html">4.10 Diffusion in the literature</a>: the papers, and five ways to get a dangerous scenario out</li>
-      <li><a href="notes7-unclip.html">4.9 Reading unCLIP</a>, for the unCLIP-style prior and the crash-sketch run</li>
+      <li><a href="notes8-diffusion-literature.html">4.10 Diffusion in transportation literature</a>: the papers, and five ways to get a dangerous scenario out</li>
+      <li><a href="notes7-unclip.html">4.9 Diffusion for text-to-image (unCLIP)</a>, for the unCLIP-style prior and the crash-sketch run</li>
       </ul>
     </div>
     <div>
@@ -37,7 +37,7 @@
 
 A diffusion model learns what traffic looks like only from its training data. You know things the data may show weakly or not at all: a car cannot brake much harder than 1 g, vehicles are conserved on a road, a lane closure caps the flow, and a near-miss matters more than a thousand ordinary passes. This page shows **where that knowledge can enter a diffusion model, what your data must contain for each entry point, and how to test whether the knowledge helped.**
 
-It builds on {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>`, {doc}`4.10 Diffusion in the literature <notes8-diffusion-literature>`, {doc}`4.9 Reading unCLIP <notes7-unclip>`, and the {ref}`35-paper diffusion companion <diffusion-papers-library>`. It also takes three ideas from the *unCLIP and Conditional Generation* handout further: the two ways to steer the denoiser (train a condition in, or guide while sampling), the sorting of conditions by the kind of information they carry, and engineering costs as guides.
+It builds on {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>`, {doc}`4.10 Diffusion in transportation literature <notes8-diffusion-literature>`, {doc}`4.9 Diffusion for text-to-image (unCLIP) <notes7-unclip>`, and the {ref}`35-paper diffusion companion <diffusion-papers-library>`. It also takes three ideas from the *unCLIP and Conditional Generation* handout further: the two ways to steer the denoiser (train a condition in, or guide while sampling), the sorting of conditions by the kind of information they carry, and engineering costs as guides.
 
 **After this page you should be able to:**
 
@@ -74,7 +74,7 @@ Knowledge can enter a diffusion model at five places. Two are set at training ti
 Five doors for transportation knowledge (course diagram).
 ```
 
-Door ③ acts on the clean guess x̂ at every denoising step. Door ④ holds values fixed in the sample at every step, or sets where sampling starts. Door ⑤ acts on the finished samples. {doc}`4.10 Diffusion in the literature <notes8-diffusion-literature>` counted five ways to get a dangerous scenario out. Here the lens is wider (any knowledge, not only danger): the representation becomes a door (①), and fill-in, hard limits and head starts share one door (④). Its five ways map onto the doors as: cost guidance → ③, head start and fill-in → ④, condition → ②, select → ⑤.
+Door ③ acts on the clean guess x̂ at every denoising step. Door ④ holds values fixed in the sample at every step, or sets where sampling starts. Door ⑤ acts on the finished samples. {doc}`4.10 Diffusion in transportation literature <notes8-diffusion-literature>` counted five ways to get a dangerous scenario out. Here the lens is wider (any knowledge, not only danger): the representation becomes a door (①), and fill-in, hard limits and head starts share one door (④). Its five ways map onto the doors as: cost guidance → ③, head start and fill-in → ④, condition → ②, select → ⑤.
 
 **Two questions help pick the door.** Does the knowledge describe *this one case* (a lane closure today) or *traffic in general* (a car cannot brake at 3 g)? And must it *always* hold, or only *usually*?
 
@@ -544,8 +544,8 @@ after the {ref}`diffusion papers companion <diffusion-papers-library>` in 4.10.
 ### Where to go next
 
 - {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>`
-- {doc}`4.9 Reading unCLIP: from a CLIP embedding back to an image <notes7-unclip>`
-- {doc}`4.10 Diffusion in the literature: from image generators to safety scenarios <notes8-diffusion-literature>`
+- {doc}`4.9 Diffusion for text-to-image (unCLIP) <notes7-unclip>`
+- {doc}`4.10 Diffusion in transportation literature <notes8-diffusion-literature>`
 - The {ref}`diffusion papers companion <diffusion-papers-library>` (35 papers) in 4.10
 - The *Generating Crash Data from Near-Misses* handout
 - The *Generative Models in Transportation* handout
