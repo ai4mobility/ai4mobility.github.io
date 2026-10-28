@@ -165,8 +165,8 @@ does the denoising, how it is trained, how it samples, and how the output is ste
 Read it after 4.11, and keep one idea from that page in mind: diffusion is a way to train a network, not a network.
 The same recipe runs on a transformer that denoises vehicle paths and on a U-Net that denoises camera images. Filter by
 **Steering** to compare how papers push a model of normal traffic toward conflicts, or by **Denoises in** to see which
-papers first compress their data. End at **Which steering for which job**, a table that matches each steering method
-to a transportation task.
+papers first compress their data. End at **How a hint reaches the model**: the five places a hint (a map, a sentence,
+a cost, observed values, a draft) can enter the sampling loop, and which route fits which transportation job.
 
 <div class="companion-embed">
   <div class="companion-embed-bar">

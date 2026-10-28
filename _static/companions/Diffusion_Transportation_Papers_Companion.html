@@ -35,17 +35,17 @@ table{border-collapse:collapse;width:100%;font-size:14.5px}th,td{padding:9px 8px
 .tablewrap{overflow-x:auto}
 ol.recipe li{margin:6px 0}footer{margin-top:30px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);padding-top:14px}
 .missing{padding:40px;text-align:center;background:#fafafa;border:1px dashed var(--border);color:var(--muted)}
-[hidden]{display:none!important}.text-small{font-size:14px}
+main>h3{margin:28px 0 8px}.fitcard{border:1px solid var(--green);border-radius:10px;padding:14px 16px;margin:18px 0;background:#fbfcfb}.fitcard h4{margin:0 0 10px;font-size:17px;color:var(--evergreen)}.fitcard dl{grid-template-columns:200px 1fr}[hidden]{display:none!important}.text-small{font-size:14px}
 .recipe-fig{border:1px solid var(--border);border-radius:10px;padding:10px;background:#fff}
 .qlist{display:grid;grid-template-columns:1fr 1fr;gap:6px 22px;margin:10px 0 0;padding:0;list-style:none;font-size:15px}.qlist li{display:flex;align-items:flex-start}
-@media(max-width:760px){h1{font-size:25px}.anat{grid-template-columns:1fr}dl{grid-template-columns:1fr}dt{margin-top:6px}.paper{padding:14px}.filters .lab{min-width:100%}.qlist{grid-template-columns:1fr}}
+@media(max-width:760px){h1{font-size:25px}.anat{grid-template-columns:1fr}dl{grid-template-columns:1fr}dt{margin-top:6px}.paper{padding:14px}.filters .lab{min-width:100%}.qlist{grid-template-columns:1fr}.figscroll{overflow-x:auto}.figscroll svg{min-width:720px}.tablewrap table{min-width:640px}.fitcard dl{grid-template-columns:1fr}}
 </style></head><body><main>
 <div class="eyebrow">AI4MOBILITY · DIFFUSION IN TRANSPORTATION</div>
 <h1>Thirty-five transportation papers that use diffusion, and how each one uses it</h1>
 <p class="intro">Each card shows a paper’s model architecture figure and answers the same six questions about its diffusion model. Read them as variations on one recipe. Diffusion is a <b>training method</b>, not a network: the same noise-and-denoise recipe trains a transformer over vehicles and time steps, a U-Net over camera images, or a small network over detector speeds. What changes from paper to paper is what gets noised, what the network reads, and how sampling is steered.</p>
 
 <figure class="recipe-fig">
-<svg viewBox="0 0 960 360" class="schem" role="img" aria-label="The diffusion recipe with the six questions each card answers">
+<div class="figscroll"><svg viewBox="0 0 960 360" class="schem" role="img" aria-label="The diffusion recipe with the six questions each card answers">
 <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#466069"/></marker></defs>
 <text x="20" y="28" font-size="15" font-weight="700" fill="#005432">Training: repeat on recorded data</text>
 <rect x="20" y="44" width="170" height="70" rx="8" fill="#EEF5F1" stroke="#006747"/><text x="105" y="72" text-anchor="middle" font-size="14" font-weight="700" fill="#005432">Recorded x</text><text x="105" y="92" text-anchor="middle" font-size="12" fill="#466069">paths, images, speeds</text>
@@ -63,7 +63,7 @@ ol.recipe li{margin:6px 0}footer{margin-top:30px;color:var(--muted);font-size:13
 <rect x="690" y="150" width="250" height="56" rx="8" fill="#fff" stroke="#CFC493" stroke-width="2"/><text x="815" y="174" text-anchor="middle" font-size="14" font-weight="700" fill="#005432">Steering</text><text x="815" y="193" text-anchor="middle" font-size="12" fill="#466069">guidance cost, labels, fixed values</text>
 <path d="M690 190L644 262" stroke="#B79F4D" stroke-width="1.5" marker-end="url(#ar)"/>
 <g font-size="12" font-weight="700" fill="#fff"><circle cx="30" cy="54" r="11" fill="#006747"/><text x="30" y="58" text-anchor="middle">1</text><circle cx="450" cy="160" r="11" fill="#006747"/><text x="450" y="164" text-anchor="middle">2</text><circle cx="450" cy="54" r="11" fill="#B79F4D"/><text x="450" y="58" text-anchor="middle">3</text><circle cx="700" cy="54" r="11" fill="#006747"/><text x="700" y="58" text-anchor="middle">4</text><circle cx="250" cy="272" r="11" fill="#B79F4D"/><text x="250" y="276" text-anchor="middle">5</text><circle cx="700" cy="160" r="11" fill="#006747"/><text x="700" y="164" text-anchor="middle">6</text></g>
-</svg>
+</svg></div>
 <figcaption>One recipe, six questions. Every card answers them in this order, with the same numbers.</figcaption>
 <ul class="qlist">
 <li><span class="q">1</span><span><b>What is noised (x)?</b> The thing the model learns to generate: actions, positions, a latent of camera images, a speed matrix.</span></li>
@@ -492,16 +492,123 @@ ol.recipe li{margin:6px 0}footer{margin-top:30px;color:var(--muted);font-size:13
 <li><b>Fewer steps is a recurring fix.</b> Sampling ranges from 2 steps (DiffusionDrive, starting near typical paths) to 500 (PMA-Diffusion). VBD cut 50 DDPM steps to 5 DDIM steps (1.48 s to 0.16 s); SceneDiffuser spreads denoising across the simulation steps.</li>
 </ol>
 
-<h3>Which steering for which job</h3>
-<div class="tablewrap"><table><tr><th>Job</th><th>Steering that fits</th><th>Seen in</th></tr>
-<tr><td>Make dangerous scenarios from a model of normal traffic</td><td>Guidance with a collision, rule or time-to-collision cost; an adversary with a head start</td><td>CTG, SAFE-SIM, DiffScene, VBD, CCDiff, Nexus</td></tr>
-<tr><td>Ask for a scenario in words</td><td>Classifier-free guidance on text, or a cost written by a language model</td><td>LangTraj, CTG++</td></tr>
-<tr><td>Complete or edit a partial scene</td><td>Fill in: hold some agents, lanes or cells fixed and denoise the rest</td><td>SceneDiffuser, SceneDiffuser++, SLEDGE, GAIA-2</td></tr>
-<tr><td>Fill detector gaps</td><td>Fill in the observed cells, sometimes with a physics correction after each step</td><td>PriSTI, PMA-Diffusion</td></tr>
-<tr><td>Render a layout as camera or LiDAR data</td><td>Conditioning on maps and boxes through attention or a ControlNet-style branch</td><td>MagicDrive, Panacea, DrivingDiffusion, Cosmos-Drive-Dreams</td></tr>
-<tr><td>Fast candidate plans for the ego vehicle</td><td>A head start from typical paths, and very few steps</td><td>DiffusionDrive</td></tr>
-<tr><td>Find rare failures of a system under test</td><td>Retrain on the model’s own closest calls, or keep the worst of many</td><td>Wang et al., Challenger</td></tr>
+<h2 id="hint-routes">How a hint reaches the model</h2>
+<p>Every paper on this page gives its diffusion model some hint about what to generate. In unCLIP (DALL·E 2) the hint is a CLIP image embedding. Here it is a map and past tracks, a layout of boxes, a sentence, a trip’s departure time, or the output of a scene encoder. The hint helps the denoiser head in the right direction at every step. Papers differ in <b>when</b> they have the hint and <b>where</b> it enters the sampling loop.</p>
+
+<figure class="recipe-fig">
+<div class="figscroll"><svg viewBox="0 0 960 372" class="schem" role="img" aria-label="The sampling loop with the five places a hint can enter: head start at the start, condition into the network, guide and fill in on the clean guess, select on the finished samples">
+<defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#466069"/></marker>
+<marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#B79F4D"/></marker>
+<marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#006747"/></marker></defs>
+<text x="20" y="26" font-size="15" font-weight="700" fill="#005432">One sampling loop, five places a hint can enter</text>
+<rect x="20" y="44" width="170" height="58" rx="8" fill="#fff" stroke="#B79F4D" stroke-width="2"/><text x="105" y="67" text-anchor="middle" font-size="14" font-weight="700" fill="#005432">Head start</text><text x="105" y="87" text-anchor="middle" font-size="12" fill="#466069">a draft, partly noised</text>
+<rect x="250" y="44" width="210" height="58" rx="8" fill="#fff" stroke="#006747" stroke-width="2" stroke-dasharray="5 4"/><text x="355" y="67" text-anchor="middle" font-size="14" font-weight="700" fill="#005432">Condition</text><text x="355" y="87" text-anchor="middle" font-size="12" fill="#466069">map, tracks, layout, text, label</text>
+<rect x="520" y="44" width="190" height="58" rx="8" fill="#fff" stroke="#B79F4D" stroke-width="2"/><text x="615" y="67" text-anchor="middle" font-size="14" font-weight="700" fill="#005432">Guide</text><text x="615" y="87" text-anchor="middle" font-size="12" fill="#466069">a cost: collision, off-road</text>
+<path d="M105 102V138" stroke="#B79F4D" stroke-width="1.8" marker-end="url(#arg)"/><path d="M355 102V138" stroke="#006747" stroke-width="1.8" marker-end="url(#arc)"/><path d="M615 102V138" stroke="#B79F4D" stroke-width="1.8" marker-end="url(#arg)"/>
+<rect x="20" y="142" width="170" height="70" rx="8" fill="#fff" stroke="#466069"/><text x="105" y="171" text-anchor="middle" font-size="14" font-weight="700" fill="#303434">Start</text><text x="105" y="191" text-anchor="middle" font-size="12" fill="#466069">pure noise</text>
+<rect x="250" y="142" width="210" height="70" rx="8" fill="#005432"/><text x="355" y="171" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Denoiser network</text><text x="355" y="191" text-anchor="middle" font-size="12" fill="#EDEBD1">reads zₜ, t and c</text>
+<rect x="520" y="142" width="190" height="70" rx="8" fill="#EEF5F1" stroke="#006747"/><text x="615" y="171" text-anchor="middle" font-size="14" font-weight="700" fill="#005432">Clean guess x̂</text><text x="615" y="191" text-anchor="middle" font-size="12" fill="#466069">this step’s best guess of x</text>
+<rect x="780" y="142" width="160" height="70" rx="8" fill="#EEF5F1" stroke="#006747"/><text x="860" y="171" text-anchor="middle" font-size="14" font-weight="700" fill="#005432">Finished samples</text><text x="860" y="191" text-anchor="middle" font-size="12" fill="#466069">after the last step</text>
+<path d="M190 177H246" stroke="#466069" stroke-width="1.5" marker-end="url(#ar2)"/><path d="M460 177H516" stroke="#466069" stroke-width="1.5" marker-end="url(#ar2)"/><path d="M710 177H776" stroke="#466069" stroke-width="1.5" marker-end="url(#ar2)"/>
+<text x="743" y="168" text-anchor="middle" font-size="11" fill="#466069">last step</text>
+<path d="M560 212V246H420V216" fill="none" stroke="#466069" stroke-width="1.5" marker-end="url(#ar2)"/>
+<text x="490" y="264" text-anchor="middle" font-size="11.5" fill="#466069">next step: a little less noise</text>
+<rect x="520" y="292" width="190" height="58" rx="8" fill="#fff" stroke="#B79F4D" stroke-width="2"/><text x="615" y="315" text-anchor="middle" font-size="14" font-weight="700" fill="#005432">Fill in</text><text x="615" y="335" text-anchor="middle" font-size="12" fill="#466069">paste observed values</text>
+<rect x="780" y="292" width="160" height="58" rx="8" fill="#fff" stroke="#B79F4D" stroke-width="2"/><text x="860" y="315" text-anchor="middle" font-size="14" font-weight="700" fill="#005432">Select</text><text x="860" y="335" text-anchor="middle" font-size="12" fill="#466069">keep the best of many</text>
+<path d="M660 292V216" stroke="#B79F4D" stroke-width="1.8" marker-end="url(#arg)"/><path d="M860 292V216" stroke="#B79F4D" stroke-width="1.8" marker-end="url(#arg)"/>
+<rect x="20" y="300" width="26" height="14" rx="3" fill="#fff" stroke="#006747" stroke-width="2" stroke-dasharray="5 4"/><text x="56" y="312" font-size="12.5" fill="#303434">built in when the network is trained (needs the hint paired with x)</text>
+<rect x="20" y="328" width="26" height="14" rx="3" fill="#fff" stroke="#B79F4D" stroke-width="2"/><text x="56" y="340" font-size="12.5" fill="#303434">added when you generate, after training</text>
+</svg></div>
+<figcaption>A hint can enter at five places in the sampling loop. Only conditioning has to be built into the denoiser’s training; the other four can be added after the denoiser is trained.</figcaption>
+</figure>
+
+<p>Two points keep this picture honest.</p>
+<ul>
+<li><b>A hint narrows the target; it does not point back to one recorded x.</b> When the model generates, there is no x to recover. The denoiser has learned what data looks like when the hint is true. How close the output lands to one particular x depends on how much the hint pins down. unCLIP’s image embedding pins down a lot, so you get close variations of one image. SLEDGE’s city label pins down little, so you get any road layout typical of that city. A scene encoder’s summary of the map and past tracks fixes the setting but leaves the future open, which is what you want when you need several plausible futures.</li>
+<li><b>Conditioning needs the hint in the training data, paired with x.</b> Many transportation goals are too rare to pair: a crash, a near-miss, a failure of the system under test. Others are rules written after the model was trained. That is why so many papers add their hint while generating instead.</li>
+</ul>
+
+<h3>Five routes</h3>
+<div class="tablewrap"><table>
+<tr><th>Route</th><th>Use it when the hint is…</th><th>Retrain?</th><th>Seen in</th></tr>
+<tr><td><b>Condition</b></td><td>available in the training data, paired with each x</td><td>yes</td><td>VBD, MotionDiffuser, MagicDrive, DiffTraj</td></tr>
+<tr><td><b>Guide</b></td><td>a rule you can write as a cost (distance, time to collision, staying on the road), or a score learned from labels</td><td>no, or only a small scorer</td><td>CTG, SAFE-SIM, VBD, CCDiff; DiffScene, AdvDiffuser, DJINN</td></tr>
+<tr><td><b>Fill in</b></td><td>part of x itself, observed</td><td>no</td><td>PriSTI, PMA-Diffusion, SceneDiffuser, SLEDGE</td></tr>
+<tr><td><b>Head start</b></td><td>a rough draft of x</td><td>no</td><td>DiffusionDrive, DJINN, GAIA-2, SAFE-SIM</td></tr>
+<tr><td><b>Select</b></td><td>a verdict you can only check on finished samples, often from a simulator</td><td>no; or retrain on the best samples</td><td>LangTraj, Challenger, Wang et al.</td></tr>
 </table></div>
+<p>The same hint can travel by different routes. DiffSTG feeds past detector readings to the network as a condition. PMA-Diffusion never shows the readings to the network: it pastes them back after each step and then applies a traffic-physics smoothing step. Conditioning learns to use the hint well, but only for the patterns of missing data it saw in training. Fill-in works for any pattern of gaps without retraining.</p>
+
+<h3>Conditioning: what the hint is</h3>
+<ul>
+<li><b>A scene summary</b> from a scene encoder: the map, past tracks and signals. The usual choice for trajectories (CTG, VBD, MotionDiffuser, SceneDiffuser).</li>
+<li><b>A layout drawn as an image</b>: a top-down map, 3D boxes, or an HD map rendered into the camera view. The usual choice for camera and LiDAR data (MagicDrive, Panacea, Cosmos-Drive-Dreams).</li>
+<li><b>Text</b>: weather and time of day (MagicDrive, Panacea), a scenario sentence (LangTraj), a pavement-defect description (RoadFusion).</li>
+<li><b>Labels and attributes</b>: the city (SLEDGE), trip distance and departure time (DiffTraj), census and point-of-interest counts (DiffODGen). Even danger itself: Wang et al. condition on the wanted minimum gap between two vehicles, then ask for a gap of 0.</li>
+<li><b>Another model’s embedding</b>, the closest cousin of unCLIP. LiDM conditions LiDAR on CLIP features of the camera images, then swaps in CLIP text features to get text-to-LiDAR with no extra training.</li>
+<li><b>Ego actions</b>: speed and curvature (GAIA-2), or a turn sequence (DriveDreamer).</li>
+<li><b>Who affects whom</b>: CCDiff’s causal graph limits which vehicles each vehicle can attend to.</li>
+</ul>
+
+<h3>Conditioning: how the hint gets in</h3>
+<p>Match the route into the network to the shape of the hint.</p>
+<ul>
+<li><b>Lined up cell by cell with x</b> (a history block, an interpolated speed map, a map raster): stack it with the noisy input. DiffSTG, PriSTI, Scenario Diffusion.</li>
+<li><b>A dense layout image for a big pretrained image model</b>: a side branch (ControlNet-style) whose features are added into the network. MagicDrive, Panacea, Cosmos-Drive-Dreams.</li>
+<li><b>A set of things</b> (lanes, vehicles, boxes, words): cross-attention, so each part of x looks up the parts of the hint it needs. VBD, MotionDiffuser, LangTraj. This is door 2 in the unCLIP handout.</li>
+<li><b>One global setting that should affect everything</b>: scale-and-shift in every layer (adaptive normalization). SLEDGE’s city, DiffTraj’s trip attributes, GAIA-2’s ego actions. This is door 1 in the unCLIP handout. GAIA-2 reports that ego speed and curvature steered the video more accurately this way than through cross-attention, because an action affects every part of the image.</li>
+<li><b>A rule about interactions</b>: an attention mask. CCDiff.</li>
+</ul>
+<p><b>Classifier-free guidance</b> is a dial on top of conditioning. It compares the network’s guess with and without the hint and pushes further in the direction the hint points. The papers that report a setting keep it low (MagicDrive 2, DiffTraj 3, CCDiff below 2); GAIA-2 turns it up (2 to 20) only for rare scenes. Higher settings follow the hint more closely and lose variety, which is why LangTraj keeps its weights moderate.</p>
+
+<details><summary>Going deeper (optional): the routes in the notation of the Basics handout</summary>
+<p>The denoiser g(z<sub>t</sub>, w, t, c) guesses the noise in z<sub>t</sub>; the clean guess is x̂ = (z<sub>t</sub> − √(1 − α<sub>t</sub>)·g) / √α<sub>t</sub>.</p>
+<ul>
+<li><b>Condition:</b> train g with c as an extra input. Nothing changes in sampling except that c is read at every step.</li>
+<li><b>Classifier-free guidance:</b> g = g<sub>without</sub> + (1 + λ)(g<sub>with</sub> − g<sub>without</sub>). λ = 0 is plain conditioning; tools report s = 1 + λ.</li>
+<li><b>Guide with a cost J:</b> g<sub>guided</sub> = g + λ·√(1 − α<sub>t</sub>)·∇J(x̂), with the gradient taken with respect to z<sub>t</sub>. This moves the clean guess downhill on J; λ sets how hard.</li>
+<li><b>Fill in:</b> after each step, overwrite the observed cells with the observed values noised to the current level, √α<sub>t</sub>·x<sub>obs</sub> + √(1 − α<sub>t</sub>)·ε.</li>
+<li><b>Head start:</b> begin at an earlier step τ from √α<sub>τ</sub>·x<sub>draft</sub> + √(1 − α<sub>τ</sub>)·ε instead of pure noise at step T. Less noise keeps more of the draft.</li>
+</ul>
+<p class="text-small">Sources: Ho &amp; Salimans (2021) for classifier-free guidance; Dhariwal &amp; Nichol (2021) for guidance by a gradient; Lugmayr et al. (2022, RePaint) for fill-in; Meng et al. (2022, SDEdit) for the head start.</p>
+</details>
+
+<h3>Which route for which job</h3>
+<div class="tablewrap"><table>
+<tr><th>Job</th><th>What you have</th><th>What works</th><th>Seen in</th></tr>
+<tr><td>Realistic traffic at a given place</td><td>maps and past tracks</td><td>condition on a scene encoder</td><td>VBD, MotionDiffuser, SceneDiffuser</td></tr>
+<tr><td>Dangerous scenarios</td><td>a model of normal traffic; crashes too rare to train on</td><td>guide one or a few vehicles with a collision or time-to-collision cost; keep the best of many</td><td>CTG, SAFE-SIM, VBD, CCDiff, SafeMVDrive</td></tr>
+<tr><td>A scenario described in words</td><td>sentence–scenario pairs</td><td>condition on the text, plus classifier-free guidance</td><td>LangTraj</td></tr>
+<tr><td>A scenario described in words</td><td>no such pairs</td><td>a language model writes the cost; then guide</td><td>CTG++</td></tr>
+<tr><td>Camera or LiDAR data for a layout</td><td>layout–image pairs</td><td>side branch or stacking for the layout; text for the weather</td><td>MagicDrive, Panacea, Cosmos-Drive-Dreams</td></tr>
+<tr><td>Fill detector gaps or complete a scene</td><td>some values observed</td><td>fill in, plus a physics step after each denoising step</td><td>PriSTI, PMA-Diffusion, SceneDiffuser</td></tr>
+<tr><td>Edit a real drive (new weather, an added car)</td><td>the recording</td><td>head start from the partly noised clip; fill in the inserted car</td><td>GAIA-2, DJINN</td></tr>
+<tr><td>Trips or OD flows with given properties</td><td>trip attributes, census data</td><td>condition on them</td><td>DiffTraj, DiffODGen</td></tr>
+<tr><td>Fast plans for the ego vehicle</td><td>a set of typical paths</td><td>head start from them, then 2 steps</td><td>DiffusionDrive</td></tr>
+<tr><td>Failures of a system you can only test</td><td>a simulator’s verdict</td><td>keep the best of many, or retrain on the closest calls</td><td>Wang et al., Challenger</td></tr>
+</table></div>
+<p class="text-small"><b>The classical baseline to beat:</b> a scripted scenario with a parameter sweep (SUMO, CARLA, OpenSCENARIO) for safety tests; a game-engine render for camera data; interpolation, kriging or the adaptive smoothing method for detector gaps; a gravity model for OD flows; a rule-based or optimization planner for ego plans.</p>
+<p>The strongest papers combine routes: condition for realism, guide toward the goal, select at the end (CTG, SAFE-SIM, LangTraj).</p>
+<div class="how"><b>The one question to ask:</b> where does your hint come from? From the training pairs: <b>condition</b>. From a rule: <b>guide</b>. From observed values: <b>fill in</b>. From a draft: give it a <b>head start</b>. Only from a test result: <b>select</b>.</div>
+
+<h3>Where it breaks</h3>
+<ul>
+<li><b>Push too hard and realism goes.</b> Every route but conditioning pulls the sample away from what the training data looked like. CCDiff guides only the few vehicles that matter; that cut the share of vehicles whose realism push and guidance push point in opposite directions from about 9.1% (CTG) to 4.8%.</li>
+<li><b>A cost rewards what you wrote, not what you meant.</b> A collision cost will happily produce a crash no vehicle could drive. CTG re-rolls positions from actions at every step, and CCDiff passes actions through vehicle dynamics, so guided paths stay drivable.</li>
+<li><b>A condition must be available when you generate.</b> A model conditioned on HD maps cannot run where no HD map exists.</li>
+<li><b>A hint that pins down too much returns copies.</b> For synthetic trips (privacy) and test scenarios (coverage), check that samples are not near-copies of training records.</li>
+<li><b>Selection is costly for rare goals.</b> Keeping the best of 64 is cheap; finding a one-in-a-million failure by sampling alone is not.</li>
+</ul>
+
+<div class="fitcard"><h4>Fit card — steering a diffusion model with a hint</h4>
+<dl>
+<dt>Idea in one sentence</dt><dd>A hint about the wanted output enters the sampling loop at one of five places: the network’s input, the clean guess, the starting point, or the finished samples.</dd>
+<dt>Why it works</dt><dd>Every step makes a guess of the clean data. That guess can be informed, pushed, overwritten or seeded before the next step, and the denoiser keeps the result looking like real data.</dd>
+<dt>Fits these tasks</dt><dd>Safety scenarios, sensor data for a layout, trips and OD flows, several possible futures, detector gap filling (generation · prediction).</dd>
+<dt>Needs this data</dt><dd>Recorded x (trajectories, sensor data, detector speeds) plus, by route: hint–x pairs, a cost or labeled scorer, the observed values, a draft, or a simulator.</dd>
+<dt>Breaks when</dt><dd>The push leaves the training data, the hint is missing when you generate, or the cost rewards a physically impossible result.</dd>
+<dt>Keep the classical method when</dt><dd>You only need parameter variations of a scenario you can already script, one fast best estimate of a gap, or results a reviewer can trace rule by rule.</dd>
+</dl></div>
 
 <p class="text-small"><b>Not on this page:</b> Kalluri et al. (CVPR 2024 Workshops), the disaster-image paper in the reading library, uses no diffusion. It chose MUSE, a masked-token model, over diffusion for easy masked editing. Not every generative paper is a diffusion paper; check before you file it.</p>
 
@@ -512,10 +619,15 @@ ol.recipe li{margin:6px 0}footer{margin-top:30px;color:var(--muted);font-size:13
 <p>CTG, SAFE-SIM and VBD for steering a model of normal traffic with a cost; SceneDiffuser for holding the recorded turner fixed while the rest is generated. Add the checks from the handout: physics, set-ups inside the recorded range, and how each conflict arises. And remember that a share of steered conflicts is not a crash rate.</p></details>
 <details><summary>3. A detector-gap paper reports better imputation than its baselines. What do you ask before using it on your district’s detectors?</summary>
 <p>What the baseline is (simple interpolation, kriging, or the adaptive smoothing method); whether the test hides whole sensors and long outages, not just random cells; and how the method does on the ugly cases, such as a queue forming inside the gap. PMA-Diffusion is a good model for adding traffic physics to the sampling loop.</p></details>
+<details><summary>4. Your drone video of one signalized intersection holds thousands of left turns but only about a dozen near-misses. You want hundreds of near-miss scenarios to test a turn-assist system. Which route carries the hint “near-miss”?</summary>
+<p>Too few near-misses to condition on them directly. Train on all turns, condition on the map and past tracks for realism, and guide the turning vehicle with a time-to-collision cost (as SAFE-SIM and CCDiff do), keeping the best of many. A second option follows Wang et al.: label every recorded turn with its smallest gap, which gives thousands of pairs, condition on the gap, and ask for small gaps. Either way, check that the paths are drivable.</p></details>
+<details><summary>5. Your imputation model conditions on the observed cells and was trained on random five-minute dropouts. Next year whole stations go dark for construction. What may go wrong, and which route avoids retraining?</summary>
+<p>A conditioned model learned to use the gap patterns it saw; whole-station outages are a new pattern, and it may fill them badly. Fill-in pastes whatever is observed after each step and works for any pattern without retraining, as PMA-Diffusion does. Test either model by hiding whole stations before trusting it.</p></details>
 
 <h2>Read next</h2>
 <ul class="text-small">
 <li><b>Diffusion Models: The Basics</b> (course handout and Module 4.11): the recipe on this page, built step by step on I-405 detector data.</li>
+<li><b>Reading unCLIP (DALL·E 2): From a CLIP Embedding Back to an Image</b> (course handout): a hint that is an image embedding, entering through the two doors described above.</li>
 <li><b>Diffusion in the Literature: From Image Generators to Safety Scenarios</b> (course handout): the image papers these models borrow from, and a worked example that steers a scenario model toward intersection conflicts.</li>
 <li><b>Reading library: generative models in transportation</b> (Module 4 page): VAE, GAN, token and diffusion papers side by side.</li>
 <li>Peng et al. (2024), <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2409.15816">Diffusion models for intelligent transportation systems: a survey</a>, arXiv: a broader map of the field.</li>

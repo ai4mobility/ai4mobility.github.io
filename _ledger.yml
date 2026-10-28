@@ -2034,7 +2034,10 @@ items:
       network, training, sampling, steering), tags, how diffusion works here, used for, what they found, for mobility,
       watch out. Six groups: safety scenarios (9), scene simulation (5), prediction and planning (3), sensor data and
       world models (11), traffic data (6), road damage (1). Filters by problem, network, denoising space and steering.
-      Closing: what the papers share (counts), which steering for which job, check yourself. Kalluri et al. dropped
+      Closing: what the papers share (counts); how a hint reaches the model (Oct 28: five-routes loop diagram,
+      condition / guide / fill in / head start / select, what the hint is and how it enters, classifier-free
+      guidance, Going-deeper formulas in 4.11 notation, which route for which job with classical baselines,
+      where it breaks, fit card); check yourself (5). Kalluri et al. dropped
       (MUSE, not diffusion) and noted. Every found-number checked by script against the paper text. Web copy drops
       the local-PDF links. 17 new PDFs in Generative_Models_Transportation_Handout/papers/08_Diffusion_added/.
       Reproducer build_v2/diffusion_library/ (python3 build/build_diffusion_library.py out.html [--web]). Mounted
