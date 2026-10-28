@@ -113,7 +113,7 @@ idea the rest builds on.
 </tr>
 <tr>
   <td><a href="notes4-gan.html"><strong>4.9 A forger and a critic, and a first scorecard</strong></a><br><em>The VAE and the GAN</em></td>
-  <td>The third answer. The two-player game; precision and recall for generators; how much a GAN wanders between runs; the first three answers scored on the same held-out heatmaps.</td>
+  <td>The third answer, one step at a time: why the loss has to be learned (squared error rewards the average, and a generator fed random numbers has no answer key); the critic and how its two losses are built; the forger and the critic trained against each other, round by round, on an I-405 detector pair; why the losses have no finish line, and how to keep the game balanced; a critic as an add-on to a reconstruction loss; precision and recall for generators; the first three answers scored on the same held-out heatmaps.</td>
   <td><a href="../labs.html">From VAE to diffusion</a></td>
 </tr>
 <tr>
