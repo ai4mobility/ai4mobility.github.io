@@ -46,7 +46,7 @@ An autoencoder can rebuild a traffic state from a few latents, but it cannot mak
 From autoencoder to VAE: a point becomes a cloud. The course models on one test heatmap; same shape for both, 400 &rarr; 96 &rarr; 2 &rarr; 96 &rarr; 400.
 ```
 
-**What you already have.** The autoencoder of {doc}`4.4&ndash;4.6 <notes2c-autoencoders>` squeezes each input x into a few latents z and rebuilds it: x → z → x̂. It is trained only to rebuild. So each x gets one exact point z, placed wherever rebuilding is easiest.
+**What you already have.** The autoencoder of {doc}`4.4–4.6 <notes2c-autoencoders>` squeezes each input x into a few latents z and rebuilds it: x → z → x̂. It is trained only to rebuild. So each x gets one exact point z, placed wherever rebuilding is easiest.
 
 **What it cannot do.** To make a new heatmap you need new latents. The autoencoder never says where its latents live: their spread and shape are whatever training happened to produce, with empty gaps between them. Pick a z at random and you may land far from every training example, in a region the decoder never learned. The section {ref}`Why a plain autoencoder cannot generate <vae-basics-cannot-generate>` measures this.
 
@@ -456,7 +456,7 @@ E: decoder. F: the bell term, the KL between the encoder's cloud and the standar
 
 ### Where to go next
 
-- {doc}`4.3 Latent variables <notes2b-latent-variables>`, {doc}`4.4&ndash;4.6 Autoencoders <notes2c-autoencoders>` and {doc}`4.7 A few hidden knobs: the VAE <notes3-vae>`.
+- {doc}`4.3 Latent variables <notes2b-latent-variables>`, {doc}`4.4–4.6 Autoencoders <notes2c-autoencoders>` and {doc}`4.7 A few hidden knobs: the VAE <notes3-vae>`.
 - The VAE Traffic Lab ({doc}`all labs <../labs>`): look inside the encoder, shift a heatmap and watch its latents move, and referee generated heatmaps against the admissible wave speeds.
 - The VAE-to-Diffusion Lab: why VAEs blur when an outcome can go two ways.
 - The longer handout, *Deep Generative Models: VAE and Diffusion*: diffusion models, and VAEs on real dashcam and FL511 camera data.

@@ -354,4 +354,4 @@ inputs such as time of day or weather.
 
 ---
 
-Next: diffusion, the third row of the table.
+Next: {doc}`4.11 Diffusion models: the basics <notes6-diffusion-basics>`, the third row of the table.

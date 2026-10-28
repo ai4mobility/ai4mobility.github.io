@@ -7,8 +7,8 @@
 - **Generative models, part 1:** what changes when a model produces data; autoregressive generation, latent
   variables, VAE, GAN, and a first scorecard (4.1&ndash;4.3, 4.7&ndash;4.9)
 - **Autoencoders:** from PCA worked by hand to deep, sparse, denoising and masked autoencoders (4.4&ndash;4.6)
-- **VAE and diffusion:** one hidden cause, from mixture models to the VAE (4.10), then diffusion; world models
-  follow
+- **VAE and diffusion:** one hidden cause, from mixture models to the VAE (4.10), then diffusion (4.11); world
+  models follow
 
 ## Overview
 
@@ -34,8 +34,8 @@ models — the attempt to learn a simulator rather than write one.
 Read the pages in order; each builds on the one before. Sections 4.1&ndash;4.3 set up the question and the idea of a
 hidden cause. Sections 4.4&ndash;4.6 build the plain autoencoder, from PCA worked by hand to masked autoencoders.
 Sections 4.7 and 4.8 are the VAE (4.8 takes it one step at a time, with a VAE trained on real detector data), and 4.9 is
-the GAN, scored side by side with it. Section 4.10 opens the VAE-and-diffusion session;
-diffusion and world models follow. Each page opens with a card naming its session. If multivariate Gaussians are
+the GAN, scored side by side with it. Section 4.10 opens the VAE-and-diffusion session, and
+4.11 is diffusion, built up from Bishop&rsquo;s math on the I-405 pair and the heatmaps; world models follow. Each page opens with a card naming its session. If multivariate Gaussians are
 rusty, start with the warm-up page before 4.3: it revisits one bell, slicing, fitting and mixtures of bells on three
 I-405 detectors, one of them the detector of 4.10.
 
@@ -43,7 +43,7 @@ Most results on these pages come from one dataset, the 4,000 cell-transmission-m
 is built on, split the same way everywhere, so the four answers to "how do you draw a realistic traffic state?" can
 be compared directly. Section 4.4 adds two real PeMS detectors on I-405, small enough to work by hand; 4.5 and 4.6 add
 a synthetic fundamental diagram; 4.8 adds real daily flow curves from 170 PeMS District 8 stations; 4.10 adds one
-real PeMS detector. The companion in 4.5 uses the I-405 pair, the
+real PeMS detector; 4.11 returns to the I-405 pair of 4.4. The companion in 4.5 uses the I-405 pair, the
 fundamental diagram and the heatmaps; the one in 4.7 adds a second simulator, a grid network; the one in 4.8 lets you turn the three knobs of a VAE trained
 on the District 8 flow curves. If you read only one
 page before class, read {doc}`4.1 <notes1-producing>`: the joint-versus-marginals figure is the idea the rest builds
@@ -112,8 +112,8 @@ on.
   <td>&mdash;</td>
 </tr>
 <tr>
-  <td><strong>Coming: diffusion</strong><br><em>VAE and diffusion session</em></td>
-  <td>The fourth answer: start from pure noise and remove a little at a time, the denoising arrows of 4.6 turned into a generator.</td>
+  <td><a href="notes6-diffusion-basics.html"><strong>4.11 Diffusion models: the basics</strong></a><br><em>VAE and diffusion session</em></td>
+  <td>The fourth answer, in Bishop&rsquo;s notation: a fixed encoder that adds noise; the three arrows of the diffusion picture; why the loss is &ldquo;name the noise&rdquo;; sampling from pure static, and where a prompt fits in; diffusion against the VAE on the same heatmaps; scenarios, guidance and gap filling; where it breaks.</td>
   <td><a href="../labs.html">From VAE to diffusion; Training the denoiser</a></td>
 </tr>
 <tr>
