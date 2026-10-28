@@ -2062,6 +2062,19 @@ items:
       number). Mounted at anchor (unclip-crash-run)= on the module index; 4.11 Where to go next links to
       it.'
 
+  - id: m4-diffusion-papers-slides
+    file: Diffusion_Transportation_Papers_Slides.pptx + .md
+    kind: deck
+    module: 4
+    session: unscheduled
+    status: drafted
+    dest: site/module4/index.md
+    notes: '26-slide lecture deck on the course template (Oct 28 2026), the slide twin of the diffusion papers
+      companion and of the handout Diffusion in the Literature; built by dpapers_slides/ (make_numbers, build_deck,
+      audit = 0). Five section headers; five safety papers with their own architecture figures (CTG, Safe-Sim, VBD,
+      CCDiff, SceneDiffuser) plus MagicDrive; the five routes for a hint; the synthetic worked example; fit card and
+      three check-yourself questions. About 45 minutes with the check-ins.'
+
   - id: m4-same-vae-different-traffic
     file: Same_VAE_Different_Traffic_Companion.html
     kind: companion
