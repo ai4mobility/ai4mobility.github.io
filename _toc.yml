@@ -111,7 +111,7 @@ parts:
           - file: module4/notes3b-vae-basics
             title: "4.8 Variational autoencoders"
           - file: module4/notes4-gan
-            title: "4.9 A forger, a critic, a scorecard"
+            title: "4.9 Generative Adversarial Networks (GAN)"
           - file: module4/notes6-diffusion-basics
             title: "4.10 Diffusion models: the basics"
           - file: module4/notes7-unclip

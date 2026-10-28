@@ -1,5 +1,5 @@
 (gan)=
-# 4.9 A forger and a critic, and a first scorecard
+# 4.9 Generative Adversarial Networks (GAN)
 
 <div class="notes-card">
   <div class="notes-card-head">
@@ -51,12 +51,12 @@ The symbols follow Bishop and Bishop (2024), *Deep Learning*, Chapter 17, which 
 
 | Symbol | Bishop's name | Classroom word | On this page |
 | --- | --- | --- | --- |
-| z | latent variable, drawn from N(0, I) | random input | 2 random numbers (detector pair) or 32 (heatmaps), drawn fresh every time |
-| g(z, w) | generator, with weights w | forger | turns z into one fake reading or one fake heatmap |
-| x | a data vector | a reading or a heatmap | (upstream, downstream) speed in mph, or a 20 × 20 speed heatmap |
-| d(x, φ) | discriminator, with weights φ | critic | the probability that x is real |
-| t | target: 1 = real, 0 = synthetic | label | what the critic is trained to predict |
-| E\_GAN(w, φ) | GAN error function | the score of the game | the critic lowers it; the forger raises it |
+| $\mathbf{z}$ | latent variable, drawn from N(0, I) | random input | 2 random numbers (detector pair) or 32 (heatmaps), drawn fresh every time |
+| $\mathbf{g}(\mathbf{z}, \mathbf{w})$ | generator, with weights w | forger | turns z into one fake reading or one fake heatmap |
+| $\mathbf{x}$ | a data vector | a reading or a heatmap | (upstream, downstream) speed in mph, or a 20 × 20 speed heatmap |
+| $d(\mathbf{x}, \phi)$ | discriminator, with weights φ | critic | the probability that x is real |
+| $t$ | target: 1 = real, 0 = synthetic | label | what the critic is trained to predict |
+| $E_{\text{GAN}}(\mathbf{w}, \phi)$ | GAN error function | the score of the game | the critic lowers it; the forger raises it |
 
 One caution on the word *critic*. In everyday GAN talk it means the discriminator, and this page uses it that way. In the Wasserstein GAN papers it means a specific variant whose output is a score, not a probability ({ref}`Fixes you will meet in papers <gan-fixes>`).
 
@@ -166,10 +166,10 @@ $$
 
 | Symbol | Here |
 | --- | --- |
-| s(x, φ) | the discriminator network's raw score for x: its utility, or logit |
-| σ | the logistic sigmoid, the same S-curve as the binary logit |
-| d(x, φ) | the probability that x is real; 0.5 means "cannot tell" |
-| φ | the discriminator's weights (135,745 for the heatmaps) |
+| $s(\mathbf{x}, \phi)$ | the discriminator network's raw score for x: its utility, or logit |
+| $\sigma$ | the logistic sigmoid, the same S-curve as the binary logit |
+| $d(\mathbf{x}, \phi)$ | the probability that x is real; 0.5 means "cannot tell" |
+| $\phi$ | the discriminator's weights (135,745 for the heatmaps) |
 
 *In words:* the discriminator is a binary logit whose utility is a deep network, choosing between "real" and "synthetic" for each heatmap.
 
@@ -197,16 +197,16 @@ $$
 
 | Symbol | Here |
 | --- | --- |
-| t\_n | 1 if example n is real, 0 if the generator made it |
-| d\_n, d(x\_n, φ) | the discriminator's probability that example n is real |
-| x\_n | a real reading (detector pair) or a real heatmap |
-| g(z\_n, w) | a fake made from the random draw z\_n |
-| N\_real, N\_synth | real and fake examples in one mini-batch: 256 each for the detector pair, 64 each for the heatmaps |
-| E\_GAN(w, φ) | the score of the game: low when the discriminator is right |
+| $t_n$ | 1 if example n is real, 0 if the generator made it |
+| $d_n$, $d(\mathbf{x}_n, \phi)$ | the discriminator's probability that example n is real |
+| $\mathbf{x}_n$ | a real reading (detector pair) or a real heatmap |
+| $\mathbf{g}(\mathbf{z}_n, \mathbf{w})$ | a fake made from the random draw $\mathbf{z}_n$ |
+| $N_{\text{real}}$, $N_{\text{synth}}$ | real and fake examples in one mini-batch: 256 each for the detector pair, 64 each for the heatmaps |
+| $E_{\text{GAN}}(\mathbf{w}, \phi)$ | the score of the game: low when the discriminator is right |
 
 *In words:* the discriminator pays −ln d for every real example and −ln(1 − d) for every fake. Each payment is near zero when it is right and confident, and large when it is confident and wrong.
 
-One number is worth remembering. If the discriminator cannot tell at all, it says d = 0.5 for everything and pays ln 2 = 0.693 on each average, so E\_GAN = 2 ln 2 = 1.386. The {ref}`training section <gan-training>` calls this the *cannot-tell level*.
+One number is worth remembering. If the discriminator cannot tell at all, it says d = 0.5 for everything and pays ln 2 = 0.693 on each average, so $E_{\text{GAN}}$ = 2 ln 2 = 1.386. The {ref}`training section <gan-training>` calls this the *cannot-tell level*.
 
 **Worked example.** Take the detector-pair GAN of the {ref}`six snapshots <gan-watch>` after 100 training rounds, and score three readings with its critic. The values of d are read from the critic's map at the nearest half-mph point.
 
@@ -216,22 +216,22 @@ One number is worth remembering. If the discriminator cannot tell at all, it say
 | (70, 18) mph, a queue between the stations, Monday 7 May 2012, 16:30 | 1 (real) | 0.567 | −ln 0.567 = 0.567 |
 | (49.8, 35.5) mph, the first fake of round 100 | 0 (fake) | 0.397 | −ln(1 − 0.397) = 0.506 |
 
-E\_GAN for this tiny batch is the average real payment plus the fake payment: (0.128 + 0.567) / 2 + 0.506 = 0.85, well below the cannot-tell level of 1.386.
+$E_{\text{GAN}}$ for this tiny batch is the average real payment plus the fake payment: (0.128 + 0.567) / 2 + 0.506 = 0.85, well below the cannot-tell level of 1.386.
 
 Notice that the critic is not equally sure about every kind of real reading. At round 100 it gives May's free-flow readings an average d of 0.87, but readings that are slow at both stations only 0.49, even though they are 37% of May. What sets d is the balance between real readings and fakes nearby, not the amount of data ({ref}`Why it is a game <gan-game>`): at round 100 many fakes sat close to the slow cluster, and few near free flow.
 
 (gan-generator-loss)=
 ### The generator's loss: the same score, pushed the other way
 
-Both networks are trained on the one score E\_GAN, in opposite directions (Bishop eqs. 17.7 and 17.8):
+Both networks are trained on the one score $E_{\text{GAN}}$, in opposite directions (Bishop eqs. 17.7 and 17.8):
 
 $$
 \Delta \phi \;=\; -\lambda \, \nabla_{\phi} E_{\mathrm{GAN}}(\mathbf{w}, \phi), \qquad \Delta \mathbf{w} \;=\; +\lambda \, \nabla_{\mathbf{w}} E_{\mathrm{GAN}}(\mathbf{w}, \phi)
 $$
 
-Here λ is the learning rate. The minus sign makes the discriminator step downhill on E\_GAN, and the plus sign makes the generator step uphill. Any gain for one is a loss for the other, which is why Bishop calls it a zero-sum game.
+Here λ is the learning rate. The minus sign makes the discriminator step downhill on $E_{\text{GAN}}$, and the plus sign makes the generator step uphill. Any gain for one is a loss for the other, which is why Bishop calls it a zero-sum game.
 
-Only the fake part of E\_GAN depends on the generator's weights w; the real heatmaps are what they are. So raising E\_GAN means lowering the average of ln(1 − d) over fakes. Written as a loss the generator lowers, this is Bishop's eq. 17.9:
+Only the fake part of $E_{\text{GAN}}$ depends on the generator's weights w; the real heatmaps are what they are. So raising $E_{\text{GAN}}$ means lowering the average of ln(1 − d) over fakes. Written as a loss the generator lowers, this is Bishop's eq. 17.9:
 
 $$
 \text{saturating:}\quad L_{\mathrm{G}}(\mathbf{w}) \;=\; \frac{1}{N_{\mathrm{synth}}} \sum_{n \in \mathrm{synth}} \ln\big(1 - d(\mathbf{g}(\mathbf{z}_n, \mathbf{w}), \phi)\big)
@@ -295,7 +295,7 @@ The two losses are lowered in two separate turns. The diagram shows what each tu
 The two turns of one training round (Bishop section 17.1). Dashed blue: where the gradient flows.
 ```
 
-**Turn 1, the critic's turn.** The fakes are treated as fixed data, like any labelled example. The gradient of E\_GAN reaches the discriminator's weights φ and stops there. The generator is not changed.
+**Turn 1, the critic's turn.** The fakes are treated as fixed data, like any labelled example. The gradient of $E_{\text{GAN}}$ reaches the discriminator's weights φ and stops there. The generator is not changed.
 
 **Turn 2, the forger's turn.** No real data is used. The chain rule runs from the loss, through the discriminator, into each fake x̃, and from there into the generator's weights w. The discriminator's weights are not stepped, but its gradient with respect to its *input* is what reaches the generator: for every fake, it says which small change would make it look more real. Backpropagation through g turns that advice into a change of w.
 
@@ -372,7 +372,7 @@ The flat map at the end is not proof that the generator has won. A critic that t
 
 Each network's loss depends on both networks' weights. When the generator improves, the critic's job gets harder and its loss rises. When the critic improves, the generator's loss rises even though its fakes did not change. So, in Bishop's words, "there is no metric of progress because the objective can go up as well as down during training" (section 17.1.2).
 
-The game does have a resting point. If the generator's fakes come from exactly the data's distribution, the best a critic can do is say d = 0.5 everywhere. Then E\_GAN = 2 ln 2 = 1.386 and the generator's loss is −ln 0.5 = 0.693: the cannot-tell level of {ref}`the critic's loss <gan-critic-loss>`.
+The game does have a resting point. If the generator's fakes come from exactly the data's distribution, the best a critic can do is say d = 0.5 everywhere. Then $E_{\text{GAN}}$ = 2 ln 2 = 1.386 and the generator's loss is −ln 0.5 = 0.693: the cannot-tell level of {ref}`the critic's loss <gan-critic-loss>`.
 
 **The bridge: user equilibrium.** You have met this kind of resting point in traffic assignment. In Wardrop's user equilibrium, no driver can shorten their trip by switching routes alone. At the GAN's resting point, neither network can lower its own loss alone. Both are reached by iterating: the method of successive averages shifts a shrinking share of trips towards the current shortest paths, and a GAN moves each network a small step against the other's current state.
 
@@ -381,13 +381,13 @@ The analogy has a limit, and it matters. User equilibrium has one convex functio
 :::{admonition} Going deeper &mdash; what the generator is really minimising
 :class: dropdown
 
-Hold the generator fixed. The best possible critic is the one below, where p\_data is the density of real readings and p\_G the density of fakes (Bishop exercise 17.1; Goodfellow et al. 2014, Proposition 1). Where the generator puts too many fakes, d⋆ is below 0.5; where it puts too few, above 0.5. That is the orange and green of the {ref}`six snapshots <gan-watch>`.
+Hold the generator fixed. The best possible critic is the one below, where $p_{\text{data}}$ is the density of real readings and $p_G$ the density of fakes (Bishop exercise 17.1; Goodfellow et al. 2014, Proposition 1). Where the generator puts too many fakes, d⋆ is below 0.5; where it puts too few, above 0.5. That is the orange and green of the {ref}`six snapshots <gan-watch>`.
 
 $$
 d^{\star}(\mathbf{x}) \;=\; \frac{p_{\mathrm{data}}(\mathbf{x})}{p_{\mathrm{data}}(\mathbf{x}) + p_{\mathrm{G}}(\mathbf{x})}
 $$
 
-Put d⋆ back into E\_GAN and you get 2 ln 2 − 2 JS(p\_data, p\_G), where JS, the Jensen-Shannon divergence, measures how different two distributions are and is zero only when they are equal. A generator that raises E\_GAN against the best critic is therefore lowering JS: pulling its distribution onto the data's. This reading is exact for the original, saturating loss; the non-saturating loss shares its resting point but not this formula. (If you work Bishop's exercise 17.1: its eq. 17.17 has the opposite sign, and it calls the sum of the two KL terms the Jensen-Shannon divergence, which is twice the JS used here.) In practice the critic is never the best possible one, which is why training can stall at 0.5 with the wrong fakes.
+Put d⋆ back into $E_{\text{GAN}}$ and you get 2 ln 2 − 2 JS($p_{\text{data}}$, $p_G$), where JS, the Jensen-Shannon divergence, measures how different two distributions are and is zero only when they are equal. A generator that raises $E_{\text{GAN}}$ against the best critic is therefore lowering JS: pulling its distribution onto the data's. This reading is exact for the original, saturating loss; the non-saturating loss shares its resting point but not this formula. (If you work Bishop's exercise 17.1: its eq. 17.17 has the opposite sign, and it calls the sum of the two KL terms the Jensen-Shannon divergence, which is twice the JS used here.) In practice the critic is never the best possible one, which is why training can stall at 0.5 with the wrong fakes.
 :::
 
 
@@ -481,12 +481,12 @@ $$
 
 | Symbol | Here |
 | --- | --- |
-| x\_n | a real CTM heatmap to be rebuilt |
-| e(x\_n) | the encoder's latents for it (4 numbers here) |
-| x̂\_n = g(e(x\_n), w) | the decoder's rebuilt heatmap |
+| $\mathbf{x}_n$ | a real CTM heatmap to be rebuilt |
+| $\mathbf{e}(\mathbf{x}_n)$ | the encoder's latents for it (4 numbers here) |
+| $\hat{\mathbf{x}}_n = \mathbf{g}(\mathbf{e}(\mathbf{x}_n), \mathbf{w})$ | the decoder's rebuilt heatmap |
 | MSE | mean squared error over the 400 cells, with speeds divided by 75 mph (γ is on that scale) |
-| −ln d(x̂\_n, φ) | the non-saturating critic term of {ref}`the generator's loss <gan-generator-loss>`, computed on the rebuilt heatmap |
-| γ | how much the critic counts against the squared error; γ = 0 is a plain autoencoder |
+| $-\ln d(\hat{\mathbf{x}}_n, \phi)$ | the non-saturating critic term of {ref}`the generator's loss <gan-generator-loss>`, computed on the rebuilt heatmap |
+| $\gamma$ | how much the critic counts against the squared error; γ = 0 is a plain autoencoder |
 
 *In words:* stay close to this heatmap, and look like real traffic. The first term keeps the output faithful to its own input. The second punishes the blur that the first term rewards. The critic is trained alongside, exactly as in the {ref}`training section <gan-training>`, with real heatmaps as t = 1 and rebuilt ones as t = 0. Here w stands for the weights of both the encoder and the decoder.
 
@@ -682,8 +682,8 @@ check how close samples sit to their nearest training heatmap: real test heatmap
 Six things to keep.
 
 1. **Squared error needs a partner.** A generator fed random numbers has none. Forced onto random partners, it learns the average: every output within 0.5 mph of the May average on the detector pair, every heatmap within 1.9 mph RMS of the average heatmap.
-2. **A GAN learns its loss.** The discriminator is a binary logit on real against fake (Bishop eq. 17.4), and its cross-entropy is the game's score E\_GAN (eq. 17.6).
-3. **One score, two players.** The critic lowers E\_GAN, and in the original game the generator raises the same score. In practice the generator lowers −ln d instead (eq. 17.10), which pushes far harder when the critic is sure: 11.4 against 0.17 after a critic head start.
+2. **A GAN learns its loss.** The discriminator is a binary logit on real against fake (Bishop eq. 17.4), and its cross-entropy is the game's score $E_{\text{GAN}}$ (eq. 17.6).
+3. **One score, two players.** The critic lowers $E_{\text{GAN}}$, and in the original game the generator raises the same score. In practice the generator lowers −ln d instead (eq. 17.10), which pushes far harder when the critic is sure: 11.4 against 0.17 after a critic head start.
 4. **The generator learns only through the critic.** Its one source of information about real traffic is the critic's gradient with respect to each fake. Where the critic has seen no data, that gradient can point anywhere.
 5. **Training is a game with no finish line.** On the detector pair the critic's loss sat within 0.01 of the cannot-tell level (1.386) from round 1,000 on, while coverage swung between 0.16 and 0.77. Judge from outside, on held-out data, over several seeds.
 6. **Balance and placement matter.** Five critic steps per round lifted coverage at round 10,000 from 0.29–0.52 to 0.73–0.92. Used as an add-on, the critic sharpened an autoencoder's fronts from 33.3 to 38.4 mph (real: 39.6) for 0.5 mph more error.

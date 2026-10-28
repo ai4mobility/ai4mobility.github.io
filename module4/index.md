@@ -112,7 +112,7 @@ idea the rest builds on.
   <td><a href="../labs.html">VAE on traffic heatmaps</a>; <a href="lab7_four_answers.html">Lab 7: four ways to predict</a></td>
 </tr>
 <tr>
-  <td><a href="notes4-gan.html"><strong>4.9 A forger and a critic, and a first scorecard</strong></a><br><em>The VAE and the GAN</em></td>
+  <td><a href="notes4-gan.html"><strong>4.9 Generative Adversarial Networks (GAN)</strong></a><br><em>The VAE and the GAN</em></td>
   <td>The third answer, one step at a time: why the loss has to be learned (squared error rewards the average, and a generator fed random numbers has no answer key); the critic and how its two losses are built; the forger and the critic trained against each other, round by round, on an I-405 detector pair; why the losses have no finish line, and how to keep the game balanced; a critic as an add-on to a reconstruction loss; precision and recall for generators; the first three answers scored on the same held-out heatmaps.</td>
   <td><a href="../labs.html">From VAE to diffusion</a></td>
 </tr>

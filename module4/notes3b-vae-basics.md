@@ -516,4 +516,4 @@ which uses the course's torus-grid network simulator.
 
 ---
 
-Next: {doc}`4.9 A forger and a critic, and a first scorecard <notes4-gan>`. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`4.9 Generative Adversarial Networks (GAN) <notes4-gan>`. Back to the {doc}`Module 4 map <index>`.
