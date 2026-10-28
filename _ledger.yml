@@ -2062,6 +2062,26 @@ items:
       number). Mounted at anchor (unclip-crash-run)= on the module index; 4.11 Where to go next links to
       it.'
 
+  - id: m4-knowledge-guided-diffusion-companion
+    file: Knowledge_Guided_Diffusion_Companion.html
+    kind: companion
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/index.md
+    mounted: site/_static/companions/Knowledge_Guided_Diffusion_Companion.html
+    notes: 'How transportation knowledge guides diffusion generation (Oct 28 2026), 0.85 MB, 9 tabs: start here
+      (clickable five-doors diagram, which-door sorter), data first (what each door needs, a readiness checklist,
+      a diffusion-ready CSV record), representation (positions-vs-actions toy), condition (clickable inlets, six
+      information types), guide (classifier-free guidance on two bells, a cost tilting a TTC distribution with
+      reweighting, cost catalog, task decides the sign), hold fixed, check, worked example (ladder chart and an
+      explorer over the 50 test maps: truth, estimate, error or spread of 8 fills), fit card and check yourself.
+      Interactive twin of the Claude Doc handout of the same name (PDF at the class-folder root). Worked example
+      (synthetic CTM, course diff_unet.pt, 4 detectors): interpolation 11.49, ASM 9.05, detectors 8.14, + context
+      4.38, wrong context 14.98 mph. Reproducer genmodels/hk_knowledge/ (experiment) and
+      genmodels/hk_knowledge/companion/ (build_companion.py asserts every quoted number). Mounted at anchor
+      (knowledge-guided-diffusion)= on the module index; 4.11 Where to go next links to it.'
+
   - id: m4-diffusion-papers-slides
     file: Diffusion_Transportation_Papers_Slides.pptx + .md
     kind: deck

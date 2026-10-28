@@ -200,6 +200,30 @@ the dataset to compare an output with the real sketch.
           title="unCLIP on crash reports: pairing, decoder and prior trained on crash narratives and sketches, with every result" loading="lazy"></iframe>
 </div>
 
+(knowledge-guided-diffusion)=
+## How transportation knowledge guides diffusion
+
+The two companions above show what published models do. This one asks where your own knowledge as a transportation
+engineer fits in. A diffusion model learns traffic only from its data. The page names five doors where knowledge can
+enter: what the model generates, the condition it reads, guidance while it samples, values held fixed at every step,
+and checks on the finished samples. For each door it lists what your data must contain, and it ends with how to test
+whether the knowledge helped. It follows the student handout of the same name.
+
+Two "Try it" panels show a law built into what the model generates and a cost that tilts a distribution. The worked
+example fills a simulated 4-mile road from four loop detectors, adding one kind of knowledge at a time, and lets you
+open each of the 50 test maps. Three context numbers roughly halve the error, wrong context makes it worse than
+straight-line interpolation, and a classical smoother with the right wave speeds is a hard baseline to beat. Read it
+after the diffusion papers companion.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Knowledge-guided diffusion &mdash; Five doors for transportation knowledge, and a worked test</span>
+    <a href="../_static/companions/Knowledge_Guided_Diffusion_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Knowledge_Guided_Diffusion_Companion.html"
+          title="How transportation knowledge guides diffusion generation: data, conditions, guidance, fixed values and checks, with a worked example on four detectors" loading="lazy"></iframe>
+</div>
+
 ## Learning objectives
 
 By the end of this module you will be able to:
