@@ -5,7 +5,7 @@
   <h2>Hands-On Labs <span>Every Notebook in the Course</span></h2>
   <p>One page for all the labs &mdash; what each one builds, what it actually proves, and what to compare it against before you believe the result. Everything runs in Google Colab; nothing needs a local install.</p>
   <div class="resource-meta">
-    <span>7 notebooks available now</span>
+    <span>8 notebooks available now</span>
     <span>7 more planned for Modules 2&ndash;7</span>
     <span>Open data throughout</span>
   </div>
@@ -38,6 +38,7 @@
         <tr><td><a href="module1/notes3-cnn.html#newell-lwr">Learning the CTM update</a></td><td>M1</td><td>A convolution kernel carries a reaction time and a wave speed</td><td>Companion available</td></tr>
         <tr><td>Cross-attention sanity check</td><td>M2</td><td>Attention heads route; they are not the tidy alignment maps papers suggest</td><td>In development</td></tr>
         <tr><td><a href="module3/lab5_graph_attention.html">5 &mdash; Attention on a road network</a></td><td>M3</td><td>Attention earns its parameters only where the weighting is unknown &mdash; and structure beats weighting</td><td>Available</td></tr>
+        <tr><td><a href="module3/lab8_agency_graph.html">8 &mdash; Building a graph from agency documents</a></td><td>M3</td><td>A table already is an edge list; prose needs a model, and the model&rsquo;s edges need checks and a labeled sample</td><td>Available</td></tr>
         <tr><td><a href="module4/lab7_four_answers.html">7 &mdash; Four ways to predict the next 5 seconds</a></td><td>M4</td><td>Regression, a VAE, a translator and diffusion learn from the same pairs; squared error alone returns the average, and diffusion uses it to draw real futures</td><td>Available</td></tr>
         <tr><td>VAE on traffic state heatmaps</td><td>M4</td><td>What a narrow bottleneck chooses to keep, and what it throws away</td><td>In development</td></tr>
         <tr><td>From VAE to diffusion</td><td>M4</td><td>Diffusion as a response to measured VAE failures, not an assertion</td><td>In development</td></tr>
@@ -56,7 +57,7 @@
     <h2>Available Now</h2>
     <span>Modules 1, 3, 4 and 6</span>
   </div>
-  <p class="section-intro">Seven notebooks, all runnable in Colab on open or synthetic data. Read each one alongside the notes section named on its card &mdash; the notebook shows the thing working, the section says why it works and where it stops working.</p>
+  <p class="section-intro">Eight notebooks, all runnable in Colab on open or synthetic data. Read each one alongside the notes section named on its card &mdash; the notebook shows the thing working, the section says why it works and where it stops working.</p>
   <div class="resource-grid">
     <article class="resource-card">
       <div class="resource-card-top"><p class="resource-category">Module 1</p><span class="level-badge level-beginner">Beginner</span></div>
@@ -97,6 +98,14 @@
       <p><strong>Proves:</strong> attention wins only where the weighting is genuinely unknown &mdash; and even there, knowing <em>which</em> neighbours to listen to is worth more than learning <em>how much</em> to weight them. <strong>Check it against:</strong> not the mean aggregator, which anything beats, but the fixed aggregator carrying your own domain knowledge. On the spillback rule it ties attention at half the parameters and a third of the seed variance.</p>
       <div class="tag-row"><span>Reads with 3.6 and 3.7</span><span>numpy &middot; torch &middot; matplotlib</span><span>Runs offline &middot; ~3 min</span></div>
       <a class="resource-link" href="module3/lab5_graph_attention.html">Open Lab 5</a>
+    </article>
+    <article class="resource-card">
+      <div class="resource-card-top"><p class="resource-category">Module 3</p><span class="level-badge level-intermediate">Intermediate</span></div>
+      <h3>Lab 8 &mdash; Building a Graph from Agency Documents</h3>
+      <p>Turn two real hurricane documents into one typed graph: FDOT District 7&rsquo;s traffic-signal SOP (the plan) and Sarasota County&rsquo;s 2024 after-action report (what happened). Read the AAR&rsquo;s responsibility matrix straight into edges, merge the many names of one organization, split the SOP into steps by phase, and pull edges out of the prose twice: with a co-occurrence baseline and with Claude given a fixed schema. Every edge keeps its page and the exact quote behind it.</p>
+      <p><strong>Proves:</strong> structure is cheap and prose is expensive. Claude finds 84% of the labeled links, and 79% of the links it reports are right, where the baseline is wrong more than half the time. Yet the automatic checks remove no wrong edge on the labeled pages: only a labeled sample tells you the reading is right. <strong>Check it against:</strong> the co-occurrence baseline, a 67-edge gold set on four pages, and a second, independent model run (the two share 138 of their 175 distinct edges).</p>
+      <div class="tag-row"><span>Reads with 3.1</span><span>pdfplumber &middot; networkx &middot; pandas</span><span>Downloads 4 MB &middot; under a minute &middot; no API key</span></div>
+      <a class="resource-link" href="module3/lab8_agency_graph.html">Open Lab 8</a>
     </article>
     <article class="resource-card">
       <div class="resource-card-top"><p class="resource-category">Module 4</p><span class="level-badge level-intermediate">Intermediate</span></div>

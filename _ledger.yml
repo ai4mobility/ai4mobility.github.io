@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-10-28
+  updated: 2026-10-29
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -2878,6 +2878,39 @@ items:
       baked into its markdown. METHOD TRAP worth keeping: the first version gave the attention branch a
       weaker message function than the fixed aggregators, and attention ''lost''. All six now share one
       message function; only the reduction differs. The notebook says so in section 4 on purpose.'
+
+  - id: m3-lab8-agency-graph
+    file: site/module3/lab8_agency_graph.ipynb
+    kind: lab
+    module: 3
+    session: gnn-week
+    status: integrated
+    dest: site/labs.md + _toc.yml Labs part + module3/index.md + module3/notes10-labs.md + module3/notes1-graph-data.md
+      (3.1, after the three routes)
+    mounted: site/_static/data/lab8_agency_graph_files.zip
+    notes: 'Lab 8 (Oct 29 2026), published executed, 15 s, no API key. Builds a typed, evidence-linked graph
+      from FDOT D7''s Traffic Signals SOP Reference Guide (v1.5, June 2025) and Sarasota County''s 2024
+      Hurricane AAR (May 2025). The SOP PDF is NOT posted (internal file path and reviewer names on its
+      control panel): the data zip carries the AAR PDF and sop_pages.json, the pdfplumber text of the ten
+      SOP pages the lab reads (4-11, 24, 25); a student with the PDF from Canvas can drop it in data/ and
+      gets identical results. 12 relations in Rinaldi''s 4 classes + modality; 107 entities, 253 aliases;
+      11 page prompts; two independent Claude runs; 67-edge gold set on SOP pp. 8, 10 and AAR pp. 30, 39,
+      labeled by Claude before the runs (sha256 4c646eecb71de26b), one annotator, review pending. HEADLINE:
+      baseline untyped P 0.45 / R 0.81; run A typed P 0.79 / R 0.84 / F1 0.81 (untyped 0.88 / 0.92); run
+      B typed F1 0.80; runs share 138 of 175 edges; checks removed no wrong edge on the gold pages. Matrix:
+      62 recs, 167 edges, Emergency Management leads 49.'
+
+  - id: m3-lab8-repro
+    file: Labs/lab8_agency_graph/_build/
+    kind: internal
+    module: 3
+    session: gnn-week
+    status: integrated
+    notes: 'Rebuild scripts for m3-lab8-agency-graph: make_entities.py, make_gold.py, build_lab8.py (writes
+      the notebook; numbers in its markdown live in narrative.py), run_nb.py, the pipeline SVG, INSTRUCTOR_NOTES.md.
+      entities.csv is frozen because the prompts embed it and the notebook asserts that the SOP p. 8 prompt
+      rebuilds byte for byte. The class-folder copy also holds the SOP PDF in data/; the site bundle does
+      not.'
 
   - id: m4-lab6-vit-finetune
     file: site/module6/lab6_vit_finetune.ipynb

@@ -143,6 +143,10 @@ Three routes you will meet:
    {doc}`3.4 <notes4-questions>` and {doc}`3.9 <notes9-classification>`), and estimate how strong each
    dependency is.
 
+{doc}`Lab 8 <lab8_agency_graph>` runs routes 1 and 2 on two real documents: FDOT District 7's traffic-signal
+SOP (one of the sources in the figure above) and the Sarasota County after-action report named in this
+section. It scores the resulting graph against a labeled sample.
+
 :::{admonition} The point
 :class: tip
 In every example, the state of one node depends on its neighbors. A congested intersection matters

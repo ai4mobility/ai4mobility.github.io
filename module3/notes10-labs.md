@@ -5,12 +5,13 @@
     <span class="notes-card-eyebrow">Module 3 &middot; Practice</span>
     <span class="notes-card-session">Sessions: all of Module 3</span>
   </div>
-  <p class="notes-card-lede">What the lab and the companion that go with this module <em>prove</em>, the module in six lines, the questions it arms you with, and where to read further. Everything on this page is practice &mdash; the explanations live in sections 3.1&ndash;3.9.</p>
+  <p class="notes-card-lede">What the labs and the companion that go with this module <em>prove</em>, the module in six lines, the questions it arms you with, and where to read further. Everything on this page is practice &mdash; the explanations live in sections 3.1&ndash;3.9.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Notebooks that go with it</h4>
       <ul>
       <li><a href="lab5_graph_attention.html">Lab 5 &mdash; Attention on a road network</a></li>
+      <li><a href="lab8_agency_graph.html">Lab 8 &mdash; Building a graph from agency documents</a></li>
       <li><a href="../module1/lab2_word_embeddings.html">Lab 2 &mdash; From Word2Vec to Road2Vec</a> (the bridge from Module 1)</li>
       </ul>
     </div>
@@ -23,7 +24,7 @@
   </div>
 </div>
 
-## What the lab and the companion prove
+## What the labs and the companion prove
 
 **{doc}`Lab 5 — Attention on a Road Network <lab5_graph_attention>`** reads with
 {doc}`3.6 <notes6-message-passing>` and {doc}`3.7 <notes7-graph-attention>`. One message-passing layer, six
@@ -35,6 +36,18 @@ takes the error from 0.0214 to 0.0122 for free; attention gets to 0.0110 with tw
 spillback rule, attention only ties the worst-downstream rule (0.0080 against 0.0081). The optional part
 tests a rule where the neighbor that matters flips with the receiving link's own density, the case that
 separates static GAT from GATv2. Runs in a few minutes with nothing to install.
+
+**{doc}`Lab 8 — Building a Graph from Agency Documents <lab8_agency_graph>`** reads with
+{doc}`3.1 <notes1-graph-data>`. It builds the implicit graph that 3.1 describes from two real documents:
+FDOT District 7's traffic-signal SOP (the plan) and Sarasota County's 2024 after-action report (what
+happened). A table is already an edge list: the AAR's responsibility matrix gives 167 edges once you split
+"N/A" and "Parks, Recreation, and Natural Resources" correctly and merge the several names of one
+organization. Prose needs a model: Claude, given a 12-relation schema and an entity table, reads each page
+into typed edges with exact quotes. *Proves:* the model finds 84% of a 67-edge gold set at 79% precision,
+against a co-occurrence baseline that is wrong more than half the time; two independent runs share 138 of
+their 175 distinct edges; and the automatic checks remove no wrong edge on the gold pages, because a wrong
+reading with a real quote passes them all. Only a labeled sample tells you the reading is right. Runs in
+under a minute with no API key; the SOP PDF is not posted, only the text of the ten pages the lab reads.
 
 **The companion, {doc}`embedded in 3.6 <notes6-message-passing>`.** Tab 2 gives every intersection the same
 input and lets you switch the aggregate between sum, mean and max: only the sum tells the intersections

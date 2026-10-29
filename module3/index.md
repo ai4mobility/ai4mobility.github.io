@@ -30,9 +30,9 @@ be trusted. A small head on top answers the question per node, per pair of nodes
 
 :::{admonition} How to read this module
 :class: tip
-Nine section pages, one interactive companion (embedded in 3.6) and one lab. Sections 3.1&ndash;3.4 need
+Nine section pages, one interactive companion (embedded in 3.6) and two labs. Sections 3.1&ndash;3.4 need
 no learning at all: they are about data, vocabulary and questions. Sections 3.5&ndash;3.9 build the model.
-Skim the module before class and read it properly after, then run the companion and Lab 5. Keep
+Skim the module before class and read it properly after, then run the companion and Labs 5 and 8. Keep
 {doc}`1.3 <../module1/notes3-cnn>` (convolution) and the attention sections of
 {doc}`Module 2 <../module2/index>` at hand.
 :::
@@ -46,7 +46,7 @@ Skim the module before class and read it properly after, then run the companion 
 <tr>
   <td><a href="notes1-graph-data.html"><strong>3.1 Graphs everywhere in transportation</strong></a><br><em>Graph neural networks</em></td>
   <td>Road, detector, transit and lane graphs; an intersection scene as a graph; infrastructure as a graph of graphs in a hurricane; one signal's data after a storm; why real graphs are implicit and three ways to build them.</td>
-  <td><a href="../module1/lab2_word_embeddings.html">Lab 2</a> (the USF network)</td>
+  <td><a href="../module1/lab2_word_embeddings.html">Lab 2</a> (the USF network)<br><a href="lab8_agency_graph.html">Lab 8</a> (a graph from agency documents)</td>
 </tr>
 <tr>
   <td><a href="notes2-graph-basics.html"><strong>3.2 Graph basics</strong></a><br><em>Graph neural networks</em></td>
@@ -90,8 +90,8 @@ Skim the module before class and read it properly after, then run the companion 
 </tr>
 <tr>
   <td><a href="notes10-labs.html"><strong>Practice, exercises, and further reading</strong></a><br><em>All of Module 3</em></td>
-  <td>What Lab 5 and the companion prove; the module in six lines; judgment questions; reading a model's parameter count; questions for a vendor; further reading.</td>
-  <td><a href="lab5_graph_attention.html">Lab 5</a><br><a href="../labs.html">All labs</a></td>
+  <td>What Labs 5 and 8 and the companion prove; the module in six lines; judgment questions; reading a model's parameter count; questions for a vendor; further reading.</td>
+  <td><a href="lab5_graph_attention.html">Lab 5</a><br><a href="lab8_agency_graph.html">Lab 8</a><br><a href="../labs.html">All labs</a></td>
 </tr>
 </tbody>
 </table>
@@ -158,6 +158,7 @@ Full descriptions, setup notes, and every lab in the course are on the {doc}`All
 | Notebook | What you build | Read alongside |
 | --- | --- | --- |
 | {doc}`Lab 5 — Attention on a Road Network <lab5_graph_attention>` | One message-passing layer with six aggregators on two traffic rules: where a learned weighting beats a fixed one, and where the right set of neighbors beats both | 3.6, 3.7 |
+| {doc}`Lab 8 — Building a Graph from Agency Documents <lab8_agency_graph>` | A typed graph, with a quote behind every edge, from FDOT District 7's signal SOP and Sarasota County's 2024 after-action report: a parsed responsibility matrix, a co-occurrence baseline and Claude with a fixed schema, all scored against a labeled gold set | 3.1 |
 
 **Inside Lab 5:** one
 message-passing layer, six ways to combine what the neighbors send: mean, sum, max, attention, and two
@@ -167,6 +168,14 @@ matters more than learning the weights. On the merge rule, reading only upstream
 from 0.0214 to 0.0122 for free; attention gets to 0.0110 with twice the parameters. On the spillback rule,
 attention only ties the worst-downstream rule (0.0080 against 0.0081). Runs in a few minutes with
 nothing to install.
+
+**Inside Lab 8:** the graph-building step that 3.1 calls "often the hard part", run on two real documents
+(the SOP PDF itself is not posted; the lab reads the text of the ten pages it needs). The AAR's
+responsibility matrix becomes 167 edges with a few lines of careful parsing, and Emergency Management turns
+out to lead 49 of its 62 recommendations. Prose needs a model. *Proves:* Claude, given a 12-relation schema,
+finds 84% of a 67-edge gold set at 79% precision, where a co-occurrence baseline is wrong more than half the
+time; but the automatic checks (quote on the page, known entities) catch made-up support, not wrong
+readings, so only the labeled sample tells you the edges are right. Runs in under a minute with no API key.
 
 ## Interactive companion
 
