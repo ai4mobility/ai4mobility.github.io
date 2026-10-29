@@ -575,5 +575,6 @@ after the {ref}`diffusion papers companion <diffusion-papers-library>` in 4.10.
 
 ---
 
-Next: world models, the last part of this module (coming soon), then the closing page
+Next: {doc}`4.12 World models <notes11-world-models>` &mdash; the last part of this module: a generator that
+produces a future which responds to your actions. Then the closing page
 {doc}`Further reading: generative models in transportation <notes10-reading-library>`. Back to the {doc}`Module 4 map <index>`.

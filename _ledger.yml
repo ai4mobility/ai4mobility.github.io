@@ -2466,6 +2466,54 @@ items:
       number-to-source table; JSON results, fig/GB_*.png (doc) and fig/site/GB_*.png (site, GB_SITE=1),
       handout_export.md, site/make_page.py.'
 
+  - id: m4-notes11-world-models
+    file: site/module4/notes11-world-models.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes11-world-models.md + _toc.yml (after 4.11) + module4/index.md (session topics, how-to-read,
+      map row, objectives, topics, ADAS-TO reading) + notes9-knowledge-guided.md (Next line)
+    notes: '4.12 World models (Oct 28 2026), the sixth and last part of Module 4: the world models handout (row
+      m4-world-models-handout) as one page, converted by hand from the doc''s Markdown export at rev 129
+      (genmodels/world_models/site/handout_export.md; a copy of the page as first published sits beside it).
+      Anchors world-models, wm-why, wm-what, wm-key-equation, wm-compare, wm-uses, wm-milestones, wm-built,
+      wm-loss, wm-modes, wm-torus, wm-data, wm-data-needs, wm-applications, wm-app-testing/-planning/-agents/
+      -rare/-operations, wm-whatif, wm-whatif-equation, wm-breaks, wm-discussion, wm-fit, wm-summary,
+      wm-references. Handout "Section N" references became {ref} links; handout cross-references became links to
+      4.5-4.10 and 5.1 (leverage labels). Equations as LaTeX (loss split over two lines, the what-if equation into two
+      displays, so neither overflows the 688 px column). Figures: WM_Loops, WM_One_Step, WM_Eras, WM_Four_Parts,
+      WM_WhatIf_Steps, WM_Takeover_Curve (doc widget screenshots, also in genmodels/world_models/site/fig/) and
+      WM_Switch_Rollout, WM_Network_Maps, WM_Plan_Ranking, WM_Horizon (copies of genmodels/world_models/fig/WM_rollout,
+      _maps, _plan_ranking, _horizon). Fixed while converting: the worked example''s trust box now says FOUR plan types
+      are absent from both logs (random phases, 4:4, EW 4:1, EW only), matching NUMBERS.md. Scratch build: no
+      warnings from the new page; no page-level horizontal scroll at 390 px.'
+
+  - id: m4-world-models-handout
+    file: World Models The Basics — Student Handout.pdf
+    kind: handout
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes11-world-models.md
+    notes: 'Student handout (Oct 28 2026), Claude Doc https://claude.ai/artifact/1pgQGDyywm4vgeS9piZzcY, PDF at the
+      class-folder root (47 pages). Why world models, what one is, milestones (four eras, 1943-2026), the four parts and
+      the RSSM loss, a worked torus example (model A on one timing plan vs model B on varied plans), data, five
+      transportation jobs, what-if takeover safety analysis on the MOTIF Lab ADAS-TO dataset (Section 7, with a
+      synthetic kinematic illustration), where it breaks, discussion against AE/VAE/GAN/diffusion, fit card. Answer
+      key (instructor only): World_Models_Handout_Answer_Key_INSTRUCTOR.md at the root (Q1-Q7). An independent
+      review traced the worked-example numbers and about 60 paper claims; 19 issues, all fixed.'
+
+  - id: m4-world-models-repro
+    file: genmodels/world_models/
+    kind: internal
+    module: 4
+    session: unscheduled
+    status: integrated
+    notes: 'Reproducer for m4-world-models-handout and m4-notes11-world-models. README has the run order (~45 min on
+      2 CPU cores) and NUMBERS.md the number-to-source table; models wm_A.pt / wm_B.pt, JSON results, fig/WM_*.png,
+      eq/WM_eq*.png (pdflatex + pdftoppm), whatif/takeover_whatif.py (+ .json), site/ (export and widget figures).'
+
 # MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------
 

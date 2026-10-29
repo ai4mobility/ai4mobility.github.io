@@ -10,7 +10,9 @@
 - **Autoencoders:** from PCA worked by hand to deep, sparse, denoising and masked autoencoders (4.4&ndash;4.5)
 - **The VAE and the GAN:** the second and third answers, and a first scorecard (4.6&ndash;4.7)
 - **Diffusion:** the basics, unCLIP, diffusion in the transportation literature, and knowledge-guided generation
-  (4.8&ndash;4.11); world models follow
+  (4.8&ndash;4.11)
+- **World models:** learning the simulator from data, imagined rollouts, and what-if safety analysis of real ADAS
+  takeovers (4.12)
 
 ## Overview
 
@@ -34,7 +36,7 @@ attempt to learn a simulator rather than write one.
 
 :::{admonition} How to read this module
 :class: tip
-Read the pages in order; each builds on the one before. The module has five parts, and each page opens with a card
+Read the pages in order; each builds on the one before. The module has six parts, and each page opens with a card
 naming its part.
 
 - **Why generate (4.1)** sets up the question and gives the first answer: one cell at a time.
@@ -45,16 +47,19 @@ naming its part.
 - **Diffusion (4.8&ndash;4.11)** is the fourth answer. 4.8 builds it from Bishop&rsquo;s math. 4.9 shows how
   unCLIP gives the decoder a condition, 4.10 how transportation papers use diffusion for safety scenarios, and 4.11
   where your own engineering knowledge can steer it.
+- **World models (4.12)** puts the same generators to work on a different question: what happens next if I do this?
+  It closes the module with what-if simulation of real ADAS takeovers.
 
-World models come next. The {doc}`closing page <notes10-reading-library>` holds a reading library of 34 papers on
-generative models in transportation.
+The {doc}`closing page <notes10-reading-library>` holds a reading library of 34 papers on generative models in
+transportation.
 
 Most results on these pages come from one dataset, the 4,000 cell-transmission-model speed heatmaps that the VAE lab
 is built on, split the same way everywhere, so the four answers to "how do you draw a realistic traffic state?" can
 be compared directly. Section 4.2 adds three real PeMS detectors on I-405; 4.4 adds two of them, small enough to
 work by hand; 4.5 adds a synthetic fundamental diagram; 4.6 adds real daily flow curves from 170
 PeMS District 8 stations and a second simulator, a grid network; 4.8 returns to the I-405 pair of 4.4; 4.9 uses the
-course crash reports; 4.10 a synthetic left-turn world; and 4.11 the heatmaps again, seen through four detectors. If
+course crash reports; 4.10 a synthetic left-turn world; 4.11 the heatmaps again, seen through four detectors; and 4.12
+the course torus network of 42 signals, plus a synthetic rear-end takeover inside the ranges of the ADAS-TO dataset. If
 you read only one page before class, read {doc}`4.1 <notes1-producing>`: the joint-versus-marginals figure is the
 idea the rest builds on.
 :::
@@ -121,8 +126,8 @@ idea the rest builds on.
   <td>&mdash;</td>
 </tr>
 <tr>
-  <td><strong>Coming: 4.12 World models</strong></td>
-  <td>Learning the simulator instead of writing it: learned dynamics and imagined rollouts, and how to judge one against a calibrated conventional model.</td>
+  <td><a href="notes11-world-models.html"><strong>4.12 World models</strong></a><br><em>World models</em></td>
+  <td>Learning the simulator instead of writing it: the simulators you already build by hand; the key equation and four uses (simulate, plan, train a controller, generate data); milestones from Craik and Dyna to the 2026 world models that test driving software; encoder, dynamics, decoder and heads, and a loss that is the VAE loss with a learned prior; a worked example on the course torus network, where only the model trained on varied signal plans can rank them; what data trains one; five transportation jobs; what-if simulation of real ADAS takeovers (what if the driver had been 1 s or 2 s late?); where it breaks, and when to keep the calibrated simulator.</td>
   <td>&mdash;</td>
 </tr>
 <tr>
@@ -161,6 +166,8 @@ By the end of this module you will be able to:
 - Name where transportation knowledge can enter a diffusion model, what each entry point needs from the data, and
   how to show that the knowledge helped.
 - Describe what a world model is, and what "learning the simulator" would require for traffic.
+- Explain how a world model could turn a real ADAS takeover into what-if questions (what if the driver had taken over
+  1 s or 2 s later?), and what it would take to trust the answers.
 - Assess a mobility world-model application — scenario generation, driving-video prediction,
   learned simulation — against what a calibrated conventional model already gives you.
 - Evaluate a synthetic-data claim: does the generated data improve a downstream task relative
@@ -182,7 +189,8 @@ By the end of this module you will be able to:
 - Latent diffusion and conditional generation; unCLIP and the pair-then-generate recipe
 - Diffusion for safety-critical driving scenarios: guidance, head starts, filling in, conditions and selection
 - Transportation knowledge in diffusion: representation, conditions, cost guidance, hard limits and checks
-- World models: learned dynamics, imagination-based rollout
+- World models: learned dynamics, imagination-based rollout, and why the logged actions must vary
+- What-if (counterfactual) simulation for takeover safety
 - Synthetic data for rare events — and how to tell whether it helped
 - Evaluating generative models when there's no ground-truth label
 
@@ -205,6 +213,7 @@ By the end of this module you will be able to:
 - Rombach, R., Blattmann, A., Lorenz, D., Esser, P., & Ommer, B. (2022). High-resolution image synthesis with latent diffusion models. *CVPR*.
 - Ha, D., & Schmidhuber, J. (2018). World models. *NeurIPS*.
 - Hafner, D., Lillicrap, T., Ba, J., & Norouzi, M. (2020). Dream to control: Learning behaviors by latent imagination. *ICLR*. *(Dreamer.)*
+- Wang, Y., Xu, Y., Sun, J., & Zhou, H. (2026). ADAS-TO: A large-scale multimodal naturalistic dataset and empirical characterization of human takeovers during ADAS engagement. *ITSC*. *(The takeover data behind the what-if section of 4.12.)*
 
 ## Labs
 

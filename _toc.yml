@@ -89,7 +89,8 @@ parts:
       - file: module4/index
         sections:
           # Reorganized 2026-10-28 into five parts: why generate (4.1), hidden causes (4.2-4.3), autoencoders (4.4-4.5),
-          # the VAE and the GAN (4.6-4.7), diffusion (4.8-4.11), then a closing reading page. Later the same day 4.1+4.2,
+          # the VAE and the GAN (4.6-4.7), diffusion (4.8-4.11), then a closing reading page. World models (4.12) were added
+          # the same evening as a sixth part. Later the same day 4.1+4.2,
           # the Gaussian warm-up + mixtures, and the two deep-autoencoder pages were merged (notes2-autoregressive,
           # notes5-hidden-cause and notes2e-copying redirect to their sections). File names no longer follow the numbers.
           - file: module4/notes1-producing
@@ -114,6 +115,8 @@ parts:
             title: "4.10 Diffusion in transportation literature"
           - file: module4/notes9-knowledge-guided
             title: "4.11 How transportation knowledge guides diffusion"
+          - file: module4/notes11-world-models
+            title: "4.12 World models"
           - file: module4/notes10-reading-library
             title: "Further reading: generative models in transportation"
 
