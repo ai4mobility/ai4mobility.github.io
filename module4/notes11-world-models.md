@@ -18,7 +18,10 @@
     </div>
     <div>
       <h4>Read it after</h4>
-      <ul><li><a href="notes10-reading-library.html">Further reading: generative models in transportation</a>, the closing page of the module</li></ul>
+      <ul>
+      <li><a href="notes12-jepa.html">Further reading: JEPA and V-JEPA 2</a>, for world models that predict a description of the next frame instead of its pixels</li>
+      <li><a href="notes10-reading-library.html">Further reading: generative models in transportation</a>, the closing page of the module</li>
+      </ul>
     </div>
   </div>
 </div>
@@ -184,6 +187,8 @@ $$
 | Observation space ("video") | compressed tokens of the next camera frames, lidar sweeps or maps, always decoded to pixels or points | yes, to pixels or points | GAIA-1 and GAIA-2, Genie, Cosmos | you can watch it and audit it by eye | expensive; spends effort on pixels that do not matter, such as cloud shapes |
 | Latent space, for control | the next latent state; decodes only when you want to look | yes, but planning can skip it | World Models (2018), PlaNet, Dreamer, MILE | cheap enough to imagine thousands of futures | the latent is not a physical quantity you can read |
 | Prediction without pictures | an embedding, or only reward and value | no | MuZero, V-JEPA 2 | no effort wasted on irrelevant detail | cannot be checked by looking at it |
+
+The last row is opened up in {doc}`Further reading: JEPA and V-JEPA 2 <notes12-jepa>`, after this page.
 
 ### Words that sound alike
 
@@ -886,4 +891,4 @@ The best current practice is often a **hybrid**: a physics model whose parameter
 
 ---
 
-Next: {doc}`Further reading: generative models in transportation <notes10-reading-library>` &mdash; the closing page of the module, a reading library of 34 papers that use these generators on transportation problems. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`Further reading: JEPA and V-JEPA 2 <notes12-jepa>` &mdash; world models that predict a description of the next frame instead of its pixels, with a car-following example you can run in your browser. After it, {doc}`Further reading: generative models in transportation <notes10-reading-library>` is the closing page of the module, a reading library of 34 papers that use these generators on transportation problems. Back to the {doc}`Module 4 map <index>`.

@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JEPA World Models</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* USF palette (official, Oct 2026): Green #006747, Evergreen #005432, Gold #CFC493, Sand #EDEBD1,
+   Storm #006484, Slate #466069, Silver #CAD2D8, Soft Black #303434. */
+:root{
+  --bg:#F3F6F4; --card:#FFFFFF; --ink:#303434; --muted:#56635D; --line:#D5DED9; --soft:#EAF1ED;
+  --green:#006747; --evergreen:#005432; --gold:#CFC493; --sand:#EDEBD1; --storm:#006484; --slate:#466069; --silver:#CAD2D8;
+  --hero-bg:#006747; --hero-ink:#FFFFFF; --hero-sub:#DCEBE4; --kick:#EDEBD1;
+  --eq-bg:#EEF4F1; --warn:#9A4A12; --grid:#E3E9E6; --axis:#7A8A83; --goldline:#A8913A;
+  --s1:#006747; --s2:#B08A1E; --s3:#006484; --s4:#7A8A83; --mask:#006484; --ctx:#B08A1E;
+  --road:#8E9A95; --sky:#DCE8EF; --verge:#C9D6C3; --car:#303434;
+  --sans:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0D1412; --card:#151F1B; --ink:#E4ECE8; --muted:#A0AEA8; --line:#2B3934; --soft:#1B2722;
+  --green:#3DAA80; --evergreen:#9BD9BE; --gold:#D9CF9F; --sand:#3A3A2A; --storm:#5FB3D3; --slate:#9DB2BA; --silver:#3A4743;
+  --hero-bg:#0A3A29; --hero-ink:#F0F7F3; --hero-sub:#B9D2C7; --kick:#D9CF9F;
+  --eq-bg:#19251F; --warn:#E59563; --grid:#24302B; --axis:#8B9A94; --goldline:#D9CF9F;
+  --s1:#3DAA80; --s2:#D9B95A; --s3:#5FB3D3; --s4:#8B9A94; --mask:#5FB3D3; --ctx:#D9B95A;
+  --road:#4E5A55; --sky:#1E2B33; --verge:#2C3A2E; --car:#D8E2DD; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0D1412; --card:#151F1B; --ink:#E4ECE8; --muted:#A0AEA8; --line:#2B3934; --soft:#1B2722;
+  --green:#3DAA80; --evergreen:#9BD9BE; --gold:#D9CF9F; --sand:#3A3A2A; --storm:#5FB3D3; --slate:#9DB2BA; --silver:#3A4743;
+  --hero-bg:#0A3A29; --hero-ink:#F0F7F3; --hero-sub:#B9D2C7; --kick:#D9CF9F;
+  --eq-bg:#19251F; --warn:#E59563; --grid:#24302B; --axis:#8B9A94; --goldline:#D9CF9F;
+  --s1:#3DAA80; --s2:#D9B95A; --s3:#5FB3D3; --s4:#8B9A94; --mask:#5FB3D3; --ctx:#D9B95A;
+  --road:#4E5A55; --sky:#1E2B33; --verge:#2C3A2E; --car:#D8E2DD; color-scheme:dark }
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding-left:16px;padding-right:16px}
+header.hero{background:var(--hero-bg);color:var(--hero-ink)}
+header.hero .wrap{padding-block:26px 22px}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--kick);font-weight:600}
+h1{font-size:30px;line-height:1.15;margin:6px 0 8px;font-weight:700}
+header.hero p{margin:0;max-width:820px;color:var(--hero-sub)}
+.terms{margin-top:12px;display:inline-block;background:rgba(0,0,0,.18);border-radius:8px;padding:6px 10px;font-size:13.5px;color:var(--hero-ink);max-width:880px}
+nav.tabs{position:sticky;top:0;z-index:50;background:var(--card);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:7px}
+nav.tabs button{font:600 13.5px var(--sans);border:0;background:transparent;color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{background:var(--soft);color:var(--ink)}
+nav.tabs button[aria-selected="true"]{background:var(--green);color:#fff}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--storm);outline-offset:2px}
+main .wrap{padding-block:22px 46px}
+section.page{display:none}
+section.page.on{display:block}
+h2{font-size:24px;line-height:1.2;margin:0 0 8px;color:var(--evergreen)}
+h3{font-size:17px;margin:22px 0 6px;color:var(--ink)}
+p{margin:0 0 12px;max-width:820px}
+.lead{max-width:820px;color:var(--muted);font-size:16px;margin:0 0 16px}
+.fig{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px;margin:0 0 16px;min-width:0}
+.fig h4{font-size:13.5px;font-weight:600;margin:0 0 6px;color:var(--ink)}
+.fig h4 span{font-weight:400;color:var(--muted)}
+.cap{font-size:13.5px;color:var(--muted);margin:8px 0 0;max-width:none}
+.cap b{color:var(--ink)}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid-ex{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr);gap:14px;align-items:start}
+@media (max-width:860px){.grid2,.grid-ex{grid-template-columns:minmax(0,1fr)}}
+svg{display:block;width:100%;height:auto}
+.svgwrap{overflow-x:auto;border-radius:8px}
+.svgwrap svg{min-width:640px}
+.controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:0 0 10px}
+.ctl{display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--muted);min-width:0}
+.ctl b{color:var(--ink);font-weight:600}
+input[type=range]{width:190px;max-width:100%;accent-color:var(--green)}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{font:600 13px var(--sans);border:0;background:var(--card);color:var(--muted);padding:6px 11px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--green);color:#fff}
+.btn{font:600 13px var(--sans);padding:7px 13px;border-radius:8px;border:1px solid var(--green);background:var(--green);color:#fff;cursor:pointer}
+.btn.alt{background:transparent;color:var(--evergreen)}
+.btn:disabled{opacity:.5;cursor:default}
+select{font:500 14px var(--sans);padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);max-width:100%}
+.readout{font:13px var(--mono);color:var(--ink);background:var(--soft);border-radius:8px;padding:7px 10px;margin-top:8px;min-height:2.4em}
+.readout b{color:var(--evergreen)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin:6px 0 0}
+.legend i{display:inline-block;width:14px;height:10px;margin-right:6px;vertical-align:-1px;border-radius:2px}
+.legend i.ln{height:3px;vertical-align:3px}
+.eq{background:var(--eq-bg);border-radius:10px;padding:12px 16px;margin:6px 0 12px;font-size:17px;overflow-x:auto;max-width:880px}
+.eq .m{font-family:'Cambria Math','STIX Two Math','Times New Roman',serif;font-size:19px;white-space:nowrap}
+@media (max-width:480px){.eq .m{font-size:16px;white-space:normal}}
+.eq .inwords{font-family:var(--sans);font-size:14.5px;color:var(--muted);margin-top:6px}
+.sym{display:grid;grid-template-columns:minmax(70px,auto) 1fr;gap:2px 14px;font-size:14px;margin:8px 0 0}
+.sym dt{font-family:'Cambria Math','STIX Two Math','Times New Roman',serif;font-size:16px;color:var(--ink)}
+.sym dd{margin:0;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:4px 0 12px}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:13px}
+td.num,th.num{text-align:right;font-family:var(--mono);font-size:13px}
+td.num{white-space:nowrap}
+th.num{font-family:var(--sans)}
+tr.hl td{background:var(--soft)}
+.tablewrap{overflow-x:auto}
+.callout{border-left:4px solid var(--green);background:var(--card);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px;max-width:880px}
+.callout.gold{border-left-color:var(--goldline)}
+.callout.warn{border-left-color:var(--warn)}
+.callout h4{margin:0 0 4px;font-size:14.5px}
+.callout p{margin:0 0 6px}
+.callout p:last-child{margin-bottom:0}
+.eval{border:1px solid var(--green);border-radius:12px;padding:12px 16px;margin:18px 0 6px;background:var(--card);max-width:900px}
+.eval h4{margin:0 0 6px;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--green)}
+.eval dl{margin:0;display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:4px 14px;font-size:14px}
+.eval dt{font-weight:600}
+.eval dd{margin:0}
+@media (max-width:620px){.eval dl{grid-template-columns:1fr}.eval dd{margin-bottom:6px}}
+details.deeper{border:1px dashed var(--slate);border-radius:10px;padding:8px 14px;margin:6px 0 14px;background:var(--card);max-width:900px}
+details.deeper summary{cursor:pointer;font-weight:600;color:var(--slate)}
+details.deeper p{font-size:14.5px}
+.fitcard{border:2px solid var(--green);border-radius:12px;background:var(--card);padding:4px 0;margin:0 0 16px;max-width:940px}
+.fitcard h4{margin:8px 16px;font-size:15px;color:var(--evergreen)}
+.fitcard dl{margin:0;display:grid;grid-template-columns:minmax(150px,220px) 1fr}
+.fitcard dt,.fitcard dd{padding:8px 16px;border-top:1px solid var(--line);margin:0;font-size:14.5px}
+.fitcard dt{font-weight:600;background:var(--soft)}
+@media (max-width:620px){.fitcard dl{grid-template-columns:1fr}}
+ol.lessons{padding-left:22px;max-width:880px}
+ol.lessons li{margin-bottom:10px}
+ol.lessons li b{color:var(--evergreen)}
+ul.plain{padding-left:20px;max-width:860px}
+ul.plain li{margin-bottom:6px}
+.qs li{margin-bottom:12px;max-width:860px}
+.qs details{font-size:14px;color:var(--muted);margin-top:4px}
+.small{font-size:13px;color:var(--muted)}
+.mono{font-family:var(--mono)}
+canvas{display:block;width:100%;height:auto;border-radius:6px}
+canvas.scene{max-width:420px;border:1px solid var(--line)}
+.stripwrap{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 10px;align-items:center;font-size:13px;color:var(--muted)}
+.stripwrap canvas{height:22px;border-radius:3px}
+.bar{height:14px;border-radius:7px;background:var(--grid);overflow:hidden;display:flex}
+.bar span{display:block;height:100%}
+.status{font-size:13px;color:var(--muted);min-height:1.4em}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:8px 0}
+.kpi{background:var(--soft);border-radius:10px;padding:8px 10px}
+.kpi .v{font:600 20px var(--mono);color:var(--evergreen)}
+.kpi .l{font-size:12.5px;color:var(--muted);line-height:1.3}
+.d-title{font:600 15px var(--sans);fill:var(--ink)}
+.d-name{font:600 13px var(--sans);fill:var(--ink)}
+.d-line{font:400 12px var(--sans);fill:var(--muted)}
+.d-box{fill:none;stroke:var(--axis);stroke-width:1.25}
+.d-hi{fill:var(--green);fill-opacity:.1;stroke:var(--green);stroke-width:2}
+.d-cont{fill:var(--soft);stroke:var(--line)}
+.d-arrow{stroke:var(--axis);stroke-width:1.25;fill:none}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · Module 4 · World models · Interactive companion</div>
+  <h1>JEPA world models: predict the description, not the picture</h1>
+  <p>A world model that predicts pixels has to draw glare, raindrops and moving leaves that nobody can predict. A JEPA (Joint-Embedding Predictive Architecture) predicts only a compact description of what comes next. On this page you hide parts of a traffic scene the way I-JEPA and V-JEPA do, train a small JEPA on a car-following sensor in your browser, watch it collapse when it is left unprotected, and then plan with it the way V-JEPA 2 plans robot actions.</p>
+  <div class="terms">Companion to the handout <i>JEPA and V-JEPA 2: World Models That Predict in Latent Space</i>, further reading for 4.12 World models. Paper numbers come from the papers. Tabs 2 and 3 run a smaller, live version of the handout's synthetic worked example, so your numbers will differ slightly from the handout's.</div>
+</div></header>
+
+<nav class="tabs" aria-label="Sections"><div class="wrap" role="tablist">
+  <button role="tab" data-tab="start" aria-selected="true">0 · Start here</button>
+  <button role="tab" data-tab="mask" aria-selected="false">1 · Hide and predict</button>
+  <button role="tab" data-tab="train" aria-selected="false">2 · Train a JEPA</button>
+  <button role="tab" data-tab="plan" aria-selected="false">3 · Plan with it</button>
+  <button role="tab" data-tab="vjepa2" aria-selected="false">4 · V-JEPA 2 at a glance</button>
+  <button role="tab" data-tab="transport" aria-selected="false">5 · In transportation</button>
+  <button role="tab" data-tab="fit" aria-selected="false">6 · Fit card and check yourself</button>
+</div></nav>
+
+<main><div class="wrap">
+
+<!-- =============================== 0. START =============================== -->
+<section class="page on" id="tab-start">
+<h2>Predict a description, not a picture</h2>
+<p class="lead">All three families below learn from data nobody labeled. They differ only in what the loss compares. A JEPA compares a <i>predicted</i> embedding of the hidden part with its actual embedding, so it never has to draw pixels.</p>
+
+<div class="fig">
+<h4>Three ways to learn from unlabeled data <span>· read each panel bottom-up: inputs, encoders, then what the loss compares</span></h4>
+<div class="svgwrap"><svg viewBox="0 0 760 404" role="img" aria-label="Three ways to learn from unlabeled data; only JEPA predicts an embedding">
+<defs><marker id="fa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7A8A83"/></marker></defs>
+<g>
+<rect x="16" y="20" width="230" height="364" rx="8" class="d-cont"/>
+<text x="28" y="44" class="d-name">(a) Generative</text><text x="28" y="62" class="d-line">autoencoder, MAE, VAE, diffusion</text>
+<rect x="31" y="90" width="200" height="34" rx="8" class="d-box"/><text x="131" y="111" text-anchor="middle" class="d-line" style="fill:var(--ink)">compare pixels: ŷ vs y</text>
+<rect x="30" y="158" width="96" height="34" rx="8" class="d-box"/><text x="78" y="179" text-anchor="middle" class="d-name" style="font-weight:400">decoder</text>
+<rect x="30" y="222" width="96" height="34" rx="8" class="d-box"/><text x="78" y="243" text-anchor="middle" class="d-name" style="font-weight:400">encoder</text>
+<circle cx="78" cy="304" r="16" class="d-box"/><text x="78" y="309" text-anchor="middle" class="d-name">x</text>
+<circle cx="184" cy="304" r="16" class="d-box"/><text x="184" y="309" text-anchor="middle" class="d-name">y</text>
+<path d="M78 288V258M78 222V194M78 158V126M184 288V126" class="d-arrow" marker-end="url(#fa)"/>
+<text x="28" y="350" class="d-line">Must rebuild every pixel of y,</text><text x="28" y="366" class="d-line">glare and raindrops included.</text>
+</g>
+<g>
+<rect x="265" y="20" width="230" height="364" rx="8" class="d-cont"/>
+<text x="277" y="44" class="d-name">(b) Joint-embedding</text><text x="277" y="62" class="d-line">SimCLR, DINO, CLIP</text>
+<rect x="280" y="90" width="200" height="34" rx="8" class="d-box"/><text x="380" y="111" text-anchor="middle" class="d-line" style="fill:var(--ink)">pull s_x and s_y together</text>
+<rect x="279" y="222" width="96" height="34" rx="8" class="d-box"/><text x="327" y="243" text-anchor="middle" class="d-name" style="font-weight:400">encoder</text>
+<rect x="385" y="222" width="96" height="34" rx="8" class="d-box"/><text x="433" y="243" text-anchor="middle" class="d-name" style="font-weight:400">encoder</text>
+<circle cx="327" cy="304" r="16" class="d-box"/><text x="327" y="309" text-anchor="middle" class="d-name">x</text>
+<circle cx="433" cy="304" r="16" class="d-box"/><text x="433" y="309" text-anchor="middle" class="d-name">y</text>
+<path d="M327 288V258M327 222V126M433 288V258M433 222V126" class="d-arrow" marker-end="url(#fa)"/>
+<text x="277" y="350" class="d-line">Needs hand-made views (crops,</text><text x="277" y="366" class="d-line">color shifts) or pairs, as in CLIP.</text>
+</g>
+<g>
+<rect x="514" y="20" width="230" height="364" rx="8" style="fill:var(--green);fill-opacity:.06;stroke:var(--green);stroke-width:1.5"/>
+<text x="526" y="44" class="d-name">(c) JEPA</text><text x="526" y="62" class="d-line">I-JEPA, V-JEPA, V-JEPA 2</text>
+<rect x="529" y="90" width="200" height="34" rx="8" class="d-hi"/><text x="629" y="111" text-anchor="middle" class="d-name">compare ŝ_y with s_y</text>
+<rect x="528" y="158" width="96" height="34" rx="8" class="d-hi"/><text x="576" y="179" text-anchor="middle" class="d-name" style="font-weight:400">predictor</text>
+<rect x="528" y="222" width="96" height="34" rx="8" class="d-box"/><text x="576" y="243" text-anchor="middle" class="d-name" style="font-weight:400">context enc.</text>
+<rect x="634" y="222" width="96" height="34" rx="8" class="d-box"/><text x="682" y="243" text-anchor="middle" class="d-name" style="font-weight:400">target enc.</text>
+<circle cx="576" cy="304" r="16" class="d-box"/><text x="576" y="309" text-anchor="middle" class="d-name">x</text>
+<circle cx="682" cy="304" r="16" class="d-box"/><text x="682" y="309" text-anchor="middle" class="d-name">y</text>
+<path d="M576 288V258M576 222V194M576 158V126M682 288V258M682 222V126M664 175H626" class="d-arrow" marker-end="url(#fa)"/>
+<path d="M675 196H689M675 201H689" class="d-arrow"/>
+<text x="636" y="168" class="d-line">Δ_y</text><text x="670" y="214" text-anchor="end" class="d-line">stop-grad</text>
+<text x="526" y="350" class="d-line">Predicts y's embedding, so it can</text><text x="526" y="366" class="d-line">drop what cannot be predicted.</text>
+</g>
+</svg></div>
+<p class="cap"><b>Takeaway:</b> the JEPA panel is the generative panel with the decoder replaced by a predictor that works on embeddings. Δ_y tells the predictor where (or when) the hidden part is. The target encoder is a slow copy of the context encoder and gets no gradient.</p>
+</div>
+
+<div class="fig">
+<h4>How much of the next frame could any model predict? <span>· the toy forward sensor of tabs 2 and 3 (synthetic)</span></h4>
+<div class="controls">
+  <label class="ctl">Glare and vibration strength <b id="g0v">2.0</b><input id="g0" type="range" min="0.25" max="3" step="0.25" value="2"></label>
+  <button class="btn alt" id="g0new">New frame pair</button>
+</div>
+<div class="stripwrap">
+  <span>frame now</span><canvas id="st0" width="640" height="22"></canvas>
+  <span>frame 0.5 s later</span><canvas id="st1" width="640" height="22"></canvas>
+  <span>best prediction</span><canvas id="st2" width="640" height="22"></canvas>
+  <span>what is left</span><canvas id="st3" width="640" height="22"></canvas>
+</div>
+<div style="margin-top:10px" class="bar" aria-hidden="true"><span id="b0p" style="background:var(--green)"></span><span id="b0u" style="background:var(--gold)"></span></div>
+<div class="legend"><span><i style="background:var(--green)"></i>predictable: gap and closing speed</span><span><i style="background:var(--gold)"></i>unpredictable: glare, vibration, noise</span></div>
+<div class="readout" id="r0"></div>
+<p class="cap"><b>How to read it.</b> Each strip is one 64-value sensor frame (green above zero, gold below). The best possible predictor knows the gap and closing speed exactly, yet it still misses everything the glare does, because the glare is redrawn every frame. A pixel loss charges a model for that miss forever. A JEPA's target encoder is free to leave the glare out of the embedding, so the target becomes predictable.</p>
+</div>
+
+<h3>How to use this page</h3>
+<ul class="plain">
+<li><b>Tab 1</b> hides patches of a drawn road scene the way I-JEPA and V-JEPA do, and measures how much each hiding scheme gives away.</li>
+<li><b>Tab 2</b> trains five small encoders on the toy sensor in your browser: an autoencoder, a pixel predictor and three JEPAs. You will see collapse happen.</li>
+<li><b>Tab 3</b> plans car-following actions toward a goal frame, as V-JEPA 2-AC plans robot actions toward a goal image, and compares it with a classical gap controller.</li>
+<li><b>Tabs 4–6</b> summarize V-JEPA 2's results, JEPA papers in transportation, and the fit card.</li>
+</ul>
+</section>
+<!-- =============================== 1. MASK =============================== -->
+<section class="page" id="tab-mask">
+<h2>Hide and predict: how I-JEPA and V-JEPA choose what to hide</h2>
+<p class="lead">A JEPA learns by predicting the embeddings of hidden patches. What you hide decides what it learns: hide a few specks and the neighbors give them away; hide a whole vehicle and the model must know what a vehicle is and where it is going.</p>
+<div class="grid-ex">
+<div class="fig">
+<h4>A drawn road scene cut into 16 × 16 patches <span id="mTitle">· I-JEPA multi-block</span></h4>
+<canvas id="scene" class="scene" width="768" height="768" aria-label="Road scene with hidden patches"></canvas>
+<div id="timeRow" class="controls" style="margin-top:8px;display:none">
+  <label class="ctl">Tubelet (2 frames each) <b id="tv">1 of 8</b><input id="tsl" type="range" min="0" max="7" step="1" value="0"></label>
+  <button class="btn alt" id="tplay">Play</button>
+</div>
+<div class="legend"><span><i style="background:var(--mask);opacity:.75"></i>hidden: the target y</span><span><i style="background:var(--ctx);opacity:.6"></i>outside the context block (seen by neither side)</span><span><i style="border:1px solid var(--axis)"></i>visible: the context x</span></div>
+</div>
+<div>
+<div class="controls">
+  <div class="seg" id="mseg" role="group" aria-label="Masking scheme">
+    <button data-m="ijepa" aria-pressed="true">I-JEPA multi-block</button>
+    <button data-m="block" aria-pressed="false">one big block</button>
+    <button data-m="random" aria-pressed="false">random patches</button>
+    <button data-m="vtube" aria-pressed="false">V-JEPA tubes</button>
+    <button data-m="vrand" aria-pressed="false">video, random per frame</button>
+  </div>
+  <button class="btn" id="mnew">New sample</button>
+</div>
+<div class="kpis">
+  <div class="kpi"><div class="v" id="k1">–</div><div class="l">of the patches are hidden (targets)</div></div>
+  <div class="kpi"><div class="v" id="k2">–</div><div class="l">are left for the context encoder</div></div>
+  <div class="kpi"><div class="v" id="k3">–</div><div class="l">vehicles at least 90% hidden</div></div>
+  <div class="kpi"><div class="v" id="k4">–</div><div class="l" id="k4l">hidden patches with a visible neighbor</div></div>
+</div>
+<div class="callout" id="mText"></div>
+</div>
+</div>
+
+<h3>What the papers measured</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>I-JEPA, ViT-B/16, frozen encoder, classifier trained on 1% of ImageNet labels</th><th class="num">Top-1</th></tr></thead>
+<tbody>
+<tr class="hl"><td>4 target blocks (each 15–20% of the image) from 1 big context block (85–100%, targets removed)</td><td class="num">54.2%</td></tr>
+<tr><td>one large block as the target, the rest as context</td><td class="num">20.2%</td></tr>
+<tr><td>random patches as the target</td><td class="num">17.6%</td></tr>
+<tr><td>one quadrant predicts the other three</td><td class="num">15.5%</td></tr>
+</tbody></table></div>
+<p class="small">Source: Assran et al. (2023), Table 6. V-JEPA (Bardes et al., 2024) hides the union of 8 blocks of 15% (short range) or 2 blocks of 70% (long range) of each frame, the same blocks in every frame, about 90% of each clip.</p>
+</section>
+
+<!-- =============================== 2. TRAIN =============================== -->
+<section class="page" id="tab-train">
+<h2>Train a JEPA on a car-following sensor, live</h2>
+<p class="lead">Each frame is 64 numbers from a toy forward sensor. Two slow causes are mixed into it, the gap to the lead vehicle and the closing speed, together with six fast nuisance causes that are redrawn every half second. Every encoder below turns 64 numbers into 2. Which 2 does each one keep?</p>
+<div class="controls">
+  <div class="seg" id="eseg" role="group" aria-label="Encoder">
+    <button data-e="ae" aria-pressed="false">Autoencoder</button>
+    <button data-e="pix" aria-pressed="false">Pixel predictor</button>
+    <button data-e="naive" aria-pressed="false">JEPA, no protection</button>
+    <button data-e="ema" aria-pressed="true">JEPA, stop-grad + EMA</button>
+    <button data-e="vic" aria-pressed="false">JEPA, spread penalty</button>
+  </div>
+</div>
+<div class="controls">
+  <label class="ctl">Nuisance strength (gap ≈ 1.5, closing speed ≈ 1.1) <b id="nv">2.0</b><input id="nsl" type="range" min="0.25" max="3" step="0.25" value="2"></label>
+  <button class="btn" id="tgo">Train 3,000 steps</button>
+  <button class="btn alt" id="tclr">Clear the results table</button>
+</div>
+<div class="status" id="tstat">Pick an encoder and press Train. Each run takes a few seconds.</div>
+<div class="grid2">
+<div class="fig">
+<h4>Training curves <span>· log scale</span></h4>
+<canvas id="cLoss" width="1000" height="420"></canvas>
+<div class="legend"><span><i class="ln" style="background:var(--s2)"></i>training loss</span><span><i class="ln" style="background:var(--s1)"></i>spread of the 2 latents</span></div>
+<p class="cap">The loss of the autoencoder and pixel predictor is in pixels; the JEPAs' loss is in latent space, so compare shapes, not levels. Watch the spread: a value falling toward zero means collapse.</p>
+</div>
+<div class="fig">
+<h4>The 2 latents of 2,000 held-out frames <span>· colored by the true gap</span></h4>
+<canvas id="cLat" width="1000" height="760"></canvas>
+<div class="legend"><span><i style="background:#EDEBD1"></i>short gap</span><span><i style="background:#8FB8A2"></i></span><span><i style="background:#005432"></i>long gap</span></div>
+<div class="readout" id="tread">No run yet.</div>
+</div>
+</div>
+<div class="tablewrap"><table id="runs"><thead><tr><th>Run</th><th>Encoder</th><th class="num">Nuisance</th><th class="num">Probe R², gap</th><th class="num">Probe R², closing speed</th><th class="num">Spread</th><th class="num">Final loss</th></tr></thead><tbody></tbody></table></div>
+<p class="small">Probe R²: a straight line is fitted from the 2 latents to the true gap on half of the held-out frames and scored on the other half. 1 means the gap can be read off perfectly; 0 means not at all. The best any straight line through all 64 values can do is shown in the readout.</p>
+
+<h3>The key equation</h3>
+<div class="eq"><div class="m">min<sub>θ, φ</sub> &nbsp;‖ P<sub>φ</sub>( E<sub>θ</sub>(x<sub>t</sub>) ) − sg( E<sub>θ̄</sub>(x<sub>t+1</sub>) ) ‖<sub>1</sub></div>
+<div class="inwords">In words: change the encoder and the predictor so that the predicted embedding of the next frame matches the actual embedding of the next frame. sg means the target is held fixed during each update.</div>
+<dl class="sym"><dt>E<sub>θ</sub></dt><dd>the encoder: 64 sensor values in, 2 latents out (here a single linear layer)</dd><dt>E<sub>θ̄</sub></dt><dd>the target encoder; in the EMA version a slow copy, θ̄ ← 0.99 θ̄ + 0.01 θ after every step</dd><dt>P<sub>φ</sub></dt><dd>the predictor: 2 latents now → 2 latents 0.5 s later</dd><dt>sg(·)</dt><dd>stop-gradient: no learning signal flows into the target</dd></dl>
+</div>
+<details class="deeper"><summary>Going deeper (optional): why "no protection" collapses, and what the other two do</summary>
+<p>If E outputs the same vector for every frame and P passes it through, the loss is exactly zero. Gradient descent finds that solution because shrinking the encoder's weights shrinks both sides of the difference. Stop-gradient plus a slow target removes the pull on the target side, so the predictor keeps chasing a target that has not collapsed yet; this is the recipe of I-JEPA, V-JEPA and V-JEPA 2. The spread penalty (the VICReg and LeJEPA family) instead charges the encoder whenever a latent's spread across a batch falls below 1 or the two latents become correlated.</p>
+<p>Why prediction keeps the gap: the nuisance causes are redrawn every frame, so nothing in frame t tells you the glare in frame t+1. The only part of x<sub>t+1</sub> that x<sub>t</sub> can predict is the part driven by the gap and closing speed, which is why the pixel predictor works too. A related result: Littwin et al. (2024) showed for deep linear networks that, for the same target, predicting in latent space favors the most <i>predictive</i> features while predicting pixels favors the highest-<i>variance</i> ones.</p>
+</details>
+<div class="eval"><h4>Can you trust this result?</h4><dl>
+<dt>Baseline</dt><dd>The autoencoder (same size, rebuilds the frame) and the best straight line through all 64 values, which uses the labels directly.</dd>
+<dt>Split</dt><dd>Encoders train on 100 synthetic drives; probes are fitted and scored on 30 different drives, half each. Labels are used only to grade.</dd>
+<dt>Ugly cases</dt><dd>Nuisance stronger than the signal (the slider). What the toy leaves out: nuisance that changes slowly (a JEPA would keep it, since it is predictable), occlusion, futures that branch. The model is linear and small, so it cannot show why V-JEPA 2 needed a million hours of video.</dd>
+</dl></div>
+</section>
+
+<!-- =============================== 3. PLAN =============================== -->
+<section class="page" id="tab-plan">
+<h2>Plan with it: reach a goal frame, as V-JEPA 2-AC does</h2>
+<p class="lead">Stage 2: freeze the encoder and learn, from a small log with the driver's accelerations, how an acceleration changes the 2 latents. Stage 3: every half second, encode the current frame and one <i>goal frame</i> recorded at the target gap, try 200 acceleration plans 4 s long, keep the one whose imagined latent lands closest to the goal's, apply its first step, and plan again.</p>
+<div class="controls">
+  <div class="seg" id="pseg" role="group" aria-label="Planner encoder">
+    <button data-p="ema" aria-pressed="true">JEPA latent</button>
+    <button data-p="pix" aria-pressed="false">Pixel-predictor latent</button>
+    <button data-p="ae" aria-pressed="false">Autoencoder latent</button>
+  </div>
+  <label class="ctl">Goal gap <b id="ggv">25 m</b><input id="ggs" type="range" min="15" max="40" step="1" value="25"></label>
+  <label class="ctl">Test drive <b id="dsv">#1</b><input id="dss" type="range" min="1" max="40" step="1" value="1"></label>
+  <button class="btn" id="pgo">Drive 60 s</button>
+</div>
+<div class="status" id="pstat">The first drive trains the encoders and the stage-2 predictors (a few seconds).</div>
+<div class="grid-ex">
+<div class="fig">
+<h4>Gap to the lead vehicle <span>· shaded: the lead brakes at 3 m/s²</span></h4>
+<canvas id="cGap" width="1000" height="560"></canvas>
+<div class="legend"><span><i class="ln" style="background:var(--s1)"></i>latent planner (sensor frames only)</span><span><i class="ln" style="background:var(--s4)"></i>classical controller (true gap and closing speed)</span><span><i class="ln" style="background:var(--s2)"></i>goal</span></div>
+<div class="kpis" id="pk"></div>
+</div>
+<div class="fig">
+<h4>Inside one planning step <span id="pstep">· latent space</span></h4>
+<canvas id="cPlane" width="800" height="640"></canvas>
+<div class="legend"><span><i style="background:var(--s4);opacity:.5"></i>imagined end points of the plans in the last round</span><span><i style="background:var(--s1)"></i>best 20</span><span><i style="background:var(--s2)"></i>goal frame's latent</span><span><i style="background:var(--ink)"></i>now</span></div>
+<canvas id="cEnergy" width="800" height="300" style="margin-top:10px"></canvas>
+<p class="cap"><b>Energy landscape.</b> The energy of holding one constant acceleration for all 4 s, from the current state. Its lowest point is the action the planner leans toward; compare V-JEPA 2's Figure 9. A smooth bowl is what makes a sampling search like this work.</p>
+</div>
+</div>
+<div class="eval"><h4>Can you trust this result?</h4><dl>
+<dt>Baseline</dt><dd>A two-gain gap controller, a = 0.2 (g − goal) + 0.7 Δv, given the true gap and closing speed, as a radar would. It sees what the latent planners must infer.</dd>
+<dt>Split</dt><dd>Stage 1 trains on 100 drives with no actions, stage 2 on 20 other drives with actions, and the test drives are new. The goal frame carries its own glare.</dd>
+<dt>Ugly cases</dt><dd>Most test drives include a hard brake by the lead; watch the closest approach. The planner re-plans from one noisy frame every 0.5 s and scores only the end of each plan, so its accelerations are jerky. In the handout's 40-drive run the JEPA planner and the classical controller had RMS gap errors of 2.7 m and 3.0 m, and the classical one had a fifth of the jerk.</dd>
+</dl></div>
+</section>
+<!-- =============================== 4. V-JEPA 2 =============================== -->
+<section class="page" id="tab-vjepa2">
+<h2>V-JEPA 2 at a glance</h2>
+<p class="lead">V-JEPA 2 (Assran et al., June 2025) learns from over a million hours of video with no actions, then learns what actions do from under 62 hours of robot video, then plans by matching an imagined embedding to a goal image. Tab 3 is the same three stages at toy scale.</p>
+<div class="fig">
+<div class="svgwrap"><svg viewBox="0 0 760 236" role="img" aria-label="V-JEPA 2 in three stages">
+<defs><marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7A8A83"/></marker></defs>
+<rect x="16" y="16" width="228" height="204" rx="10" class="d-cont"/><rect x="266" y="16" width="228" height="204" rx="10" class="d-cont"/><rect x="516" y="16" width="228" height="204" rx="10" class="d-cont"/>
+<text x="30" y="42" class="d-name">Stage 1 · pretrain</text><text x="30" y="60" class="d-line">video only, no actions</text>
+<text x="30" y="90" class="d-line">1M+ hours of internet video</text><text x="30" y="106" class="d-line">and 1M images (VideoMix22M)</text>
+<text x="30" y="130" class="d-line">hide ~90% of each clip; predict</text><text x="30" y="146" class="d-line">the hidden embeddings (L1, EMA)</text>
+<rect x="30" y="164" width="200" height="40" rx="8" class="d-hi"/><text x="130" y="189" text-anchor="middle" class="d-name">encoder E: ViT-g, 1B</text>
+<text x="280" y="42" class="d-name">Stage 2 · post-train (2-AC)</text><text x="280" y="60" class="d-line">add actions; E stays frozen</text>
+<text x="280" y="90" class="d-line">under 62 h of DROID robot video</text><text x="280" y="106" class="d-line">with gripper poses; action = pose change</text>
+<text x="280" y="130" class="d-line">teacher-forcing + 2-step rollout</text><text x="280" y="146" class="d-line">loss on next-frame embeddings</text>
+<rect x="280" y="164" width="200" height="40" rx="8" class="d-hi"/><text x="380" y="189" text-anchor="middle" class="d-name">predictor P: 300M</text>
+<text x="530" y="42" class="d-name">Stage 3 · plan (MPC)</text><text x="530" y="60" class="d-line">goal given as an image</text>
+<text x="530" y="90" class="d-line">CEM: 800 plans, keep best 10,</text><text x="530" y="106" class="d-line">10 rounds, 1 action ahead</text>
+<text x="530" y="130" class="d-line">energy = ‖P(plan) − E(goal)‖₁</text><text x="530" y="146" class="d-line">execute first action, re-plan</text>
+<rect x="530" y="164" width="200" height="40" rx="8" class="d-hi"/><text x="630" y="189" text-anchor="middle" class="d-name">16 s per robot action</text>
+<path d="M230 184H276M480 184H526" class="d-arrow" marker-end="url(#pa)"/>
+</svg></div>
+<p class="cap"><b>Takeaway:</b> the expensive stage needs no actions, and video without actions is plentiful; the stage that needs actions only has to learn how an action moves an embedding the encoder already makes.</p>
+</div>
+
+<div class="eq"><div class="m">a*<sub>1</sub>, …, a*<sub>T</sub> = arg min<sub>a<sub>1</sub>,…,a<sub>T</sub></sub> ‖ P<sub>φ</sub>(a<sub>1:T</sub>; s<sub>k</sub>, p<sub>k</sub>) − E(x<sub>goal</sub>) ‖<sub>1</sub></div>
+<div class="inwords">In words: among the plans you try, keep the one whose imagined embedding after T steps is closest to the goal image's embedding. s<sub>k</sub> is the current frame's embedding and p<sub>k</sub> the arm's pose (the paper writes them z<sub>k</sub> and s<sub>k</sub>).</div></div>
+
+<div class="grid2">
+<div>
+<h3>Stage 1: what scaling bought</h3>
+<div class="tablewrap"><table><thead><tr><th>Ingredient</th><th>From → to</th><th class="num">Avg. accuracy, 6 tasks</th></tr></thead><tbody>
+<tr><td>baseline (V-JEPA recipe)</td><td>ViT-L, 2M videos</td><td class="num">84.2</td></tr>
+<tr><td>data</td><td>2M → 22M videos and images</td><td class="num">85.2</td></tr>
+<tr><td>model</td><td>300M → 1B weights</td><td class="num">86.7</td></tr>
+<tr><td>training</td><td>90K → 252K steps</td><td class="num">87.5</td></tr>
+<tr class="hl"><td>resolution and clip length</td><td>256 → 384 px; 16 → 64 frames</td><td class="num">88.2</td></tr>
+</tbody></table></div>
+<p class="small">Frozen encoder with a probe: SSv2 77.3% (motion), Epic-Kitchens-100 anticipation 39.7 recall-at-5 (44% above the previous best). With an 8B language model trained on top: PerceptionTest 84.0% (after fine-tuning). Source: Assran et al. (2025), Figure 3 and Sections 5–7.</p>
+</div>
+<div>
+<h3>Stage 3: robot results</h3>
+<div class="tablewrap"><table><thead><tr><th>Average of 2 labs, 10 trials each</th><th class="num">Octo</th><th class="num">V-JEPA 2-AC</th></tr></thead><tbody>
+<tr><td>reach</td><td class="num">100%</td><td class="num">100%</td></tr>
+<tr><td>grasp: cup / box</td><td class="num">15% / 0%</td><td class="num">65% / 25%</td></tr>
+<tr><td>reach with object: cup / box</td><td class="num">15% / 70%</td><td class="num">75% / 75%</td></tr>
+<tr class="hl"><td>pick-and-place: cup / box</td><td class="num">15% / 10%</td><td class="num">80% / 65%</td></tr>
+</tbody></table></div>
+<div class="tablewrap"><table><thead><tr><th>Lab 2, CEM on one RTX 4090</th><th class="num">Plans per round</th><th class="num">Time per action</th><th class="num">Pick-and-place cup / box</th></tr></thead><tbody>
+<tr><td>Cosmos (video diffusion, 7B)</td><td class="num">80</td><td class="num">4 min</td><td class="num">0% / 0%</td></tr>
+<tr class="hl"><td>V-JEPA 2-AC</td><td class="num">800</td><td class="num">16 s</td><td class="num">80% / 50%</td></tr>
+</tbody></table></div>
+<p class="small">Source: Assran et al. (2025), Tables 2 and 3. Octo is an imitation-learned policy fine-tuned on all of DROID.</p>
+</div>
+</div>
+<div class="callout warn"><h4>Limits the authors report</h4><p>The model must infer the robot's action axes from one uncalibrated camera, and its inferred axes rotated as the camera moved, so camera placement was tuned by hand. Plans look one action ahead; pick-and-place needed three hand-given sub-goal images. Goals are pictures, while real tasks are usually stated in words. For a car, add two more: 16 s per decision versus about 0.1 s, and no safety constraint inside the energy.</p></div>
+</section>
+
+<!-- =============================== 5. TRANSPORT =============================== -->
+<section class="page" id="tab-transport">
+<h2>JEPA in transportation research</h2>
+<p class="lead">JEPA-style training has reached LiDAR perception, end-to-end driving, driver monitoring, GPS trajectories and loop-detector networks. The results are strong for perception and planning and mixed elsewhere.</p>
+<div class="tablewrap"><table><thead><tr><th>Paper</th><th>Data</th><th>What is predicted</th><th>Result against its baseline</th></tr></thead><tbody>
+<tr><td><a href="https://arxiv.org/abs/2501.04969" target="_blank" rel="noopener">AD-L-JEPA</a>, Zhu et al., AAAI 2026</td><td>LiDAR: KITTI3D, Waymo, ONCE</td><td>embeddings of hidden bird's-eye-view cells</td><td>+2.98 mAP on ONCE (500K-frame pretraining); 1.9–2.7× fewer GPU-hours than Occupancy-MAE</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2406.08481" target="_blank" rel="noopener">LAW</a>, Li et al., ICLR 2025</td><td>nuScenes, NAVSIM, CARLA</td><td>next-frame scene features from current features and the planned trajectory (JEPA-like)</td><td>NAVSIM PDMS 77.5 → 84.6 when the latent prediction task is added</td></tr>
+<tr class="hl"><td><a href="https://arxiv.org/abs/2601.22032" target="_blank" rel="noopener">Drive-JEPA</a>, Wang et al., 2026</td><td>V-JEPA 2 further pretrained on 330 h of driving video; NAVSIM</td><td>V-JEPA objective on dashcam clips</td><td>same simple planner design on each encoder (fine-tuned together): ResNet-34 76.0, DINOv2 76.1, SigLIP 83.4, V-JEPA 2 86.1, driving-adapted 89.0 PDMS</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2609.34085" target="_blank" rel="noopener">AD-E2E-JEPA</a>, Zhu, Zhang, LeCun, Choromanska, 2026</td><td>NAVSIM</td><td>action-conditioned JEPA world model; plans toward a goal</td><td>no driving policy trained, logged future frames as goals (tests the world model, not a deployable driver): EPDMS 67.3 / 72.9 (256 / 8,192 candidates); 0.8 s per 256-candidate rollout</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2609.33000" target="_blank" rel="noopener">TriDrive</a>, Wang et al., 2026 (MOTIF Lab, USF)</td><td>197.2 h of naturalistic BATON driving; on-road study</td><td>reuses frozen V-JEPA 2 road embeddings with driver kinematics and CAN</td><td>warning AUROC 0.725 vs 0.563 for an openpilot-based baseline (whole systems compared), at 5 Hz on a comma four</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2406.12913" target="_blank" rel="noopener">T-JEPA</a>, Li et al., SIGSPATIAL 2024</td><td>GPS traces: Porto, T-Drive, GeoLife</td><td>embeddings of hidden trajectory segments</td><td>GeoLife mean rank 1.047 vs 1.256 (TrajCL); slightly worse on Porto (1.074 vs 1.014)</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2609.31680" target="_blank" rel="noopener">Feng et al.</a>, 2026</td><td>METR-LA, PEMS-BAY, PEMS03/04/07/08</td><td>forecast-window embedding from the history window</td><td>helps STGCN (up to 8.26% lower MAE), hurts ASTGCN (10.36% higher MAE on PEMS08)</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2608.01336" target="_blank" rel="noopener">Pavuluri et al.</a>, 2026</td><td>nuScenes, Waymo, BDD100K</td><td>V-JEPA 2 prediction error as a novelty score for fleet clips</td><td>AP 0.89 across datasets but 0.29 (chance 0.24) within one; it mostly detected the source dataset</td></tr>
+</tbody></table></div>
+<ol class="lessons">
+<li><b>Video pretraining transfers to driving, and driving video helps more.</b> With the same planner design, V-JEPA 2 beat image encoders by 2.7 to 10 PDMS points; 330 h of dashcam video added about 3 more.</li>
+<li><b>It is not a free win for detector networks.</b> On the same PEMS and METR-LA data, JEPA pretraining helped one graph forecaster and hurt another. Test it on your own backbone.</li>
+<li><b>"Hard to predict" is not "rare and important".</b> A high prediction error flags anything unfamiliar, including a new camera or city. Evaluate within one source.</li>
+</ol>
+<h3>Other JEPA models, newest first</h3>
+<div class="tablewrap"><table><thead><tr><th>Date</th><th>Model</th><th>What changed</th></tr></thead><tbody>
+<tr><td>Oct 2026</td><td><a href="https://arxiv.org/abs/2610.06805" target="_blank" rel="noopener">H-JEPA</a></td><td>a stack of action-conditioned JEPAs, each predicting farther ahead; Visual AntMaze success 18% → 73%</td></tr>
+<tr><td>Mar 2026</td><td><a href="https://arxiv.org/abs/2603.14482" target="_blank" rel="noopener">V-JEPA 2.1</a></td><td>loss on visible tokens too, supervision at several depths; grasping 20 points above V-JEPA 2-AC</td></tr>
+<tr><td>Mar 2026</td><td><a href="https://arxiv.org/abs/2603.19312" target="_blank" rel="noopener">LeWorldModel</a></td><td>end-to-end JEPA world model from pixels, about 15M weights, no EMA; plans up to 48× faster than world models on large pretrained encoders</td></tr>
+<tr><td>Dec 2025</td><td><a href="https://arxiv.org/abs/2512.10942" target="_blank" rel="noopener">VL-JEPA</a></td><td>predicts the embedding of an answer text instead of generating it word by word</td></tr>
+<tr><td>Nov 2025</td><td><a href="https://arxiv.org/abs/2511.08544" target="_blank" rel="noopener">LeJEPA</a></td><td>SIGReg replaces EMA and stop-gradient; 79% ImageNet linear probe (ViT-H/14)</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- =============================== 6. FIT =============================== -->
+<section class="page" id="tab-fit">
+<h2>Fit card and check yourself</h2>
+<div class="fitcard"><h4>Fit card — JEPA (joint-embedding predictive architecture)</h4><dl>
+<dt>Idea in one sentence</dt><dd>Learn an encoder by predicting the embedding of a hidden or future part of the data from the visible part, never its pixels.</dd>
+<dt>Why it works (the logic)</dt><dd>Unpredictable detail cannot help the prediction, so the encoder keeps what persists and predicts (objects, motion, gaps). Stop-gradient with a slow target encoder, or a spread penalty, rules out the constant-output solution.</dd>
+<dt>Fits these tasks</dt><dd>Pretraining encoders for camera, LiDAR and trajectory data with few labels; anticipating maneuvers; planning toward goals in a learned space. Leverage labels: prediction, classification, extraction.</dd>
+<dt>Needs this data</dt><dd>Raw video, LiDAR sweeps, trajectories or sensor series · large and unlabeled, plus a small action-labeled set for planning · no labels to pretrain, a small labeled set to probe · vehicle fleets, DOT camera networks, naturalistic driving studies, dashcam vendors.</dd>
+<dt>Breaks when</dt><dd>The detail that matters is sudden and unpredictable; predictable but useless content dominates; collapse goes unnoticed; goals are not pictures; decisions need safety constraints and sub-second latency; the camera differs from training.</dd>
+<dt>Keep the classical method when</dt><dd>The state is measured and a physical model exists (a radar gap with a car-following controller, detector counts with the CTM): cheaper, smoother, explainable.</dd>
+</dl></div>
+<h3>Check yourself</h3>
+<ol class="qs">
+<li>A DOT has three years of video from 400 freeway cameras and 2,000 frames labeled "lane blocked". Would you pretrain a masked autoencoder or a JEPA, and how would you check that the encoder learned something useful before paying for more labels?<details><summary>Hint</summary>Think about what dominates a freeway camera's pixel variance at night and in rain, and about the probe in tab 2.</details></li>
+<li>Your JEPA's training loss falls to almost zero in the first hour. What two quantities do you check, and what are the two families of fixes if the check fails?<details><summary>Hint</summary>Run "JEPA, no protection" in tab 2 and watch both curves.</details></li>
+<li>A colleague proposes V-JEPA 2-AC-style planning for adaptive cruise control on a test vehicle that has a radar. Argue for or against.<details><summary>Hint</summary>Compare the two traces and the jerk in tab 3. What does the latent planner know that the radar controller does not?</details></li>
+<li>For a stakeholder meeting about a new signal plan, the agency wants to see what the model expects at the intersection. JEPA world model or generative video world model? What would you lose with the other choice?<details><summary>Hint</summary>Tab 4's Cosmos row, and the 4.12 handout's "looks right is not the same as being right".</details></li>
+<li>A fleet operator wants to flag unusual dashcam clips by their JEPA prediction error. What should change in how the flagging is evaluated?<details><summary>Hint</summary>Tab 5, lesson 3.</details></li>
+<li>In tab 2 the autoencoder recovers the gap when the nuisance is weak. Name one transportation sensor where reconstruction would keep the quantity you need, and one where it would not.<details><summary>Hint</summary>Ask what the biggest source of variation in the raw signal is, and whether it is the thing you need.</details></li>
+</ol>
+<h3>Sources</h3>
+<ul class="plain small">
+<li>LeCun (2022), <a href="https://openreview.net/forum?id=BZ5a1r-kVsf" target="_blank" rel="noopener">A Path Towards Autonomous Machine Intelligence</a>.</li>
+<li>Assran et al. (2023), <a href="https://arxiv.org/abs/2301.08243" target="_blank" rel="noopener">I-JEPA</a>; Bardes et al. (2024), <a href="https://arxiv.org/abs/2404.08471" target="_blank" rel="noopener">V-JEPA</a>; Assran et al. (2025), <a href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener">V-JEPA 2</a>.</li>
+<li>Littwin et al. (2024), <a href="https://arxiv.org/abs/2407.03475" target="_blank" rel="noopener">How JEPA Avoids Noisy Features</a>; Balestriero and LeCun (2025), <a href="https://arxiv.org/abs/2511.08544" target="_blank" rel="noopener">LeJEPA</a>.</li>
+<li>The synthetic worked example and its scripts: class folder, <span class="mono">genmodels/jepa/</span>.</li>
+</ul>
+</section>
+
+</div></main>
+<script>
+// ===== JEPA toy engine: a browser port of genmodels/jepa (jcommon.py, stage1.py, stage23.py) =====
+const ENG = (() => {
+  const DT = 0.5, D = 64, K = 6, G_MEAN = 35, G_SCALE = 15, DV_SCALE = 2.5;
+  function rng(seed) { let a = seed >>> 0; const u = () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    let spare = null; const n = () => { if (spare !== null) { const s = spare; spare = null; return s; } let x, y, r; do { x = 2 * u() - 1; y = 2 * u() - 1; r = x * x + y * y; } while (r >= 1 || r === 0); const f = Math.sqrt(-2 * Math.log(r) / r); spare = y * f; return x * f; };
+    return { u, n, int: (lo, hi) => lo + Math.floor(u() * (hi - lo)) }; }
+  function sensor(seed = 7) { const r = rng(seed); const A = new Float32Array(D * 2), B = new Float32Array(D * K);
+    for (let j = 0; j < 2; j++) { let s = 0; for (let i = 0; i < D; i++) { const v = r.n(); A[i * 2 + j] = v; s += v * v; } s = Math.sqrt(s); for (let i = 0; i < D; i++) A[i * 2 + j] /= s; }
+    for (let j = 0; j < K; j++) { let s = 0; for (let i = 0; i < D; i++) { const v = r.n(); B[i * K + j] = v; s += v * v; } s = Math.sqrt(s); for (let i = 0; i < D; i++) B[i * K + j] /= s; }
+    return { A, B }; }
+  function frame(g, dv, S, r, out, off, nuis, pix) { const s0 = (g - G_MEAN) / G_SCALE, s1 = dv / DV_SCALE; const nv = new Float32Array(K); for (let j = 0; j < K; j++) nv[j] = r.n() * nuis;
+    for (let i = 0; i < D; i++) { let v = S.A[i * 2] * s0 + S.A[i * 2 + 1] * s1; for (let j = 0; j < K; j++) v += S.B[i * K + j] * nv[j]; out[off + i] = v + r.n() * pix; } }
+  function leadAccel(st, vL, r) { let a; if (st.brake > 0) { st.brake--; a = -3; } else if (r.u() < 0.01) { st.brake = r.int(3, 8); a = -3; } else { a = Math.max(-2.5, Math.min(1.5, 0.9 * st.aL + r.n() * 0.35)); }
+    if (vL < 8 && a < 0) a = -a * 0.5; if (vL > 32 && a > 0) a = -a; st.aL = a; return a; }
+  function step(g, dv, vE, vL, a, aL) { const aLe = (vL > 0 || aL > 0) ? aL : 0, ae = (vE > 0 || a > 0) ? a : 0;
+    const g2 = g + dv * DT + 0.5 * (aLe - ae) * DT * DT, vL2 = Math.max(0, vL + aLe * DT), vE2 = Math.max(0, vE + ae * DT); return [g2, vL2 - vE2, vE2, vL2]; }
+  function logEpisode(r, T = 200) { let vL = 12 + r.u() * 18, vE = vL - 3 + r.u() * 6, g = 15 + r.u() * 45, dv = vL - vE; const st = { aL: 0, brake: 0 }; let expl = 0, over = 0, aover = 0;
+    const G = [], V = [], Aa = [];
+    for (let t = 0; t < T; t++) { const gs = 5 + 1.5 * vE; expl = 0.8 * expl + r.n() * 0.45; let a;
+      if (over > 0) { over--; a = aover; } else { if (r.u() < 0.02) { over = r.int(4, 12); aover = -2.5 + r.u() * 4; } a = 0.12 * (g - gs) + 0.55 * dv + expl; }
+      if (dv < 0) { const need = dv * dv / (2 * Math.max(g - 5, 0.5)); if (need > 0.3) a = Math.min(a, -Math.min(4, need + 1)); }
+      if (g < 7) a = Math.min(a, -3); a = Math.max(-4, Math.min(2, a));
+      G.push(g); V.push(dv); Aa.push(a); const aL = leadAccel(st, vL, r); [g, dv, vE, vL] = step(g, dv, vE, vL, a, aL); if (g < 2) break; }
+    return { G, V, Aa }; }
+  // logs -> pairs (x_t, x_{t+1}) as flat arrays
+  function makeLogs(nEp, seed, S, nuis = 2, pix = 0.1) { const r = rng(seed); const eps = []; let n = 0;
+    for (let e = 0; e < nEp; e++) { const ep = logEpisode(r); const T = ep.G.length; const X = new Float32Array(T * D); for (let t = 0; t < T; t++) frame(ep.G[t], ep.V[t], S, r, X, t * D, nuis, pix); ep.X = X; eps.push(ep); n += T; }
+    return eps; }
+  function pairs(eps) { let n = 0; for (const e of eps) n += e.G.length - 1; const X0 = new Float32Array(n * D), X1 = new Float32Array(n * D), A = new Float32Array(n), G0 = new Float32Array(n), V0 = new Float32Array(n); let k = 0;
+    for (const e of eps) { const T = e.G.length; for (let t = 0; t < T - 1; t++) { X0.set(e.X.subarray(t * D, t * D + D), k * D); X1.set(e.X.subarray((t + 1) * D, (t + 2) * D), k * D); A[k] = e.Aa[t]; G0[k] = e.G[t]; V0[k] = e.V[t]; k++; } }
+    return { X0, X1, A, G0, V0, n }; }
+  // ---------------- Adam ----------------
+  function adam(params, lr) { const m = {}, v = {}; for (const k in params) { m[k] = new Float64Array(params[k].length); v[k] = new Float64Array(params[k].length); } let t = 0;
+    return (grads) => { t++; const b1 = 0.9, b2 = 0.999, c1 = 1 - Math.pow(b1, t), c2 = 1 - Math.pow(b2, t); for (const k in grads) { const p = params[k], g = grads[k], mk = m[k], vk = v[k];
+      for (let i = 0; i < p.length; i++) { mk[i] = b1 * mk[i] + (1 - b1) * g[i]; vk[i] = b2 * vk[i] + (1 - b2) * g[i] * g[i]; p[i] -= lr * (mk[i] / c1) / (Math.sqrt(vk[i] / c2) + 1e-8); } } }; }
+  // ---------------- trainer (one object, stepped in chunks so the page can animate) ----------------
+  // mode: 'ae' | 'pix' | 'ema' | 'naive' | 'vic'
+  function trainer(data, mode, seed = 11, tau = 0.99) { const r = rng(seed), d = 2; const W = new Float64Array(d * D), b = new Float64Array(d);
+    for (let i = 0; i < W.length; i++) W[i] = r.n() / Math.sqrt(D);
+    const P = { W, b }; let Wt = null, bt = null, Pp = null, q = null, V = null, c = null;
+    if (mode === 'ae' || mode === 'pix') { V = new Float64Array(D * d); for (let i = 0; i < V.length; i++) V[i] = r.n() / Math.sqrt(d); c = new Float64Array(D); P.V = V; P.c = c; }
+    else { Pp = new Float64Array([1 + r.n() * 0.1, r.n() * 0.1, r.n() * 0.1, 1 + r.n() * 0.1]); q = new Float64Array(2); P.P = Pp; P.q = q; Wt = Float64Array.from(W); bt = Float64Array.from(b); }
+    const opt = adam(P, 3e-3); const B = 256; const hist = []; let it = 0;
+    const x0 = new Float64Array(B * D), x1 = new Float64Array(B * D), s0 = new Float64Array(B * 2), s1 = new Float64Array(B * 2);
+    function one() { for (let k = 0; k < B; k++) { const i = Math.floor(r.u() * data.n); for (let j = 0; j < D; j++) { x0[k * D + j] = data.X0[i * D + j]; x1[k * D + j] = data.X1[i * D + j]; } }
+      const gW = new Float64Array(d * D), gb = new Float64Array(d); let loss = 0, zs = [0, 0], zm = [0, 0], zq = [0, 0];
+      for (let k = 0; k < B; k++) for (let a = 0; a < 2; a++) { let v = b[a]; for (let j = 0; j < D; j++) v += W[a * D + j] * x0[k * D + j]; s0[k * 2 + a] = v; zm[a] += v; zq[a] += v * v; }
+      if (mode === 'ae' || mode === 'pix') { const gV = new Float64Array(D * d), gc = new Float64Array(D);
+        for (let k = 0; k < B; k++) { const gz = [0, 0]; for (let j = 0; j < D; j++) { const xh = V[j * 2] * s0[k * 2] + V[j * 2 + 1] * s0[k * 2 + 1] + c[j]; const y = mode === 'ae' ? x0[k * D + j] : x1[k * D + j]; const rr = xh - y; loss += rr * rr;
+            const gr = 2 * rr / D; gV[j * 2] += gr * s0[k * 2] / B; gV[j * 2 + 1] += gr * s0[k * 2 + 1] / B; gc[j] += gr / B; gz[0] += gr * V[j * 2]; gz[1] += gr * V[j * 2 + 1]; }
+          for (let a = 0; a < 2; a++) { gb[a] += gz[a] / B; for (let j = 0; j < D; j++) gW[a * D + j] += gz[a] * x0[k * D + j] / B; } }
+        loss /= B * D; opt({ W: gW, b: gb, V: gV, c: gc }); }
+      else { const gP = new Float64Array(4), gq = new Float64Array(2); const tW = mode === 'ema' ? Wt : W, tb = mode === 'ema' ? bt : b;
+        for (let k = 0; k < B; k++) for (let a = 0; a < 2; a++) { let v = tb[a]; for (let j = 0; j < D; j++) v += tW[a * D + j] * x1[k * D + j]; s1[k * 2 + a] = v; }
+        for (let k = 0; k < B; k++) { const h0 = Pp[0] * s0[k * 2] + Pp[1] * s0[k * 2 + 1] + q[0], h1 = Pp[2] * s0[k * 2] + Pp[3] * s0[k * 2 + 1] + q[1]; const r0 = h0 - s1[k * 2], r1 = h1 - s1[k * 2 + 1]; loss += Math.abs(r0) + Math.abs(r1);
+          const g0 = Math.sign(r0) / (B * 2), g1 = Math.sign(r1) / (B * 2); gP[0] += g0 * s0[k * 2]; gP[1] += g0 * s0[k * 2 + 1]; gP[2] += g1 * s0[k * 2]; gP[3] += g1 * s0[k * 2 + 1]; gq[0] += g0; gq[1] += g1;
+          const gs0 = g0 * Pp[0] + g1 * Pp[2], gs1 = g0 * Pp[1] + g1 * Pp[3]; gb[0] += gs0; gb[1] += gs1;
+          for (let j = 0; j < D; j++) { gW[j] += gs0 * x0[k * D + j]; gW[D + j] += gs1 * x0[k * D + j]; }
+          if (mode !== 'ema') { gb[0] -= g0; gb[1] -= g1; for (let j = 0; j < D; j++) { gW[j] -= g0 * x1[k * D + j]; gW[D + j] -= g1 * x1[k * D + j]; } } }
+        loss /= B * 2;
+        if (mode === 'vic') { const m = 2 * B; const mean = [0, 0]; for (let k = 0; k < B; k++) for (let a = 0; a < 2; a++) { mean[a] += s0[k * 2 + a] + s1[k * 2 + a]; } mean[0] /= m; mean[1] /= m;
+          const sd = [0, 0]; let cov = 0; const all = (k, a) => k < B ? s0[k * 2 + a] : s1[(k - B) * 2 + a];
+          for (let k = 0; k < m; k++) { const c0 = all(k, 0) - mean[0], c1 = all(k, 1) - mean[1]; sd[0] += c0 * c0; sd[1] += c1 * c1; cov += c0 * c1; }
+          const std = [Math.sqrt(sd[0] / m + 1e-4), Math.sqrt(sd[1] / m + 1e-4)]; cov /= (m - 1);
+          for (let k = 0; k < m; k++) { const xs = k < B ? x0 : x1, kk = k < B ? k : k - B; const cc = [all(k, 0) - mean[0], all(k, 1) - mean[1]];
+            for (let a = 0; a < 2; a++) { let gS = (std[a] < 1 ? -1 / d : 0) * cc[a] / (m * std[a]); gS += 4 * cc[1 - a] * cov / ((m - 1) * d); gb[a] += gS; for (let j = 0; j < D; j++) gW[a * D + j] += gS * xs[kk * D + j]; } } }
+        opt({ W: gW, b: gb, P: gP, q: gq });
+        if (mode === 'ema') { for (let i = 0; i < W.length; i++) Wt[i] = tau * Wt[i] + (1 - tau) * W[i]; for (let a = 0; a < 2; a++) bt[a] = tau * bt[a] + (1 - tau) * b[a]; } }
+      const spread = (Math.sqrt(Math.max(0, zq[0] / B - (zm[0] / B) ** 2)) + Math.sqrt(Math.max(0, zq[1] / B - (zm[1] / B) ** 2))) / 2;
+      if (it % 25 === 0) hist.push({ it, loss, spread }); it++; }
+    return { run(n) { for (let i = 0; i < n; i++) one(); }, get it() { return it; }, hist, W, b, mode }; }
+  function encode(m, X, n) { const Z = new Float64Array(n * 2); for (let k = 0; k < n; k++) for (let a = 0; a < 2; a++) { let v = m.b[a]; for (let j = 0; j < D; j++) v += m.W[a * D + j] * X[k * D + j]; Z[k * 2 + a] = v; } return Z; }
+  function solve3(M, y) { // 3x3 Gaussian elimination
+    const a = M.map((row, i) => row.concat([y[i]])); for (let i = 0; i < 3; i++) { let p = i; for (let r2 = i + 1; r2 < 3; r2++) if (Math.abs(a[r2][i]) > Math.abs(a[p][i])) p = r2; [a[i], a[p]] = [a[p], a[i]]; const piv = a[i][i] || 1e-12;
+      for (let r2 = 0; r2 < 3; r2++) if (r2 !== i) { const f = a[r2][i] / piv; for (let c2 = i; c2 < 4; c2++) a[r2][c2] -= f * a[i][c2]; } } return [a[0][3] / a[0][0], a[1][3] / a[1][1], a[2][3] / a[2][2]]; }
+  function probe(Z, y, n) { const h = Math.floor(n / 2); const M = [[0, 0, 0], [0, 0, 0], [0, 0, 0]], v = [0, 0, 0];
+    for (let k = 0; k < h; k++) { const f = [Z[k * 2], Z[k * 2 + 1], 1]; for (let i = 0; i < 3; i++) { v[i] += f[i] * y[k]; for (let j = 0; j < 3; j++) M[i][j] += f[i] * f[j]; } }
+    for (let i = 0; i < 3; i++) M[i][i] += 1e-9; const w = solve3(M, v); let mu = 0; for (let k = h; k < n; k++) mu += y[k]; mu /= (n - h); let se = 0, st = 0;
+    for (let k = h; k < n; k++) { const p = w[0] * Z[k * 2] + w[1] * Z[k * 2 + 1] + w[2]; se += (p - y[k]) ** 2; st += (y[k] - mu) ** 2; } return 1 - se / st; }
+  // ---------------- stage 2: action-conditioned linear predictor (L1 teacher forcing + 2-step rollout) ----------------
+  function trainAC(m, eps, steps = 3000, seed = 0) { const r = rng(seed); const S = [], A = [], starts = []; let off = 0;
+    for (const e of eps) { const T = e.G.length; const Z = encode(m, e.X, T); for (let t = 0; t < T; t++) { S.push([Z[t * 2], Z[t * 2 + 1]]); A.push(e.Aa[t]); } for (let t = 0; t < T - 2; t++) starts.push(off + t); off += T; }
+    const p = { F: new Float64Array([1, 0, 0, 1]), G: new Float64Array(2), c: new Float64Array(2) }; const opt = adam(p, 3e-3); const B = 256;
+    for (let it = 0; it < steps; it++) { const gF = new Float64Array(4), gG = new Float64Array(2), gc = new Float64Array(2);
+      for (let k = 0; k < B; k++) { const i = starts[Math.floor(r.u() * starts.length)]; const s0 = S[i], s1 = S[i + 1], s2 = S[i + 2], a0 = A[i], a1 = A[i + 1]; const F = p.F, G = p.G, c = p.c;
+        const h1 = [F[0] * s0[0] + F[1] * s0[1] + G[0] * a0 + c[0], F[2] * s0[0] + F[3] * s0[1] + G[1] * a0 + c[1]];
+        const h2 = [F[0] * h1[0] + F[1] * h1[1] + G[0] * a1 + c[0], F[2] * h1[0] + F[3] * h1[1] + G[1] * a1 + c[1]];
+        const r1 = [Math.sign(h1[0] - s1[0]) / (B * 2), Math.sign(h1[1] - s1[1]) / (B * 2)], r2 = [Math.sign(h2[0] - s2[0]) / (B * 2), Math.sign(h2[1] - s2[1]) / (B * 2)];
+        const gh1 = [r1[0] + r2[0] * F[0] + r2[1] * F[2], r1[1] + r2[0] * F[1] + r2[1] * F[3]];
+        gF[0] += gh1[0] * s0[0] + r2[0] * h1[0]; gF[1] += gh1[0] * s0[1] + r2[0] * h1[1]; gF[2] += gh1[1] * s0[0] + r2[1] * h1[0]; gF[3] += gh1[1] * s0[1] + r2[1] * h1[1];
+        gG[0] += gh1[0] * a0 + r2[0] * a1; gG[1] += gh1[1] * a0 + r2[1] * a1; gc[0] += gh1[0] + r2[0]; gc[1] += gh1[1] + r2[1]; }
+      opt({ F: gF, G: gG, c: gc }); }
+    return p; }
+  // ---------------- stage 3: CEM planning and a closed-loop drive ----------------
+  const H = 8, POP = 200, ITERS = 5, ELITE = 20, ALO = -4, AHI = 2;
+  function roll(ac, s, plan) { let x = s[0], y = s[1]; const F = ac.F, G = ac.G, c = ac.c; for (let j = 0; j < plan.length; j++) { const a = plan[j]; const nx = F[0] * x + F[1] * y + G[0] * a + c[0], ny = F[2] * x + F[3] * y + G[1] * a + c[1]; x = nx; y = ny; } return [x, y]; }
+  function cem(ac, s0, sg, r, trace) { let mu = new Float64Array(H), sd = new Float64Array(H).fill(1.5);
+    for (let it = 0; it < ITERS; it++) { const cand = []; for (let k = 0; k < POP; k++) { const pl = new Float64Array(H); for (let j = 0; j < H; j++) pl[j] = Math.max(ALO, Math.min(AHI, mu[j] + sd[j] * r.n())); const e = roll(ac, s0, pl); cand.push({ pl, e, E: Math.abs(e[0] - sg[0]) + Math.abs(e[1] - sg[1]) }); }
+      cand.sort((p, q) => p.E - q.E); if (trace) trace.push(cand.map(c => ({ e: c.e, E: c.E }))); const el = cand.slice(0, ELITE);
+      for (let j = 0; j < H; j++) { let m = 0; for (const c of el) m += c.pl[j]; m /= ELITE; let v = 0; for (const c of el) v += (c.pl[j] - m) ** 2; mu[j] = m; sd[j] = Math.sqrt(v / ELITE) + 1e-3; } }
+    return mu; }
+  function drive(seed, method, S, models, goalGap = 25, T = 120, onStep) { const r = rng(seed), pr = rng(seed + 999); let vL = 15 + r.u() * 13, g = 40 + r.u() * 20, dv = -3 + r.u() * 4, vE = vL - dv; const st = { aL: 0, brake: 0 };
+    const gf = new Float64Array(D); frame(goalGap, 0, S, r, gf, 0, 2, 0.1); const x = new Float64Array(D); const out = { g: [], a: [], aL: [], crash: false };
+    for (let t = 0; t < T; t++) { frame(g, dv, S, r, x, 0, 2, 0.1); let a;
+      if (method === 'classical') a = 0.2 * (g - goalGap) + 0.7 * dv;
+      else { const m = models[method]; const s0 = Array.from(encode(m.enc, x, 1)), sg = Array.from(encode(m.enc, gf, 1)); const tr = onStep ? [] : null; a = cem(m.ac, s0, sg, pr, tr)[0]; if (onStep) onStep(t, s0, sg, tr); }
+      a = Math.max(ALO, Math.min(AHI, a)); out.g.push(g); out.a.push(a); const aL = leadAccel(st, vL, r); out.aL.push(aL); [g, dv, vE, vL] = step(g, dv, vE, vL, a, aL); if (g < 0.5) { out.g.push(g); out.crash = true; break; } }
+    return out; }
+  return { DT, D, K, G_MEAN, G_SCALE, DV_SCALE, rng, sensor, frame, makeLogs, pairs, trainer, encode, probe, trainAC, cem, roll, drive, H, POP, ITERS, ELITE };
+})();
+// ===================== page logic =====================
+const $ = (id) => document.getElementById(id);
+const cssv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function prep(c, aspect) { const w = Math.max(240, c.clientWidth || 600); const dpr = window.devicePixelRatio || 1; c.width = Math.round(w * dpr); c.height = Math.round(w * aspect * dpr); const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); return { ctx, W: w, H: w * aspect }; }
+function hexToRgb(h) { h = h.replace('#', ''); if (h.length === 3) h = h.split('').map(x => x + x).join(''); const n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+function mix(a, b, t) { return a.map((v, i) => Math.round(v + (b[i] - v) * t)); }
+function gapColor(g) { const t = Math.max(0, Math.min(1, (g - 5) / 75)); const s = [[237, 235, 209], [143, 184, 162], [0, 84, 50]]; return t < 0.5 ? mix(s[0], s[1], t * 2) : mix(s[1], s[2], (t - 0.5) * 2); }
+const fmt = (v, d = 2) => (v === null || isNaN(v)) ? '–' : v.toFixed(d);
+const r2txt = (v) => v < 0.005 ? '0 (none)' : v.toFixed(2);
+const S = ENG.sensor(7);
+
+// ---------- tabs ----------
+const shown = {};
+function showTab(name) { document.querySelectorAll('nav.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'));
+  document.querySelectorAll('section.page').forEach(s => s.classList.toggle('on', s.id === 'tab-' + name)); shown[name] = true; redraw(name); }
+document.querySelectorAll('nav.tabs button').forEach(b => b.addEventListener('click', () => { showTab(b.dataset.tab); try { localStorage.setItem('jepa-tab', b.dataset.tab); } catch (e) {} }));
+function redraw(name) { if (name === 'start') drawStrips(); if (name === 'mask') drawMask(); if (name === 'train') { drawTrainCharts(); drawLatents(); } if (name === 'plan') drawPlan(); }
+window.addEventListener('resize', () => { const on = document.querySelector('section.page.on'); if (on) redraw(on.id.replace('tab-', '')); });
+try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { const on = document.querySelector('section.page.on'); if (on) redraw(on.id.replace('tab-', '')); }); } catch (e) {}
+
+// ---------- tab 0: strips ----------
+let pairSeed = 3; const shareCache = {};
+function predictableShare(nu) { if (shareCache[nu]) return shareCache[nu]; const eps = ENG.makeLogs(100, 1, S, nu, 0.1); let n = 0; const sx = new Float64Array(64), sxx = new Float64Array(64), sa = new Float64Array(64), saa = new Float64Array(64);
+  for (const e of eps) for (let t = 0; t < e.G.length; t++) { const s0 = (e.G[t] - ENG.G_MEAN) / ENG.G_SCALE, s1 = e.V[t] / ENG.DV_SCALE; n++;
+    for (let i = 0; i < 64; i++) { const x = e.X[t * 64 + i], a = S.A[i * 2] * s0 + S.A[i * 2 + 1] * s1; sx[i] += x; sxx[i] += x * x; sa[i] += a; saa[i] += a * a; } }
+  let vx = 0, va = 0; for (let i = 0; i < 64; i++) { vx += sxx[i] / n - (sx[i] / n) ** 2; va += saa[i] / n - (sa[i] / n) ** 2; } return (shareCache[nu] = { share: va / vx, totalPerValue: vx / 64 }); }
+function strip(c, vals, lim) { const { ctx, W, H } = prep(c, 22 / 640); const g = hexToRgb(cssv('--green')), o = hexToRgb(cssv('--s2')), bg = hexToRgb(cssv('--card')); const w = W / vals.length;
+  vals.forEach((v, i) => { const t = Math.min(1, Math.abs(v) / lim); const col = mix(bg, v >= 0 ? g : o, t); ctx.fillStyle = `rgb(${col})`; ctx.fillRect(i * w, 0, w + 0.5, H); }); }
+function drawStrips() { const nu = +$('g0').value; $('g0v').textContent = nu.toFixed(2); const r = ENG.rng(pairSeed); const g = 30, dv = -1.2, g2 = g + dv * 0.5, dv2 = dv - 0.1;
+  const x0 = new Float64Array(64), x1 = new Float64Array(64); ENG.frame(g, dv, S, r, x0, 0, nu, 0.1); ENG.frame(g2, dv2, S, r, x1, 0, nu, 0.1);
+  const best = new Float64Array(64); const s0 = (g2 - ENG.G_MEAN) / ENG.G_SCALE, s1 = dv2 / ENG.DV_SCALE; for (let i = 0; i < 64; i++) best[i] = S.A[i * 2] * s0 + S.A[i * 2 + 1] * s1;
+  const left = x1.map((v, i) => v - best[i]); const lim = 2.5; strip($('st0'), x0, lim); strip($('st1'), x1, lim); strip($('st2'), best, lim); strip($('st3'), left, lim);
+  const sh = predictableShare(nu); $('b0p').style.width = (100 * sh.share).toFixed(1) + '%'; $('b0u').style.width = (100 * (1 - sh.share)).toFixed(1) + '%';
+  const irr = 6 * nu * nu / 64 + 0.01;
+  $('r0').innerHTML = `In the 100 drives generated here, gap and closing speed explain <b>${(100 * sh.share).toFixed(0)}%</b> of the variance of the 64 values. The best possible pixel predictor still misses <b>${irr.toFixed(3)}</b> per value on average, about <b>${(100 * Math.min(1, irr / sh.totalPerValue)).toFixed(0)}%</b> of each value's variance, and no amount of training lowers that.`; }
+$('g0').addEventListener('input', drawStrips); $('g0new').addEventListener('click', () => { pairSeed++; drawStrips(); });
+
+// ---------- tab 1: masking ----------
+const N = 16; let mMode = 'ijepa', mSeed = 1, mT = 0, mMask = null, playing = null;
+const CARS = [{ X: -3.6, Z: 14, v: -0.8, w: 1.8, h: 1.5 }, { X: 0, Z: 26, v: 1.5, w: 1.9, h: 1.5 }, { X: 3.6, Z: 20, v: 2.5, w: 2.5, h: 3.2 }, { X: 0, Z: 55, v: 4, w: 1.8, h: 1.5 }, { X: -3.6, Z: 40, v: -2, w: 1.8, h: 1.5 }, { X: 3.6, Z: 75, v: 3, w: 1.8, h: 1.5 }];
+function proj(size) { const k = size / 384, yh = 0.3 * size; return { yh, y: Z => yh + 2600 * k / Z, x: (X, Z) => size / 2 + X * 352 * k / Z, s: Z => 352 * k / Z }; }
+function carBoxes(size, t) { const P = proj(size); return CARS.map(c => { const Z = c.Z + c.v * t; const b = P.y(Z); return { l: P.x(c.X - c.w / 2, Z), r: P.x(c.X + c.w / 2, Z), b, t: b - c.h * P.s(Z), Z }; }); }
+function drawScene(ctx, size, t) { const P = proj(size); ctx.fillStyle = cssv('--sky'); ctx.fillRect(0, 0, size, P.yh); ctx.fillStyle = cssv('--verge'); ctx.fillRect(0, P.yh, size, size - P.yh);
+  ctx.fillStyle = cssv('--road'); ctx.beginPath(); ctx.moveTo(P.x(-5.4, 8), P.y(8)); ctx.lineTo(P.x(5.4, 8), P.y(8)); ctx.lineTo(P.x(5.4, 400), P.y(400)); ctx.lineTo(P.x(-5.4, 400), P.y(400)); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 1.5 * size / 384; for (const X of [-1.8, 1.8]) for (let z = 8; z < 200; z += 9) { ctx.beginPath(); ctx.moveTo(P.x(X, z), P.y(z)); ctx.lineTo(P.x(X, z + 4), P.y(z + 4)); ctx.stroke(); }
+  ctx.fillStyle = cssv('--slate'); const zs = 30, sx = P.x(7.2, zs); ctx.fillRect(sx - 1, P.y(zs) - 4.2 * P.s(zs), 2, 4.2 * P.s(zs)); ctx.fillStyle = cssv('--green'); ctx.fillRect(sx - 0.9 * P.s(zs), P.y(zs) - 5.2 * P.s(zs), 1.8 * P.s(zs), 1.1 * P.s(zs));
+  const boxes = carBoxes(size, t).sort((a, b) => b.Z - a.Z); for (const c of boxes) { ctx.fillStyle = cssv('--car'); ctx.globalAlpha = 0.85; ctx.fillRect(c.l, c.t, c.r - c.l, c.b - c.t); ctx.globalAlpha = 1; ctx.fillStyle = cssv('--sky'); ctx.fillRect(c.l + (c.r - c.l) * 0.15, c.t + (c.b - c.t) * 0.12, (c.r - c.l) * 0.7, (c.b - c.t) * 0.28); } }
+function block(r, scale, ar) { const area = scale * N * N; let h = Math.round(Math.sqrt(area * ar)), w = Math.round(Math.sqrt(area / ar)); h = Math.max(1, Math.min(N, h)); w = Math.max(1, Math.min(N, w)); const top0 = Math.floor(r.u() * (N - h + 1)), left0 = Math.floor(r.u() * (N - w + 1)); const m = new Uint8Array(N * N); for (let i = top0; i < top0 + h; i++) for (let j = left0; j < left0 + w; j++) m[i * N + j] = 1; return m; }
+function makeMask() { const r = ENG.rng(1000 + mSeed * 7 + ({ ijepa: 1, block: 2, random: 3, vtube: 4, vrand: 5 })[mMode]); const T = mMode.startsWith('v') ? 8 : 1; const tg = [], out = [];
+  if (mMode === 'ijepa') { const t0 = new Uint8Array(N * N); for (let k = 0; k < 4; k++) { const b = block(r, 0.15 + 0.05 * r.u(), 0.75 + 0.75 * r.u()); b.forEach((v, i) => { if (v) t0[i] = 1; }); } const side = Math.round(Math.sqrt(0.85 + 0.15 * r.u()) * N); const cb = block(r, side * side / (N * N), 1); const o = new Uint8Array(N * N); for (let i = 0; i < N * N; i++) o[i] = (!cb[i] && !t0[i]) ? 1 : 0; tg.push(t0); out.push(o); }
+  else if (mMode === 'block') { const b = block(r, 0.6, 1); tg.push(b); out.push(new Uint8Array(N * N)); }
+  else if (mMode === 'random') { const t0 = new Uint8Array(N * N); for (let i = 0; i < N * N; i++) t0[i] = r.u() < 0.6 ? 1 : 0; tg.push(t0); out.push(new Uint8Array(N * N)); }
+  else { const longR = r.u() < 0.5; const t0 = new Uint8Array(N * N); const nb = longR ? 2 : 8, sc = longR ? 0.7 : 0.15; for (let k = 0; k < nb; k++) { const b = block(r, sc, 0.75 + 0.75 * r.u()); b.forEach((v, i) => { if (v) t0[i] = 1; }); }
+    let ratio = t0.reduce((a, b) => a + b, 0) / (N * N); for (let t = 0; t < T; t++) { if (mMode === 'vtube') tg.push(t0); else { const m = new Uint8Array(N * N); for (let i = 0; i < N * N; i++) m[i] = r.u() < ratio ? 1 : 0; tg.push(m); } out.push(new Uint8Array(N * N)); } mMask = { tg, out, longR, T }; return; }
+  mMask = { tg, out, T }; }
+function maskStats() { const { tg, out, T } = mMask; let hid = 0, vis = 0, tot = 0, nbVis = 0, cop = 0; for (let t = 0; t < T; t++) for (let i = 0; i < N * N; i++) { tot++; if (tg[t][i]) { hid++;
+      if (T === 1) { const r0 = Math.floor(i / N), c0 = i % N; const nb = [[r0 - 1, c0], [r0 + 1, c0], [r0, c0 - 1], [r0, c0 + 1]].some(([a, b]) => a >= 0 && a < N && b >= 0 && b < N && !tg[t][a * N + b] && !out[t][a * N + b]); if (nb) nbVis++; }
+      else { if ((t > 0 && !tg[t - 1][i]) || (t < T - 1 && !tg[t + 1][i])) cop++; } } else if (!out[t][i]) vis++; }
+  let full = 0, ncar = 0; for (let t = 0; t < T; t++) { const size = 384, ps = size / N; for (const b of carBoxes(size, t)) { const i0 = Math.max(0, Math.floor(b.t / ps)), i1 = Math.min(N - 1, Math.floor((b.b - 0.01) / ps)), j0 = Math.max(0, Math.floor(b.l / ps)), j1 = Math.min(N - 1, Math.floor((b.r - 0.01) / ps)); let n = 0, h = 0; for (let i = i0; i <= i1; i++) for (let j = j0; j <= j1; j++) { n++; if (tg[t][i * N + j]) h++; } ncar++; if (n && h / n >= 0.9) full++; } }
+  return { hid: hid / tot, vis: vis / tot, full: T === 1 ? full : full / T, ncar: T === 1 ? ncar : ncar / T, nb: hid ? (T === 1 ? nbVis : cop) / hid : 0 }; }
+const mTexts = { ijepa: '<h4>I-JEPA multi-block</h4><p>Four target blocks, each 15–20% of the image, and one context block of 85–100% with the targets cut out. The targets are big enough to swallow a whole vehicle, so the predictor must know what belongs there, not just copy a neighbor. On average about a quarter of the image is left as context.</p>',
+  block: '<h4>One big block</h4><p>A single block covering about 60% of the image is the target and everything else is context. The target is semantic but there is only one, and the context is a thin frame around it. In the paper this scored 20.2% against multi-block\'s 54.2%.</p>',
+  random: '<h4>Random patches</h4><p>60% of the patches are hidden at random. Nearly every hidden patch has a visible neighbor, so a model can fill most of them by smoothing the patches next door. That teaches texture, not vehicles: 17.6% in the paper.</p>',
+  vtube: '<h4>V-JEPA tubes</h4><p>The same spatial blocks are hidden in all 8 tubelets of the clip. V-JEPA masks every clip twice, once short-range (8 blocks of 15% of the frame) and once long-range (2 blocks of 70%), and predicts both; here you see one of the two at a time. On average about 90% is hidden. A vehicle that drives into a hidden region cannot be found in the next frame, so the model has to predict where it went. Press Play.</p>',
+  vrand: '<h4>Video, random per frame</h4><p>The same fraction is hidden, but redrawn every tubelet. Now a hidden patch is often visible one tubelet earlier or later, and the model can simply copy it across time. This is the leak V-JEPA\'s tubes close.</p>' };
+function drawMask() { if (!mMask) makeMask(); const c = $('scene'); const { ctx, W } = prep(c, 1); const t = mMode.startsWith('v') ? mT : 0; drawScene(ctx, W, t); const ps = W / N; const tgc = cssv('--mask'), oc = cssv('--ctx');
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { const k = i * N + j; if (mMask.tg[t][k]) { ctx.fillStyle = tgc; ctx.globalAlpha = 0.78; ctx.fillRect(j * ps, i * ps, ps, ps); } else if (mMask.out[t][k]) { ctx.fillStyle = oc; ctx.globalAlpha = 0.6; ctx.fillRect(j * ps, i * ps, ps, ps); } }
+  ctx.globalAlpha = 1; ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 0.6; for (let i = 0; i <= N; i++) { ctx.beginPath(); ctx.moveTo(0, i * ps); ctx.lineTo(W, i * ps); ctx.stroke(); ctx.beginPath(); ctx.moveTo(i * ps, 0); ctx.lineTo(i * ps, W); ctx.stroke(); }
+  const st = maskStats(); $('k1').textContent = (100 * st.hid).toFixed(0) + '%'; $('k2').textContent = (100 * st.vis).toFixed(0) + '%'; $('k3').textContent = (mMode.startsWith('v') ? st.full.toFixed(1) : st.full) + ' of ' + (mMode.startsWith('v') ? st.ncar.toFixed(0) : st.ncar);
+  $('k4').textContent = (100 * st.nb).toFixed(0) + '%'; $('k4l').textContent = mMode.startsWith('v') ? 'hidden tokens visible one tubelet earlier or later (copyable)' : 'hidden patches with a visible neighbor';
+  $('mText').innerHTML = mTexts[mMode]; $('mTitle').textContent = '· ' + document.querySelector(`#mseg button[data-m="${mMode}"]`).textContent + (mMode.startsWith('v') ? (mMask.longR ? ' (long-range sample)' : ' (short-range sample)') : '');
+  $('timeRow').style.display = mMode.startsWith('v') ? 'flex' : 'none'; $('tv').textContent = (mT + 1) + ' of 8'; }
+document.querySelectorAll('#mseg button').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('#mseg button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); mMode = b.dataset.m; mMask = null; drawMask(); }));
+$('mnew').addEventListener('click', () => { mSeed++; mMask = null; drawMask(); });
+$('tsl').addEventListener('input', () => { mT = +$('tsl').value; drawMask(); });
+$('tplay').addEventListener('click', () => { if (playing) { clearInterval(playing); playing = null; $('tplay').textContent = 'Play'; return; } $('tplay').textContent = 'Pause'; playing = setInterval(() => { mT = (mT + 1) % 8; $('tsl').value = mT; drawMask(); }, 450); });
+
+// ---------- tab 2: training ----------
+const dataCache = {};
+function getData(nu) { if (dataCache[nu]) return dataCache[nu]; const tr = ENG.pairs(ENG.makeLogs(100, 1, S, nu, 0.1)), te = ENG.pairs(ENG.makeLogs(30, 2, S, nu, 0.1));
+  // ceiling: least squares on all 64 values (+bias), fit on half, score on the other half
+  const n = te.n, h = Math.floor(n / 2), P = 65; const M = Array.from({ length: P }, () => new Float64Array(P)), vg = new Float64Array(P), vv = new Float64Array(P);
+  for (let k = 0; k < h; k++) { const f = new Float64Array(P); for (let j = 0; j < 64; j++) f[j] = te.X0[k * 64 + j]; f[64] = 1; for (let a = 0; a < P; a++) { vg[a] += f[a] * te.G0[k]; vv[a] += f[a] * te.V0[k]; for (let b = a; b < P; b++) M[a][b] += f[a] * f[b]; } }
+  for (let a = 0; a < P; a++) for (let b = 0; b < a; b++) M[a][b] = M[b][a];
+  const sol = (y) => { const A = M.map((row, i) => { const r = Array.from(row); r.push(y[i]); return r; }); for (let i = 0; i < P; i++) { let p = i; for (let r = i + 1; r < P; r++) if (Math.abs(A[r][i]) > Math.abs(A[p][i])) p = r; [A[i], A[p]] = [A[p], A[i]]; for (let r = i + 1; r < P; r++) { const f = A[r][i] / A[i][i]; for (let c = i; c <= P; c++) A[r][c] -= f * A[i][c]; } }
+    const w = new Float64Array(P); for (let i = P - 1; i >= 0; i--) { let s = A[i][P]; for (let c = i + 1; c < P; c++) s -= A[i][c] * w[c]; w[i] = s / A[i][i]; } return w; };
+  const score = (w, y) => { let mu = 0; for (let k = h; k < n; k++) mu += y[k]; mu /= n - h; let se = 0, st = 0; for (let k = h; k < n; k++) { let p = w[64]; for (let j = 0; j < 64; j++) p += w[j] * te.X0[k * 64 + j]; se += (p - y[k]) ** 2; st += (y[k] - mu) ** 2; } return 1 - se / st; };
+  const ceil = { g: score(sol(vg), te.G0), v: score(sol(vv), te.V0) }; return (dataCache[nu] = { tr, te, ceil }); }
+let eMode = 'ema', cur = null, runN = 0, busy = false;
+const NAMES = { ae: 'Autoencoder', pix: 'Pixel predictor', naive: 'JEPA, no protection', ema: 'JEPA, stop-grad + EMA', vic: 'JEPA, spread penalty' };
+document.querySelectorAll('#eseg button').forEach(b => b.addEventListener('click', () => { if (busy) return; document.querySelectorAll('#eseg button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); eMode = b.dataset.e; }));
+$('nsl').addEventListener('input', () => { $('nv').textContent = (+$('nsl').value).toFixed(2); });
+$('tclr').addEventListener('click', () => { document.querySelector('#runs tbody').innerHTML = ''; });
+function logChart(c, series, xmax, opts = {}) { const { ctx, W, H } = prep(c, opts.aspect || 0.42); const L = 48, R = 12, T = 10, B = 28; const lo = opts.lo || 1e-3, hi = opts.hi || 10; const X = (x) => L + (W - L - R) * x / xmax, Y = (v) => T + (H - T - B) * (1 - (Math.log10(Math.max(lo, Math.min(hi, v))) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo)));
+  ctx.font = '11px ' + cssv('--sans'); ctx.fillStyle = cssv('--muted'); ctx.strokeStyle = cssv('--grid'); ctx.lineWidth = 1;
+  for (let e = Math.log10(lo); e <= Math.log10(hi); e++) { const y = Y(10 ** e); ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(W - R, y); ctx.stroke(); ctx.fillText(e >= 0 ? String(10 ** e) : '0.' + '0'.repeat(-e - 1) + '1', 4, y + 4); }
+  for (let x = 0; x <= xmax; x += xmax / 3) { const lab = Math.round(x).toLocaleString('en-US'); ctx.textAlign = x === 0 ? 'left' : (x >= xmax ? 'right' : 'center'); ctx.fillText(lab, X(x), H - 8); } ctx.textAlign = 'left';
+  ctx.textAlign = 'right'; ctx.fillText('training step →', W - R, H - 20 > T ? H - 20 : H - 8); ctx.textAlign = 'left';
+  for (const s of series) { if (!s.pts.length) continue; ctx.strokeStyle = s.col; ctx.lineWidth = 2; ctx.beginPath(); s.pts.forEach((p, i) => { const x = X(p[0]), y = Y(p[1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.stroke(); } }
+function drawTrainCharts() { const h = cur ? cur.m.hist : []; logChart($('cLoss'), [{ col: cssv('--s2'), pts: h.map(p => [p.it, p.loss]) }, { col: cssv('--s1'), pts: h.map(p => [p.it, p.spread]) }], 3000); }
+function drawLatents() { const c = $('cLat'); const { ctx, W, H } = prep(c, 0.76); ctx.fillStyle = cssv('--card'); ctx.fillRect(0, 0, W, H); if (!cur || !cur.Z) { ctx.fillStyle = cssv('--muted'); ctx.font = '13px ' + cssv('--sans'); ctx.fillText('Train an encoder to see its latents.', 16, 28); return; }
+  const Z = cur.Z, n = Math.min(2000, cur.n); const xs = [], ys = []; for (let k = 0; k < n; k++) { xs.push(Z[k * 2]); ys.push(Z[k * 2 + 1]); } const q = (a, p) => { const s = [...a].sort((u, v) => u - v); return s[Math.floor(p * (s.length - 1))]; };
+  let x0 = q(xs, 0.02), x1 = q(xs, 0.98), y0 = q(ys, 0.02), y1 = q(ys, 0.98); const collapsed = cur.spread < 0.02; if (collapsed) { const mx = xs.reduce((a, b) => a + b) / n, my = ys.reduce((a, b) => a + b) / n; x0 = mx - 1; x1 = mx + 1; y0 = my - 1; y1 = my + 1; }
+  const px = (x1 - x0) * 0.08 || 1, py = (y1 - y0) * 0.08 || 1; x0 -= px; x1 += px; y0 -= py; y1 += py; const L = 30, B = 26, X = (x) => L + (W - L - 10) * (x - x0) / (x1 - x0), Y = (y) => 10 + (H - B - 10) * (1 - (y - y0) / (y1 - y0));
+  ctx.strokeStyle = cssv('--axis'); ctx.lineWidth = 1; ctx.strokeRect(L, 10, W - L - 10, H - B - 10); ctx.fillStyle = cssv('--muted'); ctx.font = '11.5px ' + cssv('--sans'); ctx.fillText('latent 1 →', W / 2 - 30, H - 8); ctx.save(); ctx.translate(14, H / 2 + 20); ctx.rotate(-Math.PI / 2); ctx.fillText('latent 2 →', 0, 0); ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.rect(L, 10, W - L - 10, H - B - 10); ctx.clip(); for (let k = 0; k < n; k++) { const col = gapColor(cur.G[k]); ctx.fillStyle = `rgb(${col})`; ctx.fillRect(X(xs[k]) - 1.5, Y(ys[k]) - 1.5, 3, 3); } ctx.restore();
+  if (collapsed) { ctx.fillStyle = cssv('--ink'); ctx.font = '600 13px ' + cssv('--sans'); ctx.fillText('All frames land on one point: collapse.', L + 12, 34); } }
+function runTraining() { if (busy) return; busy = true; $('tgo').disabled = true; const nu = +$('nsl').value; $('tstat').textContent = 'Generating 100 synthetic drives…';
+  setTimeout(() => { const D = getData(nu); const m = ENG.trainer(D.tr, eMode); cur = { m, Z: null }; const total = 3000;
+    const tick = () => { m.run(150); drawTrainCharts(); $('tstat').textContent = `Training ${NAMES[eMode]} · step ${m.it.toLocaleString('en-US')} of 3,000`; if (m.it < total) { requestAnimationFrame(tick); return; }
+      const Z = ENG.encode(m, D.te.X0, D.te.n); const rg = ENG.probe(Z, D.te.G0, D.te.n), rv = ENG.probe(Z, D.te.V0, D.te.n); let s0 = 0, s1 = 0, q0 = 0, q1 = 0; const n = D.te.n; for (let k = 0; k < n; k++) { s0 += Z[k * 2]; s1 += Z[k * 2 + 1]; q0 += Z[k * 2] ** 2; q1 += Z[k * 2 + 1] ** 2; }
+      const spread = (Math.sqrt(Math.max(0, q0 / n - (s0 / n) ** 2)) + Math.sqrt(Math.max(0, q1 / n - (s1 / n) ** 2))) / 2; const last = m.hist[m.hist.length - 1];
+      cur = { m, Z, n, G: D.te.G0, spread }; drawLatents(); runN++;
+      $('tread').innerHTML = `Probe R²: gap <b>${r2txt(rg)}</b>, closing speed <b>${r2txt(rv)}</b> (best straight line through all 64 values: ${D.ceil.g.toFixed(2)} / ${D.ceil.v.toFixed(2)}) · spread <b>${fmt(spread, spread < 0.1 ? 4 : 2)}</b>`;
+      const tr = document.createElement('tr'); tr.innerHTML = `<td>${runN}</td><td>${NAMES[eMode]}</td><td class="num">${nu.toFixed(2)}</td><td class="num">${r2txt(rg)}</td><td class="num">${r2txt(rv)}</td><td class="num">${fmt(spread, spread < 0.1 ? 4 : 2)}</td><td class="num">${fmt(last.loss, last.loss < 0.01 ? 4 : 3)}</td>`; document.querySelector('#runs tbody').appendChild(tr);
+      $('tstat').textContent = `Done: ${NAMES[eMode]}, nuisance ${nu.toFixed(2)}. Try another encoder, or move the slider and train again.`; busy = false; $('tgo').disabled = false; };
+    requestAnimationFrame(tick); }, 30); }
+$('tgo').addEventListener('click', runTraining);
+
+// ---------- tab 3: planning ----------
+let PM = null, pMode = 'ema', lastDrive = null, anim = null, preparing = false;
+document.querySelectorAll('#pseg button').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('#pseg button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); pMode = b.dataset.p; }));
+$('ggs').addEventListener('input', () => { $('ggv').textContent = $('ggs').value + ' m'; }); $('dss').addEventListener('input', () => { $('dsv').textContent = '#' + $('dss').value; });
+function preparePlanners(done) { if (PM) { done(); return; } preparing = true; $('pgo').disabled = true; const D = getData(2); const st2 = ENG.makeLogs(20, 3, S, 2, 0.1); const order = ['ema', 'pix', 'ae']; const out = {}; let i = 0;
+  const next = () => { if (i >= order.length) { PM = out; preparing = false; $('pgo').disabled = false; done(); return; } const k = order[i]; $('pstat').textContent = `Stage 1: training the ${NAMES[k].toLowerCase()} encoder on 100 drives without actions… (${i + 1} of 3)`;
+    setTimeout(() => { const m = ENG.trainer(D.tr, k); m.run(3000); $('pstat').textContent = `Stage 2: learning what an acceleration does to its latents, from 20 drives with actions… (${i + 1} of 3)`;
+      setTimeout(() => { const ac = ENG.trainAC(m, st2, 1500); const Z = ENG.encode(m, D.te.X0, Math.min(3000, D.te.n)); out[k] = { enc: m, ac, Z }; i++; next(); }, 20); }, 20); };
+  next(); }
+function driveStats(o, goal) { const late = o.g.slice(40); const rms = late.length ? Math.sqrt(late.reduce((s, v) => s + (v - goal) ** 2, 0) / late.length) : NaN; let j = 0; for (let i = 1; i < o.a.length; i++) j += ((o.a[i] - o.a[i - 1]) / 0.5) ** 2; return { rms, ming: Math.min(...o.g), jerk: Math.sqrt(j / Math.max(1, o.a.length - 1)), crash: o.crash, tEnd: (o.g.length - 1) * 0.5 }; }
+function runDrive() { if (preparing) return; if (anim) { cancelAnimationFrame(anim); anim = null; } preparePlanners(() => { const seed = 1000 + (+$('dss').value) - 1, goal = +$('ggs').value; const steps = [];
+  const o = ENG.drive(seed, pMode, S, PM, goal, 120, (t, s0, sg, tr) => { steps.push({ s0, sg, last: tr[tr.length - 1] }); }); const oc = ENG.drive(seed, 'classical', S, PM, goal, 120);
+  lastDrive = { o, oc, steps, goal, mode: pMode, k: 0 }; $('pstat').textContent = `Driving with the ${NAMES[pMode] ? '' : ''}${({ ema: 'JEPA', pix: 'pixel-predictor', ae: 'autoencoder' })[pMode]} latent planner…`;
+  const t0 = performance.now(); const play = () => { const k = Math.min(steps.length, Math.floor((performance.now() - t0) / 40)); lastDrive.k = k; drawPlan(); if (k < steps.length) anim = requestAnimationFrame(play); else { anim = null; finishDrive(); } }; anim = requestAnimationFrame(play); }); }
+function finishDrive() { const d = lastDrive; const a = driveStats(d.o, d.goal), b = driveStats(d.oc, d.goal); const nm = ({ ema: 'JEPA', pix: 'Pixel-predictor', ae: 'Autoencoder' })[d.mode];
+  const kp = (v, l) => `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+  $('pk').innerHTML = kp(a.crash ? 'crash at ' + a.tEnd.toFixed(1) + ' s' : fmt(a.rms, 1) + ' m', `${nm} planner: RMS gap error after 20 s`) + kp(fmt(b.rms, 1) + ' m', 'classical: RMS gap error after 20 s') + kp(fmt(Math.max(0, a.ming), 1) + ' m', `${nm} planner: closest approach`) + kp(fmt(b.ming, 1) + ' m', 'classical: closest approach') + kp(fmt(a.jerk, 1), `${nm} planner: RMS jerk, m/s³`) + kp(fmt(b.jerk, 1), 'classical: RMS jerk, m/s³');
+  $('pstat').textContent = a.crash ? 'The planner hit the lead vehicle. Its latents do not carry the gap, so "closest to the goal frame" means nothing.' : 'Done. Try another test drive, the autoencoder latent, or a different goal gap.'; }
+function drawPlan() { const c = $('cGap'); const { ctx, W, H } = prep(c, 0.56); ctx.fillStyle = cssv('--card'); ctx.fillRect(0, 0, W, H); const L = 40, R = 14, T = 10, Hg = H * 0.56, Ha = H * 0.22, gapTop = T, accTop = T + Hg + 26, tickY = accTop + Ha + 16;
+  const d = lastDrive; ctx.font = '11px ' + cssv('--sans'); ctx.fillStyle = cssv('--muted');
+  const X = (t) => L + (W - L - R) * t / 60; const gmax = 80, Yg = (g) => gapTop + Hg * (1 - Math.max(0, Math.min(gmax, g)) / gmax), Ya = (a) => accTop + Ha * (1 - (a + 4) / 6);
+  ctx.strokeStyle = cssv('--grid'); for (const g of [0, 20, 40, 60, 80]) { ctx.beginPath(); ctx.moveTo(L, Yg(g)); ctx.lineTo(W - R, Yg(g)); ctx.stroke(); ctx.fillText(g + ' m', 4, Yg(g) + 4); }
+  for (const a of [-4, -2, 0, 2]) { ctx.beginPath(); ctx.moveTo(L, Ya(a)); ctx.lineTo(W - R, Ya(a)); ctx.stroke(); ctx.fillText(String(a), 18, Ya(a) + 4); } ctx.fillText('ego acceleration, m/s²', L + 4, accTop - 6);
+  for (const t of [0, 10, 20, 30, 40, 50, 60]) { ctx.textAlign = t === 0 ? 'left' : (t === 60 ? 'right' : 'center'); ctx.fillText(t + ' s', X(t), tickY); } ctx.textAlign = 'left';
+  if (!d) { ctx.fillStyle = cssv('--muted'); ctx.font = '13px ' + cssv('--sans'); ctx.fillText('Press "Drive 60 s".', L + 10, gapTop + 24); drawPlane(null); return; }
+  const k = d.k; ctx.fillStyle = cssv('--sand'); ctx.globalAlpha = 0.9; d.oc.aL.forEach((a, i) => { if (a <= -2.9) { ctx.fillRect(X(i * 0.5), gapTop, X(0.5) - X(0) + 0.5, Hg); ctx.fillRect(X(i * 0.5), accTop, X(0.5) - X(0) + 0.5, Ha); } }); ctx.globalAlpha = 1;
+  ctx.strokeStyle = cssv('--s2'); ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(L, Yg(d.goal)); ctx.lineTo(W - R, Yg(d.goal)); ctx.stroke(); ctx.setLineDash([]);
+  const line = (arr, n, col, Y, wdt) => { ctx.strokeStyle = col; ctx.lineWidth = wdt; ctx.beginPath(); for (let i = 0; i < Math.min(n, arr.length); i++) { const x = X(i * 0.5), y = Y(arr[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke(); };
+  line(d.oc.g, k + 1, cssv('--s4'), Yg, 1.6); line(d.o.g, k + 1, cssv('--s1'), Yg, 2.2); line(d.oc.a, k + 1, cssv('--s4'), Ya, 1.2); line(d.o.a, k + 1, cssv('--s1'), Ya, 1.6);
+  if (d.o.crash && k >= d.steps.length) { ctx.fillStyle = cssv('--warn'); ctx.font = '600 12px ' + cssv('--sans'); ctx.fillText('collision', X((d.o.g.length - 1) * 0.5) + 4, Yg(0) - 6); }
+  drawPlane(d.steps[Math.min(k, d.steps.length - 1)]); $('pstep').textContent = `· step ${Math.min(k + 1, d.steps.length)} of ${d.steps.length}, t = ${(Math.min(k, d.steps.length - 1) * 0.5).toFixed(1)} s`; }
+function drawPlane(st) { const c = $('cPlane'); const { ctx, W, H } = prep(c, 0.8); ctx.fillStyle = cssv('--card'); ctx.fillRect(0, 0, W, H); const ce = $('cEnergy'); const E = prep(ce, 0.36); E.ctx.fillStyle = cssv('--card'); E.ctx.fillRect(0, 0, E.W, E.H);
+  if (!st || !PM) { ctx.fillStyle = cssv('--muted'); ctx.font = '13px ' + cssv('--sans'); ctx.fillText('The planner\'s search appears here during a drive.', 12, 26); return; }
+  const Z = PM[lastDrive.mode].Z; const xs = [], ys = []; for (let i = 0; i < Z.length / 2; i++) { xs.push(Z[i * 2]); ys.push(Z[i * 2 + 1]); } const q = (a, p) => { const s = [...a].sort((u, v) => u - v); return s[Math.floor(p * (s.length - 1))]; };
+  let x0 = Math.min(q(xs, 0.01), st.sg[0]), x1 = Math.max(q(xs, 0.99), st.sg[0]), y0 = Math.min(q(ys, 0.01), st.sg[1]), y1 = Math.max(q(ys, 0.99), st.sg[1]); const px = (x1 - x0) * 0.1, py = (y1 - y0) * 0.1; x0 -= px; x1 += px; y0 -= py; y1 += py;
+  const L = 26, B = 22, X = (x) => L + (W - L - 10) * (x - x0) / (x1 - x0), Y = (y) => 10 + (H - B - 10) * (1 - (y - y0) / (y1 - y0)); const inb = (x, y) => x >= x0 && x <= x1 && y >= y0 && y <= y1;
+  ctx.strokeStyle = cssv('--axis'); ctx.strokeRect(L, 10, W - L - 10, H - B - 10); ctx.fillStyle = cssv('--muted'); ctx.font = '11px ' + cssv('--sans'); ctx.fillText('latent 1 →', W / 2 - 26, H - 6); ctx.save(); ctx.translate(12, H / 2 + 20); ctx.rotate(-Math.PI / 2); ctx.fillText('latent 2 →', 0, 0); ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.rect(L, 10, W - L - 10, H - B - 10); ctx.clip(); ctx.fillStyle = cssv('--axis'); ctx.globalAlpha = 0.25; for (let i = 0; i < xs.length; i += 3) ctx.fillRect(X(xs[i]) - 1, Y(ys[i]) - 1, 2, 2); ctx.globalAlpha = 1;
+  st.last.forEach((p, i) => { const [x, y] = p.e; if (!inb(x, y)) return; ctx.fillStyle = i < ENG.ELITE ? cssv('--s1') : cssv('--s4'); ctx.globalAlpha = i < ENG.ELITE ? 0.95 : 0.35; ctx.beginPath(); ctx.arc(X(x), Y(y), i < ENG.ELITE ? 3.2 : 2.4, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1;
+  ctx.restore(); ctx.fillStyle = cssv('--s2'); ctx.beginPath(); ctx.arc(X(st.sg[0]), Y(st.sg[1]), 7, 0, 7); ctx.fill(); ctx.strokeStyle = cssv('--ink'); ctx.lineWidth = 2; const sx = X(st.s0[0]), sy = Y(st.s0[1]); ctx.beginPath(); ctx.moveTo(sx - 6, sy - 6); ctx.lineTo(sx + 6, sy + 6); ctx.moveTo(sx + 6, sy - 6); ctx.lineTo(sx - 6, sy + 6); ctx.stroke(); ctx.lineWidth = 1;
+  // energy landscape over a constant acceleration
+  const ac = PM[lastDrive.mode].ac; const as = [], es = []; for (let a = -4; a <= 2.0001; a += 0.1) { const e = ENG.roll(ac, st.s0, new Array(ENG.H).fill(a)); as.push(a); es.push(Math.abs(e[0] - st.sg[0]) + Math.abs(e[1] - st.sg[1])); }
+  const em = Math.max(...es), en = Math.min(...es); const c2 = E.ctx, W2 = E.W, H2 = E.H, L2 = 34, B2 = 36; const X2 = (a) => L2 + (W2 - L2 - 10) * (a + 4) / 6, Y2 = (e) => 8 + (H2 - B2 - 8) * (1 - (e - en) / ((em - en) || 1));
+  c2.strokeStyle = cssv('--axis'); c2.strokeRect(L2, 8, W2 - L2 - 10, H2 - B2 - 8); c2.fillStyle = cssv('--muted'); c2.font = '11px ' + cssv('--sans'); for (const a of [-4, -2, 0, 2]) { c2.textAlign = a === -4 ? 'left' : (a === 2 ? 'right' : 'center'); c2.fillText(String(a), X2(a), H2 - 20); } c2.textAlign = 'center'; c2.fillText('acceleration held for all 4 s (m/s²)', L2 + (W2 - L2 - 10) / 2, H2 - 4); c2.textAlign = 'left'; c2.save(); c2.translate(12, H2 / 2 + 16); c2.rotate(-Math.PI / 2); c2.fillText('energy', 0, 0); c2.restore();
+  c2.strokeStyle = cssv('--s1'); c2.lineWidth = 2; c2.beginPath(); as.forEach((a, i) => { i ? c2.lineTo(X2(a), Y2(es[i])) : c2.moveTo(X2(a), Y2(es[i])); }); c2.stroke(); const im = es.indexOf(en); c2.fillStyle = cssv('--s2'); c2.beginPath(); c2.arc(X2(as[im]), Y2(en), 4, 0, 7); c2.fill(); c2.fillStyle = cssv('--ink'); c2.textAlign = X2(as[im]) > W2 * 0.6 ? 'right' : 'left'; c2.fillText(`lowest at ${as[im].toFixed(1)} m/s²`, X2(as[im]) + (X2(as[im]) > W2 * 0.6 ? -8 : 8), Y2(en) - 8); c2.textAlign = 'left'; }
+$('pgo').addEventListener('click', runDrive);
+
+// ---------- start ----------
+let start = 'start'; try { const s = localStorage.getItem('jepa-tab'); if (s && $('tab-' + s)) start = s; } catch (e) {}
+showTab(start);
+</script>
+</body>
+</html>

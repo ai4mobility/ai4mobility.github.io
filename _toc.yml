@@ -93,6 +93,7 @@ parts:
           # the same evening as a sixth part. Later the same day 4.1+4.2,
           # the Gaussian warm-up + mixtures, and the two deep-autoencoder pages were merged (notes2-autoregressive,
           # notes5-hidden-cause and notes2e-copying redirect to their sections). File names no longer follow the numbers.
+          # 2026-10-29: a further-reading page on JEPA and V-JEPA 2 (notes12-jepa) follows 4.12.
           - file: module4/notes1-producing
             title: "4.1 Introduction to deep generative models"
           - file: module4/notes2a-gaussians
@@ -117,6 +118,8 @@ parts:
             title: "4.11 How transportation knowledge guides diffusion"
           - file: module4/notes11-world-models
             title: "4.12 World models"
+          - file: module4/notes12-jepa
+            title: "Further reading: JEPA and V-JEPA 2"
           - file: module4/notes10-reading-library
             title: "Further reading: generative models in transportation"
 

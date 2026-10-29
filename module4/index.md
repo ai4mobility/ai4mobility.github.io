@@ -12,7 +12,8 @@
 - **Diffusion:** the basics, unCLIP, diffusion in the transportation literature, and knowledge-guided generation
   (4.8&ndash;4.11)
 - **World models:** learning the simulator from data, imagined rollouts, and what-if safety analysis of real ADAS
-  takeovers (4.12)
+  takeovers (4.12), with further reading on JEPA world models, which predict a description of the next frame
+  instead of its pixels
 
 ## Overview
 
@@ -48,7 +49,8 @@ naming its part.
   unCLIP gives the decoder a condition, 4.10 how transportation papers use diffusion for safety scenarios, and 4.11
   where your own engineering knowledge can steer it.
 - **World models (4.12)** puts the same generators to work on a different question: what happens next if I do this?
-  It closes the module with what-if simulation of real ADAS takeovers.
+  It closes the module with what-if simulation of real ADAS takeovers. A further-reading page, {doc}`JEPA and V-JEPA 2 <notes12-jepa>`,
+  follows it: world models that predict a compact description of the next frame instead of its pixels.
 
 The {doc}`closing page <notes10-reading-library>` holds a reading library of 34 papers on generative models in
 transportation.
@@ -128,6 +130,11 @@ idea the rest builds on.
 <tr>
   <td><a href="notes11-world-models.html"><strong>4.12 World models</strong></a><br><em>World models</em></td>
   <td>Learning the simulator instead of writing it: the simulators you already build by hand; the key equation and four uses (simulate, plan, train a controller, generate data); milestones from Craik and Dyna to the 2026 world models that test driving software; encoder, dynamics, decoder and heads, and a loss that is the VAE loss with a learned prior; a worked example on the course torus network, where only the model trained on varied signal plans can rank them; what data trains one; five transportation jobs; what-if simulation of real ADAS takeovers (what if the driver had been 1 s or 2 s late?); where it breaks, and when to keep the calibrated simulator.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes12-jepa.html"><strong>Further reading: JEPA and V-JEPA 2</strong></a><br><em>World models</em></td>
+  <td>World models that predict a description of the next frame, not its pixels: three ways to learn from unlabeled data; the JEPA recipe and the collapse it must avoid; I-JEPA, V-JEPA, and V-JEPA 2, which pretrains on over a million hours of video and then plans robot actions toward a goal image; a worked example on a synthetic car-following sensor; JEPA papers in driving, trajectories and traffic forecasting (interactive companion).</td>
   <td>&mdash;</td>
 </tr>
 <tr>
@@ -213,6 +220,8 @@ By the end of this module you will be able to:
 - Rombach, R., Blattmann, A., Lorenz, D., Esser, P., & Ommer, B. (2022). High-resolution image synthesis with latent diffusion models. *CVPR*.
 - Ha, D., & Schmidhuber, J. (2018). World models. *NeurIPS*.
 - Hafner, D., Lillicrap, T., Ba, J., & Norouzi, M. (2020). Dream to control: Learning behaviors by latent imagination. *ICLR*. *(Dreamer.)*
+- LeCun, Y. (2022). A path towards autonomous machine intelligence. *OpenReview*. *(The JEPA proposal.)*
+- Assran, M., et al. (2025). V-JEPA 2: Self-supervised video models enable understanding, prediction and planning. *arXiv:2506.09985*. *(The JEPA world model of the further-reading page after 4.12.)*
 - Wang, Y., Xu, Y., Sun, J., & Zhou, H. (2026). ADAS-TO: A large-scale multimodal naturalistic dataset and empirical characterization of human takeovers during ADAS engagement. *ITSC*. *(The takeover data behind the what-if section of 4.12.)*
 
 ## Labs

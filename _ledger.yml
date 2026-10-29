@@ -2514,6 +2514,66 @@ items:
       2 CPU cores) and NUMBERS.md the number-to-source table; models wm_A.pt / wm_B.pt, JSON results, fig/WM_*.png,
       eq/WM_eq*.png (pdflatex + pdftoppm), whatif/takeover_whatif.py (+ .json), site/ (export and widget figures).'
 
+  - id: m4-notes12-jepa
+    file: site/module4/notes12-jepa.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes12-jepa.md + _toc.yml (after 4.12) + module4/index.md (topics, how-to-read, map row,
+      readings) + notes11-world-models.md (Read it after, a pointer under the three-families table, Next line)
+    notes: 'Further reading: JEPA and V-JEPA 2 (Oct 29 2026), an unnumbered page after 4.12: the JEPA handout (row
+      m4-jepa-handout) as one page, converted by script (genmodels/jepa/site/convert.py) from the doc''s Markdown
+      export at rev 59. Anchors jepa-further-reading, jepa-start, jepa-why, jepa-families, jepa-recipe,
+      jepa-collapse, jepa-ijepa, jepa-vjepa, jepa-vjepa2, jepa-plan, jepa-worked, jepa-companion, jepa-transport,
+      jepa-breaks, jepa-discussion, jepa-fit, jepa-summary, jepa-references. Handout "Section N" references became
+      {ref} links (paper section numbers kept as text); course references became links to 1.5, 2.5, 2.7, 2.10,
+      4.4-4.5, 4.7, 4.9 and 4.12 anchors. Plain-text symbols became inline LaTeX; the three equations are LaTeX.
+      Figures: JP_Families, JP_Training_Step, JP_IJEPA_Masking, JP_VJEPA_Tubes, JP_VJEPA2_Stages, JP_Planning_Loop,
+      JP_Map (doc widget screenshots, also in genmodels/jepa/site/fig/) and JP_Sensor, JP_Latents, JP_Collapse,
+      JP_Sweep, JP_Planning (copies of genmodels/jepa/fig/). The companion is embedded after the worked example.'
+
+  - id: m4-jepa-handout
+    file: JEPA and V-JEPA 2 — Student Handout.pdf
+    kind: handout
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes12-jepa.md
+    notes: 'Student handout (Oct 29 2026), further reading after 4.12. Claude Doc
+      https://claude.ai/artifact/DboUJBggMyztEfbLinQZ69, PDF at the class-folder root (40 pages). Why predict in
+      latent space, three self-supervised families, the JEPA recipe and collapse, I-JEPA, V-JEPA, V-JEPA 2 (stages
+      1-3, CEM planning, results vs Octo and Cosmos), a worked example on a synthetic car-following sensor (AE /
+      pixel predictor / three JEPAs, probes, collapse, nuisance sweep, CEM planning vs a two-gain controller), JEPA
+      after V-JEPA 2 and in transportation research (8 papers), where it breaks, discussion, fit card. Answer key
+      (instructor only): JEPA_Handout_Answer_Key_INSTRUCTOR.md at the root (Q1-Q7). An independent review checked
+      the worked example (reproduced byte-identical) and the paper claims; all must-fix and should-fix items applied.'
+
+  - id: m4-jepa-companion
+    file: JEPA_World_Models_Companion.html
+    kind: companion
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes12-jepa.md
+    mounted: site/_static/companions/JEPA_World_Models_Companion.html
+    notes: 'JEPA world models: predict the description, not the picture (Oct 29 2026), 96 KB, 3 tabs: masking
+      (I-JEPA blocks and V-JEPA tubes on a road scene, how much each scheme gives away), live training of five
+      small encoders on the car-following sensor (including a JEPA that collapses), and latent planning of 60 s
+      drives toward a goal frame beside a classical gap controller. A smaller version of the handout''s worked
+      example, so its numbers differ slightly. Interactive twin of the handout. Mounted at anchor jepa-companion.'
+
+  - id: m4-jepa-repro
+    file: genmodels/jepa/
+    kind: internal
+    module: 4
+    session: unscheduled
+    status: integrated
+    notes: 'Reproducer for m4-jepa-handout and m4-notes12-jepa. README has the run order (about 1 min on a laptop CPU,
+      NumPy only) and NUMBERS.md the number-to-source table: jcommon.py, stage1.py, sweep_nuis.py, stage23.py,
+      plan_eval.py (incl. the oracle CEM jerk check), check_stab.py, data_size.py, figs.py; JSON results,
+      fig/JP_*.png, eq/JP_eq*.png (render_eq.py), site/ (export, convert.py, widget figures).'
+
 # MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------
 
