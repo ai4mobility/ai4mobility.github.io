@@ -1754,6 +1754,22 @@ items:
       one backbone three heads, node / edge (link prediction) / graph heads (KaTeX), same 40 numbers (A 16, B 0), heads side
       by side, evaluation close, the module in six lines, fit card, check yourself, where to go next. Built by build_part6.py.'
 
+  - id: m3-gnn-deck-part7
+    file: GNN_Part7_General_Graph_Networks_Slides.pptx + .md
+    kind: deck
+    module: 3
+    session: gnn-week
+    status: drafted
+    dest: site/module3 (not yet on the site; handout v2 section 10)
+    notes: 'Part 7, added Oct 29 after Hao added Bishop ch. 13.3 slides to Part 4. 22 slides: what message passing throws
+      away, a vector on every edge, g as a shortcut (7 -> 3: 4 hops vs 2 layers; USF diameter 36), Bishop Fig. 13.5 redrawn
+      on the grid (3 builds), the four update equations (KaTeX), Bishop notation, Algorithm 13.2 as pseudocode, learned vs
+      given, encode-process-decode (41,152 weights/layer at width 64 vs GCN 4,160), the CTM as a full graph network (12
+      faces, 37.9 vehicles conserved, 10,800 veh/h), the inbox m as net inflow (2,025 vs +150) and signed aggregation, N(i)
+      in code (edge list, gather/scatter-add, PyG edge_index, Jraph), who sets N(i) (map / rule / learned / complete graph),
+      3- and 5-leg intersections (USF 285 / 114 / 1), one family table, applications, evaluation close, fit card, check
+      yourself. Built by build_part7.py; numbers from gn_numbers_part7.py (gn_block.py).'
+
 # -----------------------------------------------------------------------------
 # MODULE 4 — Deep Generative Models (was Module 3 until 2026-10-25; the Module 3 GNN rows, ex-2.14, sit just above)
 # -----------------------------------------------------------------------------
