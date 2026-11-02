@@ -3,15 +3,15 @@
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Further reading after 4.12</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Further reading after 4.14</span>
     <span class="notes-card-session">Optional, for the world-models session</span>
   </div>
-  <p class="notes-card-lede">The world models of 4.12 predict the next observation. A JEPA (Joint-Embedding Predictive Architecture) predicts only a compact description of it, so it is free to drop glare, raindrops and other detail nobody can predict. This page explains the idea and the three Meta models built on it: I-JEPA for images, V-JEPA for video, and V-JEPA 2, which adds robot actions and plans toward a goal image. A small car-following example shows an autoencoder keeping the glare while a JEPA keeps the gap, an unprotected JEPA collapsing, and planning in the JEPA's latent space. It closes with JEPA papers in driving, trajectories and traffic forecasting.</p>
+  <p class="notes-card-lede">The world models of 4.14 predict the next observation. A JEPA (Joint-Embedding Predictive Architecture) predicts only a compact description of it, so it is free to drop glare, raindrops and other detail nobody can predict. This page explains the idea and the three Meta models built on it: I-JEPA for images, V-JEPA for video, and V-JEPA 2, which adds robot actions and plans toward a goal image. A small car-following example shows an autoencoder keeping the glare while a JEPA keeps the gap, an unprotected JEPA collapsing, and planning in the JEPA's latent space. It closes with JEPA papers in driving, trajectories and traffic forecasting.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it after</h4>
       <ul>
-      <li><a href="notes11-world-models.html">4.12 World models</a>, for the world-model loop and its three families</li>
+      <li><a href="notes11-world-models.html">4.14 World models</a>, for the world-model loop and its three families</li>
       <li><a href="notes2d-deep-autoencoders.html">4.5 Deep autoencoders</a>, for masked autoencoders</li>
       </ul>
     </div>
@@ -34,7 +34,7 @@
 (jepa-start)=
 ## Before you start
 
-The world models in {doc}`4.12 <notes11-world-models>` learn to predict the next observation: the next camera frame, or the vehicle count on every link. JEPA (Joint-Embedding Predictive Architecture) makes a different bet. It predicts a compact *description* of what comes next, and it never tries to draw the frame itself.
+The world models in {doc}`4.14 <notes11-world-models>` learn to predict the next observation: the next camera frame, or the vehicle count on every link. JEPA (Joint-Embedding Predictive Architecture) makes a different bet. It predicts a compact *description* of what comes next, and it never tries to draw the frame itself.
 
 This reading explains that idea and the three Meta models built on it: I-JEPA for images, V-JEPA for video, and V-JEPA 2, which adds robot actions and uses the model to plan. A small worked example on car following runs through the same steps at a size you can check by hand.
 
@@ -47,7 +47,7 @@ This reading explains that idea and the three Meta models built on it: I-JEPA fo
 5. Explain how V-JEPA 2 plans actions by matching its prediction to a picture of the goal, and map that loop onto a driving task.
 6. Decide when a JEPA-style world model fits a transportation task, and when a pixel-predicting world model or a classical model is the better choice.
 
-**Symbols.** We follow the papers' notation so you can read them directly. One change from 4.12: there, z was the latent state; here it is the embedding s, as in the I-JEPA paper. (The V-JEPA 2 paper writes it z again; {ref}`the V-JEPA 2 section <jepa-vjepa2>` points out the switch.)
+**Symbols.** We follow the papers' notation so you can read them directly. One change from 4.14: there, z was the latent state; here it is the embedding s, as in the I-JEPA paper. (The V-JEPA 2 paper writes it z again; {ref}`the V-JEPA 2 section <jepa-vjepa2>` points out the switch.)
 
 | Symbol | Meaning | Driving example |
 | --- | --- | --- |
@@ -61,7 +61,7 @@ This reading explains that idea and the three Meta models built on it: I-JEPA fo
 | $\Delta_y$ | where or when the target is | "1 s ahead", "the patch at row 3, column 5" |
 | $a$, $p$ | action, and the agent's own state (pose) | ego acceleration; ego speed from the CAN bus |
 
-**Prerequisites.** Autoencoders and masked autoencoders ({doc}`4.4 <notes2c-autoencoders>`–{doc}`4.5 <notes2d-deep-autoencoders>`), the world-model loop, its three families and model-predictive control ({doc}`4.12 <notes11-world-models>`), BERT's masked pretraining ({doc}`2.5 <../module2/notes5-bert>`), and the Vision Transformer's patch tokens ({doc}`2.7 <../module2/notes7-vision>`). In {ref}`4.12's table of three families <wm-what>`, V-JEPA 2 sat in the last row, "prediction without pictures". This reading opens that row up.
+**Prerequisites.** Autoencoders and masked autoencoders ({doc}`4.4 <notes2c-autoencoders>`–{doc}`4.5 <notes2d-deep-autoencoders>`), the world-model loop, its three families and model-predictive control ({doc}`4.14 <notes11-world-models>`), BERT's masked pretraining ({doc}`2.5 <../module2/notes5-bert>`), and the Vision Transformer's patch tokens ({doc}`2.7 <../module2/notes7-vision>`). In {ref}`4.14's table of three families <wm-what>`, V-JEPA 2 sat in the last row, "prediction without pictures". This reading opens that row up.
 
 (jepa-why)=
 ## Why predict in latent space
@@ -84,7 +84,7 @@ A pixel loss weights every pixel equally, and much of the change between video f
 **What happens when you predict pixels anyway.** There are two outcomes, and you have met both in this module.
 
 - A *deterministic* predictor (regression on pixels) outputs the average of all the futures it cannot tell apart. The glare and the rain average into a blur, just as {doc}`4.7 <notes4-gan>` showed that an average of futures can be a state that never happens.
-- A *generative* predictor (the diffusion and token models behind GAIA and Cosmos in {ref}`4.12 <wm-milestones>`) draws sharp, believable details by sampling them. That is useful when a person must watch the output, but it costs model capacity and compute. When the V-JEPA 2 team planned robot actions with the Cosmos video model, each action took 4 minutes to choose; their latent model took 16 seconds while scoring 10 times as many candidate plans ({ref}`V-JEPA 2 <jepa-vjepa2>`).
+- A *generative* predictor (the diffusion and token models behind GAIA and Cosmos in {ref}`4.14 <wm-milestones>`) draws sharp, believable details by sampling them. That is useful when a person must watch the output, but it costs model capacity and compute. When the V-JEPA 2 team planned robot actions with the Cosmos video model, each action took 4 minutes to choose; their latent model took 16 seconds while scoring 10 times as many candidate plans ({ref}`V-JEPA 2 <jepa-vjepa2>`).
 
 **LeCun's proposal.** In his 2022 position paper *A Path Towards Autonomous Machine Intelligence*, Yann LeCun argued that a world model used for planning should predict in an abstract representation that keeps what is predictable and drops the rest. He called the design a **Joint-Embedding Predictive Architecture (JEPA)**: encode the present, encode the future, and train a predictor to map one embedding to the other.
 
@@ -106,7 +106,7 @@ Only a JEPA predicts an embedding. After LeCun (2022) and Assran et al. (2023), 
 
 Read each panel from the bottom up: inputs, then encoders, then what the loss compares at the top. The JEPA panel is the generative panel with its decoder replaced by a predictor that works on embeddings, and with the target passed through an encoder of its own.
 
-**(a) Generative.** These are the models of this module: the autoencoder and masked autoencoder (4.4–4.5), the VAE, diffusion, and the video world models of 4.12. Their strength is that you can look at the output. Their cost is that every pixel of y counts in the loss, the unpredictable ones too.
+**(a) Generative.** These are the models of this module: the autoencoder and masked autoencoder (4.4–4.5), the VAE, diffusion, and the video world models of 4.14. Their strength is that you can look at the output. Their cost is that every pixel of y counts in the loss, the unpredictable ones too.
 
 **(b) Joint-embedding.** You met one in Module 1: CLIP pulls together the embeddings of an image and its caption. Image-only versions such as SimCLR and DINO make two "views" of one picture by cropping, flipping and shifting its colors, then pull their embeddings together. Two weaknesses follow:
 
@@ -316,7 +316,7 @@ $$
 \mathcal{L}(\phi)=\frac{1}{T}\sum_{k=1}^{T}\big\|\hat{s}_{k+1}-s_{k+1}\big\|_1\;+\;\big\|P_\phi(a_{1:2};\ s_1,\ p_1)-s_{3}\big\|_1
 $$
 
-**In words:** learn to predict the next frame's embedding, $\hat{s}_{k+1}$, from the real past (T = 15 such predictions per 4-second clip; the first term, called *teacher forcing*), and also learn to predict two frames ahead when the middle frame is the model's own guess (second term, a *rollout*). The second term trains the predictor to cope with its own mistakes, which is what it faces when it imagines a plan. {ref}`4.12's first failure mode <wm-breaks>`, errors that compound over the horizon, is the reason for it.
+**In words:** learn to predict the next frame's embedding, $\hat{s}_{k+1}$, from the real past (T = 15 such predictions per 4-second clip; the first term, called *teacher forcing*), and also learn to predict two frames ahead when the middle frame is the model's own guess (second term, a *rollout*). The second term trains the predictor to cope with its own mistakes, which is what it faces when it imagines a plan. {ref}`4.14's first failure mode <wm-breaks>`, errors that compound over the horizon, is the reason for it.
 
 (jepa-plan)=
 ### Stage 3: plan by minimizing an energy
@@ -336,7 +336,7 @@ $$
 | $\lVert\cdot\rVert_1$ | L1 distance: this is the *energy* of the plan |
 | $\arg\min$ | keep the plan with the lowest energy |
 
-**In words:** among the plans you try, keep the one whose imagined future is closest to the goal picture, measured on embeddings, not pixels. Compare the {ref}`planning equation of 4.12 <wm-uses>`: there you maximized imagined reward; here you minimize imagined distance to a goal.
+**In words:** among the plans you try, keep the one whose imagined future is closest to the goal picture, measured on embeddings, not pixels. Compare the {ref}`planning equation of 4.14 <wm-uses>`: there you maximized imagined reward; here you minimize imagined distance to a goal.
 
 ```{figure} ../_static/figures/JP_Planning_Loop.png
 :alt: The current frame and the goal image each pass through the frozen encoder. Inside a cross-entropy-method box, four steps form a loop repeated 10 rounds: sample action plans, imagine their result with the predictor, score each by the L1 energy to the goal embedding, and refit the sampler to the best plans. The best plan's first action is executed; the arm moves and the next frame starts the loop again.
@@ -345,7 +345,7 @@ $$
 One planning step of V-JEPA 2-AC: it plans by matching an imagined future to a goal image. After Assran et al. (2025), Figure 7 and Section 3.2.
 ```
 
-The search inside one planning step is the **cross-entropy method (CEM)**: draw many plans from a Gaussian per action (starting at mean 0, variance 1), score each with the energy, refit the Gaussians to the best ones, and repeat. The paper used 800 plans per round, kept the best 10, ran 10 rounds, and looked only one action ahead, which it found enough for these fairly greedy tasks. After the last round, the mean of the Gaussians is the plan. Only its first action is executed; then the robot looks again and plans again. That is receding-horizon control, the same loop as ramp-metering MPC with METANET in {ref}`4.12 <wm-uses>`, except that the model is learned and the target is a picture.
+The search inside one planning step is the **cross-entropy method (CEM)**: draw many plans from a Gaussian per action (starting at mean 0, variance 1), score each with the energy, refit the Gaussians to the best ones, and repeat. The paper used 800 plans per round, kept the best 10, ran 10 rounds, and looked only one action ahead, which it found enough for these fairly greedy tasks. After the last round, the mean of the Gaussians is the plan. Only its first action is executed; then the robot looks again and plans again. That is receding-horizon control, the same loop as ramp-metering MPC with METANET in {ref}`4.14 <wm-uses>`, except that the model is learned and the target is a picture.
 
 ### Results
 
@@ -378,7 +378,7 @@ At 4 minutes per action, one Cosmos pick-and-place run would take over an hour. 
 | Part | Robot arm in the paper | Driving counterpart | What changes |
 | --- | --- | --- | --- |
 | Stage 1 video | 1M+ hours of internet video | fleet dashcam video, no CAN signals needed | the pretraining video should include driving ({ref}`research section <jepa-transport>`) |
-| Stage 2 data | 62 h of DROID with gripper poses | drives with logged CAN: acceleration, steering, speed | action variety matters, as in {ref}`4.12's data section <wm-data-needs>` |
+| Stage 2 data | 62 h of DROID with gripper poses | drives with logged CAN: acceleration, steering, speed | action variety matters, as in {ref}`4.14's data section <wm-data-needs>` |
 | Action a | change in gripper pose, capped at about 13 cm | acceleration and steering change | limits come from vehicle dynamics and comfort |
 | Pose p | gripper position, orientation, opening | ego speed, yaw rate | — |
 | Goal | a picture of the finished task | a frame at the desired gap or lane position, or a cost such as progress plus safety margin | most driving goals are not pictures |
@@ -407,7 +407,7 @@ On synthetic car-following data, a JEPA encoder that is only ever asked to predi
 ### Setup (synthetic data, built to show the mechanism)
 
 - **Hidden state.** The gap g to the lead vehicle and the closing speed Δv = lead speed − ego speed, in half-second steps. The lead vehicle's speed wanders at random, and it brakes hard (3 m/s² for 2–4 s) about once every 50 s.
-- **Logged driver.** An ACC-like rule plus random exploration and occasional overrides, so the logged actions vary, as {ref}`4.12's data section <wm-data-needs>` requires.
+- **Logged driver.** An ACC-like rule plus random exploration and occasional overrides, so the logged actions vary, as {ref}`4.14's data section <wm-data-needs>` requires.
 - **Sensor frame.** 64 numbers per frame. Gap and closing speed are mixed into all 64; so are six *nuisance* causes (think glare, vibration, road texture), each drawn fresh every frame with a standard deviation of 2, larger than the gap's 1.5 and the closing speed's 1.1 in the same units. Gap and closing speed explain 13% of the variance of the 64 values. Everything is linear on purpose, so the same experiment runs live in the companion.
 - **Three stages, as in V-JEPA 2.** Stage 1: 400 drives of 100 s (80,000 frames), no actions recorded. Stage 2: 20 more drives (4,000 frames, 5% of stage 1) with the driver's acceleration, used to train an action-conditioned predictor in each frozen latent space with the teacher-forcing and two-step rollout loss of {ref}`V-JEPA 2-AC <jepa-vjepa2>`. Stage 3: 40 new test drives of 60 s, starting 40–60 m behind the lead.
 - **Five encoders, each turning 64 numbers into 2.** An autoencoder (rebuild $x_t$); a pixel predictor (predict all 64 numbers of $x_{t+1}$ through 2 numbers); and three JEPAs that predict the next frame's embedding: with no protection, with stop-gradient plus an EMA target encoder (τ = 0.99), and with a spread-and-decorrelation penalty instead.
@@ -559,7 +559,7 @@ A JEPA's strength, predicting only a compact description, is also the source of 
 1. **There is nothing to look at.** A video world model's imagined future can be watched and judged by an engineer; a JEPA's is a list of numbers. Checking it takes probes, decoders trained after the fact, or task results. For an agency that must explain a decision, this is a real cost.
 2. **Predictable is not the same as relevant.** Slowly changing sunlight, a billboard's schedule, the shadow of an overpass: all predictable, all kept. The worked example's glare was dropped only because it was fresh every frame.
 3. **Unpredictable is not the same as irrelevant.** A pedestrian stepping out from behind a parked van is unpredictable until the moment it happens. An objective that rewards predictable content gives no special room to rare, sudden events, which are the ones safety work cares about. Check rare-event performance directly; do not assume it.
-4. **One future, not a spread.** LeCun's 2022 design includes a latent variable for what the context cannot determine, but V-JEPA 2-AC's predictor is deterministic. When the lead driver may or may not brake, it predicts one embedding, a kind of average. {ref}`4.12 <wm-key-equation>` explained why averaged futures mislead.
+4. **One future, not a spread.** LeCun's 2022 design includes a latent variable for what the context cannot determine, but V-JEPA 2-AC's predictor is deterministic. When the lead driver may or may not brake, it predicts one embedding, a kind of average. {ref}`4.14 <wm-key-equation>` explained why averaged futures mislead.
 5. **Collapse can be silent.** Full collapse shows up as a near-zero loss; partial collapse, where only a few directions of the embedding stay alive, does not. Track the spread of the embeddings and a probe on a held-out labeled set during training.
 6. **Goals and safety are not built in.** V-JEPA 2-AC's goal is a picture and its energy is a distance. Driving goals are rarely pictures, and "far from the goal" says nothing about a near-collision on the way there. Constraints must be added outside the energy.
 7. **Slow and short-sighted for driving.** 16 seconds per action, plans one action deep, and sub-goal images for anything longer. A car needs decisions in about a tenth of a second over a horizon of several seconds.
@@ -573,15 +573,15 @@ A JEPA's strength, predicting only a compact description, is also the source of 
 JEPA is not a new kind of network; it is a choice of *what to compare in the loss*. Put that choice next to whether a model takes actions, and every model of Module 4 finds its place.
 
 ```{figure} ../_static/figures/JP_Map.png
-:alt: A two by two map. Columns: the loss compares pixels or tokens; the loss compares embeddings. Rows: takes actions (a world model); no actions (an encoder or a generator). Top left: video world models such as GAIA-1 and 2, Cosmos and Genie, which you can watch but which are slow to plan with. Top right, highlighted: JEPA world models such as V-JEPA 2-AC, DINO-WM, LeWorldModel, AD-E2E-JEPA and H-JEPA. Bottom left: the generative models of 4.4 to 4.11, such as the autoencoder, MAE, VAE, GAN and diffusion. Bottom right: JEPA encoders such as I-JEPA, V-JEPA, V-JEPA 2 stage 1, LeJEPA and VL-JEPA. Dreamer and the RSSM of the 4.12 torus example straddle the two top cells: they step in latent space but are trained by rebuilding x. Below the grid, the columns read: loss compares pixels or tokens; loss compares embeddings.
+:alt: A two by two map. Columns: the loss compares pixels or tokens; the loss compares embeddings. Rows: takes actions (a world model); no actions (an encoder or a generator). Top left: video world models such as GAIA-1 and 2, Cosmos and Genie, which you can watch but which are slow to plan with. Top right, highlighted: JEPA world models such as V-JEPA 2-AC, DINO-WM, LeWorldModel, AD-E2E-JEPA and H-JEPA. Bottom left: the generative models of 4.4 to 4.11, such as the autoencoder, MAE, VAE, GAN and diffusion. Bottom right: JEPA encoders such as I-JEPA, V-JEPA, V-JEPA 2 stage 1, LeJEPA and VL-JEPA. Dreamer and the RSSM of the 4.14 torus example straddle the two top cells: they step in latent space but are trained by rebuilding x. Below the grid, the columns read: loss compares pixels or tokens; loss compares embeddings.
 :width: 100%
 
 The models of Module 4, placed by what their loss compares and whether they take actions.
 ```
 
-Read across the top row: both are world models, and they differ only in whether the imagined future is drawn or described. Read down the right column: the same JEPA training gives an encoder (stage 1 of V-JEPA 2) and, with actions added, a world model (stage 2). The {ref}`4.12 torus model <wm-torus>` sits on the line: it steps forward in latent space like a JEPA but is trained by rebuilding the link counts, like a generator.
+Read across the top row: both are world models, and they differ only in whether the imagined future is drawn or described. Read down the right column: the same JEPA training gives an encoder (stage 1 of V-JEPA 2) and, with actions added, a world model (stage 2). The {ref}`4.14 torus model <wm-torus>` sits on the line: it steps forward in latent space like a JEPA but is trained by rebuilding the link counts, like a generator.
 
-|  | Autoencoder, MAE | VAE, diffusion | Video world model (GAIA, Cosmos) | Dreamer-style latent model (4.12 torus) | JEPA world model (V-JEPA 2-AC) |
+|  | Autoencoder, MAE | VAE, diffusion | Video world model (GAIA, Cosmos) | Dreamer-style latent model (4.14 torus) | JEPA world model (V-JEPA 2-AC) |
 | --- | --- | --- | --- | --- | --- |
 | Trained to | rebuild x or its hidden parts | generate x from noise or a latent | generate the next frames | rebuild $x_t$ and predict the next latent | predict the next embedding |
 | Takes actions | no | no | yes | yes | yes |
@@ -596,7 +596,7 @@ Read across the top row: both are world models, and they differ only in whether 
 - **The details you need are a small part of what the sensor records.** The worked example's 13% is a stand-in for a dashcam frame in which the lead vehicle's motion matters and the sky does not.
 - **You need to plan quickly.** Searching in embedding space is far cheaper than generating video for every candidate plan.
 
-**When a generative world model is the better choice.** When people must see the imagined future (a stakeholder review, a safety case), when you need synthetic sensor data to train or test perception, or when the spread of possible futures matters, as in the what-if analysis of 4.12.
+**When a generative world model is the better choice.** When people must see the imagined future (a stakeholder review, a safety case), when you need synthetic sensor data to train or test perception, or when the spread of possible futures matters, as in the what-if analysis of 4.14.
 
 **When to keep the classical method.** When the state is measured (a radar gap, loop-detector counts, signal phases) and a physical model exists (car following, the CTM, HCM procedures), the learned model must beat a strong, cheap and explainable baseline. In the worked example it did not: the two-gain controller came within 0.3 m of the JEPA planner's gap error, with one fifth of its jerk. JEPA earns its place when the state is buried in raw sensor data that no one has turned into variables.
 
@@ -682,8 +682,8 @@ Read across the top row: both are world models, and they differ only in whether 
 - Feng, Y., et al. (2026). [Does Joint-Embedding Predictive Architecture Pretraining Help Time Series Forecasting?](https://arxiv.org/abs/2609.31680)
 - Pavuluri, A., et al. (2026). [Asleep at the Wheel: JEPA's Limitations in Evaluating Novel Driving Data](https://arxiv.org/abs/2608.01336).
 
-**In this course:** {ref}`1.5 <linear-head>` (linear probes), {doc}`2.5 <../module2/notes5-bert>` (BERT's masking), {doc}`2.7 <../module2/notes7-vision>` (Vision Transformer), {doc}`2.10 <../module2/notes10-detr>` (DETR's learned queries), {doc}`4.4 <notes2c-autoencoders>`–{doc}`4.5 <notes2d-deep-autoencoders>` (autoencoders and masked autoencoders), {doc}`4.7 <notes4-gan>` (why an average of futures misleads), {doc}`4.9 <notes7-unclip>` (unCLIP), {doc}`4.12 <notes11-world-models>` (world models). The worked example's scripts are in the course folder under `genmodels/jepa/`; the {ref}`companion <jepa-companion>` runs it live.
+**In this course:** {ref}`1.5 <linear-head>` (linear probes), {doc}`2.5 <../module2/notes5-bert>` (BERT's masking), {doc}`2.7 <../module2/notes7-vision>` (Vision Transformer), {doc}`2.10 <../module2/notes10-detr>` (DETR's learned queries), {doc}`4.4 <notes2c-autoencoders>`–{doc}`4.5 <notes2d-deep-autoencoders>` (autoencoders and masked autoencoders), {doc}`4.7 <notes4-gan>` (why an average of futures misleads), {doc}`4.9 <notes7-unclip>` (unCLIP), {doc}`4.14 <notes11-world-models>` (world models). The worked example's scripts are in the course folder under `genmodels/jepa/`; the {ref}`companion <jepa-companion>` runs it live.
 
 ---
 
-Previous: {doc}`4.12 World models <notes11-world-models>`. Next: {doc}`Further reading: generative models in transportation <notes10-reading-library>` &mdash; the closing page of the module. Back to the {doc}`Module 4 map <index>`.
+Previous: {doc}`4.14 World models <notes11-world-models>`. This is the last page of the module. Back to the {doc}`Module 4 map <index>`.

@@ -530,4 +530,4 @@ appears. If you are enrolled, look up any crash ID in your copy of the dataset t
 
 ---
 
-Next: {doc}`4.10 Diffusion in transportation literature <notes8-diffusion-literature>`. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`4.10 How transportation research uses diffusion <notes8-diffusion-literature>`. Back to the {doc}`Module 4 map <index>`.

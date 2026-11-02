@@ -1,10 +1,10 @@
 (diffusion-literature)=
-# 4.10 Diffusion in transportation literature
+# 4.10 How transportation research uses diffusion
 
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 4 &middot; Section 4.10</span>
-    <span class="notes-card-session">Session: Diffusion</span>
+    <span class="notes-card-session">Session: Generative models in transportation</span>
   </div>
   <p class="notes-card-lede">The recipe that turns a sentence into a picture now generates driving scenarios, including the rare, dangerous ones that safety testing needs. Part A reads the handful of papers that taught diffusion to make images, one change at a time. Part B shows how transportation research reuses the same recipe for agent motion, whole scenes and camera or LiDAR data, works one synthetic left-turn example, and lists the checks a generated scenario must pass before you trust it.</p>
   <div class="notes-card-cols">
@@ -197,7 +197,7 @@ Put the 35 papers side by side and four patterns stand out:
 (diffusion-papers-library)=
 ## How diffusion works in 35 transportation papers
 
-The {ref}`reading library <generative-reading-library>` on the closing page of this module asks what each paper
+The {ref}`reading library <generative-reading-library>` in 4.13 asks what each paper
 generates. This companion asks how the diffusion part works. It takes the recipe of {doc}`4.8 <notes6-diffusion-basics>`
 into 35 published papers: safety-critical driving scenarios, whole-scene simulation, motion prediction and planning,
 camera and lidar data for automated driving, traffic data (detector gaps, OD flows, trips), and road-damage images.
@@ -565,7 +565,9 @@ Most failures come from steering past what the data support. Nine to watch for:
 - {doc}`4.11 How transportation knowledge guides diffusion <notes9-knowledge-guided>`: five doors where
   transportation knowledge can enter a diffusion model (what it generates, the condition, guidance, values held fixed,
   checks), what your data must contain for each, and a worked test on four loop detectors.
-- The {ref}`reading library <generative-reading-library>` on the closing page of this module: 34 papers on generative
+- {doc}`4.12 How transportation knowledge guides AE and VAE <notes13-knowledge-ae-vae>`: the same question for
+  autoencoders, VAEs and GANs, tested on shockwaves in the course heatmaps.
+- The {ref}`reading library <generative-reading-library>` in 4.13: 34 papers on generative
   models in transportation, grouped by the problem they address.
 - The *Generating Crash Data from Near-Misses* handout: why sampling a generator is not enough for rare events, and
   what to do instead.

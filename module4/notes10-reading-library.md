@@ -1,10 +1,10 @@
 (generative-reading-library)=
-# Further reading: generative models in transportation
+# 4.13 How transportation research uses generative models
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Closing page</span>
-    <span class="notes-card-session">Read alongside the whole module</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.13</span>
+    <span class="notes-card-session">Session: Generative models in transportation</span>
   </div>
   <p class="notes-card-lede">What do transportation researchers actually do with generative models? This page answers with a reading library of 34 papers, grouped by eight transportation problems. Each card shows the paper&rsquo;s key figure and asks the same five questions, so you can compare the VAE, GAN and diffusion papers side by side and find a starting point for your own project.</p>
   <div class="notes-card-cols">
@@ -54,4 +54,5 @@ see the handout *Generative Models in Transportation*.
 
 ---
 
-Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`4.14 World models <notes11-world-models>` &mdash; generators that produce a future which responds to your
+actions. Back to the {doc}`Module 4 map <index>`.

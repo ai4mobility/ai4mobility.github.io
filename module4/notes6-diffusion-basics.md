@@ -639,9 +639,9 @@ There is no single right answer to the first eight; each asks for a judgment you
 - The forward-diffusion and decoder-training labs ({doc}`all labs <../labs>`): build the noise schedule and train a small denoiser yourself.
 - *Generating Crash Data from Near-Misses*: why sampling a generator is not enough for rare events, and what to do instead.
 - {doc}`4.9 Diffusion for text-to-image (unCLIP) <notes7-unclip>`: how a diffusion decoder learns to draw from a CLIP embedding, and the {ref}`unCLIP crash companion <unclip-crash-run>`, which runs the three unCLIP steps (pair, decoder, prior) on the course crash narratives and sketches.
-- {doc}`4.10 Diffusion in transportation literature <notes8-diffusion-literature>`: the key image-generation papers, then driving and intersection scenarios for safety, with the {ref}`diffusion papers companion <diffusion-papers-library>`: this page&rsquo;s recipe inside 35 transportation papers.
+- {doc}`4.10 How transportation research uses diffusion <notes8-diffusion-literature>`: the key image-generation papers, then driving and intersection scenarios for safety, with the {ref}`diffusion papers companion <diffusion-papers-library>`: this page&rsquo;s recipe inside 35 transportation papers.
 - {doc}`4.11 How transportation knowledge guides diffusion <notes9-knowledge-guided>`: five doors where transportation knowledge can enter a diffusion model, what your data must contain for each, and a worked test on four loop detectors in the {ref}`knowledge-guided companion <knowledge-guided-diffusion>`.
-- *Generative Models in Transportation* (applications handout) and the {ref}`reading library <generative-reading-library>` on the closing page of this module.
+- *Generative Models in Transportation* (applications handout) and the {ref}`reading library <generative-reading-library>` in 4.13.
 - Bishop & Bishop, *Deep Learning: Foundations and Concepts* (2024), Chapter 20.
 
 ## References for 4.8

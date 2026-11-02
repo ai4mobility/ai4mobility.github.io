@@ -2590,6 +2590,39 @@ items:
       plan_eval.py (incl. the oracle CEM jerk check), check_stab.py, data_size.py, figs.py; JSON results,
       fig/JP_*.png, eq/JP_eq*.png (render_eq.py), site/ (export, convert.py, widget figures).'
 
+  - id: m4-traffic-knowledge-ae-vae-companion
+    file: Traffic_Knowledge_AE_VAE_Companion.html
+    kind: companion
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes13-knowledge-ae-vae.md
+    mounted: site/_static/companions/Traffic_Knowledge_AE_VAE_Companion.html
+    notes: 'How to integrate traffic domain knowledge to guide AE/VAE generation (Nov 1-2 2026), 0.26 MB,
+      six tabs: a physical heatmap (test 1 = edge speeds inside -15..+75 mph; test 2 = congested-on-both-sides
+      fronts at -15 +- 3.75 mph; a real heatmap with its clock slowed 1.5x passes test 1, fails test 2),
+      why fronts blur (live CTM, mean vs median of five futures), four places (generate N(x,t) with a conservation
+      tally, simulator decoder, loss, check/repair), same VAE with four losses plus a GAN section (VAE decoder
+      network, shock map in the discriminator, conv generator; pixel noise and coverage), the CTM as decoder
+      with shock-formula lines, repair + fit card. Artifact Bq3aN6wAKnR3n6AdLKVarY. Reproducer genmodels/kg_companion/
+      (kg_build.py, kg_verify.py: JS checks equal Python, JS CTM equals torch CTM; README lists every number).'
+
+  - id: m4-notes13-knowledge-ae-vae
+    file: site/module4/notes13-knowledge-ae-vae.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes13-knowledge-ae-vae.md + _toc.yml + module4/index.md (topics, how-to-read, map
+      row, objectives)
+    notes: '4.12 How transportation knowledge guides AE and VAE (Nov 2 2026): card, objectives, the companion
+      embed (anchor knowledge-ae-vae-companion), a seed-0 results table (anchor knowledge-ae-vae-results),
+      four takeaways and the evaluation close. Same day 4.10-4.13 became one part, "Generative models in
+      transportation", with paired titles at Hao''s request: 4.10 How transportation research uses diffusion
+      (was Diffusion in transportation literature), 4.11 unchanged, 4.12 this page, 4.13 How transportation
+      research uses generative models (the reading library, was the unnumbered closing page); world models
+      4.12 -> 4.14 (notes11 and every 4.12 reference in notes12-jepa updated).'
+
 # MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------
 

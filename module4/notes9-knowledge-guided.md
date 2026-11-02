@@ -4,7 +4,7 @@
 <div class="notes-card">
   <div class="notes-card-head">
     <span class="notes-card-eyebrow">Module 4 &middot; Section 4.11</span>
-    <span class="notes-card-session">Session: Diffusion</span>
+    <span class="notes-card-session">Session: Generative models in transportation</span>
   </div>
   <p class="notes-card-lede">A diffusion model learns traffic only from its data, but you know things the data show weakly or not at all: a braking limit, a lane closure, the worth of one near-miss. This page shows five doors where that knowledge can enter a diffusion model, what your data must contain for each door, and how to test whether the knowledge helped. A worked test on a simulated road with four loop detectors adds one piece of knowledge at a time.</p>
   <div class="notes-card-cols">
@@ -12,7 +12,7 @@
       <h4>Read it before</h4>
       <ul>
       <li><a href="notes6-diffusion-basics.html">4.8 Diffusion models: the basics</a></li>
-      <li><a href="notes8-diffusion-literature.html">4.10 Diffusion in transportation literature</a>: the papers, and five ways to get a dangerous scenario out</li>
+      <li><a href="notes8-diffusion-literature.html">4.10 How transportation research uses diffusion</a>: the papers, and five ways to get a dangerous scenario out</li>
       <li><a href="notes7-unclip.html">4.9 Diffusion for text-to-image (unCLIP)</a>, for the unCLIP-style prior and the crash-sketch run</li>
       </ul>
     </div>
@@ -37,7 +37,7 @@
 
 A diffusion model learns what traffic looks like only from its training data. You know things the data may show weakly or not at all: a car cannot brake much harder than 1 g, vehicles are conserved on a road, a lane closure caps the flow, and a near-miss matters more than a thousand ordinary passes. This page shows **where that knowledge can enter a diffusion model, what your data must contain for each entry point, and how to test whether the knowledge helped.**
 
-It builds on {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>`, {doc}`4.10 Diffusion in transportation literature <notes8-diffusion-literature>`, {doc}`4.9 Diffusion for text-to-image (unCLIP) <notes7-unclip>`, and the {ref}`35-paper diffusion companion <diffusion-papers-library>`. It also takes three ideas from the *unCLIP and Conditional Generation* handout further: the two ways to steer the denoiser (train a condition in, or guide while sampling), the sorting of conditions by the kind of information they carry, and engineering costs as guides.
+It builds on {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>`, {doc}`4.10 How transportation research uses diffusion <notes8-diffusion-literature>`, {doc}`4.9 Diffusion for text-to-image (unCLIP) <notes7-unclip>`, and the {ref}`35-paper diffusion companion <diffusion-papers-library>`. It also takes three ideas from the *unCLIP and Conditional Generation* handout further: the two ways to steer the denoiser (train a condition in, or guide while sampling), the sorting of conditions by the kind of information they carry, and engineering costs as guides.
 
 **After this page you should be able to:**
 
@@ -545,7 +545,7 @@ after the {ref}`diffusion papers companion <diffusion-papers-library>` in 4.10.
 
 - {doc}`4.8 Diffusion models: the basics <notes6-diffusion-basics>`
 - {doc}`4.9 Diffusion for text-to-image (unCLIP) <notes7-unclip>`
-- {doc}`4.10 Diffusion in transportation literature <notes8-diffusion-literature>`
+- {doc}`4.10 How transportation research uses diffusion <notes8-diffusion-literature>`
 - The {ref}`diffusion papers companion <diffusion-papers-library>` (35 papers) in 4.10
 - The *Generating Crash Data from Near-Misses* handout
 - The *Generative Models in Transportation* handout
@@ -575,6 +575,5 @@ after the {ref}`diffusion papers companion <diffusion-papers-library>` in 4.10.
 
 ---
 
-Next: {doc}`4.12 World models <notes11-world-models>` &mdash; the last part of this module: a generator that
-produces a future which responds to your actions. Then the closing page
-{doc}`Further reading: generative models in transportation <notes10-reading-library>`. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`4.12 How transportation knowledge guides AE and VAE <notes13-knowledge-ae-vae>` &mdash; the same
+question for autoencoders, VAEs and GANs, tested on shockwaves in the course heatmaps. Back to the {doc}`Module 4 map <index>`.

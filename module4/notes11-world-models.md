@@ -1,9 +1,9 @@
 (world-models)=
-# 4.12 World models
+# 4.14 World models
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.12</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.14</span>
     <span class="notes-card-session">Session: World models</span>
   </div>
   <p class="notes-card-lede">Every model so far in this module produces one sample that looks like the data. A world model produces a future that responds to what you do: give it the present state and an action, and it returns the next state, again and again. This page covers why transportation needs one, the milestone systems from 2018 to the 2026 world models that test driving software, the four parts and how they are trained, the data they need, five transportation jobs, and a what-if analysis of real ADAS takeovers. A worked example on the course torus network shows that the variety of actions in the log decides whether the model can answer a what-if question at all.</p>
@@ -13,14 +13,13 @@
       <ul>
       <li><a href="notes3b-vae-basics.html">4.6 Variational autoencoders (VAE)</a>, for the loss this page builds on</li>
       <li><a href="notes6-diffusion-basics.html">4.8 Diffusion models: the basics</a></li>
-      <li><a href="notes8-diffusion-literature.html">4.10 Diffusion in transportation literature</a>, for generated safety scenarios</li>
+      <li><a href="notes8-diffusion-literature.html">4.10 How transportation research uses diffusion</a>, for generated safety scenarios</li>
       </ul>
     </div>
     <div>
       <h4>Read it after</h4>
       <ul>
       <li><a href="notes12-jepa.html">Further reading: JEPA and V-JEPA 2</a>, for world models that predict a description of the next frame instead of its pixels</li>
-      <li><a href="notes10-reading-library.html">Further reading: generative models in transportation</a>, the closing page of the module</li>
       </ul>
     </div>
   </div>
@@ -891,4 +890,4 @@ The best current practice is often a **hybrid**: a physics model whose parameter
 
 ---
 
-Next: {doc}`Further reading: JEPA and V-JEPA 2 <notes12-jepa>` &mdash; world models that predict a description of the next frame instead of its pixels, with a car-following example you can run in your browser. After it, {doc}`Further reading: generative models in transportation <notes10-reading-library>` is the closing page of the module, a reading library of 34 papers that use these generators on transportation problems. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`Further reading: JEPA and V-JEPA 2 <notes12-jepa>` &mdash; world models that predict a description of the next frame instead of its pixels, with a car-following example you can run in your browser; it closes the module. Back to the {doc}`Module 4 map <index>`.

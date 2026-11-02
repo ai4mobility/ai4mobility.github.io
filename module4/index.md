@@ -9,10 +9,12 @@
   variables in general (4.2&ndash;4.3)
 - **Autoencoders:** from PCA worked by hand to deep, sparse, denoising and masked autoencoders (4.4&ndash;4.5)
 - **The VAE and the GAN:** the second and third answers, and a first scorecard (4.6&ndash;4.7)
-- **Diffusion:** the basics, unCLIP, diffusion in the transportation literature, and knowledge-guided generation
-  (4.8&ndash;4.11)
+- **Diffusion:** the basics, and unCLIP (4.8&ndash;4.9)
+- **Generative models in transportation:** how transportation research uses diffusion, how transportation knowledge
+  guides diffusion and AE/VAE generation, and a reading library of how research uses generative models
+  (4.10&ndash;4.13)
 - **World models:** learning the simulator from data, imagined rollouts, and what-if safety analysis of real ADAS
-  takeovers (4.12), with further reading on JEPA world models, which predict a description of the next frame
+  takeovers (4.14), with further reading on JEPA world models, which predict a description of the next frame
   instead of its pixels
 
 ## Overview
@@ -30,14 +32,15 @@ The transportation on-ramp here is **macroscopic state reduction**. You already 
 whole corridor's behavior can be summarized by a handful of numbers — density, flow, speed.
 A latent-variable model does the same thing, except it learns which few numbers to keep. This
 module builds from that idea: one hidden label first (mixture models), then latent variables in general,
-autoencoders, the VAE, the GAN and diffusion, and then diffusion in practice. It closes with world models — the
+autoencoders, the VAE, the GAN and diffusion, and then how transportation research and transportation knowledge put
+them to work. It closes with world models — the
 attempt to learn a simulator rather than write one.
 
 ## The module, page by page
 
 :::{admonition} How to read this module
 :class: tip
-Read the pages in order; each builds on the one before. The module has six parts, and each page opens with a card
+Read the pages in order; each builds on the one before. The module has seven parts, and each page opens with a card
 naming its part.
 
 - **Why generate (4.1)** sets up the question and gives the first answer: one cell at a time.
@@ -45,23 +48,23 @@ naming its part.
   a detector&rsquo;s speeds, and grows it into the general idea of a latent variable.
 - **Autoencoders (4.4&ndash;4.5)** builds the plain autoencoder, from PCA worked by hand to masked autoencoders.
 - **The VAE and the GAN (4.6&ndash;4.7)** are the second and third answers, scored side by side.
-- **Diffusion (4.8&ndash;4.11)** is the fourth answer. 4.8 builds it from Bishop&rsquo;s math. 4.9 shows how
-  unCLIP gives the decoder a condition, 4.10 how transportation papers use diffusion for safety scenarios, and 4.11
-  where your own engineering knowledge can steer it.
-- **World models (4.12)** puts the same generators to work on a different question: what happens next if I do this?
+- **Diffusion (4.8&ndash;4.9)** is the fourth answer. 4.8 builds it from Bishop&rsquo;s math, and 4.9 shows how
+  unCLIP gives the decoder a condition.
+- **Generative models in transportation (4.10&ndash;4.13)** puts the answers to work, in four pages named in pairs.
+  4.10 shows how transportation research uses diffusion for safety scenarios. 4.11 and 4.12 show how your own
+  transportation knowledge can guide a diffusion model, and an AE or VAE, the second tested on shockwaves. 4.13 is a
+  reading library of 34 papers on how transportation research uses generative models.
+- **World models (4.14)** puts the same generators to work on a different question: what happens next if I do this?
   It closes the module with what-if simulation of real ADAS takeovers. A further-reading page, {doc}`JEPA and V-JEPA 2 <notes12-jepa>`,
   follows it: world models that predict a compact description of the next frame instead of its pixels.
-
-The {doc}`closing page <notes10-reading-library>` holds a reading library of 34 papers on generative models in
-transportation.
 
 Most results on these pages come from one dataset, the 4,000 cell-transmission-model speed heatmaps that the VAE lab
 is built on, split the same way everywhere, so the four answers to "how do you draw a realistic traffic state?" can
 be compared directly. Section 4.2 adds three real PeMS detectors on I-405; 4.4 adds two of them, small enough to
 work by hand; 4.5 adds a synthetic fundamental diagram; 4.6 adds real daily flow curves from 170
 PeMS District 8 stations and a second simulator, a grid network; 4.8 returns to the I-405 pair of 4.4; 4.9 uses the
-course crash reports; 4.10 a synthetic left-turn world; 4.11 the heatmaps again, seen through four detectors; and 4.12
-the course torus network of 42 signals, plus a synthetic rear-end takeover inside the ranges of the ADAS-TO dataset. If
+course crash reports; 4.10 a synthetic left-turn world; 4.11 the heatmaps again, seen through four detectors; 4.12 the heatmaps
+once more, checked against the shock formula; and 4.14 the course torus network of 42 signals, plus a synthetic rear-end takeover inside the ranges of the ADAS-TO dataset. If
 you read only one page before class, read {doc}`4.1 <notes1-producing>`: the joint-versus-marginals figure is the
 idea the rest builds on.
 :::
@@ -118,28 +121,33 @@ idea the rest builds on.
   <td>&mdash;</td>
 </tr>
 <tr>
-  <td><a href="notes8-diffusion-literature.html"><strong>4.10 Diffusion in transportation literature</strong></a><br><em>Diffusion</em></td>
+  <td><a href="notes8-diffusion-literature.html"><strong>4.10 How transportation research uses diffusion</strong></a><br><em>Generative models in transportation</em></td>
   <td>The papers that taught diffusion to make images, then the move from pictures to driving scenarios: what the models learn from, five ways to get a dangerous scenario out, the key safety papers and their figures, a worked example at one intersection, from scenario to sensor data, and how to judge a generated scenario (interactive companion: 35 papers).</td>
   <td>&mdash;</td>
 </tr>
 <tr>
-  <td><a href="notes9-knowledge-guided.html"><strong>4.11 How transportation knowledge guides diffusion</strong></a><br><em>Diffusion</em></td>
+  <td><a href="notes9-knowledge-guided.html"><strong>4.11 How transportation knowledge guides diffusion</strong></a><br><em>Generative models in transportation</em></td>
   <td>Five doors where engineering knowledge can enter: what you generate, the condition, guidance while sampling, values held fixed, and checks on the samples; what each door asks of your data; a worked test that fills a road from four loop detectors; how to show the knowledge helped (interactive companion).</td>
   <td>&mdash;</td>
 </tr>
 <tr>
-  <td><a href="notes11-world-models.html"><strong>4.12 World models</strong></a><br><em>World models</em></td>
+  <td><a href="notes13-knowledge-ae-vae.html"><strong>4.12 How transportation knowledge guides AE and VAE</strong></a><br><em>Generative models in transportation</em></td>
+  <td>When a generated time&ndash;space heatmap makes physical sense: two tests, the band every wave stays in and the shock formula where a speed heatmap can check it; why squared error smears a queue&rsquo;s back; four places for traffic knowledge (what you generate, the decoder, the loss, checks after sampling); the same VAE with four losses; the CTM as the decoder; repair after sampling; and whether a GAN&rsquo;s discriminator learns the physics (interactive companion).</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes10-reading-library.html"><strong>4.13 How transportation research uses generative models</strong></a><br><em>Generative models in transportation</em></td>
+  <td>A reading library of 34 papers grouped by eight transportation problems, each with its key figure and the same five questions: what it generates, from what, with which model, how it is steered, and what it is used for (interactive companion).</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes11-world-models.html"><strong>4.14 World models</strong></a><br><em>World models</em></td>
   <td>Learning the simulator instead of writing it: the simulators you already build by hand; the key equation and four uses (simulate, plan, train a controller, generate data); milestones from Craik and Dyna to the 2026 world models that test driving software; encoder, dynamics, decoder and heads, and a loss that is the VAE loss with a learned prior; a worked example on the course torus network, where only the model trained on varied signal plans can rank them; what data trains one; five transportation jobs; what-if simulation of real ADAS takeovers (what if the driver had been 1 s or 2 s late?); where it breaks, and when to keep the calibrated simulator.</td>
   <td>&mdash;</td>
 </tr>
 <tr>
   <td><a href="notes12-jepa.html"><strong>Further reading: JEPA and V-JEPA 2</strong></a><br><em>World models</em></td>
   <td>World models that predict a description of the next frame, not its pixels: three ways to learn from unlabeled data; the JEPA recipe and the collapse it must avoid; I-JEPA, V-JEPA, and V-JEPA 2, which pretrains on over a million hours of video and then plans robot actions toward a goal image; a worked example on a synthetic car-following sensor; JEPA papers in driving, trajectories and traffic forecasting (interactive companion).</td>
-  <td>&mdash;</td>
-</tr>
-<tr>
-  <td><a href="notes10-reading-library.html"><strong>Further reading: generative models in transportation</strong></a><br><em>Closing page</em></td>
-  <td>A reading library of 34 papers grouped by eight transportation problems, each with its key figure and the same five questions: what it generates, from what, with which model, how it is steered, and what it is used for (interactive companion).</td>
   <td>&mdash;</td>
 </tr>
 </tbody>
@@ -172,6 +180,8 @@ By the end of this module you will be able to:
   trained, how it samples, how it is steered), and judge a generated safety scenario.
 - Name where transportation knowledge can enter a diffusion model, what each entry point needs from the data, and
   how to show that the knowledge helped.
+- Check a generated time&ndash;space heatmap against the shock formula, and decide whether a physics rule belongs in
+  the generator, in the loss, in a check after sampling, or in a discriminator.
 - Describe what a world model is, and what "learning the simulator" would require for traffic.
 - Explain how a world model could turn a real ADAS takeover into what-if questions (what if the driver had taken over
   1 s or 2 s later?), and what it would take to trust the answers.
@@ -196,6 +206,7 @@ By the end of this module you will be able to:
 - Latent diffusion and conditional generation; unCLIP and the pair-then-generate recipe
 - Diffusion for safety-critical driving scenarios: guidance, head starts, filling in, conditions and selection
 - Transportation knowledge in diffusion: representation, conditions, cost guidance, hard limits and checks
+- Transportation knowledge in AE and VAE: shockwave tests, a simulator as decoder, physics losses, repair after sampling, and what a discriminator can and cannot learn
 - World models: learned dynamics, imagination-based rollout, and why the logged actions must vary
 - What-if (counterfactual) simulation for takeover safety
 - Synthetic data for rare events — and how to tell whether it helped
@@ -221,8 +232,8 @@ By the end of this module you will be able to:
 - Ha, D., & Schmidhuber, J. (2018). World models. *NeurIPS*.
 - Hafner, D., Lillicrap, T., Ba, J., & Norouzi, M. (2020). Dream to control: Learning behaviors by latent imagination. *ICLR*. *(Dreamer.)*
 - LeCun, Y. (2022). A path towards autonomous machine intelligence. *OpenReview*. *(The JEPA proposal.)*
-- Assran, M., et al. (2025). V-JEPA 2: Self-supervised video models enable understanding, prediction and planning. *arXiv:2506.09985*. *(The JEPA world model of the further-reading page after 4.12.)*
-- Wang, Y., Xu, Y., Sun, J., & Zhou, H. (2026). ADAS-TO: A large-scale multimodal naturalistic dataset and empirical characterization of human takeovers during ADAS engagement. *ITSC*. *(The takeover data behind the what-if section of 4.12.)*
+- Assran, M., et al. (2025). V-JEPA 2: Self-supervised video models enable understanding, prediction and planning. *arXiv:2506.09985*. *(The JEPA world model of the further-reading page after 4.14.)*
+- Wang, Y., Xu, Y., Sun, J., & Zhou, H. (2026). ADAS-TO: A large-scale multimodal naturalistic dataset and empirical characterization of human takeovers during ADAS engagement. *ITSC*. *(The takeover data behind the what-if section of 4.14.)*
 
 ## Labs
 

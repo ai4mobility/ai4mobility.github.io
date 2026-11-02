@@ -94,6 +94,9 @@ parts:
           # the Gaussian warm-up + mixtures, and the two deep-autoencoder pages were merged (notes2-autoregressive,
           # notes5-hidden-cause and notes2e-copying redirect to their sections). File names no longer follow the numbers.
           # 2026-10-29: a further-reading page on JEPA and V-JEPA 2 (notes12-jepa) follows 4.12.
+          # 2026-11-02: 4.10-4.13 became one part, "Generative models in transportation", with paired titles
+          # ("How transportation research uses ..." / "How transportation knowledge guides ..."): new 4.12
+          # (notes13-knowledge-ae-vae), the reading library numbered 4.13, world models moved to 4.14.
           - file: module4/notes1-producing
             title: "4.1 Introduction to deep generative models"
           - file: module4/notes2a-gaussians
@@ -113,15 +116,17 @@ parts:
           - file: module4/notes7-unclip
             title: "4.9 Diffusion for text-to-image (unCLIP)"
           - file: module4/notes8-diffusion-literature
-            title: "4.10 Diffusion in transportation literature"
+            title: "4.10 How transportation research uses diffusion"
           - file: module4/notes9-knowledge-guided
             title: "4.11 How transportation knowledge guides diffusion"
+          - file: module4/notes13-knowledge-ae-vae
+            title: "4.12 How transportation knowledge guides AE and VAE"
+          - file: module4/notes10-reading-library
+            title: "4.13 How transportation research uses generative models"
           - file: module4/notes11-world-models
-            title: "4.12 World models"
+            title: "4.14 World models"
           - file: module4/notes12-jepa
             title: "Further reading: JEPA and V-JEPA 2"
-          - file: module4/notes10-reading-library
-            title: "Further reading: generative models in transportation"
 
   # Part II became the AI agents unit on 2026-10-24; its first two modules merged into Module 5 on 2026-10-25.
   - caption: Part II — AI Agents for Mobility
