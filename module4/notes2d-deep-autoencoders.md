@@ -5,7 +5,7 @@
     <span class="notes-card-eyebrow">Module 4 &middot; Section 4.5</span>
     <span class="notes-card-session">Session: Autoencoders</span>
   </div>
-  <p class="notes-card-lede">Put nonlinear layers inside the decoder and the straight line of 4.4 can bend. On a synthetic fundamental diagram, one latent then cuts PCA's flow error from 315 to 47&ndash;87 veh/h, yet the latent turns out to be the network's own coordinate, not density. On the heatmaps, depth helps again; the page shows how to choose the number of latents, and when the latents help another task. Then the trap: with as many latents as inputs, an autoencoder can simply copy, and a near-perfect rebuild proves nothing. Beyond a narrow middle there are three standard ways out: charge for every latent that fires (sparse), feed in noise and score against the clean heatmap (denoising), or hide most of the heatmap and score only what was hidden (masked, BERT's idea). The denoiser halves the best tuned blur's error; the masked autoencoder halves the classical gap filler's. The page closes with where autoencoders break, a fit card and applications.</p>
+  <p class="notes-card-lede">Put nonlinear layers inside the decoder and the straight line of 4.4 can bend. On a synthetic fundamental diagram, one latent then cuts PCA's flow error from 315 to 47&ndash;87 veh/h, yet the latent turns out to be the network's own coordinate, not density. On the heatmaps, depth helps again; the page shows how to choose the number of latents, and when the latents help another task. Then the trap: with as many latents as inputs, an autoencoder can simply copy, and a near-perfect rebuild proves nothing. Beyond a narrow middle there are three standard ways out: charge for every latent that fires (sparse), feed in noise and score against the clean heatmap (denoising), or hide most of the heatmap and score only what was hidden (masked, BERT's idea). The denoiser halves the best tuned blur's error; the masked autoencoder halves the classical gap filler's. Both ideas are then repeated on one minute of real dashcam video, with the networks drawn layer by layer. The page closes with where autoencoders break, a fit card and applications.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it before</h4>
@@ -17,6 +17,7 @@
     <div>
       <h4>Companion and lab</h4>
       <ul><li><a href="../_static/companions/Autoencoder_Latent_Companion.html" target="_blank" rel="noopener">Inside the latent layer &#8599;</a>, on this page</li>
+      <li><a href="../_static/companions/Dashcam_Denoise_Mask_Companion.html" target="_blank" rel="noopener">Denoising and masking on real dashcam video &#8599;</a>, on this page</li>
       <li><a href="../labs.html">Training the denoiser</a>, for the denoising idea behind diffusion</li></ul>
     </div>
   </div>
@@ -525,6 +526,95 @@ face**, for example with outage-shaped masks.
 Two more cautions. A fill-in is a plausible guess, not a measurement: mark imputed values in any dataset an agency
 publishes. And these heatmaps come from one simulator on one uniform road. A real corridor has ramps, uneven
 detector spacing and incidents, so the model must be retrained, and re-tested, on that corridor's own data.
+
+(dashcam-denoise-mask)=
+## The same two ideas on real dashcam video
+
+The heatmaps above come from a simulator. Here are denoising and masking on one minute of real dashcam video
+(526 &times; 330 pixels, 20 frames a second): the car waits in a queue at a signal, drives through the
+intersection, then follows an SUV. Each frame is shrunk to 256 &times; 160 pixels, so one frame is 122,880 numbers.
+The networks trained on 640 frames (32 seconds) and were tested on 300 frames from three other 5-second stretches:
+queued, crossing the intersection, and cruising. A 1-second gap separates every test stretch from the training
+frames, so no test frame has a near-copy in training.
+
+### The denoising network, layer by layer
+
+```{figure} ../_static/figures/AEB_Dash_ConvAE_Arch.png
+:alt: A conv autoencoder drawn as nine blocks from left to right. The noisy input frame, 3 by 160 by 256. Encoder: Conv 3 by 3 with ReLU to 48 by 160 by 256 (1,344 weights); Conv 3 by 3, stride 2, ReLU to 64 by 80 by 128 (27,712); Conv 3 by 3, ReLU, 64 by 80 by 128 (36,928); Conv 3 by 3, stride 2, ReLU to z, 96 by 40 by 64, 245,760 numbers (55,392). Decoder: transposed conv 4 by 4, up by 2, ReLU, 64 by 80 by 128 (98,368); Conv 3 by 3, ReLU (36,928); transposed conv 4 by 4, up by 2, ReLU, 48 by 160 by 256 (49,200); Conv 3 by 3 to the output frame y, 3 by 160 by 256 (1,299). Encoder 121,376 weights, decoder 185,795. Each block's front face is a real feature map of the trained denoiser.
+:width: 100%
+:target: ../_static/figures/AEB_Dash_ConvAE_Arch.png
+
+Four conv layers squeeze the frame into z; four layers expand it back (click the figure for full size). Each block's front face is one real channel of
+the trained denoiser on a test frame; its depth is the number of channels. Each z cell sees a 13 &times; 13-pixel
+window of the frame.
+```
+
+The plain and the denoising autoencoder are this same network, with 307,171 weights; only the input differs. The
+middle, z, holds 245,760 numbers, twice as many as the frame, so copying is a perfect answer for the plain one, as
+for the over-complete heatmap network above. With noise of spread 25 on the 0&ndash;255 pixel scale, the plain
+autoencoder ends 10.4 off per pixel value: it lets part of the noise through. The best tuned blur is 9.0 off. The
+denoising autoencoder is 5.4 off and beats the blur on all 300 test frames, keeping lane lines and car outlines
+sharper. At twice the noise, which it never saw, the blur wins: 13.3 against 14.0.
+
+### The masked autoencoder, layer by layer
+
+```{figure} ../_static/figures/AEB_Dash_MAE_Arch.png
+:alt: The masked autoencoder from left to right. The frame is cut into 160 patches of 16 by 16 pixels and 40 are kept. The 40 kept patches, 40 tokens of 768 numbers, are embedded by a linear layer from 768 to 192 plus a position code (147,648 weights). An encoder of 4 transformer blocks, width 192 and 3 heads, works on the 40 tokens (1,779,840 weights). A linear layer narrows them to 128 (24,704). 120 copies of one learned mask token fill the hidden slots, giving 160 tokens of 128 (128 weights). A decoder of 2 transformer blocks, width 128 and 4 heads, works on all 160 (396,800). A linear layer from 128 to 768 predicts every patch (99,072). The patches are put back in place and the loss scores only the 120 hidden ones.
+:width: 100%
+:target: ../_static/figures/AEB_Dash_MAE_Arch.png
+
+The encoder sees only the 40 visible patches; the decoder fills 160 slots, 120 of them with copies of one learned mask
+token. Box heights show how many tokens there are; widths, how many numbers each token holds. 2,448,192 weights in all.
+```
+
+```{figure} ../_static/figures/AEB_Dash_Block_Arch.png
+:alt: One transformer block from left to right. Tokens in, 40 by 192. LayerNorm (384 weights). Multi-head self-attention, Q, K and V from a linear layer 192 to 3 times 192 split into 3 heads of 64, shown with the trained encoder's three real 40 by 40 attention maps, then the heads joined by a linear layer 192 to 192 (111,168 plus 37,056 weights). A skip path adds the input back. LayerNorm (384). An MLP applied to each token alone, linear 192 to 768, GELU, linear 768 to 192 (148,224 plus 147,648 weights). A second skip path adds back again. Tokens out, 40 by 192. Encoder blocks: 444,864 weights each; decoder blocks: width 128, 4 heads of 32, MLP 512, 198,272 weights each.
+:width: 100%
+:target: ../_static/figures/AEB_Dash_Block_Arch.png
+
+Inside one transformer block. Self-attention is where patches read each other: each head is a 40 &times; 40 table of
+how much each visible patch reads every other, here from the trained encoder on a test frame. The MLP then works on
+each token alone, and the skip paths mean each part only has to learn a correction.
+```
+
+Hide 120 of the 160 patches at random, as in training. Classical inpainting (OpenCV) fills them 27.5 off on the hidden
+pixels; this masked autoencoder, trained on 32 seconds of this drive, 18.1; a masked autoencoder pretrained by He et
+al. (2022) on ImageNet photos, which never saw this road, 17.8. The same transformer trained without hiding leaves the
+holes much as it was given them, 57.0 off: only training by hiding teaches filling. Two cautions. Copying the
+hidden pixels from the previous frame, 0.05 s earlier, gives 4.9: with video, look there first. And a smudge over the
+lead vehicle, a gap shape never seen in training, gives 33.9 and 29.8: neither model brings the vehicle back. A
+fill-in is a guess, never a measurement.
+
+### Try it yourself
+
+The companion walks through both experiments step by step, from the frames that go in, to the training, to the
+results, with error maps, a noise sweep, and the masked autoencoder above running in your browser: hide any patches
+you like and watch what it draws.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion &mdash; Denoising and masking on real dashcam video</span>
+    <a href="../_static/companions/Dashcam_Denoise_Mask_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Dashcam_Denoise_Mask_Companion.html"
+          title="Denoising and masking on real dashcam video" loading="lazy"></iframe>
+</div>
+
+:::{admonition} Before you trust this result
+:class: warning
+**What is the baseline?** For denoising, a Gaussian blur and OpenCV's non-local means, both tuned on a separate
+5-second validation stretch. For masking, classical inpainting tuned the same way, the previous video frame, and the
+same networks trained without hiding.
+
+**How was the data split, and why is that honest?** By time, not at random: neighbouring frames are near-copies, so a
+random split would put a twin of every test frame in training. Training, validation and test are separate stretches
+of the minute, with 1-second gaps between them. Every method gets the same noisy copy, or the same hidden patches, of
+each test frame.
+
+**What does it do on the ugly cases?** Edges are the worst pixels for every denoiser; the denoiser falls behind a blur
+at noise it never saw; a smudge-shaped gap nearly doubles the masked model's error. And it is one drive with one
+camera: part of what the small masked model "knows" is memory of this road.
+:::
 
 ## Where autoencoders break
 

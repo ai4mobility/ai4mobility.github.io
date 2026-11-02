@@ -97,7 +97,7 @@ idea the rest builds on.
 </tr>
 <tr>
   <td><a href="notes2d-deep-autoencoders.html"><strong>4.5 Deep autoencoders: bending the line, stopping the copy</strong></a><br><em>Autoencoders</em></td>
-  <td>Nonlinear layers that bend the line; what a manifold is; the price of depth; a synthetic fundamental diagram, and whether the one latent is density; PCA against a deep autoencoder on the heatmaps; choosing the number of latents; reusing latents for another task; inside the latent layer, from PCA to the VAE (interactive companion). Then why a good rebuild proves little; the sparse penalty; denoising against a tuned blur and the ASM, and why its arrows lead to diffusion; masked autoencoders, BERT&rsquo;s idea for heatmaps, filling detector gaps; where autoencoders break, fit card and applications.</td>
+  <td>Nonlinear layers that bend the line; what a manifold is; the price of depth; a synthetic fundamental diagram, and whether the one latent is density; PCA against a deep autoencoder on the heatmaps; choosing the number of latents; reusing latents for another task; inside the latent layer, from PCA to the VAE (interactive companion). Then why a good rebuild proves little; the sparse penalty; denoising against a tuned blur and the ASM, and why its arrows lead to diffusion; masked autoencoders, BERT&rsquo;s idea for heatmaps, filling detector gaps; both ideas again on real dashcam video, with the networks drawn layer by layer and a masked autoencoder that runs in your browser (interactive companion); where autoencoders break, fit card and applications.</td>
   <td><a href="../labs.html">Training the denoiser</a></td>
 </tr>
 <tr>
