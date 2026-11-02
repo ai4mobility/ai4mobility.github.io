@@ -11,10 +11,10 @@
 - **The VAE and the GAN:** the second and third answers, and a first scorecard (4.6&ndash;4.7)
 - **Diffusion:** the basics, and unCLIP (4.8&ndash;4.9)
 - **Generative models in transportation:** how transportation research uses diffusion, how transportation knowledge
-  guides diffusion and AE/VAE generation, and a reading library of how research uses generative models
-  (4.10&ndash;4.13)
+  guides diffusion and AE/VAE generation, a reading library of how research uses generative models, and one of how
+  traffic flow theory gets into AI models of every kind (4.10&ndash;4.14)
 - **World models:** learning the simulator from data, imagined rollouts, and what-if safety analysis of real ADAS
-  takeovers (4.14), with further reading on JEPA world models, which predict a description of the next frame
+  takeovers (4.15), with further reading on JEPA world models, which predict a description of the next frame
   instead of its pixels
 
 ## Overview
@@ -50,11 +50,12 @@ naming its part.
 - **The VAE and the GAN (4.6&ndash;4.7)** are the second and third answers, scored side by side.
 - **Diffusion (4.8&ndash;4.9)** is the fourth answer. 4.8 builds it from Bishop&rsquo;s math, and 4.9 shows how
   unCLIP gives the decoder a condition.
-- **Generative models in transportation (4.10&ndash;4.13)** puts the answers to work, in four pages named in pairs.
+- **Generative models in transportation (4.10&ndash;4.14)** puts the answers to work, in five pages named in pairs.
   4.10 shows how transportation research uses diffusion for safety scenarios. 4.11 and 4.12 show how your own
   transportation knowledge can guide a diffusion model, and an AE or VAE, the second tested on shockwaves. 4.13 is a
-  reading library of 34 papers on how transportation research uses generative models.
-- **World models (4.14)** puts the same generators to work on a different question: what happens next if I do this?
+  reading library of 34 papers on how transportation research uses generative models. 4.14 widens the question to
+  every kind of AI model: a second reading library, of 38 papers sorted by where traffic flow theory enters the model.
+- **World models (4.15)** puts the same generators to work on a different question: what happens next if I do this?
   It closes the module with what-if simulation of real ADAS takeovers. A further-reading page, {doc}`JEPA and V-JEPA 2 <notes12-jepa>`,
   follows it: world models that predict a compact description of the next frame instead of its pixels.
 
@@ -64,7 +65,7 @@ be compared directly. Section 4.2 adds three real PeMS detectors on I-405; 4.4 a
 work by hand; 4.5 adds a synthetic fundamental diagram; 4.6 adds real daily flow curves from 170
 PeMS District 8 stations and a second simulator, a grid network; 4.8 returns to the I-405 pair of 4.4; 4.9 uses the
 course crash reports; 4.10 a synthetic left-turn world; 4.11 the heatmaps again, seen through four detectors; 4.12 the heatmaps
-once more, checked against the shock formula; and 4.14 the course torus network of 42 signals, plus a synthetic rear-end takeover inside the ranges of the ADAS-TO dataset. If
+once more, checked against the shock formula; and 4.15 the course torus network of 42 signals, plus a synthetic rear-end takeover inside the ranges of the ADAS-TO dataset. If
 you read only one page before class, read {doc}`4.1 <notes1-producing>`: the joint-versus-marginals figure is the
 idea the rest builds on.
 :::
@@ -141,7 +142,12 @@ idea the rest builds on.
   <td>&mdash;</td>
 </tr>
 <tr>
-  <td><a href="notes11-world-models.html"><strong>4.14 World models</strong></a><br><em>World models</em></td>
+  <td><a href="notes14-traffic-physics-library.html"><strong>4.14 How traffic flow theory gets into AI models</strong></a><br><em>Generative models in transportation</em></td>
+  <td>A reading library of 38 papers from 2021 to 2026, plus 64 listed, on traffic flow theory inside AI models of every kind (state estimation, forecasting, car-following, lane changing, control). Two questions sort them: is the theory still there when the model runs, and where does it enter (data, model, loss, run time, check)? Each card has the key figure, the results checked against the paper, and a watch-out line; it closes with what each way can guarantee (interactive companion).</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes11-world-models.html"><strong>4.15 World models</strong></a><br><em>World models</em></td>
   <td>Learning the simulator instead of writing it: the simulators you already build by hand; the key equation and four uses (simulate, plan, train a controller, generate data); milestones from Craik and Dyna to the 2026 world models that test driving software; encoder, dynamics, decoder and heads, and a loss that is the VAE loss with a learned prior; a worked example on the course torus network, where only the model trained on varied signal plans can rank them; what data trains one; five transportation jobs; what-if simulation of real ADAS takeovers (what if the driver had been 1 s or 2 s late?); where it breaks, and when to keep the calibrated simulator.</td>
   <td>&mdash;</td>
 </tr>
@@ -182,6 +188,8 @@ By the end of this module you will be able to:
   how to show that the knowledge helped.
 - Check a generated time&ndash;space heatmap against the shock formula, and decide whether a physics rule belongs in
   the generator, in the loss, in a check after sampling, or in a discriminator.
+- Place a physics-informed AI paper by whether its traffic theory is still there when the model runs and where it
+  enters, and say what that design can and cannot guarantee.
 - Describe what a world model is, and what "learning the simulator" would require for traffic.
 - Explain how a world model could turn a real ADAS takeover into what-if questions (what if the driver had taken over
   1 s or 2 s later?), and what it would take to trust the answers.
@@ -207,6 +215,7 @@ By the end of this module you will be able to:
 - Diffusion for safety-critical driving scenarios: guidance, head starts, filling in, conditions and selection
 - Transportation knowledge in diffusion: representation, conditions, cost guidance, hard limits and checks
 - Transportation knowledge in AE and VAE: shockwave tests, a simulator as decoder, physics losses, repair after sampling, and what a discriminator can and cannot learn
+- Traffic flow theory in AI models of every kind: in the loss, in the data, in the layers, at run time, as a test, and learned from data
 - World models: learned dynamics, imagination-based rollout, and why the logged actions must vary
 - What-if (counterfactual) simulation for takeover safety
 - Synthetic data for rare events — and how to tell whether it helped
@@ -232,8 +241,8 @@ By the end of this module you will be able to:
 - Ha, D., & Schmidhuber, J. (2018). World models. *NeurIPS*.
 - Hafner, D., Lillicrap, T., Ba, J., & Norouzi, M. (2020). Dream to control: Learning behaviors by latent imagination. *ICLR*. *(Dreamer.)*
 - LeCun, Y. (2022). A path towards autonomous machine intelligence. *OpenReview*. *(The JEPA proposal.)*
-- Assran, M., et al. (2025). V-JEPA 2: Self-supervised video models enable understanding, prediction and planning. *arXiv:2506.09985*. *(The JEPA world model of the further-reading page after 4.14.)*
-- Wang, Y., Xu, Y., Sun, J., & Zhou, H. (2026). ADAS-TO: A large-scale multimodal naturalistic dataset and empirical characterization of human takeovers during ADAS engagement. *ITSC*. *(The takeover data behind the what-if section of 4.14.)*
+- Assran, M., et al. (2025). V-JEPA 2: Self-supervised video models enable understanding, prediction and planning. *arXiv:2506.09985*. *(The JEPA world model of the further-reading page after 4.15.)*
+- Wang, Y., Xu, Y., Sun, J., & Zhou, H. (2026). ADAS-TO: A large-scale multimodal naturalistic dataset and empirical characterization of human takeovers during ADAS engagement. *ITSC*. *(The takeover data behind the what-if section of 4.15.)*
 
 ## Labs
 

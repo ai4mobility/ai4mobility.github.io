@@ -2623,6 +2623,39 @@ items:
       research uses generative models (the reading library, was the unnumbered closing page); world models
       4.12 -> 4.14 (notes11 and every 4.12 reference in notes12-jepa updated).'
 
+  - id: m4-traffic-physics-ai-library
+    file: Traffic_Physics_AI_Readings/Traffic_Physics_AI_Library.html
+    kind: companion
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes14-traffic-physics-library.md
+    mounted: site/_static/companions/Traffic_Physics_AI_Library.html
+    notes: 'How traffic flow theory gets into AI models (Nov 2 2026), 2.8 MB single file, same card style as the
+      generative reading library: 38 papers (2021-2026) read in full with key figure, five facts, where-it-enters
+      glyph (data / model / loss / run time / check), what they found, for mobility, watch out; 64 more listed
+      with one line each (102 in all). Sorted by role, not task: 1 theory guides training (1a residual in loss,
+      1b rule in loss or RL reward, 1c theory makes or weights data, 1d second judge), 2 theory stays in the
+      model (2a physics-shaped layers, 2b traffic model as a layer, 2c physics first AI corrects, 2d steers at
+      run time incl. CBF safety layers), 3 theory tests AI, 4 AI learns theory, surveys. Closes with a
+      what-each-way-guarantees table, how the field moved, five judgment questions. Every number on a card checked
+      by verify_cards.py against the paper text. Web copy drops the local-PDF links. Artifact
+      3oPtdVLJom35CoHYieJRTE. Reproducer and 76 PDFs in Traffic_Physics_AI_Readings/ (README, Reading_List.csv,
+      _build/).'
+
+  - id: m4-notes14-traffic-physics-library
+    file: site/module4/notes14-traffic-physics-library.md
+    kind: notes
+    module: 4
+    session: unscheduled
+    status: integrated
+    dest: site/module4/notes14-traffic-physics-library.md + _toc.yml + module4/index.md (session topics,
+      how-to-read, map row, objective, topic)
+    notes: '4.14 How traffic flow theory gets into AI models (Nov 2 2026): card, the two questions and four groups,
+      how to use the library, the companion embed (anchor traffic-physics-library-companion), pointers back to
+      4.11-4.13. Joins the part "Generative models in transportation" (now 4.10-4.14). World models 4.14 -> 4.15
+      (notes11, every 4.14 reference in notes12-jepa, module4/index.md); 4.13 now points Next to 4.14.'
+
 # MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
 # -----------------------------------------------------------------------------
 

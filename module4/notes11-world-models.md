@@ -1,9 +1,9 @@
 (world-models)=
-# 4.14 World models
+# 4.15 World models
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.14</span>
+    <span class="notes-card-eyebrow">Module 4 &middot; Section 4.15</span>
     <span class="notes-card-session">Session: World models</span>
   </div>
   <p class="notes-card-lede">Every model so far in this module produces one sample that looks like the data. A world model produces a future that responds to what you do: give it the present state and an action, and it returns the next state, again and again. This page covers why transportation needs one, the milestone systems from 2018 to the 2026 world models that test driving software, the four parts and how they are trained, the data they need, five transportation jobs, and a what-if analysis of real ADAS takeovers. A worked example on the course torus network shows that the variety of actions in the log decides whether the model can answer a what-if question at all.</p>

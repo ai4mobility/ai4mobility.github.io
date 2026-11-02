@@ -97,6 +97,8 @@ parts:
           # 2026-11-02: 4.10-4.13 became one part, "Generative models in transportation", with paired titles
           # ("How transportation research uses ..." / "How transportation knowledge guides ..."): new 4.12
           # (notes13-knowledge-ae-vae), the reading library numbered 4.13, world models moved to 4.14.
+          # 2026-11-02 (later): a second reading library, on traffic flow theory inside AI models of every kind
+          # (notes14-traffic-physics-library), became 4.14 in the same part; world models moved to 4.15.
           - file: module4/notes1-producing
             title: "4.1 Introduction to deep generative models"
           - file: module4/notes2a-gaussians
@@ -123,8 +125,10 @@ parts:
             title: "4.12 How transportation knowledge guides AE and VAE"
           - file: module4/notes10-reading-library
             title: "4.13 How transportation research uses generative models"
+          - file: module4/notes14-traffic-physics-library
+            title: "4.14 How traffic flow theory gets into AI models"
           - file: module4/notes11-world-models
-            title: "4.14 World models"
+            title: "4.15 World models"
           - file: module4/notes12-jepa
             title: "Further reading: JEPA and V-JEPA 2"
 

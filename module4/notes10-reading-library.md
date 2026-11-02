@@ -54,5 +54,5 @@ see the handout *Generative Models in Transportation*.
 
 ---
 
-Next: {doc}`4.14 World models <notes11-world-models>` &mdash; generators that produce a future which responds to your
-actions. Back to the {doc}`Module 4 map <index>`.
+Next: {doc}`4.14 How traffic flow theory gets into AI models <notes14-traffic-physics-library>` &mdash; the same
+question as 4.11 and 4.12, asked of every kind of AI model in recent research. Back to the {doc}`Module 4 map <index>`.
