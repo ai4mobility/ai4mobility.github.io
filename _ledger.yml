@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-10-29
+  updated: 2026-11-03
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -2993,6 +2993,28 @@ items:
       entities.csv is frozen because the prompts embed it and the notebook asserts that the SOP p. 8 prompt
       rebuilds byte for byte. The class-folder copy also holds the SOP PDF in data/; the site bundle does
       not.'
+
+  - id: m3-who-builds-graph-companion
+    file: M3_Graph_Neural_Networks/Who_Builds_The_Graph_Companion.html
+    kind: companion
+    module: 3
+    session: gnn-week
+    status: integrated
+    dest: site/module3/notes11-who-builds.md (3.10, new page) + _toc.yml + module3/index.md + notes9 Next + notes10-labs.md
+    mounted: site/_static/companions/Who_Builds_The_Graph_Companion.html
+    notes: 'Who builds the transportation graph? (Nov 3 2026), 0.1 MB, eight tabs, all inline SVG themed by CSS variables.
+      Built from the Claude Docs handout of the same name (rev 38, https://claude.ai/artifact/6yiXN2uf35CzkE6evrnAmy). Tabs:
+      1 attention learns a graph (cell 5 under GCN / graph attention / full attention, the 3.7 numbers; a toy Graph WaveNet
+      adjacency with made-up vectors, labeled as such); 2 why storms are harder (the 3.1 coastal city, 12 dependency edges,
+      which ones a normal day / S1 trip / surge shows, look-alike common-cause links; N(N-1) slider); 3 dependency vs relevance
+      graph (task A vs B); 4 the ladder (four rungs, companion tab 5 bars, Lab 5 rule B dot-whisker, evaluation close); 5
+      the recipe (six clickable boxes with Lab 8 evidence: P/R chart, 138 of 175, 103 of 108 required, 39 of 53 observed);
+      6 torus perimeter case (three tests, gate probe with six policies, critic vs actor view, attention on the CBD, trips
+      table, evaluation close); 7 hard links (the loop under max-pressure vs a gate start, three levers mapped onto it, easy/hard
+      checker incl. our reading of the storm feeder); 8 fit card, four check questions, six lines, reading. Torus numbers
+      are INJECTED by who_builds_graph/build.py from RL_Network_Control/torus/source/rl/eval_*.json and sim/baselines.json
+      - re-run it if the torus runs change. Retention is shown as a ratio of mean trips (98.1-101.4%); TORUS_RESULTS.md quotes
+      paired differences. Lab 8 notebook header now points to 3.10 instead of ''the handout''.'
 
   - id: m4-lab6-vit-finetune
     file: site/module6/lab6_vit_finetune.ipynb

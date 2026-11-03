@@ -175,4 +175,4 @@ day or by area. **Ugly cases:** how does it do on storm days, incident days, and
 
 ---
 
-Next: {doc}`notes10-labs` &mdash; the lab, the questions this module arms you with, and further reading.
+Next: {doc}`3.10 Who builds the transportation graph? <notes11-who-builds>` &mdash; when a model can learn the graph itself, and what to do when it cannot.

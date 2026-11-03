@@ -7,7 +7,7 @@
 - **Graph neural networks:** graph-structured data in transportation research and agency practice; nodes,
   edges and the adjacency matrix; every network so far as a graph model; node, edge and graph questions;
   node embeddings; message passing with convolution and attention; the cell transmission model as message
-  passing; node, edge and graph classification
+  passing; node, edge and graph classification; who builds the graph when nobody hands it to you
 
 ## Overview
 
@@ -30,7 +30,7 @@ be trusted. A small head on top answers the question per node, per pair of nodes
 
 :::{admonition} How to read this module
 :class: tip
-Nine section pages, one interactive companion (embedded in 3.6) and two labs. Sections 3.1&ndash;3.4 need
+Ten section pages, two interactive companions (embedded in 3.6 and 3.10) and two labs. Sections 3.1&ndash;3.4 need
 no learning at all: they are about data, vocabulary and questions. Sections 3.5&ndash;3.9 build the model.
 Skim the module before class and read it properly after, then run the companion and Labs 5 and 8. Keep
 {doc}`1.3 <../module1/notes3-cnn>` (convolution) and the attention sections of
@@ -89,8 +89,13 @@ Skim the module before class and read it properly after, then run the companion 
   <td>&mdash;</td>
 </tr>
 <tr>
+  <td><a href="notes11-who-builds.html"><strong>3.10 Who builds the transportation graph?</strong></a><br><em>Graph neural networks</em></td>
+  <td>Attention as a learned graph; why a post-storm graph is harder to learn than a sentence; dependency against relevance; the ladder from a given graph to a learned one; a recipe for the post-storm graph; why a transformer did not discover perimeter control.</td>
+  <td><a href="../_static/companions/Who_Builds_The_Graph_Companion.html" target="_blank" rel="noopener">Who builds the graph &#8599;</a><br><a href="lab8_agency_graph.html">Lab 8</a></td>
+</tr>
+<tr>
   <td><a href="notes10-labs.html"><strong>Practice, exercises, and further reading</strong></a><br><em>All of Module 3</em></td>
-  <td>What Labs 5 and 8 and the companion prove; the module in six lines; judgment questions; reading a model's parameter count; questions for a vendor; further reading.</td>
+  <td>What Labs 5 and 8 and the companions prove; the module in six lines; judgment questions; reading a model's parameter count; questions for a vendor; further reading.</td>
   <td><a href="lab5_graph_attention.html">Lab 5</a><br><a href="lab8_agency_graph.html">Lab 8</a><br><a href="../labs.html">All labs</a></td>
 </tr>
 </tbody>
@@ -116,6 +121,8 @@ By the end of this module you will be able to:
 - Map the cell transmission model onto message passing, and use that map to say where a learned graph
   model can be trusted and where the classical model should be kept.
 - Tell from a model's parameter count whether it can move to another city.
+- Decide how much of a graph to give a model and how much to let it learn, and explain why links that show only
+  after a failure or a joint action are very hard to learn.
 
 ## Topics
 
@@ -133,6 +140,8 @@ By the end of this module you will be able to:
   transformers
 - The cell transmission model as message passing: derived versus fitted rules
 - Node, edge and graph classification; link prediction; transferability
+- Who builds the graph: masks and learned graphs, dependency against relevance, a recipe for the post-storm graph,
+  and a perimeter-control case study
 
 ## Video lectures
 
@@ -177,6 +186,7 @@ finds 84% of a 67-edge gold set at 79% precision, where a co-occurrence baseline
 time; but the automatic checks (quote on the page, known entities) catch made-up support, not wrong
 readings, so only the labeled sample tells you the edges are right. Runs in under a minute with no API key.
 
-## Interactive companion
+## Interactive companions
 
 - <a href="../_static/companions/GNN_On_A_Road_Network_Companion.html" target="_blank" rel="noopener">A GNN on a road network: one shared rule, any number of intersections</a> &mdash; embedded in <a href="notes6-message-passing.html">3.6 Message passing and graph convolution</a>; tab 5 goes with <a href="notes7-graph-attention.html">3.7 Graph attention</a>
+- <a href="../_static/companions/Who_Builds_The_Graph_Companion.html" target="_blank" rel="noopener">Who builds the transportation graph?</a> &mdash; embedded in <a href="notes11-who-builds.html">3.10 Who builds the transportation graph?</a>; tab 5 goes with <a href="lab8_agency_graph.html">Lab 8</a>

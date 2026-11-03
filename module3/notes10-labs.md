@@ -5,7 +5,7 @@
     <span class="notes-card-eyebrow">Module 3 &middot; Practice</span>
     <span class="notes-card-session">Sessions: all of Module 3</span>
   </div>
-  <p class="notes-card-lede">What the labs and the companion that go with this module <em>prove</em>, the module in six lines, the questions it arms you with, and where to read further. Everything on this page is practice &mdash; the explanations live in sections 3.1&ndash;3.9.</p>
+  <p class="notes-card-lede">What the labs and the companions that go with this module <em>prove</em>, the module in six lines, the questions it arms you with, and where to read further. Everything on this page is practice &mdash; the explanations live in sections 3.1&ndash;3.10.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Notebooks that go with it</h4>
@@ -24,7 +24,7 @@
   </div>
 </div>
 
-## What the labs and the companion prove
+## What the labs and the companions prove
 
 **{doc}`Lab 5 — Attention on a Road Network <lab5_graph_attention>`** reads with
 {doc}`3.6 <notes6-message-passing>` and {doc}`3.7 <notes7-graph-attention>`. One message-passing layer, six
@@ -55,6 +55,16 @@ apart. Tab 3 animates queue spillback against what an L-layer model can see. Tab
 on a spillback rule and tests it on networks it never saw, at sizes it never saw: depth and aggregator
 choice. Tab 5 is the 10-weight attention layer of {doc}`3.7 <notes7-graph-attention>`, with and without the
 road mask.
+
+**The companion {doc}`embedded in 3.10 <notes11-who-builds>`** asks who builds the graph when nobody hands it to
+you. Tab 2 shows which edges of 3.1's coastal city the data can see on a normal day, when a substation trips, and
+when surge floods a pump: on a normal day, none. Tab 4 puts the companion's tab 5 and Lab 5 on one ladder, from a
+given graph to a learned one. Tab 5 lays out a recipe for the post-storm graph with Lab 8's numbers for its first
+steps. Tabs 6 and 7 are a case study on the course's torus simulator. *Proves:* a transformer whose signals could
+all attend to each other could hold a perimeter when trained to copy one (its boundary signals put 0.49&ndash;0.59 of
+their attention on downtown, against 0.25 for an even spread) and kept it under further training, but trained from
+max-pressure it never found one (5.42 trips per step against the gate's 5.90). A model learns a link only if
+training shows that link changing the outcome.
 
 **{doc}`Lab 2 — From Word2Vec to Road2Vec <../module1/lab2_word_embeddings>`** lives in Module 1 and is the
 bridge into this module: it builds the USF street network of {doc}`3.1 <notes1-graph-data>` and the
@@ -148,8 +158,8 @@ agency.
 - Bishop and Bishop, *Deep Learning: Foundations and Concepts* (Springer, 2024), chapter 13. The textbook
   treatment of graph neural networks.
 
-*Numbers on these pages come from the course's GNN companion, Lab 5, the Road2Vec lab and the GNN figure
-reproducers. The grid snapshot, the intersection scene, the queues in the max-pressure example, the
+*Numbers on these pages come from the course's GNN companion, Lab 5, Lab 8, the torus runs behind 3.10, the
+Road2Vec lab and the GNN figure reproducers. The grid snapshot, the intersection scene, the queues in the max-pressure example, the
 hurricane system and the 5 &times; 5 grid snapshots are synthetic or illustrative; the USF and METR-LA
 networks are real.*
 

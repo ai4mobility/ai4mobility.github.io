@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
+<title>Who Builds the Graph</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Course-companion shell (green band, sticky tabs, one figure grid per tab); USF green/gold, theme-aware.
+   Shared tokens and shell lifted from the course companions. All diagrams are inline SVG coloured by CSS
+   variables, so they follow the theme without redrawing. */
+:root{
+  --bg:#F2F6F4; --card:#FFFFFF; --ink:#15211C; --muted:#55655E; --line:#D7E1DC; --soft:#E8F0EC;
+  --green:#006747; --green-d:#003E2A; --gold:#B79F4D; --gold-ink:#76621F; --sand:#CFC493;
+  --blue:#1F6FB5; --warn:#B5581E; --dot:#93A39C; --dot2:#C7D2CD;
+  --hero-bg:#006747; --hero-ink:#FFFFFF; --hero-sub:#D8EAE2; --kick:#E6DCA8;
+  --eq-bg:#EEF4F1;
+  --sans:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0C1311; --card:#141E1A; --ink:#E3ECE7; --muted:#9AAAA3; --line:#293732; --soft:#1A2621;
+  --green:#3DAA80; --green-d:#9BD9BE; --gold:#D5BE6A; --gold-ink:#E3D18A; --sand:#8C8350;
+  --blue:#6AAEE8; --warn:#E59563; --dot:#5E6E67; --dot2:#35443E;
+  --hero-bg:#0A3A29; --hero-ink:#F0F7F3; --hero-sub:#B9D2C7; --kick:#D9CC8C;
+  --eq-bg:#18241F; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0C1311; --card:#141E1A; --ink:#E3ECE7; --muted:#9AAAA3; --line:#293732; --soft:#1A2621;
+  --green:#3DAA80; --green-d:#9BD9BE; --gold:#D5BE6A; --gold-ink:#E3D18A; --sand:#8C8350;
+  --blue:#6AAEE8; --warn:#E59563; --dot:#5E6E67; --dot2:#35443E;
+  --hero-bg:#0A3A29; --hero-ink:#F0F7F3; --hero-sub:#B9D2C7; --kick:#D9CC8C;
+  --eq-bg:#18241F; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+a{color:var(--green)}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.hero{background:var(--hero-bg);color:var(--hero-ink)}
+header.hero .wrap{padding-block:26px 22px}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--kick);font-weight:600}
+h1{font-size:30px;line-height:1.15;margin:6px 0 8px;font-weight:700;text-wrap:balance}
+header.hero p{margin:0;max-width:780px;color:var(--hero-sub)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--card)}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--card);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:7px;scrollbar-width:thin}
+nav.tabs button{font:600 13.5px var(--sans);border:0;background:transparent;color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{background:var(--soft);color:var(--ink)}
+nav.tabs button[aria-selected="true"]{background:var(--green);color:#fff}
+nav.tabs button:focus-visible,.btn:focus-visible,select:focus-visible,input:focus-visible,.seg button:focus-visible,g.hit:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+main .wrap{padding-block:22px 40px}
+section.page h2{font-size:23px;line-height:1.2;margin:0 0 6px;color:var(--green-d);text-wrap:balance}
+section.page h3.sub{font-size:16px;margin:22px 0 6px;color:var(--green-d)}
+.lead{max-width:800px;color:var(--muted);margin:0 0 14px}
+.how{font-size:13.5px;color:var(--ink);background:var(--soft);border-radius:8px;padding:8px 12px;margin:0 0 14px;max-width:800px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px;align-items:start}
+.grid2.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.stack{display:grid;gap:14px;min-width:0}
+@media (max-width:820px){.grid2,.grid2.even{grid-template-columns:minmax(0,1fr)}}
+.fig{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px 12px;min-width:0}
+.fig h3{font-size:13px;font-weight:600;margin:0 0 6px;color:var(--ink);letter-spacing:.01em}
+.fig h3 span{font-weight:400;color:var(--muted)}
+.fig .cap{font-size:12px;color:var(--muted);margin:6px 0 0}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end;margin:0 0 14px}
+.ctrl{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ctrl label,.ctrl .lab{font-size:12.5px;font-weight:600;color:var(--muted)}
+.ctrl input[type=range]{width:190px;max-width:70vw;accent-color:var(--green)}
+.ctrl .val{font:600 13px var(--mono);color:var(--green-d)}
+.btn{font:600 13.5px var(--sans);padding:7px 13px;border-radius:8px;border:1px solid var(--green);background:var(--green);color:#fff;cursor:pointer}
+.btn.alt{background:transparent;color:var(--green-d);border-color:var(--line)}
+.btn.alt:hover{border-color:var(--green)}
+.btn.alt[aria-pressed="true"]{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset;background:var(--soft)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{font:600 13px var(--sans);border:0;background:transparent;color:var(--muted);padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--green);color:#fff}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0}
+.stat{background:var(--soft);border-radius:8px;padding:5px 9px;font-size:12px;color:var(--muted)}
+.stat b{display:block;font:600 14px var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:12px;margin-top:16px}
+.notes > .note:last-child:nth-child(odd){grid-column:1 / -1}
+.note{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:4px 10px 10px 4px;padding:10px 14px;font-size:14px}
+.note.key{border-left-color:var(--green)}
+.note.warn{border-left-color:var(--warn)}
+.note h4{margin:0 0 4px;font-size:14px;color:var(--green-d)}
+.note p{margin:0 0 6px}.note p:last-child{margin:0}
+.note ul{margin:4px 0 0;padding-left:18px}.note li{margin:2px 0}
+.eq{background:var(--eq-bg);border-radius:8px;padding:9px 13px;font:15px/1.7 var(--mono);overflow-x:auto;margin:8px 0;color:var(--ink)}
+.eq .c{color:var(--muted);font-size:13px}
+dl.defs{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:13.5px;margin:6px 0 0}
+dl.defs dt{font:600 13px var(--mono);color:var(--green-d)}
+dl.defs dd{margin:0}
+details.deeper{margin-top:14px;background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:8px 14px;max-width:880px}
+details.deeper summary{cursor:pointer;font-weight:600;color:var(--green-d)}
+details.deeper p{margin:8px 0}
+.check{margin-top:16px;max-width:880px;background:var(--soft);border-radius:10px;padding:10px 14px}
+.check h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--green-d)}
+.check ol{margin:0;padding-left:20px}.check li{margin:6px 0}
+.check details{margin:4px 0 0;font-size:13.5px}
+.check details summary{cursor:pointer;color:var(--green-d);font-weight:600;font-size:13px}
+.eval{margin-top:16px;max-width:880px;background:var(--card);border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:10px;padding:10px 14px}
+.eval h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--gold-ink)}
+.eval dl{margin:0;display:grid;grid-template-columns:minmax(0,15em) minmax(0,1fr);gap:6px 14px;font-size:14px}
+.eval dt{font-weight:600;color:var(--green-d)}
+.eval dd{margin:0}
+@media (max-width:640px){.eval dl{grid-template-columns:minmax(0,1fr)}}
+table.fit{border-collapse:collapse;width:100%;font-size:14px}
+table.fit th,table.fit td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+table.fit th{color:var(--green-d);font-size:12.5px;text-transform:uppercase;letter-spacing:.05em}
+table.fit td:first-child{font-weight:600;color:var(--green-d);white-space:nowrap}
+table.fit.cmp td:first-child{white-space:normal}
+.tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px 6px}
+table.score{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+table.score th,table.score td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:right;vertical-align:top}
+table.score th:first-child,table.score td:first-child{text-align:left}
+table.score th{color:var(--green-d);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+table.score tr.ref td{color:var(--muted)}
+table.score tr.sel td{background:var(--soft);font-weight:600}
+table.eh td.on{background:var(--soft);box-shadow:inset 0 0 0 2px var(--green);font-weight:600}
+table.eh td.on.hard{box-shadow:inset 0 0 0 2px var(--warn)}
+.recap{max-width:820px}.recap li{margin:6px 0}
+.small{font-size:12.5px;color:var(--muted)}
+.mono{font-family:var(--mono)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:18px;height:0;border-top:2.5px solid;margin-right:5px;vertical-align:3px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.chip{font:600 12.5px var(--sans);display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:20px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+.chip i{display:inline-block;width:16px;height:0;border-top:3px solid}
+.chip[aria-pressed="true"]{color:var(--ink);border-color:var(--green);background:var(--soft)}
+.chip[aria-pressed="false"] i{opacity:.35}
+.tests{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:10px;margin-top:12px}
+.test{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 13px;font-size:13.5px}
+.test h4{display:flex;gap:8px;align-items:center;margin:0 0 4px;font-size:14px;color:var(--green-d)}
+.tag{display:inline-block;font:600 11px var(--sans);letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-left:auto}
+.tag.yes{background:var(--green);color:#fff}.tag.no{background:var(--warn);color:#fff}
+.panel{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--green);border-radius:4px 10px 10px 4px;padding:10px 14px;font-size:14px;min-height:120px}
+.panel h4{margin:0 0 6px;font-size:15px;color:var(--green-d)}
+.panel p{margin:0 0 6px}.panel ul{margin:4px 0 6px;padding-left:18px}.panel li{margin:2px 0}
+.panel .ev{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.panel .ev b.k{color:var(--gold-ink);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+
+/* ---- SVG diagrams ---- */
+svg.dg{width:100%;height:auto;display:block;font-family:var(--sans);overflow:visible}
+.gdwrap{overflow-x:auto}
+svg.dg.wide{min-width:640px}
+svg.dg.mid{min-width:480px}
+svg.dg text{fill:var(--ink);font-size:13px}
+svg.dg text.m{fill:var(--muted);font-size:11.5px}
+svg.dg text.b{font-weight:600}
+svg.dg text.h{font-weight:600;fill:var(--green-d)}
+svg.dg text.big{font:600 15px var(--mono)}
+svg.dg text.w{fill:var(--warn);font-weight:600}
+svg.dg text.mono{font-family:var(--mono)}
+svg.dg .band{fill:var(--soft)}
+svg.dg .zone{fill:var(--blue);fill-opacity:.14}
+svg.dg .nd{fill:var(--card);stroke:var(--green-d);stroke-width:1.6}
+svg.dg .nd.chg{fill:var(--warn);fill-opacity:.22}
+svg.dg .nd.hit{stroke:var(--warn);stroke-width:3}
+svg.dg .nd.tgt{fill:var(--gold);fill-opacity:.35;stroke:var(--gold-ink);stroke-width:2.2}
+svg.dg .nd.off{stroke:var(--dot);fill:var(--card)}
+svg.dg .bx{fill:var(--card);stroke:var(--line);stroke-width:1.3}
+svg.dg .bx.on{stroke:var(--green);stroke-width:2.4;fill:var(--soft)}
+svg.dg .bx.aim{stroke:var(--gold);stroke-width:2}
+svg.dg .bx.broke{stroke:var(--warn);stroke-width:2;stroke-dasharray:6 4}
+svg.dg .bx.lever{stroke:var(--gold);stroke-width:3;fill:var(--soft)}
+svg.dg g.hit{cursor:pointer}
+svg.dg g.hit:hover .bx{stroke:var(--green)}
+svg.dg .cell{stroke:var(--line);stroke-width:1.2}
+svg.dg .ln{stroke:var(--muted);stroke-width:1.4;fill:none}
+svg.dg .e-pow{stroke:var(--gold);stroke-width:1.8;stroke-dasharray:6 4;fill:none}
+svg.dg .e-ctl{stroke:var(--green);stroke-width:1.8;fill:none}
+svg.dg .e-drn{stroke:var(--blue);stroke-width:2;stroke-dasharray:1.5 4;stroke-linecap:round;fill:none}
+svg.dg .e-lyr{stroke:var(--dot);stroke-width:1.2;fill:none}
+svg.dg .e-faint{opacity:.22}
+svg.dg .e-on{stroke-width:3.4}
+svg.dg .e-look{stroke:var(--warn);stroke-width:2.2;stroke-dasharray:5 4;fill:none}
+svg.dg .e-need{stroke:var(--green);stroke-width:3;fill:none}
+svg.dg .e-skip{stroke:var(--dot);stroke-width:1.3;stroke-dasharray:4 4;fill:none}
+svg.dg .e-bad{stroke:var(--warn);stroke-width:2.2;stroke-dasharray:6 4;fill:none}
+svg.dg .e-good{stroke:var(--green);stroke-width:2.4;fill:none}
+svg.dg .w-arrow{stroke:var(--green);fill:none;stroke-linecap:round}
+svg.dg .w-arrow.corner{stroke:var(--warn)}
+svg.dg .ax{stroke:var(--muted);stroke-width:1}
+svg.dg .gl{stroke:var(--line);stroke-width:1}
+svg.dg .gl.dash{stroke-dasharray:3 4}
+svg.dg .nstar{stroke:var(--ink);stroke-width:1.2;stroke-dasharray:2 4}
+svg.dg .bar{fill:var(--green)}
+svg.dg .bar.base{fill:var(--dot2);stroke:var(--dot);stroke-width:1}
+svg.dg .bar.k-right{fill:var(--green)}
+svg.dg .bar.k-learn{fill:var(--gold)}
+svg.dg .bar.k-all{fill:var(--dot)}
+svg.dg .bar.k-wrong{fill:var(--warn)}
+svg.dg .whisk{stroke:var(--ink);stroke-width:1.4}
+svg.dg .cbd{fill:var(--gold);fill-opacity:.16;stroke:var(--gold);stroke-width:1.2}
+svg.dg .tn{fill:var(--dot)}
+svg.dg .tn.bd{fill:var(--gold);stroke:var(--gold-ink);stroke-width:1}
+svg.dg .tl{stroke:var(--dot2);stroke-width:1.4}
+svg.dg .ti{stroke:var(--gold-ink);stroke-width:2.2}
+.mk-g{fill:var(--green)}.mk-y{fill:var(--gold)}.mk-b{fill:var(--blue)}.mk-m{fill:var(--muted)}.mk-w{fill:var(--warn)}.mk-d{fill:var(--dot)}.mk-yi{fill:var(--gold-ink)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <marker id="m-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk-g"/></marker>
+    <marker id="m-y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk-y"/></marker>
+    <marker id="m-yi" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk-yi"/></marker>
+    <marker id="m-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk-b"/></marker>
+    <marker id="m-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk-m"/></marker>
+    <marker id="m-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk-w"/></marker>
+    <marker id="m-d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk-d"/></marker>
+  </defs>
+</svg>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility · Graph neural networks · Interactive companion</div>
+  <h1>Who builds the transportation graph?</h1>
+  <p>On a road network the map gives you the graph. After a hurricane, nobody gives you one, and building it is often the hardest part of the project. This page asks three questions. Can a model learn the graph by itself, the way a transformer learns who attends to whom? Why is that harder for a transportation system than for a sentence? And when the graph is the hard part, what do you do? It ends with a real test: a transformer asked to discover perimeter control on a simulated city, which did not.</p>
+</div></header>
+
+<nav class="tabs" aria-label="Sections"><div class="wrap" role="tablist">
+  <button role="tab" data-tab="learn" aria-selected="true">1 · Attention learns a graph</button>
+  <button role="tab" data-tab="storm" aria-selected="false">2 · Why storms are harder</button>
+  <button role="tab" data-tab="two" aria-selected="false">3 · Two graphs</button>
+  <button role="tab" data-tab="ladder" aria-selected="false">4 · The ladder</button>
+  <button role="tab" data-tab="recipe" aria-selected="false">5 · A recipe</button>
+  <button role="tab" data-tab="torus" aria-selected="false">6 · Perimeter control</button>
+  <button role="tab" data-tab="hard" aria-selected="false">7 · Hard links</button>
+  <button role="tab" data-tab="card" aria-selected="false">8 · Fit card</button>
+</div></nav>
+
+<main><div class="wrap">
+
+<!-- ======================================================== TAB 1 -->
+<section class="page" id="sec-learn">
+  <h2>Attention already learns a graph</h2>
+  <p class="lead">A transformer is a graph network on a complete graph, so its attention weights are a learned graph. A mask is how you hand it the edges you already know. On a road network the adjacency matrix is the mask, and attention only has to learn how much each neighbor counts. Take the mask off, and the model must also learn who its neighbors are.</p>
+  <p class="how">Pick a rule and watch where cell 5 puts its weight. Darker cells are denser (share of jam density). The numbers are the worked example from section 3.7.</p>
+  <div class="controls">
+    <div class="ctrl"><span class="lab">Who decides the edges?</span><div class="seg" id="l-rule"><button data-v="conv" aria-pressed="false">Graph convolution</button><button data-v="gat" aria-pressed="true">Graph attention, road mask</button><button data-v="full" aria-pressed="false">Full attention, no mask</button></div></div>
+  </div>
+  <div class="grid2">
+    <div class="fig"><h3>Where cell 5 looks <span>· 3 × 3 grid of road cells · arrow width = weight</span></h3>
+      <svg class="dg" id="l-grid" viewBox="0 0 400 400" role="img" aria-label="A 3 by 3 grid of road cells with arrows into cell 5 whose widths show the weight cell 5 gives each cell"></svg>
+      <div class="stats" id="l-stats"></div>
+    </div>
+    <div class="stack">
+      <div class="note key" id="l-note"></div>
+      <div class="tablewrap"><table class="fit cmp">
+        <thead><tr><th></th><th>A new graph for each input</th><th>One graph for the whole dataset</th></tr></thead>
+        <tbody>
+          <tr><td>How an edge weight is made</td><td>From the current states of the two nodes (q · k)</td><td>From two learned vectors per node, fixed after training</td></tr>
+          <tr><td>The question it answers</td><td>Who matters right now?</td><td>Who is connected in general?</td></tr>
+          <tr><td>Example</td><td>Graph attention inside the road mask (3.7)</td><td>Graph WaveNet's learned adjacency on METR-LA</td></tr>
+        </tbody></table></div>
+    </div>
+  </div>
+
+  <h3 class="sub">One graph for the whole dataset: a learned adjacency</h3>
+  <p class="lead">The second kind needs one equation, because you will meet it, or a close variant, in many forecasting papers (Graph WaveNet, MTGNN, AGCRN).</p>
+  <div class="grid2">
+    <div class="stack">
+      <div class="eq">Ã = SoftMax( ReLU( E₁ E₂ᵀ ) )</div>
+      <dl class="defs">
+        <dt>N</dt><dd>the number of detectors (207 on METR-LA)</dd>
+        <dt>E₁, E₂</dt><dd>two N × c tables of learned numbers: every detector gets one "sender" vector and one "receiver" vector</dd>
+        <dt>E₁E₂ᵀ</dt><dd>an N × N table with a score for every pair of detectors</dd>
+        <dt>ReLU</dt><dd>sets negative scores to zero, so weak pairs end up with small weights</dd>
+        <dt>SoftMax</dt><dd>row by row: turns each detector's scores into weights that sum to 1</dd>
+      </dl>
+      <p class="small">In words: two detectors are linked when one's sender vector points the same way as the other's receiver vector. Training on forecast error moves the vectors, and the graph moves with them.</p>
+      <div class="controls">
+        <div class="ctrl"><label for="w-ang">Turn detector 4's receiver vector</label><input type="range" id="w-ang" min="0" max="355" step="5" value="180"><span class="val" id="w-ang-v"></span></div>
+        <div class="ctrl"><label for="w-len">Length of every vector</label><input type="range" id="w-len" min="0.5" max="3" step="0.1" value="2"><span class="val" id="w-len-v"></span></div>
+      </div>
+    </div>
+    <div class="fig"><h3>Four detectors on a freeway <span>· toy vectors, made up to show the mechanics</span></h3>
+      <svg class="dg" id="w-graph" viewBox="0 0 460 170" role="img" aria-label="Four detectors in a row with the learned links drawn as arrows"></svg>
+      <svg class="dg" id="w-mat" viewBox="0 0 460 210" role="img" aria-label="The four by four learned adjacency matrix"></svg>
+      <p class="cap" id="w-cap"></p>
+    </div>
+  </div>
+  <details class="deeper"><summary>Going deeper (optional): Graph WaveNet keeps the road graph</summary>
+    <p>Graph WaveNet does not throw the road graph away. Its graph convolution adds three terms: one over the forward road graph, one over the backward road graph, and one over the learned graph Ã, each summed over k hops. So the learned graph is added on top of the known one. The paper also tested the learned graph alone, with no road graph, and it did nearly as well as the forward road graph alone on METR-LA and PEMS-BAY. Source: Wu et al., Graph WaveNet, IJCAI 2019, equations 5 and 6.</p>
+  </details>
+  <div class="notes">
+    <div class="note"><h4>A post-storm system needs both kinds</h4><p>The link from a signal to its feeder is a fixed fact. Whether that link matters right now depends on whether the feeder is down, which is the same "the neighbor that matters flips with the state" effect you saw in 3.7.</p></div>
+  </div>
+  <div class="check"><h4>Check yourself</h4><ol>
+    <li>Set the toy to its starting position, then turn detector 4's receiver vector to 0°. Detector 1 now splits its message between two detectors. Which two, and why?
+      <details><summary>Answer</summary>Detectors 2 and 4. Detector 1's sender vector points at 0°, and now two receiver vectors (2's and 4's) point the same way, so both pairs get the same high score.</details></li>
+    <li>Shrink every vector to length 0.5. Why does the graph turn almost uniform, even though no vector changed direction?
+      <details><summary>Answer</summary>The scores are lengths times cosines. Short vectors give small scores, and a softmax of small numbers is nearly even. The length of the learned vectors sets how sharp the learned graph is.</details></li>
+  </ol></div>
+</section>
+
+<!-- ======================================================== TAB 2 -->
+<section class="page" id="sec-storm" hidden>
+  <h2>Why a storm graph is harder than a sentence</h2>
+  <p class="lead">BERT can learn who attends to whom because it reads billions of sentences that share one grammar. A post-storm system gives you a few events, links that hide until something fails, things that fail together, and nodes of many kinds.</p>
+  <p class="how">This is the illustrative coastal city of section 3.1. Pick a day, then switch between the facts and what the data shows. A link shows in the data only when its upstream end changes state.</p>
+  <div class="controls">
+    <div class="ctrl"><span class="lab">The day</span><div class="seg" id="s-day"><button data-v="normal" aria-pressed="true">Normal day</button><button data-v="s1" aria-pressed="false">Wind trips S1</button><button data-v="surge" aria-pressed="false">Surge floods P1</button><button data-v="both" aria-pressed="false">Both</button></div></div>
+    <div class="ctrl"><span class="lab">Show</span><div class="seg" id="s-view"><button data-v="facts" aria-pressed="false">The facts</button><button data-v="data" aria-pressed="true">What the data shows</button></div></div>
+  </div>
+  <div class="fig"><h3>An illustrative coastal city <span>· four layers joined by dependency edges</span></h3>
+    <div class="gdwrap"><svg class="dg wide" id="s-city" viewBox="0 0 760 420" role="img" aria-label="Power, signal, stormwater and road layers with powers, controls and drains edges"></svg></div>
+    <div class="legend" id="s-legend"></div>
+    <div class="stats" id="s-stats"></div>
+    <p class="cap" id="s-cap"></p>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="tablewrap"><table class="fit cmp">
+      <thead><tr><th></th><th>A sentence, for BERT</th><th>A post-storm system</th></tr></thead>
+      <tbody>
+        <tr><td>How many examples</td><td>Billions of sentences, the same grammar in all of them</td><td>A handful of major storms in a decade</td></tr>
+        <tr><td>When a link shows in the data</td><td>Every time the two words appear together</td><td>Only when one end of the link fails</td></tr>
+        <tr><td>Why two nodes change together</td><td>Mostly because one word governs the other</td><td>Often because the same wind and surge hit both</td></tr>
+        <tr><td>What a node is</td><td>A word piece, the same kind for every node</td><td>A signal, a feeder, a pump, a work order, a crew, a police post</td></tr>
+      </tbody></table></div>
+    <div class="fig"><h3>Too few events for too many pairs</h3>
+      <div class="controls">
+        <div class="ctrl"><label for="p-n">Nodes in the system</label><input type="range" id="p-n" min="0" max="7" step="1" value="5"><span class="val" id="p-n-v"></span></div>
+        <div class="ctrl"><label for="p-s">Storms in the record</label><input type="range" id="p-s" min="1" max="10" step="1" value="3"><span class="val" id="p-s-v"></span></div>
+      </div>
+      <div class="stats" id="p-stats"></div>
+      <p class="cap">Every ordered pair of nodes could be an edge: N(N − 1) of them. The storms are the only days the hidden links work where you can see them.</p>
+    </div>
+  </div>
+  <div class="notes">
+    <div class="note"><h4>1 · Too few events</h4><p>A system with 1,000 nodes has 999,000 ordered pairs that could be edges. A few storms cannot tell you which of them are real.</p></div>
+    <div class="note"><h4>2 · Links hide until failure</h4><p>On a normal day every signal has power, so a signal's status says nothing about its feeder. Normal-day data, however much of it you collect, never shows that edge at work.</p></div>
+    <div class="note warn"><h4>3 · Common cause</h4><p>In a storm, assets fail together because the same event hits them, not because one caused the other. Infrastructure researchers call this a <em>geographic</em> interdependency: a local event changes the state of everything nearby (Rinaldi, Peerenboom and Kelly, 2001). A model that learns edges from storm data will join everything in the surge zone. Those links help prediction, but they do not mean that restoring one asset restores the other.</p></div>
+    <div class="note"><h4>4 · Mixed node types</h4><p>Before attention can compare a signal with a work order, each type needs its own encoder into a shared space (section 3.5). Each kind of relation (powers, controls, drains) usually needs its own query and key weights too.</p></div>
+    <div class="note key"><h4>So what?</h4><p>"Take the mask off and let attention learn" is a bet that the data shows the links at work. For a sentence the bet is safe. After a storm it usually is not.</p></div>
+  </div>
+  <div class="check"><h4>Check yourself</h4><ol>
+    <li>Pick "Both" and "What the data shows". Signal G1 and pump P1 changed together. Is there an edge between them? What made them move together?
+      <details><summary>Answer</summary>No edge joins them. Substation S1 feeds both, so S1's trip changed both at once: a common cause inside the dependency graph. A model that joins G1 and P1 would forecast well on this storm and still be wrong about what restores what.</details></li>
+    <li>You have ten years of five-minute signal status data, all from normal days. How many of the twelve dependency edges in this city could a model learn from it?
+      <details><summary>Answer</summary>None from status changes alone. On a normal day no source fails, so no edge is ever seen at work. More normal days do not help; you need failures, real or simulated, or the records that state the edges.</details></li>
+  </ol></div>
+</section>
+
+<!-- ======================================================== TAB 3 -->
+<section class="page" id="sec-two" hidden>
+  <h2>Two graphs: what depends on what, and what helps this task</h2>
+  <p class="lead">The same nodes can need different edges for different tasks. It helps to split "the graph" in two: a <strong>dependency graph</strong> of facts, and a <strong>relevance graph</strong> that changes with the task. Attention learns only the second.</p>
+  <p class="how">Pick a task. The nodes and the fact edges stay the same; the edges the task needs change. The generator crew and the police deputy are added to the city of section 3.1 for this example.</p>
+  <div class="controls">
+    <div class="ctrl"><span class="lab">The task</span><div class="seg" id="t-task"><button data-v="A" aria-pressed="true">Task A: are G1 and G2 still dark at 48 h?</button><button data-v="B" aria-pressed="false">Task B: how long does the queue on R1 last?</button></div></div>
+  </div>
+  <div class="grid2">
+    <div class="fig"><h3 id="t-title"></h3>
+      <svg class="dg" id="t-graph" viewBox="0 50 440 350" role="img" aria-label="Six nodes, the fact edges between them, and the edges this task needs"></svg>
+      <div class="legend"><span><i style="border-color:var(--green)"></i>An edge this task needs</span><span><i style="border-color:var(--dot);border-top-style:dashed"></i>A fact this task can ignore</span><span><i style="border-color:var(--gold);border-top-width:8px;width:12px"></i>The target</span></div>
+      <p class="cap" id="t-cap"></p>
+    </div>
+    <div class="stack">
+      <div class="note key"><h4>The dependency graph holds facts about the world</h4><p>In the illustrative city, substation S1 feeds signals G1 and G2. This generator crew is assigned to G1. The sheriff posts a deputy at G1 when it goes dark. These facts do not change with the task. If you know them, write them down as edges; do not ask a model to rediscover them.</p></div>
+      <div class="note"><h4>The relevance graph holds whatever helps predict this target</h4><p>For "which signals are still dark 48 hours after landfall?", the power edges and the crew assignment matter. For "how long does the queue on corridor R1 last?", the edge from G1 to the road it controls and the deputy directing traffic matter more. Same nodes, different edges.</p></div>
+      <div class="note warn"><h4>Attention learns relevance, not dependency</h4><p>A large attention weight means "this node was useful for this task's loss." It does not mean "this node depends on that one." Jain and Wallace (2019) showed that attention weights often disagree with other measures of what a model relies on, and that quite different weights can give the same prediction. Treat a strong learned edge as a hypothesis to check, not a finding.</p></div>
+      <div class="note"><h4>A link back to BERT</h4><p>Different attention heads tend to track different relations, such as a verb and its object (Clark et al., 2019). Several heads are a little like several edge types learned at once. On a graph you usually know the edge types (powers, controls, drains), so it is cheaper to give them to the model than to hope the heads find them.</p></div>
+    </div>
+  </div>
+  <div class="check"><h4>Check yourself</h4><ol>
+    <li>A model trained on storm data puts a strong attention weight from a stormwater pump on a signal 300 m away. A colleague concludes that the pump powers the signal. What would you check before you agree?
+      <details><summary>Answer</summary>A common cause first: are both in the same surge or flood zone (a geographic link)? Then the utility's feeder records, and a knock-out test: switch the pump off in the input and see whether only that signal's prediction moves. A large attention weight shows usefulness for the task, not dependency.</details></li>
+  </ol></div>
+</section>
+
+<!-- ======================================================== TAB 4 -->
+<section class="page" id="sec-ladder" hidden>
+  <h2>The ladder: how much of the graph you hand the model</h2>
+  <p class="lead">Every step from "the graph is given" toward "the model learns the graph" needs more data and gives you a graph you can trust less. In this module's own experiments, telling the model which neighbors matter was worth more than letting it learn how much they count.</p>
+  <p class="how">Click a rung. Read it top down: on each rung you hand the model less, so it must learn more from the data. Then read the two measurements below it.</p>
+  <div class="grid2">
+    <div class="fig"><h3>Four rungs from a given graph to a learned one</h3>
+      <svg class="dg" id="ld-svg" viewBox="0 0 560 400" role="group" aria-label="Four rungs; click one"></svg>
+    </div>
+    <div class="panel" id="ld-detail" aria-live="polite"></div>
+  </div>
+  <div class="grid2 even" style="margin-top:14px">
+    <div class="fig"><h3>Same ten weights, different graph <span>· GNN companion, tab 5</span></h3>
+      <svg class="dg" id="ld-c5" viewBox="0 0 470 200" role="img" aria-label="Bar chart of test error for four versions of the same attention layer"></svg>
+      <p class="cap">Spillback rule, tested on street networks the model never saw, 6 seeds. Lower is better. Only the graph handed to the layer changed.</p>
+    </div>
+    <div class="fig"><h3>What you tell the aggregator <span>· Lab 5, merge rule (rule B)</span></h3>
+      <svg class="dg" id="ld-l5" viewBox="0 0 470 290" role="img" aria-label="Dot and whisker chart of test error for seven aggregators"></svg>
+      <div class="legend"><span><i style="border-color:var(--green)"></i>the right neighbors, fixed weights</span><span><i style="border-color:var(--gold)"></i>learned attention</span><span><i style="border-color:var(--dot)"></i>all neighbors</span><span><i style="border-color:var(--warn)"></i>the wrong neighbors</span></div>
+      <p class="cap">Dot: mean test error over 6 seeds; whisker: best to worst seed. 3 training networks, 3 unseen test networks of an unseen size.</p>
+    </div>
+  </div>
+  <div class="stats" id="ld-stats"></div>
+  <div class="eval"><h4>Before you trust this result</h4><dl>
+    <dt>What is the baseline?</dt><dd>Persistence (predict no change), and a fixed aggregator that encodes what an engineer knows: flow arrives from upstream. Beating a plain mean proves little.</dd>
+    <dt>How was the data split, and why is that honest?</dt><dd>By network: trained on 3 synthetic networks, tested on 3 unseen networks of an unseen size, 6 seeds.</dd>
+    <dt>What does it do on the ugly cases?</dt><dd>Attention's worst seed (0.0255) is worse than the upstream mean's worst (0.0151). The ground truth is a rule written in code, so trust the order of the results, not their size.</dd>
+  </dl></div>
+  <div class="check"><h4>Check yourself</h4><ol>
+    <li>A county wants to forecast which signals will still be dark 24 hours after landfall. It has records from two storms. Which rung would you choose, and what would go into the candidate graph?
+      <details><summary>Answer</summary>Rung 3. Feeder assignments, generator lists and the SOP's priority signals as typed edges, plus place and time matches between damage reports and outage records. Two storms are too few to learn edges from, so add masked-node pretraining and simulated outages, then check with knock-out tests.</details></li>
+  </ol></div>
+</section>
+
+<!-- ======================================================== TAB 5 -->
+<section class="page" id="sec-recipe" hidden>
+  <h2>A recipe for the post-storm graph</h2>
+  <p class="lead">Build a generous graph from what you know, let the model weight it and add a few edges, then check the learned graph against the world before anyone acts on it.</p>
+  <p class="how"><strong>Pick the task first</strong>: the relevance graph depends on it (tab 3). Then click each box. The check step loops back: an edge that fails a check goes back to the candidate graph, not into a decision. Lab 8 tries the first two boxes, and part of the check, on real agency documents.</p>
+  <div class="fig"><h3>Build generously, learn a little, and check before anyone acts</h3>
+    <div class="gdwrap"><svg class="dg wide" id="rc-svg" viewBox="0 0 760 330" role="group" aria-label="Six steps in a loop; click one"></svg></div>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="panel" id="rc-detail" aria-live="polite"></div>
+    <div class="fig" id="rc-labfig"><h3>Lab 8: reading edges out of an SOP and an after-action report <span>· scored on 4 gold pages</span></h3>
+      <svg class="dg" id="rc-pr" viewBox="0 0 470 230" role="img" aria-label="Precision and recall of a co-occurrence baseline and of the language model runs"></svg>
+      <div class="legend"><span><i style="border-color:var(--green)"></i>precision: share of returned edges that are right</span><span><i style="border-color:var(--gold)"></i>recall: share of true edges found</span></div>
+      <p class="cap">Gold set: 67 edges on four pages, labeled by one annotator and frozen before either model run. "Typed" means the relation must match too. <a href="../../module3/lab8_agency_graph.html" target="_top">Open Lab 8</a>.</p>
+    </div>
+  </div>
+  <div class="notes">
+    <div class="note warn"><h4>A question this recipe cannot answer</h4><p>"If we restore this feeder first, how many signals come back?" is a question about cause and effect. A graph learned for prediction does not answer it. Causal discovery methods (Granger causality, PCMCI, NOTEARS) try to, but they need interventions in the data or strong assumptions.</p></div>
+  </div>
+</section>
+
+<!-- ======================================================== TAB 6 -->
+<section class="page" id="sec-torus" hidden>
+  <h2>Case study: can a transformer discover perimeter control?</h2>
+  <p class="lead">A shared transformer could hold a perimeter and could keep one it was given, but it did not discover one on its own. The reason was not that attention could not see downtown. Training never gave that link a reason to matter.</p>
+  <div class="grid2">
+    <div class="stack">
+      <div class="note key"><h4>The question</h4><p>Perimeter control is traffic flow theory's answer to a congested downtown: hold traffic at the boundary so the inside stays near the density where it discharges the most (the macroscopic fundamental diagram). If every signal can attend to every other signal, will a learned policy find that rule by itself?</p></div>
+      <div class="note"><h4>The test bed and the model</h4><p>The course's torus simulator (Rule 184 lanes) at 12 × 12 signals with a 6 × 6 CBD. Vehicles drive trips, and 62.5% of trips end in the CBD. Each signal can pick one of six phases, including four that serve a single approach, so a boundary signal can hold only its inbound direction.</p>
+        <p>Each signal is a token with a positional code, and every token attends to all 144 tokens plus one network token. One shared policy head picks each signal's phase, trained with reinforcement learning (PPO). Training from scratch was too slow on two CPU cores, so each run started from a copy of max-pressure or of the hand-built gate. Two rewards were tried: trips completed in the whole network (one number shared by all 144 signals), or vehicles discharged by each signal's own approaches.</p></div>
+    </div>
+    <div class="fig"><h3>The torus <span>· 144 signals, a 6 × 6 CBD, edges wrap around</span></h3>
+      <svg class="dg" id="tr-grid" viewBox="0 0 360 360" role="img" aria-label="A 12 by 12 grid of signals with the CBD in the middle; 20 gold boundary signals and 24 gold inbound approaches"></svg>
+      <p class="cap">Gold: the 20 boundary signals and the 24 approaches that bring traffic into the CBD.</p>
+    </div>
+  </div>
+  <div class="stats" id="tr-gate-stats"></div>
+  <p class="small" style="max-width:800px">There is something to find. A hand-built gate runs max-pressure everywhere, and holds the 24 inbound approaches while the CBD holds more than 288 vehicles (40% of its 720 cells). Over the second half of the run its gain over max-pressure is 23%, and the CBD stays near 0.43 vehicles per cell instead of 0.72.</p>
+
+  <h3 class="sub">Three tests, three answers</h3>
+  <div class="tests" id="tr-tests"></div>
+
+  <div class="grid2" style="margin-top:14px">
+    <div class="fig"><h3 id="tr-pt"></h3>
+      <div class="controls" style="margin-bottom:8px">
+        <div class="ctrl"><span class="lab">Show</span><div class="seg" id="tr-mode"><button data-v="act" aria-pressed="true">What the boundary signals do</button><button data-v="critic" aria-pressed="false">What the critic predicts</button></div></div>
+      </div>
+      <div class="chips" id="tr-chips"></div>
+      <div class="gdwrap"><svg class="dg mid" id="tr-probe" viewBox="0 0 520 320" role="img" aria-label="Line chart against CBD density"></svg></div>
+      <p class="cap" id="tr-pcap"></p>
+    </div>
+    <div class="stack">
+      <div class="fig"><h3>Where the boundary signals look <span>· share of attention on the 36 CBD tokens</span></h3>
+        <svg class="dg" id="tr-attn" viewBox="0 0 470 220" role="img" aria-label="Attention on the CBD against CBD density for two trained policies"></svg>
+        <p class="cap">An even spread over 144 tokens would give the CBD 36/144 = 0.25 (dashed).</p>
+      </div>
+      <div class="note warn" id="tr-know"><h4>Knowing is not acting</h4><p></p></div>
+    </div>
+  </div>
+  <h3 class="sub">Trips completed per step, on the test seeds</h3>
+  <div class="tablewrap"><table class="score" id="tr-table"></table></div>
+  <div class="eval"><h4>Before you trust this result</h4><dl>
+    <dt>What is the baseline?</dt><dd>Two-phase max-pressure, and the hand-built gate. Random phases and six-phase max-pressure are far worse (table above).</dd>
+    <dt>How was the data split, and why is that honest?</dt><dd>Every number is 32 test runs on seeds not used in training; validation used a separate seed. Load 0.55 lies outside the training range of 0.30–0.50.</dd>
+    <dt>What does it do on the ugly cases?</dt><dd>Each training run used one seed, and gaps of 1–2% between the trained policies are about the size of seed-to-seed noise. The budget was small: 31 rounds, 83 minutes on two CPU cores. An earlier 5 × 5 grid study with the same model found the same pattern.</dd>
+  </dl></div>
+</section>
+
+<!-- ======================================================== TAB 7 -->
+<section class="page" id="sec-hard" hidden>
+  <h2>Why some links are very hard to learn</h2>
+  <p class="lead">A model can learn an edge only if training contains cases where that edge changes the outcome. The link from the boundary signals to the CBD never did, so attention had nothing to learn from.</p>
+  <p class="how">Switch the starting policy to see the loop run or stall. Then click a lever to see which step of the loop it acts on.</p>
+  <div class="controls">
+    <div class="ctrl"><span class="lab">Training starts from</span><div class="seg" id="h-start"><button data-v="mp" aria-pressed="true">A copy of max-pressure</button><button data-v="gate" aria-pressed="false">A copy of the gate</button></div></div>
+    <div class="ctrl"><span class="lab">Lever</span><div class="btns" id="h-lever"><button class="btn alt" data-v="none" aria-pressed="true">None</button><button class="btn alt" data-v="give" aria-pressed="false">Give the structure</button><button class="btn alt" data-v="make" aria-pressed="false">Make the cases happen</button><button class="btn alt" data-v="clean" aria-pressed="false">Clean up the signal</button></div></div>
+  </div>
+  <div class="fig"><h3 id="h-title"></h3>
+    <div class="gdwrap"><svg class="dg wide" id="h-loop" viewBox="0 0 760 440" style="max-width:860px;margin:0 auto" role="img" aria-label="A four-step loop: read the CBD, hold inbound traffic, more trips downtown, reward credits the hold"></svg></div>
+  </div>
+  <div class="panel" id="h-detail" aria-live="polite" style="margin-top:12px;min-height:0"></div>
+  <div class="notes">
+    <div class="note"><h4>Many signals must act together</h4><p>One approach held for 10 steps changes the CBD by a handful of vehicles. The gate works only when the 24 inbound approaches hold together for hundreds of steps. Standard PPO exploration samples each signal's action on its own, so that joint pattern almost never appears.</p></div>
+    <div class="note"><h4>The payoff is late and far away</h4><p>The cost of lost green is immediate and at the boundary. The benefit shows up minutes later, downtown.</p></div>
+    <div class="note"><h4>One reward is shared by 144 signals</h4><p>A network-wide trip count cannot say which signal earned it. This is the credit assignment problem. The torus runs suggest, from one seed each, that this noise even loosened a gate the network reward was handed: inbound green at CBD density 0.45–0.50 crept from 0.00 to 0.11.</p></div>
+    <div class="note"><h4>A decent answer already exists</h4><p>Max-pressure works well, so small random departures from it mostly look worse.</p></div>
+    <div class="note key"><h4>The same root cause as the storm feeder</h4><ul><li><strong>Storm:</strong> feeders rarely fail on a normal day, so the signal–feeder link never shows in normal-day data.</li><li><strong>Perimeter:</strong> under max-pressure nobody ever holds traffic, so the boundary–CBD link never shows in the training data.</li></ul><p>The difference: in prediction you wait for failures or simulate them. In control, the agent has to create the cases itself. That is what exploration means, and it is why reinforcement learning makes the problem harder.</p></div>
+  </div>
+  <h3 class="sub">Easy or hard to learn?</h3>
+  <div class="controls">
+    <div class="ctrl"><span class="lab">The link</span><div class="seg" id="h-case"><button data-v="lab5" aria-pressed="true">Lab 5 merge rule</button><button data-v="feeder" aria-pressed="false">Storm feeder (prediction)</button><button data-v="perim" aria-pressed="false">Perimeter gate (control)</button></div></div>
+  </div>
+  <div class="tablewrap"><table class="fit cmp eh" id="h-table"></table></div>
+  <p class="small" id="h-case-cap" style="max-width:800px"></p>
+</section>
+
+<!-- ======================================================== TAB 8 -->
+<section class="page" id="sec-card" hidden>
+  <h2>Fit card: learning the graph structure</h2>
+  <div class="tablewrap"><table class="fit">
+    <tbody>
+      <tr><td>Idea in one sentence</td><td>Let the model decide who reads whom, either fresh for each input (attention beyond a mask) or once for a dataset (a learned adjacency), instead of fixing every edge in advance.</td></tr>
+      <tr><td>Why it works (the logic)</td><td>Training keeps the links that lower the loss, so useful links nobody wrote down can surface, as long as the data shows them at work.</td></tr>
+      <tr><td>Fits these tasks</td><td>Forecasts on sensor networks whose links are unknown or incomplete; finding missing dependencies between infrastructure records; fusing many sources after a storm. Leverage labels: prediction, classification (is this pair linked?), extraction (edges read from text).</td></tr>
+      <tr><td>Needs this data</td><td>Many samples in which the links vary: months of 5-minute detector data (METR-LA: 207 detectors, 4 months), or simulated failures. A candidate graph from IDs, inventories and SOPs held by the DOT, the county, the utility and contractors.</td></tr>
+      <tr><td>Breaks when</td><td>Links show only after rare failures or joint actions; things fail together from a common cause; one reward is shared by many nodes; someone reads attention weights as dependencies.</td></tr>
+      <tr><td>Keep the classical method when</td><td>The network is known and trusted (the road as the mask, graph convolution, max-pressure); you need cause and effect for a decision; an engineering rule already exists, such as a perimeter gate set from the fundamental diagram.</td></tr>
+    </tbody></table></div>
+
+  <div class="check"><h4>Check yourself</h4><ol>
+    <li>You have two projects: (a) speed forecasts for METR-LA's 207 detectors with four months of data; (b) dependencies among 40 critical facilities from one storm's records. For which one would you let full attention learn the graph, and why?
+      <details><summary>Answer</summary>(a), with care. Four months of detector data show the links at work every day, and Graph WaveNet's learned graph does well there. Still compare against the road graph as a mask. For (b), one storm cannot pin down the edges among 40 facilities (1,560 ordered pairs); build the candidate graph from records instead.</details></li>
+    <li>A learned signal policy on a 50-signal arterial network beats max-pressure by 2% but never holds traffic upstream of a known bottleneck. Name three changes you would try first, and say which research question each one changes.
+      <details><summary>Answer</summary>Feed the bottleneck's occupancy to the upstream signals (this asks "does it emerge given the right input?"); coordinated, persistent exploration (same question, better search); a difference reward (same goal, cleaner credit). Then more compute and three seeds before you claim anything.</details></li>
+    <li>A model run reads 120 edges out of a county's debris-management plan. Every edge's quote is on the page and both ends are known entities. Is the graph right?
+      <details><summary>Answer</summary>Not yet. Those checks protect you from made-up support, not from wrong edges: in Lab 8 they removed no wrong edge on the gold pages. Only a labeled sample of pages tells you precision and recall, and a second run tells you how stable the edges are.</details></li>
+    <li>A colleague says: "The torus result proves transformers cannot learn perimeter control." What would you say back?
+      <details><summary>Answer</summary>It shows less. The same network represented the gate and kept it; it did not discover it in 31 rounds from a max-pressure start, with one seed per run and a network-wide reward. The fair claim is about discovery under that training setup, and the levers in tab 7 each test a different version of the question.</details></li>
+  </ol></div>
+
+  <h3 class="sub">The page in six lines</h3>
+  <ol class="recap">
+    <li>Attention is graph learning: a mask hands the model the edges you know; no mask asks it to learn them.</li>
+    <li>A learned graph is either fresh for each input (attention) or one per dataset (a learned adjacency, as in Graph WaveNet).</li>
+    <li>Split the graph in two: dependency facts you should write down, and task relevance the model can learn.</li>
+    <li>Climb down the ladder only as far as your data allows. On roads and in Lab 5, knowing who the neighbors are beat learning how much they count.</li>
+    <li>A model learns an edge only if training shows that edge changing the outcome. Storm feeders and perimeter gates both fail that test.</li>
+    <li>When the link is hard: give the structure, make the missing cases happen, clean up the credit, and say which question you answered.</li>
+  </ol>
+
+  <h3 class="sub">Further reading</h3>
+  <ul class="recap">
+    <li>Kipf et al., <a href="https://arxiv.org/abs/1802.04687" target="_blank" rel="noopener">Neural Relational Inference for Interacting Systems</a>, ICML 2018. Infers hidden edges and their types from trajectories.</li>
+    <li>Wu et al., <a href="https://www.ijcai.org/proceedings/2019/264" target="_blank" rel="noopener">Graph WaveNet for Deep Spatial-Temporal Graph Modeling</a>, IJCAI 2019. A learned graph added to the road graph, on METR-LA and PEMS-BAY.</li>
+    <li>Wu et al., <a href="https://arxiv.org/abs/2005.11650v1" target="_blank" rel="noopener">Connecting the Dots: Multivariate Time Series Forecasting with Graph Neural Networks</a> (MTGNN), KDD 2020; and Shang, Chen and Bi, <a href="https://arxiv.org/abs/2101.06861v3" target="_blank" rel="noopener">Discrete Graph Structure Learning for Forecasting Multiple Time Series</a> (GTS), ICLR 2021. Learn the graph while forecasting.</li>
+    <li>Hu et al., <a href="https://arxiv.org/abs/2003.01332v1" target="_blank" rel="noopener">Heterogeneous Graph Transformer</a>, WWW 2020. Attention with node and edge types.</li>
+    <li>Rinaldi, Peerenboom and Kelly, <a href="https://www.osti.gov/biblio/949367" target="_blank" rel="noopener">Identifying, Understanding, and Analyzing Critical Infrastructure Interdependencies</a>, IEEE Control Systems Magazine 21(6), 2001. The physical, cyber, geographic and logical classes.</li>
+    <li>Jain and Wallace, <a href="https://aclanthology.org/N19-1357/" target="_blank" rel="noopener">Attention is not Explanation</a>, NAACL 2019.</li>
+    <li>Clark et al., <a href="https://aclanthology.org/W19-4828/" target="_blank" rel="noopener">What Does BERT Look At? An Analysis of BERT's Attention</a>, BlackboxNLP 2019.</li>
+    <li>Foerster et al., <a href="https://arxiv.org/pdf/1705.08926" target="_blank" rel="noopener">Counterfactual Multi-Agent Policy Gradients</a> (COMA), AAAI 2018.</li>
+    <li>In this course: section 3.3 (who may read whom), section 3.7 and Lab 5 (graph attention on a road network), Lab 8 (a graph from agency documents), and the RL handout on network signal control with its torus write-up.</li>
+  </ul>
+</section>
+
+</div></main>
+
+<script id="torus" type="application/json">{"bins":[0.0,0.3,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.8],"n_star":0.4,"probes":{"random":{"ig":[0.0,0.0,0.5,0.5015,0.5078,0.4997,0.4924,0.5009,0.5006,0.5069],"n":[0,0,384,1992,2424,3240,4344,8208,55776,432]},"mp2":{"ig":[0.0,0.0,0.5194,0.5093,0.5005,0.4925,0.4946,0.4966,0.48,0.0],"n":[0,0,360,1728,1992,2664,5040,15816,49200,0]},"mp6":{"ig":[0.0,0.0,0.4141,0.379,0.4127,0.4153,0.4311,0.4289,0.4487,0.4309],"n":[0,0,384,1992,2040,2160,2832,3840,36168,27384]},"gate":{"ig":[0.0,0.7936,0.0251,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"n":[0,16392,36312,24096,0,0,0,0,0,0]},"imit":{"ig":[0.0,0.3523,0.0735,0.0031,0.0,0.0,0.0,0.0,0.0,0.0],"n":[0,29760,41616,5424,0,0,0,0,0,0]},"disc":{"ig":[0.0,0.0,0.5139,0.5139,0.4949,0.4899,0.5008,0.4932,0.477,0.0],"n":[0,0,360,1656,2136,2784,5328,20400,44136,0]},"keepN":{"ig":[0.0,0.3222,0.1995,0.1103,0.0,0.0,0.0,0.0,0.0,0.0],"n":[0,4296,61704,10800,0,0,0,0,0,0]},"keepL":{"ig":[0.0,0.0,0.2776,0.1804,0.1718,0.0417,0.0,0.0,0.0,0.0],"n":[0,0,16752,51768,8256,24,0,0,0,0]}},"trips":{"random":{"0.35":3.6647,"0.45":3.5463,"0.55":3.3029},"mp6":{"0.35":4.3262,"0.45":4.1019,"0.55":3.7779},"mp2":{"0.35":5.5086,"0.45":5.3122,"0.55":5.0577},"gate":{"0.35":5.9393,"0.45":5.8973,"0.55":5.5957},"imit":{"0.35":5.922,"0.45":5.795,"0.55":5.5338},"disc":{"0.35":5.4423,"0.45":5.4156,"0.55":5.0708},"keepN":{"0.35":5.8584,"0.45":5.7873,"0.55":5.5113},"keepL":{"0.35":6.0229,"0.45":5.8687,"0.55":5.5448}},"attn":{"imit":[null,0.5904,0.5666,0.4905,null,null,null,null,null,null],"disc":[null,null,0.2477,0.2485,0.25,0.2523,0.2532,0.2553,0.2541,null],"keepN":[null,0.5782,0.5612,0.5223,null,null,null,null,null,null],"keepL":[null,null,0.5681,0.5533,0.5475,null,null,null,null,null]},"critic":{"imit":{"v":[null,-0.062,-0.07,-0.084,null,null,null,null,null,null],"corr":-0.3699},"disc":{"v":[null,null,4.419,4.407,4.405,4.366,4.184,3.067,2.393,null],"corr":-0.7551},"keepN":{"v":[null,2.684,3.05,3.416,null,null,null,null,null,null],"corr":0.2219},"keepL":{"v":[null,null,1.32,1.562,2.268,2.427,null,null,null,null],"corr":0.5373}},"uniform":0.25}</script>
+<script>
+(() => {
+'use strict';
+const TD = JSON.parse(document.getElementById('torus').textContent);
+const $ = s => document.querySelector(s);
+const fx = (v, d = 2) => (Math.round(v * 10 ** d + 1e-6) / 10 ** d).toFixed(d);
+const sg = t => String(t).replace(/^-/, '−');
+const pc = (v, d = 0) => (100 * v).toFixed(d) + '%';
+const comma = n => n.toLocaleString('en-US');
+
+function seg(id, cb){ const el = $(id);
+  el.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || !el.contains(b)) return;
+    el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); cb(b.dataset.v); });
+  return () => el.querySelector('[aria-pressed="true"]').dataset.v; }
+function ln(x1, y1, x2, y2, cls, mk, p1 = 0, p2 = 0, extra = ''){ const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
+  return `<line x1="${(x1 + ux * p1).toFixed(1)}" y1="${(y1 + uy * p1).toFixed(1)}" x2="${(x2 - ux * p2).toFixed(1)}" y2="${(y2 - uy * p2).toFixed(1)}" class="${cls}"${mk ? ` marker-end="url(#${mk})"` : ''} ${extra}/>`; }
+function tx(x, y, s, cls = '', anchor = 'start', extra = ''){ return `<text x="${x}" y="${y}" class="${cls}" text-anchor="${anchor}" ${extra}>${s}</text>`; }
+function stats(el, rows){ el.innerHTML = rows.map(([l, v]) => `<div class="stat">${l}<b>${v}</b></div>`).join(''); }
+function hitKeys(svg, cb){ svg.addEventListener('click', e => { const g = e.target.closest('g.hit'); if (g) cb(g.dataset.k); });
+  svg.addEventListener('keydown', e => { const g = e.target.closest('g.hit'); if (g && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); cb(g.dataset.k); } }); }
+
+// ================================================================ TAB 1 · attention learns a graph
+const T1 = (() => {
+  const K = {1: .10, 2: .20, 3: .25, 4: .15, 5: .15, 6: .50, 7: .07, 8: .12, 9: .35};
+  const W = { conv: {2: .224, 4: .224, 6: .224, 8: .224}, gat: {4: .337, 8: .323, 6: .205, 2: .134},
+              full: {1: .102, 2: .071, 3: .126, 4: .179, 6: .109, 7: .098, 8: .171, 9: .145} };
+  const NOTE = {
+    conv: ['The grid says who; link counts say how much', 'Cell 5 gives 0.224 to each of cells 2, 4, 6 and 8 and 0.200 to itself, whatever the traffic is doing. The weights come from the number of links at each end, 1/√(d₅·dⱼ) with self-loops counted, so they need not sum to 1. This is rung 1 of the ladder (tab 4): max-pressure works the same way.'],
+    gat: ['The grid says who; Q · K says how much', 'Cell 5 gives 0.337 to cell 4, 0.323 to cell 8, 0.205 to cell 6 and 0.134 to cell 2. It is nearly empty, so it listens to the cells that feed it. Change the traffic and the weights change; the four neighbors stay the same. The road is the mask.'],
+    full: ['Nobody says who', 'All eight other cells get weight, and the four corner cells, which cannot pass traffic to cell 5, take 47% of it. The model now has to learn from data that corners do not matter.'] };
+  const C = 120, O = 20, cx = i => O + ((i - 1) % 3) * C + C / 2, cy = i => O + Math.floor((i - 1) / 3) * C + C / 2;
+  let rule;
+  function draw(){
+    const w = W[rule]; let s = '';
+    for (let i = 1; i <= 9; i++){ const x = O + ((i - 1) % 3) * C, y = O + Math.floor((i - 1) / 3) * C;
+      s += `<rect x="${x}" y="${y}" width="${C}" height="${C}" class="cell" style="fill:var(--green);fill-opacity:${(0.05 + K[i] * 0.75).toFixed(3)}"/>`;
+      if (i === 5) continue;
+      const pos = { 3: 'tr', 7: 'bl', 8: 'bl', 9: 'br' }[i] || 'tl', right = pos[1] === 'r', bottom = pos[0] === 'b';
+      const lx = right ? x + C - 10 : x + 10, ly = bottom ? y + C - 28 : y + 20, an = right ? 'end' : 'start';
+      s += tx(lx, ly, 'cell ' + i, 'm', an) + tx(lx, ly + 16, 'k = ' + fx(K[i]), 'm mono', an); }
+    for (let i = 1; i <= 9; i++){ if (i === 5 || !w[i]) continue;
+      const corner = [1, 3, 7, 9].includes(i);
+      s += ln(cx(i), cy(i), cx(5), cy(5), 'w-arrow' + (corner ? ' corner' : ''), null, 34, 30, `stroke-width="${(1.5 + w[i] * 34).toFixed(1)}" stroke-opacity=".8"`);
+      s += tx(cx(i), cy(i) + 6, fx(w[i], 3), 'big' + (corner ? ' w' : ''), 'middle'); }
+    s += `<circle cx="${cx(5)}" cy="${cy(5)}" r="27" class="nd tgt"/>` + tx(cx(5), cy(5) - 2, 'cell 5', 'b', 'middle', 'style="font-size:11.5px"') + tx(cx(5), cy(5) + 13, 'k ' + fx(K[5]), 'mono', 'middle', 'style="font-size:10.5px"');
+    if (rule === 'conv') s += tx(cx(5), cy(5) + 46, 'self 0.200', 'mono', 'middle');
+    $('#l-grid').innerHTML = s;
+    const road = [2, 4, 6, 8].reduce((a, j) => a + (w[j] || 0), 0), corn = [1, 3, 7, 9].reduce((a, j) => a + (w[j] || 0), 0);
+    stats($('#l-stats'), [['who', rule === 'full' ? 'the model' : 'the grid'], ['how much', rule === 'conv' ? 'link counts' : 'Q · K from the states'],
+      ['on road neighbors 2, 4, 6, 8', fx(road, 3)], ['on corner cells', fx(corn, 3)]]);
+    $('#l-note').innerHTML = `<h4>${NOTE[rule][0]}</h4><p>${NOTE[rule][1]}</p>`; }
+
+  // toy learned adjacency
+  const SEND = [0, 90, 180, 270], RECV0 = [270, 0, 90, null];
+  const DX = [60, 180, 300, 420];
+  function wn(){
+    const ang = +$('#w-ang').value, L = +$('#w-len').value; $('#w-ang-v').textContent = ang + '°'; $('#w-len-v').textContent = fx(L, 1);
+    const R = RECV0.map((a, i) => i === 3 ? ang : a), rad = d => d * Math.PI / 180;
+    const A = SEND.map(si => { const sc = R.map(rj => Math.max(0, L * L * Math.cos(rad(si - rj)))); const ex = sc.map(Math.exp), Z = ex.reduce((a, b) => a + b, 0); return ex.map(e => e / Z); });
+    // graph
+    const Y0 = 70; let g = `<line x1="20" y1="${Y0}" x2="440" y2="${Y0}" class="gl"/>` + tx(20, 16, 'traffic →', 'm');
+    for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++){ if (i === j || A[i][j] < 0.08) continue;
+      const x1 = DX[i], x2 = DX[j], up = j > i ? -1 : 1, span = Math.abs(j - i), h = 22 + 22 * span, mx = (x1 + x2) / 2, y0 = Y0 + up * 10, cy = Y0 + up * h, ym = (y0 + cy) / 2;
+      const sw = (1 + A[i][j] * 7).toFixed(1);
+      g += `<path d="M${x1 + (x2 > x1 ? 14 : -14)} ${y0} Q ${mx} ${cy} ${x2 + (x2 > x1 ? -14 : 14)} ${y0}" class="e-ctl" stroke-width="${sw}" marker-end="url(#m-g)"/>`;
+      g += tx(mx, ym + (up < 0 ? -8 : 18), fx(A[i][j], 2), 'm mono', 'middle'); }
+    for (let i = 0; i < 4; i++) g += `<circle cx="${DX[i]}" cy="${Y0}" r="13" class="nd"/>` + tx(DX[i], Y0 + 5, i + 1, 'b', 'middle');
+    $('#w-graph').innerHTML = g;
+    // matrix
+    const x0 = 150, y0 = 30, c = 40; let m = tx(x0 + 2 * c, 16, 'to detector', 'm', 'middle') + tx(x0 - 46, y0 + 2 * c + 4, 'from', 'm', 'end');
+    for (let j = 0; j < 4; j++) m += tx(x0 + j * c + c / 2, y0 - 4, j + 1, 'b', 'middle');
+    for (let i = 0; i < 4; i++){ m += tx(x0 - 12, y0 + i * c + c / 2 + 5, i + 1, 'b', 'middle');
+      for (let j = 0; j < 4; j++){ const v = A[i][j];
+        m += `<rect x="${x0 + j * c}" y="${y0 + i * c}" width="${c - 2}" height="${c - 2}" rx="4" style="fill:var(--green);fill-opacity:${(0.06 + 0.9 * v).toFixed(3)};stroke:var(--line)"/>`;
+        m += tx(x0 + j * c + c / 2 - 1, y0 + i * c + c / 2 + 4, fx(v, 2), 'mono', 'middle', v > 0.55 ? 'style="fill:#fff;font-size:12px"' : 'style="font-size:12px"'); } }
+    m += tx(x0 + 4 * c + 14, y0 + 20, 'each row', 'm') + tx(x0 + 4 * c + 14, y0 + 36, 'sums to 1', 'm');
+    $('#w-mat').innerHTML = m;
+    const best = A[0].indexOf(Math.max(...A[0]));
+    $('#w-cap').textContent = `Row i is where detector i's message goes. Sender vectors point at 0°, 90°, 180° and 270°; receiver vectors of detectors 1–3 at 270°, 0° and 90°, and detector 4's at ${ang}°. Detector 1 sends most to detector ${best + 1} (${fx(A[0][best], 2)}). Arrows show weights of 0.08 or more.`; }
+
+  return { init(){ rule = seg('#l-rule', v => { rule = v; draw(); })(); $('#w-ang').addEventListener('input', wn); $('#w-len').addEventListener('input', wn); }, draw(){ draw(); wn(); } };
+})();
+
+// ================================================================ TAB 2 · the storm city
+const T2 = (() => {
+  const N = { S1: [250, 62, 'P'], S2: [560, 62, 'P'], G1: [190, 150, 'G'], G2: [330, 150, 'G'], G3: [450, 150, 'G'], G4: [590, 150, 'G'],
+    P1: [250, 235, 'W'], P2: [520, 235, 'W'], R1: [170, 330, 'R'], R2: [330, 318, 'R'], R3: [250, 382, 'R'], R4: [440, 350, 'R'], R5: [590, 318, 'R'], R6: [520, 384, 'R'], SH: [680, 352, 'R'] };
+  const DEP = [['S1', 'G1', 'pow'], ['S1', 'G2', 'pow'], ['S1', 'P1', 'pow'], ['S2', 'G3', 'pow'], ['S2', 'G4', 'pow'], ['S2', 'P2', 'pow'],
+    ['G1', 'R1', 'ctl'], ['G2', 'R2', 'ctl'], ['G3', 'R4', 'ctl'], ['G4', 'R5', 'ctl'], ['P1', 'R3', 'drn'], ['P2', 'R6', 'drn']];
+  const LYR = [['S1', 'S2'], ['G1', 'G2'], ['G2', 'G3'], ['G3', 'G4'], ['R1', 'R2'], ['R1', 'R3'], ['R3', 'R4'], ['R2', 'R4'], ['R4', 'R5'], ['R4', 'R6'], ['R5', 'SH'], ['R6', 'SH']];
+  const DAY = {
+    normal: { hit: [], look: [], cap: 'A normal day. Every dependency edge is real, but no source changes state, so the data never shows one of them at work. A model trained only on days like this has nothing to learn the edges from.' },
+    s1: { hit: ['S1'], look: [['G1', 'G2'], ['G1', 'P1'], ['G2', 'P1']], cap: 'Wind trips S1. Its three power edges show at work, and so do the edges below them: dark signals G1 and G2 change traffic on R1 and R2, and the stopped pump P1 leaves R3 undrained. The S2 side stays invisible. G1, G2 and P1 also changed together, so a learner may join them, although their only tie is a shared parent.' },
+    surge: { hit: ['P1', 'R1', 'R3'], look: [['P1', 'R1'], ['R1', 'R3']], cap: 'Surge floods pump P1 and the low roads R1 and R3. One edge shows at work (P1 drains R3). R1 and R3 flooded with P1 because the same water hit them, not because one caused the other: a geographic, common-cause link that no dependency edge stands for.' },
+    both: { hit: ['S1', 'P1', 'R1', 'R3'], look: [['G1', 'G2'], ['G1', 'P1'], ['G2', 'P1'], ['P1', 'R1'], ['R1', 'R3']], cap: 'The storm: both at once. Half of the twelve dependency edges show at work; the other half never do. Five look-alike links appear among things that changed together, and a model that learns edges from this storm would join them too.' } };
+  const Y = { P: [28, 96, 'Power grid'], G: [116, 184, 'Traffic signals'], W: [202, 268, 'Stormwater'], R: [288, 408, 'Roads and a shelter'] };
+  let day, view;
+  function changed(hit){ const ch = new Set(hit); let grew = true;
+    while (grew){ grew = false; DEP.forEach(([a, b]) => { if (ch.has(a) && !ch.has(b)){ ch.add(b); grew = true; } }); }
+    return ch; }
+  function draw(){
+    const D = DAY[day], ch = changed(D.hit), seen = DEP.filter(([a]) => ch.has(a));
+    let s = '';
+    Object.values(Y).forEach(([y0, y1, name]) => { s += `<rect x="110" y="${y0}" width="640" height="${y1 - y0}" rx="8" class="band"/>` + tx(12, (y0 + y1) / 2 + 4, name, 'h'); });
+    if (D.hit.includes('P1')) s += `<path d="M110 ${Y.W[0]} H330 L300 ${Y.R[1]} H110 Z" class="zone"/>` + tx(118, Y.R[1] - 8, 'storm surge', 'm', 'start', 'style="fill:var(--blue)"');
+    LYR.forEach(([a, b]) => { s += ln(N[a][0], N[a][1], N[b][0], N[b][1], 'e-lyr', null, 13, 13); });
+    const MK = { pow: 'm-y', ctl: 'm-g', drn: 'm-b' };
+    DEP.forEach(([a, b, t]) => { const on = view === 'facts' || ch.has(a);
+      const cls = 'e-' + t + (view === 'data' ? (on ? ' e-on' : ' e-faint') : '');
+      s += ln(N[a][0], N[a][1], N[b][0], N[b][1], cls, MK[t], 14, 16); });
+    if (view === 'data') D.look.forEach(([a, b]) => { const [x1, y1] = N[a], [x2, y2] = N[b], mx = (x1 + x2) / 2 - (y2 - y1) * 0.18, my = (y1 + y2) / 2 + (x2 - x1) * 0.18;
+      s += `<path d="M${x1} ${y1} Q ${mx.toFixed(1)} ${my.toFixed(1)} ${x2} ${y2}" class="e-look"/>`; });
+    Object.entries(N).forEach(([k, [x, y]]) => { const cls = 'nd' + (ch.has(k) ? ' chg' : '') + (D.hit.includes(k) ? ' hit' : '');
+      s += k === 'SH' ? `<path d="M${x - 13} ${y + 11} V${y - 3} L${x} ${y - 15} L${x + 13} ${y - 3} V${y + 11} Z" class="${cls}"/>` : `<circle cx="${x}" cy="${y}" r="12" class="${cls}"/>`;
+      s += tx(x + 15, y - 9, k, 'b'); });
+    $('#s-city').innerHTML = s;
+    const leg = [['var(--gold)', 'dashed', 'powers'], ['var(--green)', 'solid', 'controls'], ['var(--blue)', 'dotted', 'drains'], ['var(--dot)', 'solid', 'links inside a layer']];
+    if (view === 'data') leg.push(['var(--warn)', 'dashed', 'look-alike: changed together, no edge']);
+    $('#s-legend').innerHTML = leg.map(([c, st, l]) => `<span><i style="border-color:${c};border-top-style:${st}"></i>${l}</span>`).join('') + '<span><i style="border:2.5px solid var(--warn);border-radius:50%;width:12px;height:12px;vertical-align:-2px"></i>hit by the storm</span>';
+    stats($('#s-stats'), [['dependency edges (facts)', DEP.length], ['seen at work in the data', seen.length], ['never seen today', DEP.length - seen.length], ['look-alike links', view === 'data' ? D.look.length : '—']]);
+    $('#s-cap').textContent = view === 'facts' ? 'The facts: twelve dependency edges, the same on every day. Switch to "What the data shows" to see which of them this day reveals.' : D.cap; }
+  const NS = [10, 20, 50, 100, 200, 1000, 2000, 5000];
+  function pairs(){ const n = NS[+$('#p-n').value], st = +$('#p-s').value; $('#p-n-v').textContent = comma(n); $('#p-s-v').textContent = st;
+    stats($('#p-stats'), [['ordered pairs N(N − 1)', comma(n * (n - 1))], ['candidate pairs per storm', comma(Math.round(n * (n - 1) / st))]]); }
+  return { init(){ day = seg('#s-day', v => { day = v; draw(); })(); view = seg('#s-view', v => { view = v; draw(); })();
+    $('#p-n').addEventListener('input', pairs); $('#p-s').addEventListener('input', pairs); }, draw(){ draw(); pairs(); } };
+})();
+
+// ================================================================ TAB 3 · two graphs
+const T3 = (() => {
+  const P = { S1: [80, 90, 'substation'], G2: [340, 90, 'signal'], G1: [210, 190, 'signal'], Crew: [80, 290, 'generator'], Dep: [340, 290, 'police'], R1: [210, 370, 'corridor'] };
+  const E = [['S1', 'G2', 'powers'], ['S1', 'G1', 'powers'], ['Crew', 'G1', 'restores'], ['Dep', 'G1', 'directs'], ['G1', 'R1', 'controls']];
+  const TASK = { A: { tgt: ['G1', 'G2'], need: ['S1>G2', 'S1>G1', 'Crew>G1'], title: 'Task A: are G1 and G2 still dark at 48 h?',
+      cap: 'Target: signals G1 and G2. Whether a signal is still dark depends on its power and on the crew that restores it. The deputy and the road it controls do not change that answer.' },
+    B: { tgt: ['R1'], need: ['S1>G1', 'Crew>G1', 'Dep>G1', 'G1>R1'], title: 'Task B: how long does the queue on R1 last?',
+      cap: 'Target: corridor R1. The queue depends on whether G1 runs and on the deputy directing traffic when it does not. G1’s power and crew still matter; G2 does not.' } };
+  const BW = 92, BH = 40;
+  function clip(a, b){ // shorten a line between two box centers so it stops at the boxes
+    const [x1, y1] = P[a], [x2, y2] = P[b], dx = x2 - x1, dy = y2 - y1;
+    const f = (w, h) => Math.min(Math.abs(dx) > 0 ? (w / 2) / Math.abs(dx) : 1e9, Math.abs(dy) > 0 ? (h / 2) / Math.abs(dy) : 1e9);
+    const t = f(BW + 8, BH + 8); return [x1 + dx * t, y1 + dy * t, x2 - dx * t, y2 - dy * t]; }
+  let task;
+  function draw(){ const T = TASK[task]; let s = '';
+    E.forEach(([a, b, l]) => { const on = T.need.includes(a + '>' + b), [x1, y1, x2, y2] = clip(a, b);
+      s += ln(x1, y1, x2, y2, on ? 'e-need' : 'e-skip', on ? 'm-g' : 'm-d');
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, lp = a === 'S1' && b === 'G2' ? [mx, my - 8, 'middle'] : a === 'S1' && b === 'G1' ? [mx - 12, my + 16, 'end'] : [mx + (x2 < x1 ? 8 : -8), my - 6, x2 < x1 ? 'start' : 'end'];
+      s += tx(lp[0], lp[1], l, on ? '' : 'm', lp[2], on ? 'style="font-size:12px;font-weight:600"' : ''); });
+    Object.entries(P).forEach(([k, [x, y, sub]]) => { const tgt = T.tgt.includes(k), used = tgt || T.need.some(e => e.split('>').includes(k));
+      s += `<rect x="${x - BW / 2}" y="${y - BH / 2}" width="${BW}" height="${BH}" rx="8" class="nd ${tgt ? 'tgt' : (used ? '' : 'off')}"/>`;
+      s += tx(x, y - 3, k === 'Dep' ? 'Deputy' : k, used ? 'b' : 'b m', 'middle', used ? '' : 'style="font-size:13px"') + tx(x, y + 13, sub, 'm', 'middle'); });
+    $('#t-graph').innerHTML = s; $('#t-title').textContent = T.title; $('#t-cap').textContent = T.cap; }
+  return { init(){ task = seg('#t-task', v => { task = v; draw(); })(); }, draw };
+})();
+
+// ================================================================ TAB 4 · the ladder
+const T4 = (() => {
+  const R = [
+    { n: '1 · You give every edge and what it means', l: 'The model learns only the message rule', ex: 'Example: graph convolution or max-pressure on the road (3.6)',
+      d: ['Every edge and its weight come from the problem: the grid and its link counts, or max-pressure’s rule on each approach.', 'Needs the least data and gives a graph you can read edge by edge.', 'Breaks when the right weights change with the traffic.'] },
+    { n: '2 · You give which edges exist', l: 'The model learns how much each edge counts, fresh for each input', ex: 'Example: graph attention inside the road mask (3.7, Lab 5)',
+      d: ['The road is the mask. Attention learns how much each neighbor counts from the current states.', 'Where you stand on a road network: the roads are known and trusted.', 'In tab 1, this is the middle rule: cell 5 listens to the cells that feed it.'] },
+    { n: '3 · You give some of the edges', l: 'The model learns the weights plus a few missing edges', ex: 'Example: Graph WaveNet, the road graph plus a learned graph', aim: true,
+      d: ['Aim here after a storm. Give the model the facts you have (feeder lists, IDs, SOP links), then let it learn the weights and a few missing edges on top.', 'The extra edges must pay for themselves: a penalty keeps them rare, and each one is a hypothesis to check (tab 5).'] },
+    { n: '4 · You give only the node types', l: 'The model learns the whole graph', ex: 'Example: full attention with no mask; NRI; GTS',
+      d: ['No edges are given. The model must learn who and how much.', 'Needs many samples in which the links vary, such as months of detector data. In tab 1 this is the rule that put 47% of cell 5’s weight on corners.', 'After a storm, the data rarely shows the links at work (tab 2), so this rung is a bet you usually lose.'] } ];
+  const W = 440, H = 74, G = 14;
+  let k = 2;
+  function draw(){ let s = '';
+    s += tx(10, 18, 'You give more', 'm') + ln(28, 28, 28, 4 * (H + G) + 4, 'ln', 'm-m') + tx(10, 4 * (H + G) + 26, 'The model learns more, so it needs more data and earns less trust', 'm');
+    R.forEach((r, i) => { const x = 50 + i * 16, y = 30 + i * (H + G);
+      s += `<g class="hit" data-k="${i}" tabindex="0" role="button" aria-pressed="${i === k}"><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="8" class="bx${i === k ? ' on' : (r.aim ? ' aim' : '')}"/>`;
+      s += tx(x + 14, y + 24, r.n, 'b') + tx(x + 14, y + 44, r.l, '', 'start', 'style="font-size:12px"') + tx(x + 14, y + 61, r.ex, 'm');
+      if (r.aim) s += tx(x + W - 12, y + 24, 'Aim here after a storm', 'b', 'end', 'style="fill:var(--gold-ink);font-size:12px"');
+      s += '</g>'; });
+    $('#ld-svg').innerHTML = s;
+    const r = R[k]; $('#ld-detail').innerHTML = `<h4>Rung ${r.n}</h4><p><strong>${r.l}.</strong> ${r.ex}.</p><ul>${r.d.map(x => `<li>${x}</li>`).join('')}</ul>`; }
+  function bars(){ // companion tab 5
+    const rows = [['Predict no change', .0870, 'base'], ['Attention, no mask', .0839, 'k-all'], ['Attention, road mask', .0556, 'k-right'], ['Road mask + direction', .0286, 'k-right']];
+    const x0 = 160, w = 280, xm = .09, sx = v => x0 + v / xm * w; let s = '';
+    [0, .03, .06, .09].forEach(t => { s += ln(sx(t), 10, sx(t), 160, 'gl') + tx(sx(t), 178, fx(t, 2), 'm', 'middle'); });
+    rows.forEach(([l, v, c], i) => { const y = 18 + i * 36; s += `<rect x="${x0}" y="${y}" width="${(sx(v) - x0).toFixed(1)}" height="22" rx="3" class="bar ${c}"/>` + tx(x0 - 8, y + 15, l, '', 'end', 'style="font-size:12.5px"') + tx(sx(v) + 6, y + 15, fx(v, 4), 'mono', 'start', 'style="font-size:12px"'); });
+    s += tx(x0 + w / 2, 196, 'test error (lower is better)', 'm', 'middle');
+    $('#ld-c5').innerHTML = s;
+    // Lab 5 rule B: mean and best–worst seed
+    const L5 = [['Attention (learns how much)', .0110, .0061, .0255, 'k-learn'], ['Upstream only, mean (umean)', .0122, .0095, .0151, 'k-right'], ['All neighbors, max', .0164, .0145, .0182, 'k-all'],
+      ['All neighbors, mean', .0214, .0194, .0259, 'k-all'], ['All neighbors, sum', .0340, .0196, .0454, 'k-all'], ['Worst downstream (dmax)', .0619, .0614, .0631, 'k-wrong'], ['Predict no change', .0716, null, null, 'base']];
+    const a0 = 190, aw = 250, am = .08, ax = v => a0 + v / am * aw; let t = '';
+    [0, .02, .04, .06, .08].forEach(v => { t += ln(ax(v), 8, ax(v), 254, 'gl') + tx(ax(v), 270, fx(v, 2), 'm', 'middle'); });
+    L5.forEach(([l, m, lo, hi, c], i) => { const y = 24 + i * 34;
+      t += tx(a0 - 10, y + 4, l, '', 'end', 'style="font-size:12.5px"');
+      if (lo !== null) t += ln(ax(lo), y, ax(hi), y, 'whisk') + ln(ax(lo), y - 5, ax(lo), y + 5, 'whisk') + ln(ax(hi), y - 5, ax(hi), y + 5, 'whisk');
+      t += `<circle cx="${ax(m).toFixed(1)}" cy="${y}" r="6" class="bar ${c}" style="stroke:var(--card);stroke-width:1.5"/>` + tx((lo !== null ? ax(hi) : ax(m)) + 10, y + 4, fx(m, 4), 'mono', 'start', 'style="font-size:12px"'); });
+    t += tx(a0 + aw / 2, 286, 'test error (lower is better)', 'm', 'middle');
+    $('#ld-l5').innerHTML = t;
+    stats($('#ld-stats'), [['knowing the neighbors (mean → umean)', '0.0214 → 0.0122 (−' + pc(1 - .0122 / .0214) + ')'], ['parameters, every fixed aggregator', '2,193'],
+      ['attention on top (umean → attention)', '0.0122 → 0.0110 (−' + pc(1 - .0110 / .0122) + ')'], ['parameters, attention', '4,401'], ['companion tab 5: road mask vs no mask', '−' + pc(1 - .0556 / .0839)]]); }
+  return { init(){ hitKeys($('#ld-svg'), v => { k = +v; draw(); }); }, draw(){ draw(); bars(); } };
+})();
+
+// ================================================================ TAB 5 · the recipe
+const T5 = (() => {
+  const B = [
+    { id: 'ev', c: 0, r: 0, n: 'Evidence', l: ['Shared IDs: signal, work order', 'Feeder lists from the utility', 'Matches by place and time', 'Links an LLM reads from SOPs'],
+      h: 'Collect evidence for edges', p: ['Shared IDs: signal ID, generator tracking number, work order number, FPID.', 'The utility’s feeder assignments.', 'Place and time windows, like the 50 m and one-hour match rule from section 3.1.', 'Links a language model reads out of SOPs and work orders.'],
+      lab: 'In Lab 8 a language model read 11 pages of FDOT District 7’s traffic signals SOP and Sarasota County’s 2024 hurricane after-action report into typed edges, each with an exact quote. The chart shows how it scored. A co-occurrence baseline (join every pair of entities named in one sentence) finds most true pairs but returns more wrong ones than right ones.' },
+    { id: 'cg', c: 1, r: 0, n: 'Candidate graph', l: ['Typed edges: powers, controls,', 'drains, restores, directs', 'A confidence on every edge', 'Generous: keep doubtful edges'],
+      h: 'Build a generous candidate graph', p: ['Missing a true edge costs more than keeping a false one: a mask can never bring back an edge you deleted, but attention can learn to ignore a useless one.', 'Give every edge a type and a confidence. Rinaldi and colleagues’ four classes (physical, cyber, geographic, logical) are a ready-made list of types.'],
+      lab: 'Lab 8 keeps a modality on every edge. In the SOP, 103 of the 108 verified edges are <em>required</em>: a plan says what must happen. In the AAR, 39 of 53 are <em>observed</em>: a report says what did. Modality was the easiest attribute to get right (93% agreement with the gold set on matched edges). Names need resolving first: in the AAR’s recommendation matrix, 46 raw names stand for 39 organizations.' },
+    { id: 'md', c: 2, r: 0, n: 'Model', l: ['Attention inside the mask', 'Weights per node and edge type', 'A null token for "nobody"', 'A few new edges, penalized'],
+      h: 'Use the candidate graph as the mask', p: ['Inside it, run attention whose weights depend on the node types and the edge type, as the Heterogeneous Graph Transformer does (Hu et al., 2020).', 'Add a null token so a node can say "none of my neighbors matter": a plain softmax cannot say that, because its weights must sum to 1.', 'Let the model add a few edges outside the mask, with a penalty that keeps them rare, for example a penalty on the size of a learned adjacency like Graph WaveNet’s. A new edge survives only if it lowers the error enough to pay for itself.'] },
+    { id: 'tr', c: 2, r: 1, n: 'Train', l: ['Labels from past storms', 'Hide a node, predict it', 'Simulated feeder trips', 'and flooded pumps'],
+      h: 'Train on more than the labeled storms', p: ['Hide one node’s state and predict it from the others: BERT’s masked-word trick on a graph. To do it, the model has to find out which neighbors are informative.', 'Add simulated failures (tripped feeders, flooded pumps) from a simulator or a scenario generator, because links show only when something fails (tab 2).'] },
+    { id: 'ck', c: 1, r: 1, n: 'Check', l: ['Hidden known edges found?', 'Knock out a feeder: do only', 'its own signals change?', 'Expert review vs the AAR'], key: true,
+      h: 'Check the learned graph before anyone acts on it', p: ['Hide some known edges during training and see whether the model finds them again.', 'Switch off one feeder in the input and confirm that only its own signals’ predictions change.', 'Show the strongest new edges to the people who run the system, and compare them with the after-action report.', 'An edge that fails a check goes back to the candidate graph, not into a decision.'],
+      lab: 'Lab 8’s automatic checks (the quote is on the page, both ends are known entities named there) removed no wrong edge on the gold pages: every extra edge had a real quote. Checks protect you from made-up support; only a labeled sample tells you how right the graph is. A second run is a check too: runs A and B agree on 138 of 175 edges, and keeping only those raises typed precision to 0.85 while recall falls to 0.76.' },
+    { id: 'us', c: 0, r: 1, n: 'Use it', l: ['Forecast, and flag new edges', 'for the field to confirm'],
+      h: 'Use it', p: ['Forecast with the checked graph, and send the strongest new edges to the field as questions, not as findings.', 'Each confirmed edge moves into the candidate graph for the next storm.'] } ];
+  const CX = [130, 380, 630], RY = [52, 206], W = 216, H = 104;
+  let k = 'ev';
+  function draw(){ let s = '';
+    const mid = (c, r) => [CX[c], RY[r] + H / 2];
+    s += ln(CX[0] + W / 2, RY[0] + 52, CX[1] - W / 2, RY[0] + 52, 'ln', 'm-m') + ln(CX[1] + W / 2, RY[0] + 52, CX[2] - W / 2, RY[0] + 52, 'ln', 'm-m');
+    s += ln(CX[2], RY[0] + H, CX[2], RY[1], 'ln', 'm-m') + ln(CX[2] - W / 2, RY[1] + 52, CX[1] + W / 2, RY[1] + 52, 'ln', 'm-m') + ln(CX[1] - W / 2, RY[1] + 52, CX[0] + W / 2, RY[1] + 52, 'ln', 'm-m');
+    s += ln(CX[1], RY[1], CX[1], RY[0] + H, 'e-bad', 'm-w') + tx(CX[1] + 10, RY[0] + H + 30, 'fails a check: fix the graph', 'w', 'start', 'style="font-size:12px"');
+    s += tx(20, 26, 'First: pick the task. The relevance graph depends on it.', 'h');
+    B.forEach(b => { const x = CX[b.c] - W / 2, y = RY[b.r];
+      s += `<g class="hit" data-k="${b.id}" tabindex="0" role="button" aria-pressed="${b.id === k}"><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="8" class="bx${b.id === k ? ' on' : (b.key ? ' aim' : '')}"/>`;
+      s += tx(x + 14, y + 22, b.n, 'b'); b.l.forEach((t, i) => { s += tx(x + 14, y + 42 + i * 16, t, '', 'start', 'style="font-size:12px"'); }); s += '</g>'; });
+    $('#rc-svg').innerHTML = s;
+    const b = B.find(x => x.id === k);
+    $('#rc-detail').innerHTML = `<h4>${b.h}</h4><ul>${b.p.map(x => `<li>${x}</li>`).join('')}</ul>` + (b.lab ? `<div class="ev"><b class="k">In Lab 8</b><p>${b.lab}</p></div>` : '<p class="small">Lab 8 stops at the candidate graph and its checks; training a model on it is the next project.</p>'); }
+  function pr(){ const rows = [['Co-occurrence baseline', 'untyped', .45, .81], ['LLM run A', 'untyped', .88, .92], ['LLM run A', 'typed', .79, .84], ['Edges both runs found', 'typed', .85, .76]];
+    const x0 = 180, w = 260, sx = v => x0 + v * w; let s = '';
+    [0, .25, .5, .75, 1].forEach(t => { s += ln(sx(t), 8, sx(t), 200, 'gl') + tx(sx(t), 216, fx(t, 2), 'm', 'middle'); });
+    rows.forEach(([a, b, p, r], i) => { const y = 14 + i * 47;
+      s += tx(x0 - 10, y + 13, a, '', 'end', 'style="font-size:12.5px"') + tx(x0 - 10, y + 29, b, 'm', 'end');
+      s += `<rect x="${x0}" y="${y}" width="${(p * w).toFixed(1)}" height="15" rx="2" class="bar k-right"/>` + tx(sx(p) + 5, y + 12, fx(p, 2), 'mono', 'start', 'style="font-size:11.5px"');
+      s += `<rect x="${x0}" y="${y + 18}" width="${(r * w).toFixed(1)}" height="15" rx="2" class="bar k-learn"/>` + tx(sx(r) + 5, y + 30, fx(r, 2), 'mono', 'start', 'style="font-size:11.5px"'); });
+    $('#rc-pr').innerHTML = s; }
+  return { init(){ hitKeys($('#rc-svg'), v => { k = v; draw(); }); pr(); }, draw };
+})();
+
+// ================================================================ TAB 6 · the torus
+const T6 = (() => {
+  const mids = [null, .35, .425, .475, .525, .575, .625, .675, .75, null];
+  const SER = [
+    { k: 'gate', l: 'Hand-built gate', c: 'var(--green-d)', w: 3.2, d: '', on: true },
+    { k: 'mp2', l: 'Max-pressure', c: 'var(--gold)', w: 6, d: '', o: .55, on: true },
+    { k: 'disc', l: 'Trained from a max-pressure start', c: 'var(--blue)', w: 2.6, d: '7 4', on: true },
+    { k: 'imit', l: 'Copy of the gate', c: 'var(--green)', w: 2.4, d: '3 3', on: false },
+    { k: 'keepN', l: 'Gate kept, network reward', c: 'var(--warn)', w: 2.4, d: '', on: false },
+    { k: 'keepL', l: 'Gate kept, local reward', c: 'var(--gold-ink)', w: 2.4, d: '7 3 2 3', on: false } ];
+  const MIN_N = 20;
+  let mode;
+  function pts(k){ const p = TD.probes[k]; const o = []; p.ig.forEach((v, i) => { if (mids[i] !== null && p.n[i] >= MIN_N) o.push([mids[i], v]); }); return o; }
+  function chart(el, X, Y, yLab, series, extra = ''){ // X:[min,max,ticks], Y:[min,max,ticks]
+    const L = 56, R = 500, T = 14, B = 270, sx = v => L + (v - X[0]) / (X[1] - X[0]) * (R - L), sy = v => B - (v - Y[0]) / (Y[1] - Y[0]) * (B - T);
+    let s = '';
+    Y[2].forEach(v => { s += ln(L, sy(v), R, sy(v), 'gl') + tx(L - 8, sy(v) + 4, fx(v, Y[3] ?? 1), 'm', 'end'); });
+    X[2].forEach(v => { s += ln(sx(v), B, sx(v), B + 5, 'ax') + tx(sx(v), B + 19, fx(v, 2), 'm', 'middle'); });
+    s += ln(L, B, R, B, 'ax') + tx((L + R) / 2, B + 38, 'CBD density (vehicles per cell)', 'm', 'middle');
+    s += tx(14, (T + B) / 2, yLab, 'm', 'middle', `transform="rotate(-90 14 ${(T + B) / 2})"`);
+    s += extra.replace(/SX\(([^)]+)\)/g, (_, v) => sx(+v).toFixed(1)).replace(/SY\(([^)]+)\)/g, (_, v) => sy(+v).toFixed(1));
+    series.forEach(({ p, c, w, d, lab, o }) => { if (!p.length) return;
+      s += `<polyline points="${p.map(([x, y]) => sx(x).toFixed(1) + ',' + sy(y).toFixed(1)).join(' ')}" style="fill:none;stroke:${c};stroke-width:${w};stroke-opacity:${o || 1};stroke-dasharray:${d || 'none'};stroke-linejoin:round"/>`;
+      p.forEach(([x, y]) => { s += `<circle cx="${sx(x).toFixed(1)}" cy="${sy(y).toFixed(1)}" r="3.6" style="fill:${c};stroke:var(--card);stroke-width:1.2"/>`; });
+      if (lab){ const [x, y] = p[p.length - 1]; s += tx(sx(x) + 6, sy(y) - 6, lab, 'm', 'start', `style="fill:${c};font-weight:600"`); } });
+    el.innerHTML = s; }
+  function probe(){
+    const nstar = (top, bot) => `<line x1="SX(${TD.n_star})" y1="SY(${top})" x2="SX(${TD.n_star})" y2="SY(${bot})" class="nstar"/><text x="SX(${TD.n_star})" y="SY(${top})" dx="5" dy="10" class="m">n* = 0.40</text>`;
+    if (mode === 'act'){
+      $('#tr-chips').hidden = false; $('#tr-pt').innerHTML = 'Does a boundary signal give its inbound approach green? <span>· by CBD density</span>';
+      const on = SER.filter(s => s.on).map(s => ({ p: pts(s.k), c: s.c, w: s.w, d: s.d, o: s.o }));
+      chart($('#tr-probe'), [.3, .8, [.3, .4, .5, .6, .7, .8]], [0, 1, [0, .25, .5, .75, 1], 2], 'share of decisions giving inbound green', on, nstar(1, 0));
+      $('#tr-pcap').textContent = 'Each point is the share of boundary-signal decisions, in one CBD-density bin, that gave the inbound approach green. The gate drops from 0.79 to about 0 once the CBD passes 0.40 (dotted line). Max-pressure and the policy trained from a max-pressure start stay near 0.5 at every density. Lines that stop early belong to policies that never let the CBD fill, so there are no full-CBD states to measure.'; }
+    else {
+      $('#tr-chips').hidden = true; $('#tr-pt').innerHTML = 'The same run, two heads <span>· trained from a max-pressure start</span>';
+      const v = TD.critic.disc.v, cp = []; v.forEach((y, i) => { if (y !== null && mids[i] !== null) cp.push([mids[i], y]); });
+      const ig = pts('disc');
+      // two curves on two scales: draw value on its own axis and scale inbound green into the same box (labelled on the right)
+      const vmin = 2, vmax = 5, toV = g => vmin + g * (vmax - vmin);
+      const right = [0, .25, .5, .75, 1].map(g => `<text x="SX(0.8)" y="SY(${toV(g)})" dx="6" dy="4" class="m">${fx(g, 2)}</text>`).join('');
+      chart($('#tr-probe'), [.3, .8, [.3, .4, .5, .6, .7, .8]], [vmin, vmax, [2, 3, 4, 5], 0], 'critic: predicted future trips (value)',
+        [{ p: cp, c: 'var(--warn)', w: 3, d: '', lab: 'critic' }, { p: ig.map(([x, g]) => [x, toV(g)]), c: 'var(--blue)', w: 2.6, d: '7 4', lab: 'actor' }], nstar(vmax, vmin) + right);
+      $('#tr-pcap').textContent = `Orange (left scale): the critic’s value, its forecast of future trips, falls as the CBD fills (correlation with CBD density ${sg(fx(TD.critic.disc.corr, 2))}). Blue (right scale, 0–1): the share of inbound green from the same network’s action head stays near 0.5. The network knew a full CBD was bad; it never acted on it.`; } }
+  function grid(){ const n = 12, sp = 28, o = 26, P = i => o + i * sp; let s = '';
+    const inC = (i, j) => i >= 3 && i <= 8 && j >= 3 && j <= 8, bd = (i, j) => inC(i, j) && (i === 3 || i === 8 || j === 3 || j === 8);
+    s += `<rect x="${P(3) - 12}" y="${P(3) - 12}" width="${5 * sp + 24}" height="${5 * sp + 24}" rx="6" class="cbd"/>` + tx(P(5.5), P(5.5) + 4, 'CBD', 'b', 'middle', 'style="fill:var(--gold-ink)"');
+    for (let i = 0; i < n; i++){ s += ln(P(0) - 10, P(i), P(n - 1) + 10, P(i), 'tl') + ln(P(i), P(0) - 10, P(i), P(n - 1) + 10, 'tl'); }
+    for (let i = 3; i <= 8; i++){ s += ln(P(i), P(2), P(i), P(3), 'ti', 'm-yi', 4, 7) + ln(P(i), P(9), P(i), P(8), 'ti', 'm-yi', 4, 7) + ln(P(2), P(i), P(3), P(i), 'ti', 'm-yi', 4, 7) + ln(P(9), P(i), P(8), P(i), 'ti', 'm-yi', 4, 7); }
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) s += `<circle cx="${P(i)}" cy="${P(j)}" r="${bd(i, j) ? 5.5 : 3.6}" class="tn${bd(i, j) ? ' bd' : ''}"/>`;
+    $('#tr-grid').innerHTML = s; }
+  function attn(){ const L = 56, R = 440, T = 14, B = 170, X = [.3, .8], sx = v => L + (v - X[0]) / (X[1] - X[0]) * (R - L), sy = v => B - v / .7 * (B - T); let s = '';
+    [0, .25, .5].forEach(v => s += ln(L, sy(v), R, sy(v), 'gl') + tx(L - 8, sy(v) + 4, fx(v, 2), 'm', 'end'));
+    [.3, .4, .5, .6, .7, .8].forEach(v => s += tx(sx(v), B + 18, fx(v, 1), 'm', 'middle'));
+    s += ln(L, B, R, B, 'ax') + ln(L, sy(TD.uniform), R, sy(TD.uniform), 'nstar') + tx((L + R) / 2, B + 36, 'CBD density', 'm', 'middle');
+    [['imit', 'var(--green)', 'copy of the gate'], ['disc', 'var(--blue)', 'trained from max-pressure']].forEach(([k, c, lab]) => { const p = []; TD.attn[k].forEach((v, i) => { if (v !== null && mids[i] !== null) p.push([mids[i], v]); });
+      s += `<polyline points="${p.map(([x, y]) => sx(x).toFixed(1) + ',' + sy(y).toFixed(1)).join(' ')}" style="fill:none;stroke:${c};stroke-width:2.6"/>`;
+      p.forEach(([x, y]) => s += `<circle cx="${sx(x).toFixed(1)}" cy="${sy(y).toFixed(1)}" r="3.5" style="fill:${c}"/>`);
+      const [x, y] = p[0]; s += tx(sx(x) + 4, sy(y) - 10, lab, 'm', 'start', `style="fill:${c};font-weight:600"`); });
+    $('#tr-attn').innerHTML = s; }
+  function textAndTable(){ const t = TD.trips, g45 = t.gate['0.45'], m45 = t.mp2['0.45'];
+    const mean = a => { const v = a.filter(x => x !== null); return v.reduce((x, y) => x + y, 0) / v.length; };
+    const rng = a => { const v = a.filter(x => x !== null); return fx(Math.min(...v), 2) + '–' + fx(Math.max(...v), 2); };
+    const keep = [...TD.attn.keepN, ...TD.attn.keepL].filter(x => x !== null);
+    stats($('#tr-gate-stats'), [['hand-built gate, load 0.45', fx(g45, 2) + ' trips per step'], ['max-pressure, load 0.45', fx(m45, 2)], ['gain at load 0.45, whole run', '+' + pc(g45 / m45 - 1)], ['gate threshold n*', '288 vehicles = 0.40 × 720']]);
+    const ret = ['keepN', 'keepL'].flatMap(k => ['0.35', '0.45', '0.55'].map(L => t[k][L] / t.gate[L]));
+    const imitR = ['0.35', '0.45', '0.55'].map(L => t.imit[L] / t.gate[L]);
+    $('#tr-tests').innerHTML = [
+      ['Can the transformer represent gating?', true, `Trained to copy the hand-built gate, it agreed on 97.8% of decisions and completed ${pc(Math.min(...imitR), 1)}–${pc(Math.max(...imitR), 1)} of the gate’s trips. Its boundary tokens put ${rng(TD.attn.imit)} of their attention on the 36 CBD tokens; an even spread would give 0.25.`],
+      ['Does it keep a gate it is given?', true, `Starting from that copy, 25 more rounds of training kept ${pc(Math.min(...ret), 1)}–${pc(Math.max(...ret), 1)} of the gate’s trips with either reward, and the boundary tokens kept ${fx(Math.min(...keep), 2)}–${fx(Math.max(...keep), 2)} of their attention on the CBD.`],
+      ['Does it discover gating from a max-pressure start?', false, `After 31 rounds it completed ${fx(t.disc['0.45'], 2)} trips per step at load 0.45 (max-pressure ${fx(m45, 2)}, gate ${fx(g45, 2)}). Boundary signals chose what max-pressure would 97% of the time, and their attention on the CBD stayed at ${fx(mean(TD.attn.disc), 2)}: an even spread.`]
+    ].map(([q, y, e]) => `<div class="test"><h4>${q}<span class="tag ${y ? 'yes' : 'no'}">${y ? 'Yes' : 'No'}</span></h4><p>${e}</p></div>`).join('');
+    $('#tr-know p').textContent = `The same network has a critic that predicts future trips. In the max-pressure-start run, its value fell as CBD density rose from 0.4 to 0.75, most sharply past 0.6 (correlation ${sg(fx(TD.critic.disc.corr, 2))}): it learned the falling branch of the fundamental diagram. The action heads never used that knowledge. Prediction learned the link; control did not. Switch the chart to "What the critic predicts" to see both heads of one network.`;
+    const R = [['random', 'Random phases', 'ref'], ['mp6', 'Six-phase max-pressure', 'ref'], ['mp2', 'Two-phase max-pressure', ''], ['gate', 'Hand-built gate', 'sel'], ['disc', 'Trained from a max-pressure start (31 rounds)', ''], ['imit', 'Copy of the gate', ''], ['keepN', 'Gate kept, network reward (25 rounds)', ''], ['keepL', 'Gate kept, local reward (25 rounds)', '']];
+    $('#tr-table').innerHTML = '<thead><tr><th>Policy</th><th>load 0.35</th><th>load 0.45</th><th>load 0.55</th><th>vs max-pressure at 0.45</th></tr></thead><tbody>' +
+      R.map(([k, l, c]) => `<tr class="${c}"><td>${l}</td>${['0.35', '0.45', '0.55'].map(L => `<td>${fx(t[k][L], 2)}</td>`).join('')}<td>${k === 'mp2' ? '—' : (t[k]['0.45'] >= m45 ? '+' : '−') + pc(Math.abs(t[k]['0.45'] / m45 - 1))}</td></tr>`).join('') + '</tbody>';
+  }
+  function chips(){ $('#tr-chips').innerHTML = SER.map(s => `<button class="chip" data-k="${s.k}" aria-pressed="${s.on}"><i style="border-color:${s.c};border-top-style:${s.d ? 'dashed' : 'solid'}"></i>${s.l}</button>`).join(''); }
+  return { init(){ mode = seg('#tr-mode', v => { mode = v; probe(); })(); chips();
+      $('#tr-chips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; const s = SER.find(x => x.k === b.dataset.k); s.on = !s.on; b.setAttribute('aria-pressed', s.on); probe(); });
+      grid(); textAndTable(); }, draw(){ probe(); attn(); } };
+})();
+
+// ================================================================ TAB 7 · hard links
+const T7 = (() => {
+  const LEV = {
+    none: null,
+    give: { box: 'a', h: 'Give the structure', storm: 'A candidate graph from IDs, feeder lists and SOPs, used as the mask.', perim: 'Feed the CBD’s vehicle count to every boundary signal, or mask boundary tokens to read the CBD.',
+      q: 'This is the cheapest lever and usually the strongest, as tab 4 showed. It changes the question from "does perimeter control emerge from nothing?" to "does it emerge when the model is told the CBD’s state?" Both are fair questions. They are not the same question.' },
+    make: { box: 'b', h: 'Make the cases happen', storm: 'Simulated feeder trips and pump failures.', perim: 'Coordinated and persistent exploration.',
+      q: 'All 144 signals share one set of weights. So instead of adding noise to each signal’s action, add noise to the weights themselves (parameter-space noise, or evolution strategies). One change to the weights moves every boundary signal the same way at once, which is the joint "hold" that independent noise never produces. Keep each trial deviation for 5–10 decisions (50–100 steps), so a hold lasts long enough to change the CBD.' },
+    clean: { box: 'd', h: 'Clean up the signal', storm: 'Masked-node pretraining; typed edges with their own weights.', perim: 'A difference reward, or counterfactual credit per signal.',
+      q: 'A difference reward grades a signal by the network’s trips minus the trips the network would have completed had that signal followed max-pressure. It keeps the network goal but removes most of the noise from the other 143 signals. COMA (Foerster et al., 2018) learns a similar counterfactual comparison for each agent.' } };
+  const BX = { a: [380, 100, 'A · Read the CBD', 'boundary tokens attend downtown', 'lever: give the CBD count as input'], b: [600, 240, 'B · Hold inbound traffic', 'when the CBD is full', 'lever: coordinated exploration'],
+    c: [380, 380, 'C · More trips downtown', 'CBD kept near its best density', 'the payoff comes minutes later'], d: [160, 240, 'D · Reward credits the hold', 'each signal sees its share', 'lever: a difference reward'] };
+  const W = 240, H = 72;
+  let start, lever = 'none';
+  function draw(){ const gate = start === 'gate', L = LEV[lever]; let s = '';
+    const [ax, ay] = BX.a, [bx, by] = BX.b, [cx, cy] = BX.c, [dx, dy] = BX.d;
+    s += `<path d="M${ax + W / 2} ${ay}H${bx}V${by - H / 2}" class="${gate ? 'e-good' : 'e-bad'}" marker-end="url(#${gate ? 'm-g' : 'm-w'})"/>`;
+    s += tx(ax + W / 2 + 12, ay - 10, gate ? 'already happens: the copy holds' : 'never tried under max-pressure', gate ? 'b' : 'w', 'start', 'style="font-size:12px"');
+    const lc = gate ? 'e-good' : 'ln', lm = gate ? 'm-g' : 'm-m';
+    s += `<path d="M${bx} ${by + H / 2}V${cy}H${cx + W / 2}" class="${lc}" marker-end="url(#${lm})"/><path d="M${cx - W / 2} ${cy}H${dx}V${dy + H / 2}" class="${lc}" marker-end="url(#${lm})"/><path d="M${dx} ${dy - H / 2}V${ay}H${ax - W / 2}" class="${lc}" marker-end="url(#${lm})"/>`;
+    s += tx(bx - 10, 322, 'fewer vehicles enter the CBD', 'm', 'end') + tx(dx - 10, 330, 'trips rise', 'm', 'end') + tx(dx + 10, 160, 'attention on the CBD grows', 'm');
+    Object.entries(BX).forEach(([k, [x, y, n, l1, l2]]) => { const cls = 'bx' + (L && L.box === k ? ' lever' : (!gate && k === 'b' ? ' broke' : ''));
+      s += `<rect x="${x - W / 2}" y="${y - H / 2}" width="${W}" height="${H}" rx="8" class="${cls}"/>` + tx(x - W / 2 + 16, y - H / 2 + 24, n, 'b', 'start', 'style="font-size:14.5px"') + tx(x - W / 2 + 16, y - H / 2 + 45, l1, '', 'start', 'style="font-size:13px"') + tx(x - W / 2 + 16, y - H / 2 + 62, l2, 'm', 'start', 'style="font-size:12.5px"'); });
+    const keep = [...TD.attn.keepN, ...TD.attn.keepL].filter(x => x !== null);
+    const note = gate ? ['With the gate copied,', 'step B already happens,', 'so the loop has a case', 'to reinforce: CBD attention', `stayed ${fx(Math.min(...keep), 2)}–${fx(Math.max(...keep), 2)}.`]
+      : ['Under max-pressure', 'no boundary signal holds,', 'so step B never happens', 'and the loop never starts.'];
+    note.forEach((t, i) => { s += tx(380, 204 + i * 19, t, i === 0 ? 'b' : '', 'middle', 'style="font-size:13.5px"'); });
+    $('#h-loop').innerHTML = s;
+    $('#h-title').textContent = gate ? 'With the gate given, the loop keeps running' : 'The loop that would teach a boundary signal to read the CBD never starts';
+    $('#h-detail').innerHTML = L ? `<h4>${L.h}</h4><p><strong>In a post-storm prediction task:</strong> ${L.storm}</p><p><strong>In perimeter control:</strong> ${L.perim}</p><p>${L.q}</p>`
+      : `<h4>Three levers, and honest compute</h4><p>You have three levers: give the model the structure, make the missing cases happen, and clean up the learning signal. Each one changes which research question you are answering, so say which in your write-up.</p><p>And spend honest compute. The torus runs used 16 copies of the network and about 30 rounds. The torus write-up recommends 64–128 copies, hundreds of rounds, and at least three seeds per setting.</p><p class="small">Click a lever above to see where it acts on the loop.</p>`; }
+  const ROWS = [['Does the target depend on the edge?', 'Yes, in every sample', 'Only after a rare event or a joint action'], ['When and where does the effect show?', 'At once, next to the node', 'Late, and far away'],
+    ['Who gets the credit?', 'One node, one error', 'One number shared by many nodes'], ['Does the data vary the edge?', 'In every sample', 'Only in failures, or in actions nobody has tried']];
+  const CASE = { lab5: ['E', 'E', 'E', 'E', 'The Lab 5 merge rule lands in the easy column on every row, which is why attention could learn how much each neighbor counts there.'],
+    feeder: ['H', 'E', 'E', 'H', 'Our reading of the storm feeder: once a feeder trips, its signals go dark at once and each signal’s forecast error is its own, so two rows are easy. But the link matters only in a failure, and only failures vary it. Simulated failures attack exactly those two rows.'],
+    perim: ['H', 'H', 'H', 'H', 'Perimeter control lands in the hard column on every row. That is why it is a good test of whether a model can learn structure, and why plain PPO did not pass it.'] };
+  let cs;
+  function table(){ const c = CASE[cs];
+    $('#h-table').innerHTML = '<thead><tr><th></th><th>Easy to learn</th><th>Hard to learn</th></tr></thead><tbody>' + ROWS.map(([q, e, h], i) => `<tr><td>${q}</td><td class="${c[i] === 'E' ? 'on' : ''}">${e}</td><td class="${c[i] === 'H' ? 'on hard' : ''}">${h}</td></tr>`).join('') + '</tbody>';
+    $('#h-case-cap').textContent = c[4]; }
+  return { init(){ start = seg('#h-start', v => { start = v; draw(); })(); seg('#h-lever', v => { lever = v; draw(); }); cs = seg('#h-case', v => { cs = v; table(); })(); },
+    draw(){ draw(); table(); } };
+})();
+
+// ================================================================ tabs
+const TABS = { learn: T1, storm: T2, two: T3, ladder: T4, recipe: T5, torus: T6, hard: T7, card: { init(){}, draw(){} } };
+const ready = {};
+function show(name){ if (!(name in TABS)) name = 'learn';
+  document.querySelectorAll('nav.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'));
+  document.querySelectorAll('section.page').forEach(s => { s.hidden = s.id !== 'sec-' + name; });
+  const T = TABS[name]; if (!ready[name]){ T.init(); ready[name] = true; } T.draw();
+  try { localStorage.setItem('wbg-tab', name); } catch (e) {} }
+document.querySelectorAll('nav.tabs button').forEach(b => b.addEventListener('click', () => { const nav = document.querySelector('nav.tabs'); const top = nav.getBoundingClientRect().top + window.scrollY;
+  if (location.hash !== '#' + b.dataset.tab) location.hash = b.dataset.tab; else show(b.dataset.tab); if (window.scrollY > top) window.scrollTo({ top }); }));
+window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+let start = location.hash.slice(1); if (!(start in TABS)){ try { start = localStorage.getItem('wbg-tab') || 'learn'; } catch (e) { start = 'learn'; } }
+show(start in TABS ? start : 'learn');
+window.__wbg = { TD, TABS };
+})();
+</script>
+</body>
+</html>

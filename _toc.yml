@@ -84,6 +84,9 @@ parts:
             title: "3.8 The cell transmission model already passes messages"
           - file: module3/notes9-classification
             title: "3.9 Node, edge and graph classification"
+          # 2026-11-03: 3.10 added, built from the "Who builds the transportation graph?" handout and its companion.
+          - file: module3/notes11-who-builds
+            title: "3.10 Who builds the transportation graph?"
           - file: module3/notes10-labs
             title: "Practice, exercises, and further reading"
       - file: module4/index
