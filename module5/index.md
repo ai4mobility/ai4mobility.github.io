@@ -123,8 +123,13 @@ rebuilds it around transportation research and agency work.
   <td>&mdash;</td>
 </tr>
 <tr>
+  <td><a href="notes5-architectures.html"><strong>5.5 Agent architectures: one loop, four questions</strong></a><br><em>Skills, memory, and planning</em></td>
+  <td>Why the published lists of &ldquo;architectures&rdquo; disagree; four design questions (control, reach, team, oversight); three ways to pick the next step, measured on the SUMO agent; the published traffic agents redrawn on the loop; what agencies ask for.</td>
+  <td>In-class sorting worksheet</td>
+</tr>
+<tr>
   <td><strong>Further sections</strong><br><em>Skills, memory, and planning</em></td>
-  <td>Skills, memory, planning and re-planning, and coordinating several agents &mdash; written up after the session.</td>
+  <td>Skills, memory, planning and re-planning in depth &mdash; written up after the session.</td>
   <td>In-class skill exercise</td>
 </tr>
 </tbody>
@@ -191,6 +196,8 @@ By the end of this module you will be able to:
 - Schick, T., et al. (2023). Toolformer: Language models can teach themselves to use tools. *NeurIPS*.
 - Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. *NeurIPS*.
 - Anthropic (2024). [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents).
+- OpenAI (2025). [A practical guide to building agents](https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf).
+- Anthropic (2025). [How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system).
 - Anthropic (2024). [Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol).
 - Liu, N. F., et al. (2024). Lost in the middle: How language models use long contexts. *Transactions of the ACL*.
 - Xia, C. S., et al. (2025). Demystifying LLM-based software engineering agents (preprint title: Agentless). *FSE*.

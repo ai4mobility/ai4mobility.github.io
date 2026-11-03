@@ -145,6 +145,8 @@ parts:
             title: "5.3 Tools: what an agent can reach"
           - file: module5/notes4-context
             title: "5.4 Context: what the model reads"
+          - file: module5/notes5-architectures
+            title: "5.5 Agent architectures: one loop, four questions"
       - file: module6/index
         sections:
           - file: module6/notes1-adaptation

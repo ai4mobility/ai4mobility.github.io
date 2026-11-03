@@ -3436,3 +3436,49 @@ items:
       project cards (key question, first look, why it matters, toward a paper, venues) and the
       pipeline figure _static/figures/HT_Research_Directions.png (SVG source in the class folder).
       Not mirrored in the Canvas page.
+
+  - id: m5-notes-5-architectures
+    file: site/module5/notes5-architectures.md
+    kind: notes
+    module: 5
+    session: '2026-11-12'
+    status: drafted
+    notes: '5.5 Agent architectures: one loop, four questions. Replaces blog-post lists of "8 / 11 architectures" with the
+      loop and four design questions (Q1 control, Q2 reach, Q3 team, Q4 oversight); the in-class sorting answer key in a
+      dropdown; the measured Q1 comparison (table and evaluation close generated from
+      agent_architectures/compare_summary.json by make_notes_5_5.py); TrafficGPT and Open-TI redrawn on the loop; FDOT
+      and TxDOT human-review rules; companion embed. Figures AGA_* in _static/figures.'
+
+  - id: m5-companion-agent-architectures
+    file: M5-8_AI_Agents_and_RL/Agent_Architectures_Companion.html
+    kind: companion
+    module: 5
+    session: '2026-11-12'
+    status: drafted
+    dest: site/module5/notes5-architectures.md
+    notes: 'Seven tabs: a recorded agents_m4 run (D, seed 1) step by step; eight lists (two blog posts, Anthropic,
+      OpenAI, Google, Microsoft, LangChain, the LLM4TR survey) placed on Q1-Q4 with quotes; eleven pattern cards with fit
+      cards; twelve transportation tasks plus a seven-question helper; six published traffic agents and four agency items;
+      the measured comparison; judgment questions. Built by agent_architectures/build_companion.py; checked by
+      check_companion.py.'
+
+  - id: m5-agent-architectures-repro
+    file: M5-8_AI_Agents_and_RL/agent_architectures/
+    kind: internal
+    module: 5
+    session: '2026-11-12'
+    status: integrated
+    notes: 'Figure generator (AGA_* figures, reveals/), compare_control.py (three control styles on the agents_m4 SUMO
+      agent, 10 seeds each, Qwen2.5-1.5B; compare_runs.jsonl, compare_summary.json; the failed first plan-first attempt
+      kept in compare_runs_plan_first_attempt.jsonl), build_companion.py, make_notes_5_5.py, and plain-text copies of
+      every source in sources/. README inside.'
+
+  - id: m5-handout-architecture-sorting
+    file: 'claude.ai Docs artifact "Sorting Agent Architectures: In-Class Worksheet"'
+    kind: handout
+    module: 5
+    session: '2026-11-12'
+    status: drafted
+    notes: 'In-class worksheet (about 15 minutes in pairs): sort the 19 labels of two blog posts onto Q1-Q4, merge
+      duplicates, five judgment questions, and a homework card describing the final project as four answers. Answer
+      key = AGA_Sorting_Key (slide and 5.5 dropdown). Not on the site.'
