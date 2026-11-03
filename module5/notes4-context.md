@@ -30,8 +30,9 @@
 - What the model reads on every call, measured on a recorded run
 - Why the context grows at every step, and what that costs
 - Lost in the middle: why more context is not better context
-- Four ways to keep the context useful, and what each one costs
+- Five ways to keep the context useful, and what each one costs
 - Summaries that drop the rule that mattered, measured
+- Keeping the loop light: why a longer context lowers accuracy, and three questions about what an agent reads
 - Milestone paper: **retrieval-augmented generation (RAG)**
 - RAG for a safety analyst, and where retrieval breaks
 
@@ -96,17 +97,18 @@ same pattern for most of the models it tested.
 For an agent, position is a design choice. The task and the rules belong at the start, the latest result at the
 end, and the middle is where old, unimportant steps sit, or better, where they leave the context.
 
-## Four ways to keep the context useful
+## Five ways to keep the context useful
 
 | Move | What it does | In a transportation agent |
 |---|---|---|
-| **Leave it out** | send only what this step needs | return the average delay, not the 1,100-vehicle trip file |
+| **Leave it out** | send only what this step needs | return the average delay, not the 2,786-vehicle trip file |
 | **Look it up** | keep knowledge outside; fetch the relevant part | retrieve the manual section on left-turn phasing when it is asked about |
 | **Summarize** | replace old steps with a short summary | "tested 6 plans; best valid so far 54/22" instead of six full results |
 | **Split the work** | give a sub-task its own short context | one agent screens the crash records; another writes the memo from its findings |
+| **Clear old results** | replace tool results older than a few steps with a placeholder; keep the model's own steps | older simulation results become "[output omitted]" |
 
-All four are harness design, and each has a cost. Leaving out can drop something you needed. Retrieval can bring
-back the wrong page. Splitting the work comes later in {doc}`this module <index>`. And summaries can drop the one rule
+All five are harness design, and each has a cost. Leaving out can drop something you needed. Retrieval can bring
+back the wrong page. Clearing can drop a rule that appeared only in an old result. Splitting the work comes later in {doc}`this module <index>`. And summaries can drop the one rule
 that mattered, which we measured.
 
 ## Summaries can drop the rule
@@ -141,6 +143,82 @@ not depend on the size of the model: a summary is a new context that nobody chec
 
 The fix that always works is to keep rules out of the summary: put them in the instructions, repeat them where they
 apply, and enforce them in the harness, as condition C of {doc}`5.2 <notes2-loop>` did.
+
+(keeping-the-loop-light)=
+## Keeping the loop light
+
+```{figure} ../_static/figures/AGC_Feed_Less.png
+:alt: Left, accuracy against context length from 1K to 32K tokens on the NoLiMa benchmark. GPT-4o stays near 98 percent up to 2K tokens and falls to 69.7 percent at 32K; Llama 3.1 8B falls from 65.7 percent at 1K to 14.2 percent at 32K. A dashed line marks our SUMO agent's context at step 10, 2,298 tokens. Right, three questions with measured token counts: one SUMO run's raw trip file is 481,729 tokens against 74 for the tool's summary; the same intersection record is 326 tokens as HTML, 244 as JSON and 186 as Markdown; after ten steps the recorded run carried 1,788 tokens of history against 89 for a note of the timings it tested.
+:width: 100%
+
+Feed it less, and it thinks more clearly. Leaving out what a step does not need saves the most; plain text and a short note save more.
+```
+
+Lost in the middle is about *where* a fact sits. Length is a second problem: a longer context lowers accuracy even
+when the fact is easy to reach.
+
+**Length alone costs accuracy.** NoLiMa (Modarressi et al., ICML 2025) hides one fact in a long text and words the
+question so that it shares almost no words with the fact. With 1K tokens of text around the fact, GPT-4o answers
+98.1% correctly; with 32K tokens, 69.7%. Llama 3.1 8B falls from
+65.7% to 14.2%. Both models claim a 128K-token window, and 10
+of the 12 models tested scored half or less of their short-text score at 32K. Other studies point the same way.
+Chroma tested 18 models: every one answered better from a focused prompt of about 300 tokens than from the full
+113,000-token version of the same question (Hong et al., 2025). Du et al. (2025) measured drops of 13.9% to 85% as the
+input grew, even when the model could find the evidence perfectly. And giving one task over many turns instead of
+all at once lowered scores by 39% on average (Laban et al., ICLR 2026). The window printed on the box is not the length
+a model uses well. In NoLiMa the smaller Llama also drops sooner; the model in our runs is smaller still, and we did
+not measure it.
+
+**Three questions about what the agent reads.** Our SUMO agent gives a measured number for each, counted with its own
+tokenizer.
+
+1. **Only what this step needs?** One SUMO run of the current plan 50/30 writes a trip file of
+   481,729 tokens for 2,786 vehicles, 14.7 times our model's
+   32,768-token window. The tool returns 74 tokens: the cycle, the vehicle
+   count, the average delay and the delay per approach. This is the biggest saving, and it is a harness decision.
+2. **Plain text?** The same intersection record costs 326 tokens as an HTML page,
+   244 as JSON and 186 as Markdown. Format helps, but far less than leaving
+   things out.
+3. **Can it write a note, and drop the rest?** After ten steps, run D/0 carried 1,788
+   tokens of history. A note of the timings it tested is 89 tokens:
+   "current 50/30 = 21.5 s/veh. Tested: 60/30 21.7, 65/30 21.6, 70/30 21.7, 75/30 21.4. Best so far: 75/30 at 21.4 s/veh." The history already held a timing that passed the check, 75/30 at
+   21.4 s/veh from step 8. The agent never submitted it. It spent its last two steps on 80/30 and 85/30,
+   which break the 120 s cycle limit, and ran out of steps.
+
+A notes app such as Obsidian keeps notes as Markdown files on your own disk that an agent can read and edit, which
+covers questions 2 and 3. Question 1 is up to whoever writes the tools.
+
+**Clear old results before you summarize.** For a long loop, the cheapest move is to keep the model's own reasoning
+and actions and replace tool results older than a few steps with a short placeholder. JetBrains researchers compared
+this with asking a model to summarize the old steps, on coding agents fixing real GitHub issues (SWE-bench Verified).
+Clearing roughly halved the cost of keeping everything and solved about as many issues as summarizing: 54.8% against
+53.8% for Qwen3-Coder 480B, for example. The summarizing agents also ran longer, 52 turns against 44 for Gemini 2.5
+Flash (Lindenbauer et al., 2025). Anthropic's guide to context calls clearing tool results "one of the safest lightest
+touch forms of compaction" (Anthropic, 2025). Clearing deletes but never rewrites, so unlike the summaries above
+it cannot mix up which timing gave which delay. It can still drop a rule that appeared only in an old result, like the 21 s
+pedestrian minimum in our step-1 result. The fix is the same as for summaries: rules go in the instructions and the
+harness.
+
+**What clearing does not fix.** In the check-then-retry runs of {doc}`5.5 <notes5-architectures>` (seed 0), from
+step 6 to step 10 the model wrote that each new delay was "lower than the 21.5 seconds" when it was 21.7 or 22.2.
+That sentence is the model's own text, so clearing old tool results keeps it, and the model re-read it at every step.
+Laban et al. describe the same pattern in long conversations: when a model takes a wrong turn, it gets lost and does
+not recover. Two things help: a check outside the model, as the harness did when it rejected each submission, and a
+fresh start from a short note that the harness has checked.
+
+:::{admonition} Before you trust this result
+:class: important
+**What is the baseline?** For the token counts, the same content with nothing left out (the trip file) or in another
+format. For the curve, each model's own score on short texts.
+
+**How was the data split, and why is that honest?** The token counts are measurements, not a trained model. They are
+exact for these texts and this tokenizer (Qwen2.5-1.5B); another tokenizer, or another HTML page, gives another count.
+The curve is one benchmark task, on models other than ours. The clearing result comes from coding agents, not traffic
+ones.
+
+**What does it do on the ugly cases?** We did not test the note in a run, so we do not know whether our model would
+have submitted 75/30 after reading it. And clearing can drop a rule that lived only in an old result.
+:::
 
 ## Milestone paper: retrieval-augmented generation
 
@@ -286,6 +364,9 @@ fix it. That is evaluation, and it is {doc}`Module 6 <../module6/index>`.
    hot-swap result, make the case for an index instead, and name one case where fine-tuning would still help.
 3. Your RAG assistant answers a question about a crash modification factor correctly but cites the wrong chapter.
    Is that a pass or a fail? Why?
+4. An agent helps a TMC operator review last night's incidents, and each incident record arrives as a 40-page PDF
+   export from the CAD system. Which of the three questions in {ref}`keeping the loop light <keeping-the-loop-light>`
+   does this setup fail, and what would you change first?
 
 ## Sources
 
@@ -293,6 +374,19 @@ fix it. That is evaluation, and it is {doc}`Module 6 <../module6/index>`.
   [arXiv:2005.11401](https://arxiv.org/abs/2005.11401).
 - Liu, N. F., et al. (2024). Lost in the middle: How language models use long contexts. *Transactions of the ACL*
   12. [arXiv:2307.03172](https://arxiv.org/abs/2307.03172).
+- Modarressi, A., et al. (2025). NoLiMa: Long-context evaluation beyond literal matching. *ICML*, Table 3.
+  [arXiv:2502.05167](https://arxiv.org/abs/2502.05167).
+- Hong, K., Troynikov, A., & Huber, J. (2025). [Context rot: How increasing input tokens impacts LLM
+  performance](https://www.trychroma.com/research/context-rot). Chroma technical report.
+- Du, Y., et al. (2025). Context length alone hurts LLM performance despite perfect retrieval.
+  [arXiv:2510.05381](https://arxiv.org/abs/2510.05381).
+- Laban, P., Hayashi, H., Zhou, Y., & Neville, J. (2026). LLMs get lost in multi-turn conversation. *ICLR*.
+  [arXiv:2505.06120](https://arxiv.org/abs/2505.06120).
+- Lindenbauer, T., et al. (2025). The complexity trap: Simple observation masking is as efficient as LLM
+  summarization for agent context management. NeurIPS 2025 Workshop on Deep Learning for Code in the Agentic Era.
+  [arXiv:2508.21433](https://arxiv.org/abs/2508.21433).
+- Anthropic (2025). [Effective context engineering for AI
+  agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents).
 - Qwen Team (2024). Qwen2.5-1.5B-Instruct, the model in the recorded runs and the summary test.
 - Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures on context and
   retrieval.
