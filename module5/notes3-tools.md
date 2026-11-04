@@ -35,6 +35,7 @@
 - How the model picks a tool, and how the harness runs it
 - What a harness can check about a tool call, and what it cannot
 - Where your transportation knowledge goes in a tool
+- A full SUMO toolkit for agents on a real network, and how to write your own tool (interactive companion)
 - Milestone paper: **Toolformer**, a model that learns when a call is worth making
 - Code as the action (CodeAct)
 - MCP: one standard plug between agents and tools, and why credentials stay in the server
@@ -374,6 +375,31 @@ check that is easy to compute goes into the code, as a refusal or an extra numbe
 goes into the description. Then test whether your knowledge helped: run the same agent once with a plain tool and once
 with yours.
 
+(sumo-tools-companion)=
+## A full SUMO toolkit, and how to write your own tool
+
+The five tools above run on a small synthetic grid. The companion below takes the same ideas to a real study: twelve
+SUMO tools on the Fowler Avenue corridor next to campus (a real OpenStreetMap network with synthetic demand), each
+written the way a traffic engineer would write it, with a test for every claim its description makes. Each tab takes
+one piece of traffic knowledge and measures what went wrong when a tool left it out: speed on an empty road, the
+definition of a queue, the vehicles that never got in, timing rules, one run as evidence, calibration, and how much a
+tool should say. Tab 10, **Write your own**, shows how to turn what you know into a tool's description and its result,
+starting from one raw TraCI call.
+
+The toolkit is public, so you can take it, run it, and add to it:
+<a href="https://github.com/ai4mobility/sumo-agent-tools" target="_blank" rel="noopener">ai4mobility/sumo-agent-tools</a>.
+Its `WRITING_TOOLS.md` is the step-by-step guide to writing a tool, and its `walkthrough/` folder records small models
+calling the tools, round by round, with what went wrong and how each fix was made.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion &mdash; Building SUMO tools for AI agents</span>
+    <a href="../_static/companions/SUMO_Tools_for_Agents_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/SUMO_Tools_for_Agents_Companion.html"
+          title="Building SUMO tools for AI agents" loading="lazy"></iframe>
+</div>
+
 ## Milestone paper: Toolformer
 
 ReAct ({doc}`5.2 <notes2-loop>`) prompted a frozen model to use tools. **Toolformer** (Schick, Dwivedi-Yu,
@@ -668,6 +694,9 @@ tokens or time?
   traffic light value retrieval and state changes) and [TripInfo output](https://sumo.dlr.de/docs/Simulation/Output/TripInfo.html).
   The five tools, the harness and every SUMO output quoted in this section come from our own runs on a small synthetic
   3×3 grid (SUMO with the `traci` Python package, November 2026).
+- The course toolkit: <a href="https://github.com/ai4mobility/sumo-agent-tools" target="_blank" rel="noopener">ai4mobility/sumo-agent-tools</a>
+  (SUMO 1.28.0; Fowler Avenue network © OpenStreetMap contributors, ODbL; synthetic demand). Every number in the
+  companion comes from its scripts and tests.
 
 ---
 

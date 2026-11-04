@@ -3602,3 +3602,41 @@ items:
     notes: 'run_demo.py (pip install eclipse-sumo traci): builds a synthetic 3x3 grid with seeded randomTrips,
       runs the five TraCI tools through harness.py and harness_short.py (asserted identical), runs the overloaded
       case, writes ../numbers_tools.json.'
+
+  - id: m5-companion-sumo-tools
+    file: M5-8_AI_Agents_and_RL/SUMO_Tools_for_Agents_Companion.html
+    kind: companion
+    module: 5
+    session: '2026-11-05'
+    status: drafted
+    dest: site/module5/notes3-tools.md
+    notes: 'Building SUMO tools for AI agents. Eleven tabs: your part; three doors (TraCI, sumolib, output
+      files); speed and queues; every vehicle; rules and evidence; calibrate first; corridor study; lean
+      tools; toolkit (files, setup, the 23 tested claims); write your own (raw TraCI values vs the tool
+      result, the get_signal_state worked example, description and result checks with quotes from the recorded
+      runs); cards and check. Fowler Ave network (OSM) with synthetic demand. Built by sumo_tools/build_companion.py
+      from experiments.py, test_claims.py, examples/ and walkthrough/; the build fails on any missing number.
+      Mounted Nov 4 as the new 5.3 section "A full SUMO toolkit, and how to write your own tool" (anchor
+      sumo-tools-companion). Source repo: github.com/ai4mobility/sumo-agent-tools.'
+
+  - id: m5-sumo-tools-repo
+    file: M5-8_AI_Agents_and_RL/sumo_tools/
+    kind: lab
+    module: 5
+    session: '2026-11-05'
+    status: integrated
+    dest: site/module5/notes3-tools.md
+    notes: Git working copy of the public repo ai4mobility/sumo-agent-tools (Hao pushes). Twelve engineer-shaped
+      tools (sumo_agent_tools.py), api_shaped_tools.py as the comparison case, mcp_server.py, test_claims.py
+      (23 claims), WRITING_TOOLS.md (guide for traffic engineers new to AI) with examples/get_signal_state.py,
+      and walkthrough/ (Qwen2.5-1.5B and Qwen3-1.7B runs A-G, an MCP message trace, raw TraCI vs result).
+
+  - id: m5-handout-model-calls-tool
+    file: claude.ai Docs artifact "How a Model Calls a SUMO Tool, Step by Step"
+    kind: handout
+    module: 5
+    session: '2026-11-05'
+    status: drafted
+    notes: Six steps of one tool call with real text from the walkthrough runs (Qwen chat template and Claude
+      API formats side by side), the MCP trace, what went wrong in runs A-G and the fix after each, writing
+      the result, check yourself. Not on the site; its runs are in the repo walkthrough/.
