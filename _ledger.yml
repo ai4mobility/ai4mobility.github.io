@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-11-03
+  updated: 2026-11-04
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -2861,11 +2861,11 @@ items:
     module: [4, 5, 6, 7, 8]
     status: debt
     notes: >
-      Since 2026-10-24 Part II is the AI agents unit. Three labs are described
-      and none is built: an agent that tunes a signal plan through SUMO tools
-      (M4; its agent, scenario, grid and recorded runs exist in agents_m4/ and
-      can seed the notebook), LoRA on crash narratives (M6), and reviewing recorded agent runs
-      (M7). The old applied labs (detection and tracking, edge deployment,
+      Since 2026-10-24 Part II is the AI agents unit. Of the three labs described here, the LoRA
+      crash-narrative lab (M6) is now Lab 9 (see m6-lab9-lora-crash-narratives). Still unbuilt: an
+      agent that tunes a signal plan through SUMO tools (M4; its agent, scenario, grid and recorded
+      runs exist in agents_m4/ and can seed the notebook) and reviewing recorded agent runs (M7).
+      The old applied labs (detection and tracking, edge deployment,
       production driving stack, lane keeping, RL signal control, CARLA,
       surrogate safety, agency document workflow) left the site with them.
 
@@ -3053,6 +3053,31 @@ items:
       hard-coded in BOTH the notebook and dataset.py; set_dial(m,0) unfreezes head AND norm = 963 params,
       not 579; experiments must read the PACKAGED images, not the raw originals, or the notebook prints
       numbers that do not match.'
+
+  - id: m6-lab9-lora-crash-narratives
+    file: site/module6/lab9_lora_crash_narratives.ipynb
+    kind: lab
+    module: 6
+    session: agents-finetune
+    status: drafted
+    dest: site/labs.md + _toc.yml Labs part + module6/index.md + module6/notes1-adaptation.md
+    notes: 'Lab 9. LoRA r16 on Qwen2.5-0.5B-Instruct, six fields, five corridor-grouped folds (the 2.13
+      split). Mean headline score 0.367, versus 0.566 for 3 retrieved examples and 0.722 for TF-IDF + LR.
+      Notebook is unexecuted (44 cells, no outputs). DATA_URL is empty; crash_narratives_joined.json is
+      Canvas only and is not in the repo. T4 timings are still TODO-after-run. Verdict in section 10:
+      LoRA does not beat retrieval or the bag of words at these settings.'
+
+  - id: m6-lab9-repro
+    file: site/module6/lab9_lora_crash/
+    kind: internal
+    module: 6
+    session: agents-finetune
+    status: drafted
+    notes: 'Instructor tooling for m6-lab9-lora-crash-narratives, kept on the site because the class-folder
+      Labs/ tree is not in this repo. build_lora_crash_lab.py + _cells_code.py read numbers.json (aggregate
+      only; no narrative text, no per-report predictions). lora_crash/ holds the reproducer scripts.
+      refresh.sh still assumes the original ../work and ../out layout and is not wired into the book build.
+      Do not add crash_narratives_joined.json.'
 
   - id: m3-notes-7-gnn
     file: site/module3/notes1-gnn.md

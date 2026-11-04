@@ -1,0 +1,1799 @@
+{
+ "corpus": {
+  "n": 399,
+  "n_corridors": 20,
+  "fold_sizes": [
+   79,
+   82,
+   80,
+   79,
+   79
+  ],
+  "label_counts": {
+   "crash_type": {
+    "pedestrian_bicycle": 35,
+    "other": 16,
+    "left_turn": 245,
+    "angle": 103
+   },
+   "pedestrian": {
+    "yes": 36,
+    "no": 363
+   },
+   "vehicles": {
+    "1": 36,
+    "2": 326,
+    "3+": 37
+   },
+   "injury": {
+    "yes": 225,
+    "no": 174
+   },
+   "hit_and_run": {
+    "no": 362,
+    "yes": 37
+   },
+   "distracted": {
+    "no": 310,
+    "yes": 89
+   }
+  }
+ },
+ "availability": {
+  "weather_rain": {
+   "coded_positive": 16,
+   "positive_mentioning": 2,
+   "ceiling_pct": 12.5,
+   "any_narrative_mentioning": 5
+  },
+  "light_dark": {
+   "coded_positive": 119,
+   "positive_mentioning": 6,
+   "ceiling_pct": 5.0,
+   "any_narrative_mentioning": 10
+  },
+  "surface_wet": {
+   "coded_positive": 27,
+   "positive_mentioning": 5,
+   "ceiling_pct": 18.5,
+   "any_narrative_mentioning": 6
+  },
+  "alcohol": {
+   "coded_positive": 9,
+   "positive_mentioning": 7,
+   "ceiling_pct": 77.8,
+   "any_narrative_mentioning": 11
+  },
+  "hit_and_run": {
+   "coded_positive": 37,
+   "positive_mentioning": 23,
+   "ceiling_pct": 62.2,
+   "any_narrative_mentioning": 30
+  },
+  "pedestrian": {
+   "coded_positive": 36,
+   "positive_mentioning": 35,
+   "ceiling_pct": 97.2,
+   "any_narrative_mentioning": 42
+  }
+ },
+ "majority": {
+  "crash_type": {
+   "acc": 0.614,
+   "macroF1": 0.19
+  },
+  "pedestrian": {
+   "acc": 0.91,
+   "F1": 0.0,
+   "P": 0.0,
+   "R": 0.0
+  },
+  "vehicles": {
+   "acc": 0.817,
+   "macroF1": 0.3
+  },
+  "injury": {
+   "acc": 0.564,
+   "F1": 0.721,
+   "P": 0.564,
+   "R": 1.0
+  },
+  "hit_and_run": {
+   "acc": 0.907,
+   "F1": 0.0,
+   "P": 0.0,
+   "R": 0.0
+  },
+  "distracted": {
+   "acc": 0.777,
+   "F1": 0.0,
+   "P": 0.0,
+   "R": 0.0
+  }
+ },
+ "tfidf_lr": {
+  "crash_type": {
+   "acc": 0.709,
+   "macroF1": 0.578
+  },
+  "pedestrian": {
+   "acc": 0.98,
+   "F1": 0.882,
+   "P": 0.938,
+   "R": 0.833,
+   "AP": 0.935
+  },
+  "vehicles": {
+   "acc": 0.952,
+   "macroF1": 0.886
+  },
+  "injury": {
+   "acc": 0.662,
+   "F1": 0.707,
+   "P": 0.691,
+   "R": 0.724,
+   "AP": 0.786
+  },
+  "hit_and_run": {
+   "acc": 0.95,
+   "F1": 0.688,
+   "P": 0.815,
+   "R": 0.595,
+   "AP": 0.791
+  },
+  "distracted": {
+   "acc": 0.83,
+   "F1": 0.59,
+   "P": 0.636,
+   "R": 0.551,
+   "AP": 0.614
+  }
+ },
+ "tfidf_lr_seconds": 63.02,
+ "tfidf_lr_left_turn_AP": 0.888,
+ "tfidf_lr_random_split": {
+  "crash_type": {
+   "acc": 0.787,
+   "macroF1": 0.722
+  },
+  "pedestrian": {
+   "acc": 0.982,
+   "F1": 0.899,
+   "P": 0.939,
+   "R": 0.861
+  },
+  "vehicles": {
+   "acc": 0.927,
+   "macroF1": 0.823
+  },
+  "injury": {
+   "acc": 0.667,
+   "F1": 0.701,
+   "P": 0.709,
+   "R": 0.693
+  },
+  "hit_and_run": {
+   "acc": 0.942,
+   "F1": 0.623,
+   "P": 0.792,
+   "R": 0.514
+  },
+  "distracted": {
+   "acc": 0.805,
+   "F1": 0.562,
+   "P": 0.562,
+   "R": 0.562
+  }
+ },
+ "tfidf_lr_per_fold": [
+  {
+   "crash_type": {
+    "acc": 0.722,
+    "macroF1": 0.522
+   },
+   "pedestrian": {
+    "acc": 0.987,
+    "F1": 0.923,
+    "P": 1.0,
+    "R": 0.857
+   },
+   "vehicles": {
+    "acc": 0.924,
+    "macroF1": 0.722
+   },
+   "injury": {
+    "acc": 0.633,
+    "F1": 0.58,
+    "P": 0.667,
+    "R": 0.513
+   },
+   "hit_and_run": {
+    "acc": 0.975,
+    "F1": 0.857,
+    "P": 0.857,
+    "R": 0.857
+   },
+   "distracted": {
+    "acc": 0.899,
+    "F1": 0.8,
+    "P": 0.8,
+    "R": 0.8
+   }
+  },
+  {
+   "crash_type": {
+    "acc": 0.732,
+    "macroF1": 0.553
+   },
+   "pedestrian": {
+    "acc": 0.963,
+    "F1": 0.857,
+    "P": 0.818,
+    "R": 0.9
+   },
+   "vehicles": {
+    "acc": 0.988,
+    "macroF1": 0.975
+   },
+   "injury": {
+    "acc": 0.72,
+    "F1": 0.796,
+    "P": 0.703,
+    "R": 0.918
+   },
+   "hit_and_run": {
+    "acc": 0.951,
+    "F1": 0.714,
+    "P": 0.833,
+    "R": 0.625
+   },
+   "distracted": {
+    "acc": 0.89,
+    "F1": 0.769,
+    "P": 0.833,
+    "R": 0.714
+   }
+  },
+  {
+   "crash_type": {
+    "acc": 0.812,
+    "macroF1": 0.553
+   },
+   "pedestrian": {
+    "acc": 1.0,
+    "F1": 1.0,
+    "P": 1.0,
+    "R": 1.0
+   },
+   "vehicles": {
+    "acc": 0.988,
+    "macroF1": 0.978
+   },
+   "injury": {
+    "acc": 0.637,
+    "F1": 0.688,
+    "P": 0.653,
+    "R": 0.727
+   },
+   "hit_and_run": {
+    "acc": 0.975,
+    "F1": 0.5,
+    "P": 1.0,
+    "R": 0.333
+   },
+   "distracted": {
+    "acc": 0.8,
+    "F1": 0.467,
+    "P": 0.467,
+    "R": 0.467
+   }
+  },
+  {
+   "crash_type": {
+    "acc": 0.633,
+    "macroF1": 0.526
+   },
+   "pedestrian": {
+    "acc": 0.962,
+    "F1": 0.897,
+    "P": 1.0,
+    "R": 0.812
+   },
+   "vehicles": {
+    "acc": 0.937,
+    "macroF1": 0.807
+   },
+   "injury": {
+    "acc": 0.696,
+    "F1": 0.739,
+    "P": 0.739,
+    "R": 0.739
+   },
+   "hit_and_run": {
+    "acc": 0.899,
+    "F1": 0.5,
+    "P": 0.667,
+    "R": 0.4
+   },
+   "distracted": {
+    "acc": 0.759,
+    "F1": 0.24,
+    "P": 0.429,
+    "R": 0.167
+   }
+  },
+  {
+   "crash_type": {
+    "acc": 0.646,
+    "macroF1": 0.617
+   },
+   "pedestrian": {
+    "acc": 0.987,
+    "F1": 0.0,
+    "P": 0.0,
+    "R": 0.0
+   },
+   "vehicles": {
+    "acc": 0.924,
+    "macroF1": 0.542
+   },
+   "injury": {
+    "acc": 0.62,
+    "F1": 0.681,
+    "P": 0.681,
+    "R": 0.681
+   },
+   "hit_and_run": {
+    "acc": 0.949,
+    "F1": 0.75,
+    "P": 0.857,
+    "R": 0.667
+   },
+   "distracted": {
+    "acc": 0.797,
+    "F1": 0.5,
+    "P": 0.471,
+    "R": 0.533
+   }
+  }
+ ],
+ "distilbert_g": {
+  "distracted": {
+   "AP": 0.488,
+   "F1": 0.453,
+   "P": 0.47,
+   "R": 0.438,
+   "base_rate": 0.223,
+   "minutes": 35.1
+  },
+  "pedestrian": {
+   "AP": 0.879,
+   "F1": 0.914,
+   "P": 0.941,
+   "R": 0.889,
+   "base_rate": 0.09,
+   "minutes": 27.9
+  }
+ },
+ "site_2_13": {
+  "distracted_tfidf_AP_quoted": 0.619,
+  "distilbert_distracted_AP_quoted": 0.488,
+  "note": "quoted from the published 2.13 page; recomputed here as tfidf_lr.distracted.AP"
+ },
+ "runtime": {
+  "device": "CPU only (no GPU on the build machine), 8 threads, bfloat16",
+  "python": "3.13.5",
+  "torch": "2.15.0+cpu",
+  "transformers": "5.22.1",
+  "peft": "0.21.2",
+  "sklearn": "1.9.1",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "max_new_tokens": 80,
+  "decoding": "greedy",
+  "t4_tested": false
+ },
+ "methods": {
+  "zero": {
+   "n_scored": 399,
+   "scores": {
+    "crash_type": {
+     "acc": 0.612,
+     "macroF1": 0.191
+    },
+    "pedestrian": {
+     "acc": 0.644,
+     "F1": 0.0,
+     "P": 0.0,
+     "R": 0.0
+    },
+    "vehicles": {
+     "acc": 0.093,
+     "macroF1": 0.072
+    },
+    "injury": {
+     "acc": 0.584,
+     "F1": 0.623,
+     "P": 0.637,
+     "R": 0.609
+    },
+    "hit_and_run": {
+     "acc": 0.9,
+     "F1": 0.049,
+     "P": 0.25,
+     "R": 0.027
+    },
+    "distracted": {
+     "acc": 0.774,
+     "F1": 0.154,
+     "P": 0.533,
+     "R": 0.09
+    }
+   },
+   "json_valid": 0.995,
+   "schema_valid": 0.709,
+   "per_fold": [
+    {
+     "crash_type": {
+      "acc": 0.696,
+      "macroF1": 0.205
+     },
+     "pedestrian": {
+      "acc": 0.646,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "vehicles": {
+      "acc": 0.089,
+      "macroF1": 0.064
+     },
+     "injury": {
+      "acc": 0.595,
+      "F1": 0.61,
+      "P": 0.581,
+      "R": 0.641
+     },
+     "hit_and_run": {
+      "acc": 0.924,
+      "F1": 0.25,
+      "P": 1.0,
+      "R": 0.143
+     },
+     "distracted": {
+      "acc": 0.747,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.549,
+      "macroF1": 0.179
+     },
+     "pedestrian": {
+      "acc": 0.537,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "vehicles": {
+      "acc": 0.073,
+      "macroF1": 0.048
+     },
+     "injury": {
+      "acc": 0.488,
+      "F1": 0.543,
+      "P": 0.581,
+      "R": 0.51
+     },
+     "hit_and_run": {
+      "acc": 0.902,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.768,
+      "F1": 0.24,
+      "P": 0.75,
+      "R": 0.143
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.775,
+      "macroF1": 0.218
+     },
+     "pedestrian": {
+      "acc": 0.725,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "vehicles": {
+      "acc": 0.138,
+      "macroF1": 0.177
+     },
+     "injury": {
+      "acc": 0.588,
+      "F1": 0.645,
+      "P": 0.612,
+      "R": 0.682
+     },
+     "hit_and_run": {
+      "acc": 0.963,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.762,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.43,
+      "macroF1": 0.153
+     },
+     "pedestrian": {
+      "acc": 0.57,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "vehicles": {
+      "acc": 0.076,
+      "macroF1": 0.051
+     },
+     "injury": {
+      "acc": 0.696,
+      "F1": 0.727,
+      "P": 0.762,
+      "R": 0.696
+     },
+     "hit_and_run": {
+      "acc": 0.861,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.785,
+      "F1": 0.2,
+      "P": 1.0,
+      "R": 0.111
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.608,
+      "macroF1": 0.19
+     },
+     "pedestrian": {
+      "acc": 0.747,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "vehicles": {
+      "acc": 0.089,
+      "macroF1": 0.056
+     },
+     "injury": {
+      "acc": 0.557,
+      "F1": 0.588,
+      "P": 0.658,
+      "R": 0.532
+     },
+     "hit_and_run": {
+      "acc": 0.848,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.81,
+      "F1": 0.3,
+      "P": 0.6,
+      "R": 0.2
+     }
+    }
+   ],
+   "sec_per_narrative": 2.57,
+   "total_minutes": 17.1,
+   "schema_failures": {
+    "bad_or_missing_pedestrian": 108,
+    "bad_or_missing_vehicles": 5,
+    "bad_or_missing_crash_type": 3,
+    "no_parseable_json": 2
+   },
+   "pred_dist": {
+    "crash_type": {
+     "left_turn": 394,
+     "None": 5
+    },
+    "pedestrian": {
+     "no": 289,
+     "None": 110
+    },
+    "vehicles": {
+     "3+": 367,
+     "1": 22,
+     "None": 7,
+     "2": 3
+    },
+    "injury": {
+     "yes": 215,
+     "no": 182,
+     "None": 2
+    },
+    "hit_and_run": {
+     "no": 393,
+     "yes": 4,
+     "None": 2
+    },
+    "distracted": {
+     "no": 382,
+     "yes": 15,
+     "None": 2
+    }
+   },
+   "crash_type_confusion": {
+    "angle->invalid": 2,
+    "angle->left_turn": 101,
+    "left_turn->invalid": 1,
+    "left_turn->left_turn": 244,
+    "other->left_turn": 16,
+    "pedestrian_bicycle->invalid": 2,
+    "pedestrian_bicycle->left_turn": 33
+   },
+   "hit_and_run_recall_by_mention": {
+    "mentioned": 0.043,
+    "not_mentioned": 0.0
+   }
+  },
+  "fixed3": {
+   "n_scored": 399,
+   "scores": {
+    "crash_type": {
+     "acc": 0.579,
+     "macroF1": 0.37
+    },
+    "pedestrian": {
+     "acc": 0.732,
+     "F1": 0.262,
+     "P": 0.174,
+     "R": 0.528
+    },
+    "vehicles": {
+     "acc": 0.772,
+     "macroF1": 0.585
+    },
+    "injury": {
+     "acc": 0.607,
+     "F1": 0.721,
+     "P": 0.601,
+     "R": 0.902
+    },
+    "hit_and_run": {
+     "acc": 0.91,
+     "F1": 0.053,
+     "P": 1.0,
+     "R": 0.027
+    },
+    "distracted": {
+     "acc": 0.769,
+     "F1": 0.042,
+     "P": 0.286,
+     "R": 0.022
+    }
+   },
+   "json_valid": 1.0,
+   "schema_valid": 0.99,
+   "per_fold": [
+    {
+     "crash_type": {
+      "acc": 0.671,
+      "macroF1": 0.402
+     },
+     "pedestrian": {
+      "acc": 0.747,
+      "F1": 0.286,
+      "P": 0.19,
+      "R": 0.571
+     },
+     "vehicles": {
+      "acc": 0.835,
+      "macroF1": 0.508
+     },
+     "injury": {
+      "acc": 0.519,
+      "F1": 0.672,
+      "P": 0.506,
+      "R": 1.0
+     },
+     "hit_and_run": {
+      "acc": 0.911,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.747,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.634,
+      "macroF1": 0.38
+     },
+     "pedestrian": {
+      "acc": 0.695,
+      "F1": 0.286,
+      "P": 0.2,
+      "R": 0.5
+     },
+     "vehicles": {
+      "acc": 0.817,
+      "macroF1": 0.635
+     },
+     "injury": {
+      "acc": 0.585,
+      "F1": 0.738,
+      "P": 0.593,
+      "R": 0.98
+     },
+     "hit_and_run": {
+      "acc": 0.902,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.756,
+      "F1": 0.091,
+      "P": 1.0,
+      "R": 0.048
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.5,
+      "macroF1": 0.362
+     },
+     "pedestrian": {
+      "acc": 0.75,
+      "F1": 0.091,
+      "P": 0.05,
+      "R": 0.5
+     },
+     "vehicles": {
+      "acc": 0.713,
+      "macroF1": 0.502
+     },
+     "injury": {
+      "acc": 0.688,
+      "F1": 0.752,
+      "P": 0.667,
+      "R": 0.864
+     },
+     "hit_and_run": {
+      "acc": 0.975,
+      "F1": 0.5,
+      "P": 1.0,
+      "R": 0.333
+     },
+     "distracted": {
+      "acc": 0.75,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.519,
+      "macroF1": 0.39
+     },
+     "pedestrian": {
+      "acc": 0.671,
+      "F1": 0.381,
+      "P": 0.308,
+      "R": 0.5
+     },
+     "vehicles": {
+      "acc": 0.759,
+      "macroF1": 0.648
+     },
+     "injury": {
+      "acc": 0.658,
+      "F1": 0.769,
+      "P": 0.634,
+      "R": 0.978
+     },
+     "hit_and_run": {
+      "acc": 0.873,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.785,
+      "F1": 0.105,
+      "P": 1.0,
+      "R": 0.056
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.57,
+      "macroF1": 0.282
+     },
+     "pedestrian": {
+      "acc": 0.797,
+      "F1": 0.111,
+      "P": 0.059,
+      "R": 1.0
+     },
+     "vehicles": {
+      "acc": 0.734,
+      "macroF1": 0.529
+     },
+     "injury": {
+      "acc": 0.582,
+      "F1": 0.667,
+      "P": 0.635,
+      "R": 0.702
+     },
+     "hit_and_run": {
+      "acc": 0.886,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.81,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     }
+    }
+   ],
+   "sec_per_narrative": 2.29,
+   "total_minutes": 15.2,
+   "schema_failures": {
+    "bad_or_missing_crash_type": 1,
+    "bad_or_missing_vehicles": 3
+   },
+   "pred_dist": {
+    "crash_type": {
+     "left_turn": 241,
+     "angle": 134,
+     "pedestrian_bicycle": 23,
+     "None": 1
+    },
+    "pedestrian": {
+     "no": 290,
+     "yes": 109
+    },
+    "vehicles": {
+     "2": 287,
+     "1": 99,
+     "3+": 10,
+     "None": 3
+    },
+    "injury": {
+     "yes": 338,
+     "no": 61
+    },
+    "hit_and_run": {
+     "no": 398,
+     "yes": 1
+    },
+    "distracted": {
+     "no": 392,
+     "yes": 7
+    }
+   },
+   "crash_type_confusion": {
+    "angle->angle": 52,
+    "angle->invalid": 1,
+    "angle->left_turn": 46,
+    "angle->pedestrian_bicycle": 4,
+    "left_turn->angle": 69,
+    "left_turn->left_turn": 169,
+    "left_turn->pedestrian_bicycle": 7,
+    "other->angle": 1,
+    "other->left_turn": 13,
+    "other->pedestrian_bicycle": 2,
+    "pedestrian_bicycle->angle": 12,
+    "pedestrian_bicycle->left_turn": 13,
+    "pedestrian_bicycle->pedestrian_bicycle": 10
+   },
+   "hit_and_run_recall_by_mention": {
+    "mentioned": 0.043,
+    "not_mentioned": 0.0
+   }
+  },
+  "rag3": {
+   "n_scored": 399,
+   "scores": {
+    "crash_type": {
+     "acc": 0.672,
+     "macroF1": 0.492
+    },
+    "pedestrian": {
+     "acc": 0.942,
+     "F1": 0.667,
+     "P": 0.697,
+     "R": 0.639
+    },
+    "vehicles": {
+     "acc": 0.789,
+     "macroF1": 0.686
+    },
+    "injury": {
+     "acc": 0.607,
+     "F1": 0.697,
+     "P": 0.622,
+     "R": 0.791
+    },
+    "hit_and_run": {
+     "acc": 0.917,
+     "F1": 0.327,
+     "P": 0.667,
+     "R": 0.216
+    },
+    "distracted": {
+     "acc": 0.83,
+     "F1": 0.528,
+     "P": 0.691,
+     "R": 0.427
+    }
+   },
+   "json_valid": 1.0,
+   "schema_valid": 0.95,
+   "per_fold": [
+    {
+     "crash_type": {
+      "acc": 0.785,
+      "macroF1": 0.552
+     },
+     "pedestrian": {
+      "acc": 0.949,
+      "F1": 0.667,
+      "P": 0.8,
+      "R": 0.571
+     },
+     "vehicles": {
+      "acc": 0.81,
+      "macroF1": 0.584
+     },
+     "injury": {
+      "acc": 0.582,
+      "F1": 0.619,
+      "P": 0.578,
+      "R": 0.667
+     },
+     "hit_and_run": {
+      "acc": 0.949,
+      "F1": 0.6,
+      "P": 1.0,
+      "R": 0.429
+     },
+     "distracted": {
+      "acc": 0.873,
+      "F1": 0.706,
+      "P": 0.857,
+      "R": 0.6
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.671,
+      "macroF1": 0.491
+     },
+     "pedestrian": {
+      "acc": 0.902,
+      "F1": 0.556,
+      "P": 0.625,
+      "R": 0.5
+     },
+     "vehicles": {
+      "acc": 0.841,
+      "macroF1": 0.724
+     },
+     "injury": {
+      "acc": 0.622,
+      "F1": 0.721,
+      "P": 0.645,
+      "R": 0.816
+     },
+     "hit_and_run": {
+      "acc": 0.902,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.878,
+      "F1": 0.706,
+      "P": 0.923,
+      "R": 0.571
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.675,
+      "macroF1": 0.457
+     },
+     "pedestrian": {
+      "acc": 0.988,
+      "F1": 0.8,
+      "P": 0.667,
+      "R": 1.0
+     },
+     "vehicles": {
+      "acc": 0.863,
+      "macroF1": 0.714
+     },
+     "injury": {
+      "acc": 0.562,
+      "F1": 0.653,
+      "P": 0.593,
+      "R": 0.727
+     },
+     "hit_and_run": {
+      "acc": 0.975,
+      "F1": 0.5,
+      "P": 1.0,
+      "R": 0.333
+     },
+     "distracted": {
+      "acc": 0.738,
+      "F1": 0.087,
+      "P": 0.125,
+      "R": 0.067
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.557,
+      "macroF1": 0.437
+     },
+     "pedestrian": {
+      "acc": 0.924,
+      "F1": 0.786,
+      "P": 0.917,
+      "R": 0.688
+     },
+     "vehicles": {
+      "acc": 0.722,
+      "macroF1": 0.687
+     },
+     "injury": {
+      "acc": 0.658,
+      "F1": 0.761,
+      "P": 0.642,
+      "R": 0.935
+     },
+     "hit_and_run": {
+      "acc": 0.886,
+      "F1": 0.4,
+      "P": 0.6,
+      "R": 0.3
+     },
+     "distracted": {
+      "acc": 0.81,
+      "F1": 0.4,
+      "P": 0.714,
+      "R": 0.278
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.671,
+      "macroF1": 0.495
+     },
+     "pedestrian": {
+      "acc": 0.949,
+      "F1": 0.333,
+      "P": 0.2,
+      "R": 1.0
+     },
+     "vehicles": {
+      "acc": 0.709,
+      "macroF1": 0.537
+     },
+     "injury": {
+      "acc": 0.608,
+      "F1": 0.705,
+      "P": 0.638,
+      "R": 0.787
+     },
+     "hit_and_run": {
+      "acc": 0.873,
+      "F1": 0.167,
+      "P": 0.333,
+      "R": 0.111
+     },
+     "distracted": {
+      "acc": 0.848,
+      "F1": 0.571,
+      "P": 0.615,
+      "R": 0.533
+     }
+    }
+   ],
+   "sec_per_narrative": 1.96,
+   "total_minutes": 13.0,
+   "schema_failures": {
+    "bad_or_missing_crash_type": 17,
+    "bad_or_missing_injury": 2,
+    "bad_or_missing_vehicles": 1
+   },
+   "pred_dist": {
+    "crash_type": {
+     "left_turn": 265,
+     "angle": 91,
+     "pedestrian_bicycle": 26,
+     "None": 17
+    },
+    "pedestrian": {
+     "no": 366,
+     "yes": 33
+    },
+    "vehicles": {
+     "2": 278,
+     "1": 100,
+     "3+": 20,
+     "None": 1
+    },
+    "injury": {
+     "yes": 286,
+     "no": 111,
+     "None": 2
+    },
+    "hit_and_run": {
+     "no": 387,
+     "yes": 12
+    },
+    "distracted": {
+     "no": 344,
+     "yes": 55
+    }
+   },
+   "crash_type_confusion": {
+    "angle->angle": 44,
+    "angle->invalid": 11,
+    "angle->left_turn": 46,
+    "angle->pedestrian_bicycle": 2,
+    "left_turn->angle": 38,
+    "left_turn->invalid": 5,
+    "left_turn->left_turn": 202,
+    "other->angle": 5,
+    "other->left_turn": 9,
+    "other->pedestrian_bicycle": 2,
+    "pedestrian_bicycle->angle": 4,
+    "pedestrian_bicycle->invalid": 1,
+    "pedestrian_bicycle->left_turn": 8,
+    "pedestrian_bicycle->pedestrian_bicycle": 22
+   },
+   "hit_and_run_recall_by_mention": {
+    "mentioned": 0.261,
+    "not_mentioned": 0.143
+   }
+  },
+  "rag3_leaky": {
+   "n_scored": 399,
+   "scores": {
+    "crash_type": {
+     "acc": 0.689,
+     "macroF1": 0.55
+    },
+    "pedestrian": {
+     "acc": 0.955,
+     "F1": 0.743,
+     "P": 0.765,
+     "R": 0.722
+    },
+    "vehicles": {
+     "acc": 0.744,
+     "macroF1": 0.636
+    },
+    "injury": {
+     "acc": 0.654,
+     "F1": 0.737,
+     "P": 0.649,
+     "R": 0.853
+    },
+    "hit_and_run": {
+     "acc": 0.92,
+     "F1": 0.304,
+     "P": 0.778,
+     "R": 0.189
+    },
+    "distracted": {
+     "acc": 0.842,
+     "F1": 0.583,
+     "P": 0.71,
+     "R": 0.494
+    }
+   },
+   "json_valid": 1.0,
+   "schema_valid": 0.94,
+   "per_fold": [
+    {
+     "crash_type": {
+      "acc": 0.759,
+      "macroF1": 0.503
+     },
+     "pedestrian": {
+      "acc": 0.937,
+      "F1": 0.545,
+      "P": 0.75,
+      "R": 0.429
+     },
+     "vehicles": {
+      "acc": 0.722,
+      "macroF1": 0.57
+     },
+     "injury": {
+      "acc": 0.532,
+      "F1": 0.617,
+      "P": 0.527,
+      "R": 0.744
+     },
+     "hit_and_run": {
+      "acc": 0.924,
+      "F1": 0.4,
+      "P": 0.667,
+      "R": 0.286
+     },
+     "distracted": {
+      "acc": 0.911,
+      "F1": 0.821,
+      "P": 0.842,
+      "R": 0.8
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.683,
+      "macroF1": 0.563
+     },
+     "pedestrian": {
+      "acc": 0.927,
+      "F1": 0.667,
+      "P": 0.75,
+      "R": 0.6
+     },
+     "vehicles": {
+      "acc": 0.829,
+      "macroF1": 0.746
+     },
+     "injury": {
+      "acc": 0.646,
+      "F1": 0.748,
+      "P": 0.652,
+      "R": 0.878
+     },
+     "hit_and_run": {
+      "acc": 0.915,
+      "F1": 0.222,
+      "P": 1.0,
+      "R": 0.125
+     },
+     "distracted": {
+      "acc": 0.829,
+      "F1": 0.632,
+      "P": 0.706,
+      "R": 0.571
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.787,
+      "macroF1": 0.533
+     },
+     "pedestrian": {
+      "acc": 0.975,
+      "F1": 0.667,
+      "P": 0.5,
+      "R": 1.0
+     },
+     "vehicles": {
+      "acc": 0.762,
+      "macroF1": 0.603
+     },
+     "injury": {
+      "acc": 0.75,
+      "F1": 0.804,
+      "P": 0.707,
+      "R": 0.932
+     },
+     "hit_and_run": {
+      "acc": 0.975,
+      "F1": 0.5,
+      "P": 1.0,
+      "R": 0.333
+     },
+     "distracted": {
+      "acc": 0.812,
+      "F1": 0.444,
+      "P": 0.5,
+      "R": 0.4
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.595,
+      "macroF1": 0.482
+     },
+     "pedestrian": {
+      "acc": 0.975,
+      "F1": 0.933,
+      "P": 1.0,
+      "R": 0.875
+     },
+     "vehicles": {
+      "acc": 0.747,
+      "macroF1": 0.704
+     },
+     "injury": {
+      "acc": 0.646,
+      "F1": 0.725,
+      "P": 0.661,
+      "R": 0.804
+     },
+     "hit_and_run": {
+      "acc": 0.886,
+      "F1": 0.182,
+      "P": 1.0,
+      "R": 0.1
+     },
+     "distracted": {
+      "acc": 0.81,
+      "F1": 0.4,
+      "P": 0.714,
+      "R": 0.278
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.62,
+      "macroF1": 0.498
+     },
+     "pedestrian": {
+      "acc": 0.962,
+      "F1": 0.4,
+      "P": 0.25,
+      "R": 1.0
+     },
+     "vehicles": {
+      "acc": 0.658,
+      "macroF1": 0.441
+     },
+     "injury": {
+      "acc": 0.696,
+      "F1": 0.778,
+      "P": 0.689,
+      "R": 0.894
+     },
+     "hit_and_run": {
+      "acc": 0.899,
+      "F1": 0.333,
+      "P": 0.667,
+      "R": 0.222
+     },
+     "distracted": {
+      "acc": 0.848,
+      "F1": 0.455,
+      "P": 0.714,
+      "R": 0.333
+     }
+    }
+   ],
+   "sec_per_narrative": 9.14,
+   "total_minutes": 60.8,
+   "schema_failures": {
+    "bad_or_missing_crash_type": 20,
+    "bad_or_missing_injury": 1,
+    "bad_or_missing_vehicles": 3
+   },
+   "pred_dist": {
+    "crash_type": {
+     "left_turn": 274,
+     "angle": 82,
+     "pedestrian_bicycle": 21,
+     "None": 20,
+     "other": 2
+    },
+    "pedestrian": {
+     "no": 365,
+     "yes": 34
+    },
+    "vehicles": {
+     "2": 263,
+     "1": 113,
+     "3+": 20,
+     "None": 3
+    },
+    "injury": {
+     "yes": 296,
+     "no": 102,
+     "None": 1
+    },
+    "hit_and_run": {
+     "no": 390,
+     "yes": 9
+    },
+    "distracted": {
+     "no": 337,
+     "yes": 62
+    }
+   },
+   "crash_type_confusion": {
+    "angle->angle": 46,
+    "angle->invalid": 10,
+    "angle->left_turn": 46,
+    "angle->pedestrian_bicycle": 1,
+    "left_turn->angle": 31,
+    "left_turn->invalid": 6,
+    "left_turn->left_turn": 208,
+    "other->angle": 3,
+    "other->left_turn": 10,
+    "other->other": 2,
+    "other->pedestrian_bicycle": 1,
+    "pedestrian_bicycle->angle": 2,
+    "pedestrian_bicycle->invalid": 4,
+    "pedestrian_bicycle->left_turn": 10,
+    "pedestrian_bicycle->pedestrian_bicycle": 19
+   },
+   "hit_and_run_recall_by_mention": {
+    "mentioned": 0.304,
+    "not_mentioned": 0.0
+   }
+  },
+  "lora": {
+   "n_scored": 399,
+   "scores": {
+    "crash_type": {
+     "acc": 0.732,
+     "macroF1": 0.413
+    },
+    "pedestrian": {
+     "acc": 0.907,
+     "F1": 0.182,
+     "P": 0.5,
+     "R": 0.111
+    },
+    "vehicles": {
+     "acc": 0.922,
+     "macroF1": 0.805
+    },
+    "injury": {
+     "acc": 0.614,
+     "F1": 0.706,
+     "P": 0.622,
+     "R": 0.818
+    },
+    "hit_and_run": {
+     "acc": 0.902,
+     "F1": 0.051,
+     "P": 0.5,
+     "R": 0.027
+    },
+    "distracted": {
+     "acc": 0.774,
+     "F1": 0.043,
+     "P": 0.667,
+     "R": 0.022
+    }
+   },
+   "json_valid": 0.995,
+   "schema_valid": 0.967,
+   "per_fold": [
+    {
+     "crash_type": {
+      "acc": 0.684,
+      "macroF1": 0.203
+     },
+     "pedestrian": {
+      "acc": 0.911,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "vehicles": {
+      "acc": 0.835,
+      "macroF1": 0.303
+     },
+     "injury": {
+      "acc": 0.481,
+      "F1": 0.624,
+      "P": 0.486,
+      "R": 0.872
+     },
+     "hit_and_run": {
+      "acc": 0.911,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.747,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.744,
+      "macroF1": 0.482
+     },
+     "pedestrian": {
+      "acc": 0.866,
+      "F1": 0.154,
+      "P": 0.333,
+      "R": 0.1
+     },
+     "vehicles": {
+      "acc": 0.915,
+      "macroF1": 0.829
+     },
+     "injury": {
+      "acc": 0.598,
+      "F1": 0.714,
+      "P": 0.635,
+      "R": 0.816
+     },
+     "hit_and_run": {
+      "acc": 0.89,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.756,
+      "F1": 0.174,
+      "P": 1.0,
+      "R": 0.095
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.838,
+      "macroF1": 0.398
+     },
+     "pedestrian": {
+      "acc": 0.975,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "vehicles": {
+      "acc": 0.975,
+      "macroF1": 0.867
+     },
+     "injury": {
+      "acc": 0.7,
+      "F1": 0.769,
+      "P": 0.667,
+      "R": 0.909
+     },
+     "hit_and_run": {
+      "acc": 0.975,
+      "F1": 0.5,
+      "P": 1.0,
+      "R": 0.333
+     },
+     "distracted": {
+      "acc": 0.8,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.633,
+      "macroF1": 0.382
+     },
+     "pedestrian": {
+      "acc": 0.81,
+      "F1": 0.211,
+      "P": 0.667,
+      "R": 0.125
+     },
+     "vehicles": {
+      "acc": 0.924,
+      "macroF1": 0.881
+     },
+     "injury": {
+      "acc": 0.684,
+      "F1": 0.747,
+      "P": 0.698,
+      "R": 0.804
+     },
+     "hit_and_run": {
+      "acc": 0.873,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.772,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     }
+    },
+    {
+     "crash_type": {
+      "acc": 0.759,
+      "macroF1": 0.545
+     },
+     "pedestrian": {
+      "acc": 0.975,
+      "F1": 0.667,
+      "P": 0.5,
+      "R": 1.0
+     },
+     "vehicles": {
+      "acc": 0.962,
+      "macroF1": 0.864
+     },
+     "injury": {
+      "acc": 0.608,
+      "F1": 0.68,
+      "P": 0.66,
+      "R": 0.702
+     },
+     "hit_and_run": {
+      "acc": 0.861,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     },
+     "distracted": {
+      "acc": 0.797,
+      "F1": 0.0,
+      "P": 0.0,
+      "R": 0.0
+     }
+    }
+   ],
+   "schema_failures": {
+    "bad_or_missing_crash_type": 10,
+    "no_parseable_json": 2,
+    "bad_or_missing_vehicles": 1
+   },
+   "pred_dist": {
+    "crash_type": {
+     "left_turn": 287,
+     "angle": 93,
+     "None": 12,
+     "pedestrian_bicycle": 7
+    },
+    "pedestrian": {
+     "no": 389,
+     "yes": 8,
+     "None": 2
+    },
+    "vehicles": {
+     "2": 349,
+     "3+": 32,
+     "1": 15,
+     "None": 3
+    },
+    "injury": {
+     "yes": 296,
+     "no": 101,
+     "None": 2
+    },
+    "hit_and_run": {
+     "no": 395,
+     "None": 2,
+     "yes": 2
+    },
+    "distracted": {
+     "no": 394,
+     "yes": 3,
+     "None": 2
+    }
+   },
+   "crash_type_confusion": {
+    "angle->angle": 59,
+    "angle->invalid": 6,
+    "angle->left_turn": 36,
+    "angle->pedestrian_bicycle": 2,
+    "left_turn->angle": 15,
+    "left_turn->invalid": 1,
+    "left_turn->left_turn": 229,
+    "other->angle": 7,
+    "other->invalid": 2,
+    "other->left_turn": 6,
+    "other->pedestrian_bicycle": 1,
+    "pedestrian_bicycle->angle": 12,
+    "pedestrian_bicycle->invalid": 3,
+    "pedestrian_bicycle->left_turn": 16,
+    "pedestrian_bicycle->pedestrian_bicycle": 4
+   },
+   "fold_meta": {
+    "0": {
+     "train_seconds": 1256.5,
+     "infer_seconds": 528.5,
+     "n_train": 320,
+     "n_test": 79,
+     "final_train_loss": 0.0643,
+     "skipped": 2
+    },
+    "1": {
+     "train_seconds": 769.4,
+     "infer_seconds": 383.4,
+     "n_train": 317,
+     "n_test": 82,
+     "final_train_loss": 0.0413,
+     "skipped": 0
+    },
+    "2": {
+     "train_seconds": 1640.6,
+     "infer_seconds": 363.5,
+     "n_train": 319,
+     "n_test": 80,
+     "final_train_loss": 0.0511,
+     "skipped": 1
+    },
+    "3": {
+     "train_seconds": 9539.3,
+     "infer_seconds": 769.7,
+     "n_train": 320,
+     "n_test": 79,
+     "final_train_loss": 0.0507,
+     "skipped": 0
+    },
+    "4": {
+     "train_seconds": 5610.5,
+     "infer_seconds": 172.2,
+     "n_train": 320,
+     "n_test": 79,
+     "final_train_loss": 0.0401,
+     "skipped": 4
+    }
+   },
+   "train_minutes_total": 313.6,
+   "infer_minutes_total": 37.0,
+   "sec_per_narrative": 5.56,
+   "config": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "targets": "q,k,v,o",
+    "epochs": 2,
+    "lr": 0.0001,
+    "adapter_dtype": "fp32",
+    "first_attempt_note": "lr 2e-4 with bf16 adapter diverged to NaN at step ~80 of fold 0 on CPU; restarted",
+    "grad_accum": 4,
+    "trainable_params": 2162688,
+    "total_params": 496195456
+   },
+   "hit_and_run_recall_by_mention": {
+    "mentioned": 0.043,
+    "not_mentioned": 0.0
+   }
+  }
+ },
+ "hit_and_run_mentioned": {
+  "positives": 37,
+  "mentioned": 23
+ }
+}

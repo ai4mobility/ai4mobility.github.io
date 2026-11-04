@@ -180,6 +180,8 @@ parts:
             title: "Lab 7 — Four Ways to Predict the Next 5 Seconds"
           - file: module3/lab8_agency_graph
             title: "Lab 8 — Building a Graph from Agency Documents"
+          - file: module6/lab9_lora_crash_narratives
+            title: "Lab 9 — Fine-tuning a Small Language Model on Crash Narratives"
 
   - caption: Capstone
     chapters:

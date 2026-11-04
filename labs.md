@@ -5,8 +5,8 @@
   <h2>Hands-On Labs <span>Every Notebook in the Course</span></h2>
   <p>One page for all the labs &mdash; what each one builds, what it actually proves, and what to compare it against before you believe the result. Everything runs in Google Colab; nothing needs a local install.</p>
   <div class="resource-meta">
-    <span>8 notebooks available now</span>
-    <span>7 more planned for Modules 2&ndash;7</span>
+    <span>9 notebooks available now</span>
+    <span>6 more planned for Modules 2&ndash;7</span>
     <span>Open data throughout</span>
   </div>
 </section>
@@ -45,7 +45,7 @@
         <tr><td>Training the denoiser</td><td>M4</td><td>What the network predicts at each noise level, and why</td><td>In development</td></tr>
         <tr><td>An agent that tunes a signal plan</td><td>M5</td><td>What you show an agent in a tool's output changes how often it breaks the rules</td><td>In development</td></tr>
         <tr><td><a href="module6/lab6_vit_finetune.html">6 &mdash; Fine-tuning a vision transformer</a></td><td>M6</td><td>Where the accuracy in a fine-tune actually comes from &mdash; and how little of it survives sunset</td><td>Available</td></tr>
-        <tr><td>Fine-tuning a small language model on crash narratives</td><td>M6</td><td>Whether LoRA beats prompting and retrieval on a split you can defend</td><td>In development</td></tr>
+        <tr><td><a href="module6/lab9_lora_crash_narratives.html">9 &mdash; Fine-tuning a small language model on crash narratives</a></td><td>M6</td><td>Whether LoRA beats prompting and retrieval on a split you can defend</td><td>Available</td></tr>
         <tr><td>Reviewing an agent&rsquo;s work</td><td>M7</td><td>Which agent failures a human reviewer would actually have caught</td><td>In development</td></tr>
       </tbody>
     </table>
@@ -57,7 +57,7 @@
     <h2>Available Now</h2>
     <span>Modules 1, 3, 4 and 6</span>
   </div>
-  <p class="section-intro">Eight notebooks, all runnable in Colab on open or synthetic data. Read each one alongside the notes section named on its card &mdash; the notebook shows the thing working, the section says why it works and where it stops working.</p>
+  <p class="section-intro">Nine notebooks, all runnable in Colab. Read each one alongside the notes section named on its card &mdash; the notebook shows the thing working, the section says why it works and where it stops working. Lab 9&rsquo;s crash narratives are downloaded from Canvas; they are not in this repository.</p>
   <div class="resource-grid">
     <article class="resource-card">
       <div class="resource-card-top"><p class="resource-category">Module 1</p><span class="level-badge level-beginner">Beginner</span></div>
@@ -123,6 +123,14 @@
       <div class="tag-row"><span>Reads with 2.7, 6.1</span><span>torch &middot; timm &middot; scikit-learn &middot; matplotlib</span><span>Downloads 31 MB &middot; ~15 min on CPU</span></div>
       <a class="resource-link" href="module6/lab6_vit_finetune.html">Open Lab 6</a>
     </article>
+    <article class="resource-card">
+      <div class="resource-card-top"><p class="resource-category">Module 6</p><span class="level-badge level-intermediate">Intermediate</span></div>
+      <h3>Lab 9 &mdash; Fine-tuning a Small Language Model on Crash Narratives</h3>
+      <p>399 crash reports from 20 corridors in Pasco, Hernando and Pinellas counties, chosen to study left turns and pedestrians, each with an officer&rsquo;s narrative and the coded form. Turn each narrative into six structured fields with a 0.5B-parameter open model, climbing the adaptation ladder from 6.1 one rung at a time: the prompt alone, three fixed examples, three retrieved examples, then a LoRA adapter trained per fold. Every rung is scored on the same corridor-grouped folds as 2.13, and the lab shows what a random split would have claimed instead. The last sections cover the hit-and-runs the narrative never mentions, and the fields that were dropped because the text does not contain them.</p>
+      <p><strong>Proves:</strong> whether LoRA beats prompting and retrieval on a split you can defend &mdash; and that retrieved examples beat fixed ones (mean 0.566 vs 0.339 across the six fields) partly by copying the nearest neighbour. <strong>Check it against:</strong> a TF-IDF logistic regression trained in about a minute, which averages 0.722 across the six fields; retrieval from training corridors reaches 0.566, retrieval allowed to see the test corridors 0.592, and LoRA 0.367 &mdash; strong on vehicle counts, but it collapses to &ldquo;no&rdquo; on the rare yes/no fields.</p>
+      <div class="tag-row"><span>Reads with 2.13, 6.1</span><span>transformers &middot; peft &middot; scikit-learn</span><span>Colab T4 &middot; data: download from Canvas &middot; ~TODO-after-run min on a T4</span></div>
+      <a class="resource-link" href="module6/lab9_lora_crash_narratives.html">Open Lab 9</a>
+    </article>
   </div>
   <div class="placeholder-panel">
     <p><strong>Lab 4 is also the bridge into Module 2.</strong> It lives here because it is built from Module 1's embedding material, but the shared image&ndash;text space it constructs is what the vision-language section of <a href="module2/index.html">Module 2</a> assumes you already have. If you arrive at Module 2 without having run it, run it first.</p>
@@ -153,12 +161,6 @@
       <h3>Understanding AI Agents</h3>
       <p><strong>An agent that tunes a signal plan.</strong> Build a small agent loop that adjusts the timing of one intersection through SUMO tools. Run it with and without the timing limits shown in the tool&rsquo;s output, count the plans that break them, then add a checkpoint before any plan is applied.</p>
       <a class="resource-link" href="module5/index.html">Module 5</a>
-    </article>
-    <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 6</p><span class="status-tag status-closed">In development</span></div>
-      <h3>Evaluation and Fine-Tuning</h3>
-      <p><strong>Fine-tuning a small language model on crash narratives.</strong> Use LoRA to teach a small open model to turn crash narratives into structured fields, and compare it with prompting alone and with retrieval on a split you can defend.</p>
-      <a class="resource-link" href="module6/index.html">Module 6</a>
     </article>
     <article class="resource-card">
       <div class="resource-card-top"><p class="resource-category">Module 7</p><span class="status-tag status-closed">In development</span></div>
