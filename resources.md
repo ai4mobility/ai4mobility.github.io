@@ -214,7 +214,7 @@
 <section class="resource-section" id="agency">
   <div class="resource-section-header">
     <h2>Agency & Practice Resources</h2>
-    <span>5 resources</span>
+    <span>6 resources</span>
   </div>
   <p class="section-intro">These resources help connect AI mobility projects to public-sector operations, safety programs, standards, and deployment contexts.</p>
 
@@ -253,6 +253,13 @@
       <p>Florida traveler information system with traffic, incident, and roadway condition information.</p>
       <div class="tag-row"><span>Florida</span><span>Traffic Operations</span><span>Incidents</span></div>
       <a class="resource-link" href="https://fl511.com/" target="_blank" rel="noopener">fl511.com</a>
+    </article>
+    <article class="resource-card" data-resource data-search="traffic cam archive california traffic camera video archive roadway footage monitoring agency">
+      <div class="resource-card-top"><p class="resource-category">Operations</p><span class="level-badge level-intermediate">Intermediate</span></div>
+      <h3>California Traffic Cam Archive</h3>
+      <p>Browsable archive of California traffic camera footage, useful for sourcing real-world roadway video for traffic monitoring and hazard-detection projects.</p>
+      <div class="tag-row"><span>California</span><span>Traffic Cameras</span><span>Video Archive</span></div>
+      <a class="resource-link" href="https://california.trafficcamarchive.com/selectState.jsp" target="_blank" rel="noopener">california.trafficcamarchive.com</a>
     </article>
   </div>
 </section>

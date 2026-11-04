@@ -1761,10 +1761,11 @@ items:
     session: gnn-week
     status: drafted
     dest: site/module3 (not yet on the site; handout v2 section 10)
-    notes: 'Part 7, added Oct 29 after Hao added Bishop ch. 13.3 slides to Part 4. 22 slides: what message passing throws
-      away, a vector on every edge, g as a shortcut (7 -> 3: 4 hops vs 2 layers; USF diameter 36), Bishop Fig. 13.5 redrawn
-      on the grid (3 builds), the four update equations (KaTeX), Bishop notation, Algorithm 13.2 as pseudocode, learned vs
-      given, encode-process-decode (41,152 weights/layer at width 64 vs GCN 4,160), the CTM as a full graph network (12
+    notes: 'Part 7, added Oct 29 after Hao added Bishop ch. 13.3 slides to Part 4. 25 slides: what message passing throws
+      away, a vector on every edge, signal control needs both (same node totals 32 / 45, opposite max-pressure decisions at A),
+      spillback travels edge-node-edge, g as a shortcut (7 -> 3: 4 hops vs 2 layers; USF diameter 36), Bishop Fig. 13.5 redrawn
+      on the grid (3 builds), the four update equations (KaTeX), Bishop notation, Algorithm 13.2 as pseudocode, the learned-parts architecture
+      diagram (encoders, psi/phi/gamma per layer, heads; aggregate and edge list fixed), learned vs given, encode-process-decode (41,152 weights/layer at width 64 vs GCN 4,160), the CTM as a full graph network (12
       faces, 37.9 vehicles conserved, 10,800 veh/h), the inbox m as net inflow (2,025 vs +150) and signed aggregation, N(i)
       in code (edge list, gather/scatter-add, PyG edge_index, Jraph), who sets N(i) (map / rule / learned / complete graph),
       3- and 5-leg intersections (USF 285 / 114 / 1), one family table, applications, evaluation close, fit card, check
