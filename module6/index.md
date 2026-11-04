@@ -54,7 +54,7 @@ calibrated to trust as a judge?
 <tr>
   <td><strong>Further sections</strong><br><em>Making agents better</em></td>
   <td>Evaluating agents, LoRA and instruction tuning, training on agent runs, agents that learn from experience &mdash; written up after the session.</td>
-  <td>LoRA lab <em>(in development)</em></td>
+  <td><a href="lab9_lora_crash_narratives.html">Lab 9</a></td>
 </tr>
 </tbody>
 </table>
@@ -101,6 +101,7 @@ By the end of this module you will be able to:
   after-dark score is higher than it should be. The labels came from a detector, and the last
   third of the lab is about what that costs. Reads with sections 2.7 and 6.1.
 
-- **Fine-tuning a small language model on crash narratives** *(in development)*. Use LoRA to teach a
-  small open model to turn crash narratives into structured fields, and compare it with prompting alone
-  and with retrieval, on a split you can defend.
+- **{doc}`Lab 9 — Fine-tuning a Small Language Model on Crash Narratives <lab9_lora_crash_narratives>`** *(available)*.
+  Turn 399 crash narratives into six coded fields with a 0.5B open model, four ways: prompt only,
+  fixed examples, retrieved examples, and a LoRA adapter, all scored on 2.13's corridor folds against
+  a TF-IDF baseline. Then find out which fields the text never contained. Reads with sections 2.13 and 6.1.

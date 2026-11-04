@@ -187,9 +187,9 @@ the score.
 4. A colleague proposes continued pretraining on 3 million tokens of district memos. Give the two
    questions you would ask before agreeing, and say what answer would change your mind.
 
-*The lab for this section &mdash; adapting a small language model to a transportation corpus, with
-the prompt and retrieval baselines run first &mdash; is in development. Its model shortlist is
-being piloted against the free Colab tier so that every step is runnable without a lab GPU.*
+*The lab for this section is {doc}`Lab 9 — Fine-tuning a Small Language Model on Crash Narratives <lab9_lora_crash_narratives>`:
+adapting a small language model to crash narratives, with the prompt and retrieval baselines run first.
+It is written for the free Colab T4.*
 
 ---
 
