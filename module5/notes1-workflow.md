@@ -161,6 +161,14 @@ In every workflow above, a person fixed the steps in advance. An **AI agent** ru
 itself: a language model reads what has happened so far, picks the next step, calls a tool to do it,
 reads the result, and repeats until it decides the task is done.
 
+You have seen this split before, in a TMC. An operator who wants to post a message on a DMS does not write code.
+The operator picks a command from a menu in the traffic management software and fills in a form: which sign, what
+message. The software checks the form, asks the operator to confirm, sends the command and logs it. That is this
+section's workflow in miniature: the check and the confirmation are the checkpoint, and the log is the record. An
+agent keeps the same structure. The model fills in the form, which is called a **tool call**, and a program called
+the **harness** does the checking, the running and the logging. {doc}`5.3 <notes3-tools>` draws the analogy step by
+step.
+
 Nothing in this section stops applying when that happens. The six labels still describe what each step
 contributes. Judgment is still not a step you can hand over. The checkpoint still sits immediately before
 the first irreversible action. What changes is that the model, not the engineer, now chooses the path.

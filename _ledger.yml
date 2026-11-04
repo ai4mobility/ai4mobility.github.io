@@ -3527,3 +3527,52 @@ items:
     notes: 'feed_less_numbers.py (runs SUMO once; counts tokens with the Qwen2.5-1.5B tokenizer) -> feed_less_numbers.json;
       make_feed_less_figure.py -> ../AGC_Feed_Less.svg/png and reveals/ (4 stages); README with the slide notes, a
       check-yourself question and the evaluation close.'
+
+  - id: m5-notes-tool-calling
+    file: site/module5/notes3-tools.md
+    kind: notes
+    module: 5
+    session: '2026-11-05'
+    status: drafted
+    notes: 'Added Nov 3 from the handout "How an AI Agent Uses Tools" (built from Hao''s comment threads
+      on the Lecture 1 handout). 5.1: the TMC/DMS form as a bridge in "From a workflow to an agent". 5.2:
+      figure AGT_Loop_Words, the six-word table, "an action is more than the next token", a pointer to run_tool
+      in 5.3. 5.3: "A menu, not a new script each time" (figure AGT_TMC_Form, five reasons, the price),
+      "Five SUMO tools built from TraCI" (code, the menu table, one order), "Tool call vs. TraCI call" (who
+      names the tools), "How the model picks a tool, and how the harness runs it" (figure AGT_Harness_Flow,
+      run_tool_call, five tested replies), "Where your transportation knowledge goes" (six decisions, teleport-aware
+      advance, the overload case 12,000 / 664 / 48 / 11,330 with 57 teleports), MCP framed as plumbing,
+      two check-yourself questions, SUMO sources. Every SUMO output from agents_m4/tools_demo/run_demo.py
+      -> agents_m4/numbers_tools.json.'
+
+  - id: m5-deck-tool-calling
+    file: M5-8_AI_Agents_and_RL/Agents_Tool_Calling_Slides.md
+    kind: deck
+    module: 5
+    session: '2026-11-05'
+    status: drafted
+    dest: site/module5/notes3-tools.md
+    notes: 'How an AI agent uses tools: 27 slides, about 45 minutes, on the Swin_Intro_Slides template via
+      agents_m4/build_tool_calling.py (same Builder as Lecture 1). Follows the handout section by section.
+      Figures AGT_Loop_Words, AGT_TMC_Form, AGT_Harness_Flow from agents_m4/figs_tools.js (masters in agents_m4/figs_tools/).
+      audit.py reads numbers_tools.json; 0 unexplained.'
+
+  - id: m5-handout-tool-calling
+    file: claude.ai Docs artifact "How an AI Agent Uses Tools"
+    kind: handout
+    module: 5
+    session: '2026-11-05'
+    status: drafted
+    notes: 'Eight sections: what an agent is; why agents use tools (TMC analogy); a tool is a utility function
+      with a new caller; tool call vs. TraCI call; how the harness runs a call; where transportation knowledge
+      goes; MCP, not yet; check yourself. Three figures (doc widgets). Its content is on the site in 5.1-5.3.'
+
+  - id: m5-tool-calling-repro
+    file: M5-8_AI_Agents_and_RL/agents_m4/tools_demo/
+    kind: internal
+    module: 5
+    session: '2026-11-05'
+    status: integrated
+    notes: 'run_demo.py (pip install eclipse-sumo traci): builds a synthetic 3x3 grid with seeded randomTrips,
+      runs the five TraCI tools through harness.py and harness_short.py (asserted identical), runs the overloaded
+      case, writes ../numbers_tools.json.'

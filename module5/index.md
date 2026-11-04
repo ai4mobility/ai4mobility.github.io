@@ -109,12 +109,12 @@ rebuilds it around transportation research and agency work.
 </tr>
 <tr>
   <td><a href="notes2-loop.html"><strong>5.2 A model in a loop</strong></a><br><em>How an agent works</em></td>
-  <td>From answering to acting; a tool call is just text; recorded runs of a small model retiming a signal in SUMO; <strong>milestone paper: ReAct</strong>; workflow or agent, and Agentless; a model plus a harness.</td>
+  <td>From answering to acting; six words for one step of the loop; a tool call is just text; recorded runs of a small model retiming a signal in SUMO; <strong>milestone paper: ReAct</strong>; workflow or agent, and Agentless; a model plus a harness.</td>
   <td>Agent lab <em>(in development)</em></td>
 </tr>
 <tr>
   <td><a href="notes3-tools.html"><strong>5.3 Tools: what an agent can reach</strong></a><br><em>How an agent works</em></td>
-  <td>Tool descriptions as contracts; what a harness can check; <strong>milestone paper: Toolformer</strong>; code as the action; MCP; the published traffic agents and the gap they leave; a detector as a tool; grading tool use.</td>
+  <td>A menu, not a new script each time (the TMC analogy); tool descriptions as contracts; five SUMO tools built from TraCI; tool call vs. TraCI call; how the harness runs a call; what a harness can check; where your traffic knowledge goes in a tool; <strong>milestone paper: Toolformer</strong>; code as the action; MCP; the published traffic agents and the gap they leave; a detector as a tool; grading tool use.</td>
   <td>&mdash;</td>
 </tr>
 <tr>

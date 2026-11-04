@@ -6,7 +6,7 @@
     <span class="notes-card-eyebrow">Module 5 &middot; Section 5.3</span>
     <span class="notes-card-session">Session: How an agent works</span>
   </div>
-  <p class="notes-card-lede">An agent is only as useful as what it can reach. This section is about the tools: how a tool is described to a model, how a model learned to decide when to call one (the milestone paper Toolformer, read in depth), code as a richer kind of action, the protocol that lets one tool serve many agents (MCP), and what the first published traffic agents show and do not show. It ends with how to grade an agent's tool use against a baseline that needs no model.</p>
+  <p class="notes-card-lede">An agent is only as useful as what it can reach. This section is about the tools: why an agent picks from a menu instead of writing a new script each time, how a tool is described to a model, how a TraCI function you already know becomes a tool, how the harness turns a model's call into a run, and where your traffic knowledge goes in a tool's design. Then how a model learned to decide when to call one (the milestone paper Toolformer, read in depth), code as a richer kind of action, the protocol that lets one tool serve many agents (MCP), and what the first published traffic agents show and do not show. It ends with how to grade an agent's tool use against a baseline that needs no model.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it first</h4>
@@ -28,8 +28,13 @@
 ## What this section covers
 
 - Why a language model needs tools at all, in four transportation needs
+- A menu, not a new script each time: the TMC analogy
 - A tool is a contract: name, description, parameters, result
+- Five SUMO tools built from TraCI: a utility function with a new caller
+- Tool call vs. TraCI call, and who names the tools
+- How the model picks a tool, and how the harness runs it
 - What a harness can check about a tool call, and what it cannot
+- Where your transportation knowledge goes in a tool
 - Milestone paper: **Toolformer**, a model that learns when a call is worth making
 - Code as the action (CodeAct)
 - MCP: one standard plug between agents and tools, and why credentials stay in the server
@@ -58,6 +63,47 @@ tool, a vision model lets a language model use what it sees.
 Every tool you add should answer one of these needs. A tool that answers none is one more description the model
 must read at every step, and one more way for the agent to go wrong.
 
+## A menu, not a new script each time
+
+You already know how to make SUMO do something: you write a Python script that calls SUMO's predefined API
+functions through TraCI. An agent ends up calling the same API functions. What changes is how the call is made. The
+model does not write a new script each time. Instead, you write each tool once, as an ordinary, tested function, much
+like the TraCI functions you wrote in your traffic flow course. The harness shows the model a short menu of the tools:
+each tool's name, one sentence on what it does, and its inputs. The model only fills in an order: which tool, with
+which inputs, such as `run_simulation` with green_ns = 30 and green_ew = 21. The harness runs the real function, which
+calls SUMO, and pastes the result back as text.
+
+**An analogy you know: the TMC's traffic management software.** A TMC operator who wants to post a message on a DMS
+does not write code. The operator picks a command from a menu and fills in a form: which sign, what message. The
+software checks the form, sends the command to the sign, and logs it. A **tool call is that form**, filled in by the
+model instead of the operator. The menu is the list of tools in the model's context, the form's fields are the tool's
+inputs, and the software that checks and runs the command is the harness.
+
+```{figure} ../_static/figures/AGT_TMC_Form.png
+:alt: Two rows of four panels. Top, what a TMC operator does: pick Post DMS message from a menu in the TMC software; fill in a form with sign I-275 NB sign 12 and the lines CRASH AHEAD, RIGHT LANE BLOCKED, EXPECT DELAYS; check that the message fits the sign (3 lines of 18 characters), that the sign is online, that the operator confirms and that the action is logged; the sign changes. Bottom, the same four steps for an agent: pick post_dms_message from the tools listed in its context; write the call; the harness runs the same checks in code, asks a person before posting and logs every call; the harness posts the message, a real action rather than words.
+:width: 100%
+
+A tool call is a form the model fills in. Menu = tool list, form = tool call, software = harness, sign = the real world. Illustrative.
+```
+
+**Why not let the model write a script each time?** A script can do things no menu offers. But writing a new script
+each time is slow, it makes mistakes, and its result can change from run to run. That is like calling a software
+engineer to write new code every time you need to change a DMS message. The menu-and-form design wins on five counts:
+
+- **Fewer mistakes.** A form with two numbers is much easier to fill in correctly than a script is to write
+  correctly. The tool itself is written and tested once, by a person, so the same order runs the same way every time.
+- **Checks before anything runs.** The harness can check every input against a rule, such as the 21 s pedestrian
+  minimum, before SUMO starts. A free-form script is much harder to check.
+- **Safety by design.** The model can do only what is on the menu. If no tool writes to a live signal controller,
+  the agent cannot change one.
+- **Cheaper and faster.** In the recorded runs of {doc}`5.2 <notes2-loop>`, the model's whole reply at step 1, a
+  thought plus the call, was 44 tokens. A script would run to hundreds, and every token the model writes costs time
+  and money.
+- **Reuse.** One tool serves many tasks, and with MCP (below) one tool can serve many agents.
+
+The price is flexibility: an agent can do only what its tools allow. When a task really needs a loop over many
+intersections, some agents let the model write short code instead (CodeAct, below), always inside a sandbox.
+
 ## A tool is a contract
 
 ```{figure} ../_static/figures/AGT_Schema.png
@@ -82,6 +128,182 @@ Three parts of the contract matter most.
   the number that matters. An error that says "invalid input" teaches nothing; one that says "east-west green
   must be at least 21 s for pedestrians" tells the model what to try next.
 
+## Five SUMO tools built from TraCI
+
+Before agents, you wrote utility functions: helpers you write once so your own scripts stay short. A tool is the
+same kind of helper, but now the model calls it, not you. Here are five SUMO tools, each a plain Python function
+that calls [TraCI](https://sumo.dlr.de/docs/TraCI/index.html). Two read the simulation, two change it, and one moves
+time forward. The one-line docstring under each name is the sentence the model will read.
+
+```python
+import traci
+
+MPH = 0.44704  # 1 mph in m/s; TraCI speeds are in m/s
+
+# Tool 1 (reads): the queue at a lane-area (E2) detector
+def get_queue(detector_id):
+    """Queue length at a lane-area (E2) detector."""
+    meters = traci.lanearea.getJamLengthMeters(detector_id)
+    vehicles = traci.lanearea.getJamLengthVehicle(detector_id)
+    return f"Queue at {detector_id}: {meters:.0f} m, {vehicles} vehicles"
+
+# Tool 2 (reads): speed and stopped vehicles on one lane
+def get_lane_state(lane_id):
+    """Mean speed and number of stopped vehicles on a lane, last step."""
+    mph = traci.lane.getLastStepMeanSpeed(lane_id) / MPH
+    stopped = traci.lane.getLastStepHaltingNumber(lane_id)
+    return f"{lane_id}: mean speed {mph:.0f} mph, {stopped} vehicles stopped"
+
+# Tool 3 (acts): switch a signal to a phase and hold it
+MIN_HOLD, MAX_HOLD = 7, 60  # example limits in seconds; use your own timing plan's
+
+def set_signal_phase(tls_id, phase, seconds):
+    """Switch a signal to a phase number and hold it for some seconds."""
+    if not MIN_HOLD <= seconds <= MAX_HOLD:
+        return f"Rejected: hold time must be {MIN_HOLD}-{MAX_HOLD} s."
+    traci.trafficlight.setPhase(tls_id, phase)
+    traci.trafficlight.setPhaseDuration(tls_id, seconds)
+    return f"Signal {tls_id} is in phase {phase} for {seconds} s"
+
+# Tool 4 (acts): a variable speed limit, for example ahead of a work zone
+def set_speed_limit(lane_id, mph):
+    """Set the speed limit on one lane, in mph."""
+    if not 25 <= mph <= 70:
+        return "Rejected: speed limit must be 25-70 mph."
+    traci.lane.setMaxSpeed(lane_id, mph * MPH)
+    return f"{lane_id} speed limit is now {mph} mph"
+
+# Tool 5: let time pass so a change can show up
+def advance(seconds):
+    """Run the simulation forward by some seconds."""
+    for _ in range(seconds):  # one step = 1 s, SUMO's default step length
+        traci.simulationStep()
+    return f"Simulation time is now {traci.simulation.getTime():.0f} s"
+```
+
+Because the model is now the caller, a tool needs three things you could skip when you were the only caller:
+
+- **A description the model can read:** a clear name, a short docstring, inputs with units, and what the tool cannot
+  do or where its results can mislead.
+- **A check on every input,** because the model may ask for something you never would, such as a 90 s hold.
+- **A short text result, errors included,** because text is all the model can read.
+
+The model never sees the code. The harness turns each function into one line of the menu, built from its name, its
+docstring and its inputs:
+
+| Tool | What the model reads | Inputs | Changes SUMO? |
+|---|---|---|---|
+| `get_queue` | Queue length at a lane-area (E2) detector. | detector_id (text) | No, it reads |
+| `get_lane_state` | Mean speed and number of stopped vehicles on a lane, last step. | lane_id (text) | No, it reads |
+| `set_signal_phase` | Switch a signal to a phase number and hold it for some seconds. | tls_id (text), phase (whole number), seconds (whole number, 7–60) | Yes |
+| `set_speed_limit` | Set the speed limit on one lane, in mph. | lane_id (text), mph (number, 25–70) | Yes |
+| `advance` | Run the simulation forward by some seconds. | seconds (whole number) | Moves time only |
+
+**One order, start to finish.** Say the model writes
+`{"name": "set_signal_phase", "arguments": {"tls_id": "J1", "phase": 2, "seconds": 90}}`. The harness calls
+`set_signal_phase("J1", 2, 90)`. The check fails, SUMO is never touched, and the model reads back
+`Rejected: hold time must be 7-60 s.` It can then try again with a valid hold time. If TraCI itself refuses, the
+harness pastes TraCI's own message back the same way: for a signal with four phases, asking for phase 5 returns
+`The phase index 5 is not in the allowed range [0,3].`
+
+In SUMO, all five tools are safe to try. On a real signal system or a real speed-limit sign, the two tools that
+change things would also wait for an engineer to approve, and every call would be logged.
+
+**Try it.** Take a TraCI function you have already written and turn it into a tool: a clear name, a one-sentence
+docstring, inputs with units, a check on those inputs, and a short text result.
+
+## Tool call vs. TraCI call
+
+At the bottom they are the same: some Python function runs. In everything around the call, they differ.
+
+| | Your Python script calling TraCI | An agent's tool call |
+|---|---|---|
+| **Who picks the call and its inputs** | you, while writing the code | the model, while the task runs, after reading the context |
+| **What the call is** | code that runs at once | text (a tool name and inputs) that does nothing until the harness runs it |
+| **What it knows about the function** | the API documentation, and your own testing | only the tool's name, its description and its list of inputs |
+| **Checks before it runs** | Python checks names and syntax; the rest is up to you | the harness checks the call and can refuse it, ask a person, or run it in a sandbox |
+| **What comes back** | a Python value your code uses | text pasted into the context, which the model must read |
+| **When something fails** | an exception your code catches | an error message the model reads; a clear one lets it try again |
+| **Run it twice** | the same calls every time | possibly different calls each time, so test over repeated runs |
+| **How many functions** | TraCI has hundreds of small ones, called every simulation step | a few larger ones, because every description is re-read at every step and every call is a trip through the model |
+
+**Who names the tools?** You do. There is no standard list of tool names. A tool that counts turning movements could
+be called `count_turns` in your SUMO harness and something else in a VISSIM or Aimsun harness. The model does not need
+to know the name in advance: it reads the menu at every step and copies a name from it. That is why a clear name and a
+clear one-sentence description matter so much. They are all the model has.
+
+## How the model picks a tool, and how the harness runs it
+
+The model picks a tool by reading the menu. But there is no separate "pick" step inside the model. It does what it
+always does: it writes the next words. When the task needs data or an action, the most likely next words are a tool
+call: a name copied from the menu, plus the inputs, in a fixed format the model was trained to write. In the recorded
+runs of {doc}`5.2 <notes2-loop>` (Qwen), a call looks like this:
+
+```text
+<tool_call>{"name": "get_queue", "arguments": {"detector_id": "e2_A1B1"}}</tool_call>
+```
+
+So picking a tool means writing its name. Until the harness acts on it, nothing has happened: the call is still just
+text.
+
+```{figure} ../_static/figures/AGT_Harness_Flow.png
+:alt: A flow of five boxes. The model's reply, plain text; find a call between the tags; check the call, is it a known tool; run the tool, your TraCI code (highlighted); text result into the context, which the model reads at its next step. If no call is found, the loop ends. If the check or the run fails, an error message goes into the context as text: unknown name, bad JSON, wrong inputs, TraCI refused.
+:width: 100%
+
+The harness, not the model, starts the tool. Every outcome, even an error, goes back to the model as text.
+```
+
+The tool starts running in the harness, in ordinary Python you can read. After each reply, the harness searches for
+the call format. If it finds a call, it looks up the name in a dictionary of real functions and calls that function
+with the inputs. This is the `run_tool` step of the loop in {doc}`5.2 <notes2-loop>`, written out for the five tools
+above:
+
+```python
+import json, re
+
+TOOLS = {                       # the menu: the name the model writes -> the real function
+    "get_queue": get_queue,
+    "get_lane_state": get_lane_state,
+    "set_signal_phase": set_signal_phase,
+    "set_speed_limit": set_speed_limit,
+    "advance": advance,
+}
+
+def run_tool_call(reply):
+    """Find a tool call in the model's reply, run it, and return the result as text."""
+    found = re.search(r"<tool_call>(.*?)</tool_call>", reply, re.S)
+    if found is None:
+        return None                                  # no call: the model just answered
+    try:
+        call = json.loads(found.group(1))            # text -> {"name": ..., "arguments": {...}}
+    except json.JSONDecodeError:
+        return "Error: the tool call is not valid JSON."
+    name = call.get("name")
+    if name not in TOOLS:
+        return f"Error: there is no tool named {name}."
+    try:
+        return TOOLS[name](**call.get("arguments", {}))  # this line runs your TraCI code
+    except Exception as e:                           # wrong inputs, or TraCI refused
+        return f"Error: {e}"
+```
+
+We ran this harness on a small synthetic 3×3 SUMO grid with five replies a model could write:
+
+| What the model wrote | What it read back |
+|---|---|
+| No call, just "I think the queue is fine." | Nothing. The loop ends. |
+| `get_queue` with detector_id `e2_A1B1` | `Queue at e2_A1B1: 8 m, 2 vehicles` |
+| `get_queue_length`, a name not on the menu | `Error: there is no tool named get_queue_length.` |
+| `set_signal_phase` without `seconds` | `Error: set_signal_phase() missing 1 required positional argument: 'seconds'` |
+| `set_signal_phase` with phase 5 | `Error: The phase index 5 is not in the allowed range [0,3].` |
+
+The model reads the error at its next step and can fix the call, for example by adding the missing seconds.
+
+**Where the format comes from.** Each model family is trained on its own call format; the `<tool_call>` tags above are
+Qwen's. With hosted models such as Claude or GPT, you send the menu in the API request, and the call comes back in its
+own field, with the name and the inputs already separated. The harness then skips the search, but the dictionary
+lookup and the function call stay the same.
+
 ## What the harness can check, and what it cannot
 
 | Question about a tool call | Who can check it | In our SUMO agent |
@@ -99,6 +321,58 @@ tools in typed descriptions and compared an agent using them with an agent calli
 same task in five regions, the agent with typed tools needed 5.0 tool calls on average instead of 12.6, and 74 s
 instead of 106 s. The authors say why: with raw command lines, "parameter mismatches frequently lead to task
 retries", and some runs stalled until a person stepped in (Ye et al., 2025, Table IV).
+
+## Where your transportation knowledge goes
+
+Your knowledge comes in at every step of designing a tool, not only in the description. Writing a SUMO tool means
+making six decisions. At each one, a traffic engineer and a programmer would write different code:
+
+| Design step | The question | Where your traffic and SUMO knowledge goes |
+|---|---|---|
+| **1. Which tools exist** | Which actions and measures belong on the menu? | Offer the actions an engineer takes, at the level an engineer thinks: `set_timing_plan(cycle, splits)`, not raw signal-state strings like `"GGrrGGrr"`. Leave off anything no engineer would let the agent do alone. |
+| **2. Inputs** | What does the model fill in, and in what units? | Engineering terms and units: "NB left", green in seconds, speed in mph. The tool translates them into SUMO's lane IDs and m/s inside, where the model cannot get them wrong. |
+| **3. Checks** | Which inputs must be refused? | The rules of practice: pedestrian clearance from the crossing distance at 3.5 ft/s (MUTCD), yellow and all-red from the ITE formula, a maximum cycle length, and speed limits only in steps an agency would post. |
+| **4. Results** | What should the tool measure and report? | Measures that answer the engineering question: delay per vehicle, queue against storage length, spillback. Drop a warm-up period, run several random seeds, and report the spread, not one number. |
+| **5. Warnings** | When can the numbers mislead? | The simulator's traps, reported in the result: teleports, vehicles still waiting to enter, and trips that never finished. |
+| **6. Tests** | How do you know the tool is right? | Cases you can solve by hand: one intersection at low demand against Webster's delay, a queue against the input–output diagram, and more green giving less delay to that movement. |
+
+**Put your experience into the description.** The docstring is the only manual the model gets. The model reads it to
+decide whether to use the tool and how much to trust its results, so it should carry the traps that take years with
+SUMO to learn. One example: under heavy congestion, vehicles can block a junction and lock it up. SUMO then teleports
+any vehicle stuck for 300 s (its default) out of the jam, so a gridlocked run can report a delay that looks fine. A
+better `advance` says so in its description, and its code reports the count:
+
+```python
+def advance(seconds):
+    """Run the simulation forward by some seconds.
+    Under heavy congestion, vehicles can block a junction and lock it up.
+    SUMO then teleports any vehicle stuck for 300 s (its default), which
+    makes delay look better than it is. Check the teleport count in the
+    result before trusting a delay number."""
+    teleports = 0
+    for _ in range(seconds):  # one step = 1 s, SUMO's default step length
+        traci.simulationStep()
+        teleports += traci.simulation.getStartingTeleportNumber()
+    t = traci.simulation.getTime()
+    return f"Simulation time is now {t:.0f} s; {teleports} vehicles teleported"
+```
+
+**Row 5 is the one most often skipped.** We overloaded the small synthetic 3×3 grid on purpose, with 12,000 trips in
+30 minutes. The new `advance` reported 57 teleports; the first version gave no sign of them. Only 664 vehicles entered
+the network, 48 finished their trips, and 11,330 were still waiting to get in. SUMO's trip records list only finished
+trips, so an average delay computed from them describes the 48 lucky vehicles. A tool written by someone who knows
+this reports all of these counts next to the delay. A tool written without that knowledge returns a clean, wrong
+number, and the model has no way to tell.
+
+**A description is advice; a check is a rule.** The model can ignore a description. In the recorded runs of
+{doc}`5.2 <notes2-loop>`, the lookup tool showed the 21 s pedestrian minimum and the model still submitted a plan that
+broke it; when the harness rejected such plans, the model kept the rule. So when you can, put each trap in two places:
+in the description, so the model chooses well, and in the code, as a check or an extra number in the result.
+
+**For your own tools.** Before you write a tool, write down how a senior traffic engineer would check its answer. Each
+check that is easy to compute goes into the code, as a refusal or an extra number in the result. Each one that is not
+goes into the description. Then test whether your knowledge helped: run the same agent once with a plain tool and once
+with yours.
 
 ## Milestone paper: Toolformer
 
@@ -227,7 +501,10 @@ The Model Context Protocol: a host holds one client per server, and each server 
 
 Every agent so far had its tools wired in by hand. If three research groups each build a SUMO tool for their own
 agent, that is three wrappers for one simulator; multiply by every app and every tool. The **Model Context
-Protocol (MCP)**, released by Anthropic as an open standard in November 2024, is the standard plug.
+Protocol (MCP)**, released by Anthropic as an open standard in November 2024, is the standard plug. It is
+plumbing, not new AI: it changes nothing about the model or about how you design a tool. The model reads the same menu
+and writes the same tool call whether the tool sits in your own harness, as above, or behind MCP. What it changes is
+where the tool runs, and that is the point that matters for an agency (below).
 
 - **Host:** the app a person uses: a chat app, a coding tool, or your own harness. It holds the conversation and
   asks the person before sensitive actions.
@@ -367,6 +644,10 @@ tokens or time?
    conclude if the switched-off score had been 38?
 3. Your detector server runs on the district's network. List two things the server should do itself rather than
    leave to the language model.
+4. A classmate's `run_simulation` tool returns only an average delay. Under what traffic conditions would you distrust
+   that number, and what would you add to the result?
+5. Your agent writes a call to `get_queue_length`, a tool that does not exist. Who catches the mistake, what does the
+   model read next, and what might you change in the menu?
 
 ## Sources
 
@@ -383,6 +664,10 @@ tokens or time?
 - Da, L., et al. (2024). Open-TI: Open traffic intelligence with augmented language model. *International Journal
   of Machine Learning and Cybernetics* 15, 4761–4786. [arXiv:2401.00211](https://arxiv.org/abs/2401.00211).
 - Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures on tool use and MCP.
+- Eclipse SUMO documentation: [TraCI](https://sumo.dlr.de/docs/TraCI/index.html) (lane area detector, lane and
+  traffic light value retrieval and state changes) and [TripInfo output](https://sumo.dlr.de/docs/Simulation/Output/TripInfo.html).
+  The five tools, the harness and every SUMO output quoted in this section come from our own runs on a small synthetic
+  3×3 grid (SUMO with the `traci` Python package, November 2026).
 
 ---
 

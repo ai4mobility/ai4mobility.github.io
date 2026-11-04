@@ -29,7 +29,7 @@
 
 - From answering to acting: three kinds of task
 - Which tasks an agent may do alone, must ask about first, or must never do
-- What counts as an agent
+- What counts as an agent, and six words for one step of the loop
 - A tool call is just more text: the real input and output of one step
 - The loop you already know, and the whole loop in a few lines of code
 - Recorded runs on a SUMO intersection, and what the tool shows changing the plan
@@ -96,6 +96,32 @@ so does a TMC operator.
 The new thing is not the definition. It is that a **language model** now fills the middle: it reads the
 observations as text and writes the actions as text.
 
+```{figure} ../_static/figures/AGT_Loop_Words.png
+:alt: Inside a dashed box labelled the harness, all the code around the model. The context (instructions, tool descriptions, the task, the history so far, notes loaded from memory) is read by the language model, which writes a tool call (text naming a tool and its inputs). The harness runs the tool (a program such as SUMO, a crash database or FL511), and the observation (the result) is pasted into the context. Memory, notes kept between tasks outside the model, is loaded into and saved from the context.
+:width: 100%
+
+One step of the agent loop. The model reads the context and writes text; the harness does everything else. Memory is the one part that lasts from one task to the next.
+```
+
+Read the figure clockwise from the context. The model reads the **context** and writes a **tool call**. The
+harness runs the **tool**, and the **observation** goes back into the context for the next step. The loop ends when
+the model answers without a call, or when the harness decides it has run long enough.
+
+| Word | Meaning |
+|---|---|
+| **Context** | Everything the model reads on one call: instructions, tool descriptions, the task, the history so far |
+| **Tool call** | The request the model writes, as text: which tool, with which inputs |
+| **Tool** | A program the harness can run, described to the model by a name, a sentence and typed inputs |
+| **Observation** | What comes back from the tool, pasted into the text the model reads next |
+| **Memory** | Notes kept outside the model between tasks; the harness loads the relevant ones back into the context |
+| **Harness** | All the code around the model: instructions, tools, memory, the loop, the checks, the log |
+
+**For an agent, an action is more than the next token.** A language model only predicts the next token, as in
+{doc}`2.4 <../module2/notes4-gpt>`. For an agent, the tokens it writes can be a tool call. The harness then runs the
+tool and waits for it to finish, which can take seconds or minutes: in the recorded runs below, one full step, model
+and simulation together, took one to four minutes on a laptop CPU. And the action can change the world outside the
+model: a simulation runs, a record is written, a message appears on a sign.
+
 ## A tool call is just more text
 
 ```{figure} ../_static/figures/AGL_Tokens.png
@@ -156,6 +182,9 @@ Count the lines that involve the model: one. Everything else is ordinary code yo
 reads, which tools exist and what they check, the step limit, and the condition that ends the task. The last line
 matters most for an agency. Submitting a plan ends the loop and hands the plan to a person; the agent cannot push a
 timing plan to a controller, because no tool does that. **A permission you never give cannot be misused.**
+
+`find_tool_call` and `run_tool` are ordinary Python too. {doc}`5.3 <notes3-tools>` writes them out for five SUMO tools
+built from TraCI, and shows what the model reads back when a call goes wrong.
 
 ## Recorded runs on a SUMO intersection
 
