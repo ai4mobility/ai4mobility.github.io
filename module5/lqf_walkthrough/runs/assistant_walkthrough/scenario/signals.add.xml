@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<additional><tlLogic id="J" type="static" programID="lqf" offset="0"><phase duration="10000" state="GrGr" /><phase duration="3" state="yryr" /><phase duration="2" state="rrrr" /><phase duration="10000" state="rGrG" /><phase duration="3" state="ryry" /><phase duration="2" state="rrrr" /></tlLogic></additional>

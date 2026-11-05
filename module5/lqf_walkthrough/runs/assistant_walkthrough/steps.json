@@ -1,0 +1,842 @@
+[
+  {
+    "from_s": 0.0,
+    "to_s": 1.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 1.0,
+    "to_s": 2.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 2.0,
+    "to_s": 3.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 3.0,
+    "to_s": 4.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 4.0,
+    "to_s": 5.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 5.0,
+    "to_s": 6.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 6.0,
+    "to_s": 7.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 7.0,
+    "to_s": 8.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 8.0,
+    "to_s": 9.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 9.0,
+    "to_s": 10.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 10.0,
+    "to_s": 11.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 11.0,
+    "to_s": 12.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 12.0,
+    "to_s": 13.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 13.0,
+    "to_s": 14.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 14.0,
+    "to_s": 15.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 15.0,
+    "to_s": 16.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 16.0,
+    "to_s": 17.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 17.0,
+    "to_s": 18.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 18.0,
+    "to_s": 19.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 19.0,
+    "to_s": 20.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 20.0,
+    "to_s": 21.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 0
+  },
+  {
+    "from_s": 21.0,
+    "to_s": 22.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 1
+  },
+  {
+    "from_s": 22.0,
+    "to_s": 23.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 23.0,
+    "to_s": 24.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 24.0,
+    "to_s": 25.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 25.0,
+    "to_s": 26.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 26.0,
+    "to_s": 27.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 27.0,
+    "to_s": 28.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 3
+  },
+  {
+    "from_s": 28.0,
+    "to_s": 29.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 3
+  },
+  {
+    "from_s": 29.0,
+    "to_s": 30.0,
+    "stage": "warmup",
+    "phase": 0,
+    "total_halting_vehicles": 4
+  },
+  {
+    "from_s": 30.0,
+    "to_s": 31.0,
+    "stage": "yellow",
+    "phase": 1,
+    "total_halting_vehicles": 5
+  },
+  {
+    "from_s": 31.0,
+    "to_s": 32.0,
+    "stage": "yellow",
+    "phase": 1,
+    "total_halting_vehicles": 5
+  },
+  {
+    "from_s": 32.0,
+    "to_s": 33.0,
+    "stage": "yellow",
+    "phase": 1,
+    "total_halting_vehicles": 5
+  },
+  {
+    "from_s": 33.0,
+    "to_s": 34.0,
+    "stage": "all_red",
+    "phase": 2,
+    "total_halting_vehicles": 6
+  },
+  {
+    "from_s": 34.0,
+    "to_s": 35.0,
+    "stage": "all_red",
+    "phase": 2,
+    "total_halting_vehicles": 7
+  },
+  {
+    "from_s": 35.0,
+    "to_s": 36.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 6
+  },
+  {
+    "from_s": 36.0,
+    "to_s": 37.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 7
+  },
+  {
+    "from_s": 37.0,
+    "to_s": 38.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 8
+  },
+  {
+    "from_s": 38.0,
+    "to_s": 39.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 9
+  },
+  {
+    "from_s": 39.0,
+    "to_s": 40.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 10
+  },
+  {
+    "from_s": 40.0,
+    "to_s": 41.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 10
+  },
+  {
+    "from_s": 41.0,
+    "to_s": 42.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 10
+  },
+  {
+    "from_s": 42.0,
+    "to_s": 43.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 9
+  },
+  {
+    "from_s": 43.0,
+    "to_s": 44.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 9
+  },
+  {
+    "from_s": 44.0,
+    "to_s": 45.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 10
+  },
+  {
+    "from_s": 45.0,
+    "to_s": 46.0,
+    "stage": "yellow",
+    "phase": 4,
+    "total_halting_vehicles": 11
+  },
+  {
+    "from_s": 46.0,
+    "to_s": 47.0,
+    "stage": "yellow",
+    "phase": 4,
+    "total_halting_vehicles": 12
+  },
+  {
+    "from_s": 47.0,
+    "to_s": 48.0,
+    "stage": "yellow",
+    "phase": 4,
+    "total_halting_vehicles": 13
+  },
+  {
+    "from_s": 48.0,
+    "to_s": 49.0,
+    "stage": "all_red",
+    "phase": 5,
+    "total_halting_vehicles": 14
+  },
+  {
+    "from_s": 49.0,
+    "to_s": 50.0,
+    "stage": "all_red",
+    "phase": 5,
+    "total_halting_vehicles": 15
+  },
+  {
+    "from_s": 50.0,
+    "to_s": 51.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 15
+  },
+  {
+    "from_s": 51.0,
+    "to_s": 52.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 15
+  },
+  {
+    "from_s": 52.0,
+    "to_s": 53.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 14
+  },
+  {
+    "from_s": 53.0,
+    "to_s": 54.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 13
+  },
+  {
+    "from_s": 54.0,
+    "to_s": 55.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 13
+  },
+  {
+    "from_s": 55.0,
+    "to_s": 56.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 13
+  },
+  {
+    "from_s": 56.0,
+    "to_s": 57.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 15
+  },
+  {
+    "from_s": 57.0,
+    "to_s": 58.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 15
+  },
+  {
+    "from_s": 58.0,
+    "to_s": 59.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 15
+  },
+  {
+    "from_s": 59.0,
+    "to_s": 60.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 14
+  },
+  {
+    "from_s": 60.0,
+    "to_s": 61.0,
+    "stage": "yellow",
+    "phase": 1,
+    "total_halting_vehicles": 14
+  },
+  {
+    "from_s": 61.0,
+    "to_s": 62.0,
+    "stage": "yellow",
+    "phase": 1,
+    "total_halting_vehicles": 14
+  },
+  {
+    "from_s": 62.0,
+    "to_s": 63.0,
+    "stage": "yellow",
+    "phase": 1,
+    "total_halting_vehicles": 14
+  },
+  {
+    "from_s": 63.0,
+    "to_s": 64.0,
+    "stage": "all_red",
+    "phase": 2,
+    "total_halting_vehicles": 16
+  },
+  {
+    "from_s": 64.0,
+    "to_s": 65.0,
+    "stage": "all_red",
+    "phase": 2,
+    "total_halting_vehicles": 17
+  },
+  {
+    "from_s": 65.0,
+    "to_s": 66.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 17
+  },
+  {
+    "from_s": 66.0,
+    "to_s": 67.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 18
+  },
+  {
+    "from_s": 67.0,
+    "to_s": 68.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 19
+  },
+  {
+    "from_s": 68.0,
+    "to_s": 69.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 19
+  },
+  {
+    "from_s": 69.0,
+    "to_s": 70.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 20
+  },
+  {
+    "from_s": 70.0,
+    "to_s": 71.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 18
+  },
+  {
+    "from_s": 71.0,
+    "to_s": 72.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 16
+  },
+  {
+    "from_s": 72.0,
+    "to_s": 73.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 15
+  },
+  {
+    "from_s": 73.0,
+    "to_s": 74.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 14
+  },
+  {
+    "from_s": 74.0,
+    "to_s": 75.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 14
+  },
+  {
+    "from_s": 75.0,
+    "to_s": 76.0,
+    "stage": "yellow",
+    "phase": 4,
+    "total_halting_vehicles": 14
+  },
+  {
+    "from_s": 76.0,
+    "to_s": 77.0,
+    "stage": "yellow",
+    "phase": 4,
+    "total_halting_vehicles": 15
+  },
+  {
+    "from_s": 77.0,
+    "to_s": 78.0,
+    "stage": "yellow",
+    "phase": 4,
+    "total_halting_vehicles": 14
+  },
+  {
+    "from_s": 78.0,
+    "to_s": 79.0,
+    "stage": "all_red",
+    "phase": 5,
+    "total_halting_vehicles": 16
+  },
+  {
+    "from_s": 79.0,
+    "to_s": 80.0,
+    "stage": "all_red",
+    "phase": 5,
+    "total_halting_vehicles": 17
+  },
+  {
+    "from_s": 80.0,
+    "to_s": 81.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 16
+  },
+  {
+    "from_s": 81.0,
+    "to_s": 82.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 15
+  },
+  {
+    "from_s": 82.0,
+    "to_s": 83.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 14
+  },
+  {
+    "from_s": 83.0,
+    "to_s": 84.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 13
+  },
+  {
+    "from_s": 84.0,
+    "to_s": 85.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 12
+  },
+  {
+    "from_s": 85.0,
+    "to_s": 86.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 10
+  },
+  {
+    "from_s": 86.0,
+    "to_s": 87.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 9
+  },
+  {
+    "from_s": 87.0,
+    "to_s": 88.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 8
+  },
+  {
+    "from_s": 88.0,
+    "to_s": 89.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 8
+  },
+  {
+    "from_s": 89.0,
+    "to_s": 90.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 8
+  },
+  {
+    "from_s": 90.0,
+    "to_s": 91.0,
+    "stage": "yellow",
+    "phase": 1,
+    "total_halting_vehicles": 8
+  },
+  {
+    "from_s": 91.0,
+    "to_s": 92.0,
+    "stage": "yellow",
+    "phase": 1,
+    "total_halting_vehicles": 8
+  },
+  {
+    "from_s": 92.0,
+    "to_s": 93.0,
+    "stage": "yellow",
+    "phase": 1,
+    "total_halting_vehicles": 8
+  },
+  {
+    "from_s": 93.0,
+    "to_s": 94.0,
+    "stage": "all_red",
+    "phase": 2,
+    "total_halting_vehicles": 9
+  },
+  {
+    "from_s": 94.0,
+    "to_s": 95.0,
+    "stage": "all_red",
+    "phase": 2,
+    "total_halting_vehicles": 10
+  },
+  {
+    "from_s": 95.0,
+    "to_s": 96.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 8
+  },
+  {
+    "from_s": 96.0,
+    "to_s": 97.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 7
+  },
+  {
+    "from_s": 97.0,
+    "to_s": 98.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 6
+  },
+  {
+    "from_s": 98.0,
+    "to_s": 99.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 5
+  },
+  {
+    "from_s": 99.0,
+    "to_s": 100.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 4
+  },
+  {
+    "from_s": 100.0,
+    "to_s": 101.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 3
+  },
+  {
+    "from_s": 101.0,
+    "to_s": 102.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 102.0,
+    "to_s": 103.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 103.0,
+    "to_s": 104.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 104.0,
+    "to_s": 105.0,
+    "stage": "green",
+    "phase": 3,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 105.0,
+    "to_s": 106.0,
+    "stage": "yellow",
+    "phase": 4,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 106.0,
+    "to_s": 107.0,
+    "stage": "yellow",
+    "phase": 4,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 107.0,
+    "to_s": 108.0,
+    "stage": "yellow",
+    "phase": 4,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 108.0,
+    "to_s": 109.0,
+    "stage": "all_red",
+    "phase": 5,
+    "total_halting_vehicles": 3
+  },
+  {
+    "from_s": 109.0,
+    "to_s": 110.0,
+    "stage": "all_red",
+    "phase": 5,
+    "total_halting_vehicles": 3
+  },
+  {
+    "from_s": 110.0,
+    "to_s": 111.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 2
+  },
+  {
+    "from_s": 111.0,
+    "to_s": 112.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 1
+  },
+  {
+    "from_s": 112.0,
+    "to_s": 113.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 1
+  },
+  {
+    "from_s": 113.0,
+    "to_s": 114.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 1
+  },
+  {
+    "from_s": 114.0,
+    "to_s": 115.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 1
+  },
+  {
+    "from_s": 115.0,
+    "to_s": 116.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 1
+  },
+  {
+    "from_s": 116.0,
+    "to_s": 117.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 1
+  },
+  {
+    "from_s": 117.0,
+    "to_s": 118.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 1
+  },
+  {
+    "from_s": 118.0,
+    "to_s": 119.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 1
+  },
+  {
+    "from_s": 119.0,
+    "to_s": 120.0,
+    "stage": "green",
+    "phase": 0,
+    "total_halting_vehicles": 1
+  }
+]

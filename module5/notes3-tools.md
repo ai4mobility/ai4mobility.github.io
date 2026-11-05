@@ -33,6 +33,7 @@
 - Five SUMO tools built from TraCI: a utility function with a new caller
 - Tool call vs. TraCI call, and who names the tools
 - How the model picks a tool, and how the harness runs it
+- The whole loop in one function: an annotated harness for a longest-queue-first signal, through a hosted model's API
 - What a harness can check about a tool call, and what it cannot
 - Where your transportation knowledge goes in a tool
 - A full SUMO toolkit for agents on a real network, and how to write your own tool (interactive companion)
@@ -304,6 +305,58 @@ The model reads the error at its next step and can fix the call, for example by 
 Qwen's. With hosted models such as Claude or GPT, you send the menu in the API request, and the call comes back in its
 own field, with the name and the inputs already separated. The harness then skips the search, but the dictionary
 lookup and the function call stay the same.
+
+(harness-loop-explained)=
+## The whole loop in one function
+
+With a hosted model, the search for tags disappears, and what is left fits in one short function. The figure and the
+code below show it for a real SUMO task: a longest-queue-first (LQF) signal at one synthetic four-arm intersection,
+run through OpenAI's Responses API. The model reads stopped-vehicle counts and asks for green; the harness does
+everything else.
+
+```{figure} ../_static/figures/AI4Mobility_Harness_Loop.png
+:alt: The harness closes the tool-use loop. Left, the AI model reads the task and tool results and chooses a tool or a final answer. Its tool request (name, arguments, call_id) goes to the harness, your application code, which has two roles. Role 1, execute the request: validate the tool name and arguments, look up the handler, call the function with result = handlers[name](**arguments). The function call runs the tool function on the right, for example a helper that calls SUMO, which returns a value. Role 2, return the result: serialize the value with json.dumps, build a tool result with the same call_id, append it to the conversation history, and send the next model request. Repeat while the model needs tools; exit when it produces a final answer.
+:width: 100%
+
+Two roles, one harness: it executes the model's request, then delivers the result to the model's next turn.
+```
+
+The letters in the code's comments follow the loop around the figure:
+
+| Comment | In the figure | What the code does |
+|---|---|---|
+| **A** | Next model request | Sends the task, the tool menu and the history so far to the model: one API request |
+| **B** | Tool request | Keeps every item of the reply. A `function_call` item carries a name, arguments and a `call_id`; a reply with no call is the final answer, and the loop exits |
+| **C** | 1 Execute the request | Checks the name against the menu, decodes the arguments from JSON text, and validates them against the tool's schema |
+| **D** | Function call, tool function, return value | `handlers[name](**arguments)` runs an ordinary Python helper, which calls TraCI |
+| **E** | 2 Return the result | `json.dumps` turns the return value into text, wrapped in a result item with the same `call_id` |
+| **F** | Append it to the history | Updates the local history only; nothing goes to the model yet |
+| **G** | Repeat | Back to A: the next request carries the updated history |
+
+```{literalinclude} lqf_walkthrough/harness_loop_explained.py
+:language: python
+```
+
+Three details worth noticing. The `try` block covers every way a call can fail, from an unknown name to SUMO refusing,
+and the failure goes back to the model as a result rather than stopping the run. The `call_id` is how the model
+matches each result to its request. And the format is OpenAI's, a third one next to Qwen's `<tool_call>` tags and
+Claude's `tool_use` blocks; the dictionary lookup and the function call are the same in all three.
+
+**Run it yourself.** The file reuses the task text and the four tool definitions from `harness.py`, and the SUMO
+helpers from `sumo_tools.py`; all of them are in the
+<a href="https://github.com/ai4mobility/ai4mobility.github.io/tree/main/module5/lqf_walkthrough" target="_blank" rel="noopener">lqf_walkthrough folder</a>,
+with the scenario builder and the recorded runs. Install `requirements.txt` (it brings its own SUMO). Then
+`python harness.py --mode reference --output runs/my_reference` plays the LQF rule in plain Python, with no model
+and no API key. `harness_loop_explained.py` calls a real model: it needs `OPENAI_API_KEY` and `OPENAI_MODEL` set,
+and uses API credits.
+
+**What we checked** (November 4, 2026). The reference run reproduced the recorded result: six decisions, all
+following LQF; by 120 s, 50 of the 59 vehicles had arrived and 9 remained; on average 9.6 vehicles were stopped
+during the 90 s of control; no collisions or teleports. Then we drove `harness_loop_explained.py` through the OpenAI
+Python SDK against a local stand-in that plays the LQF rule in Python (not a model) and sends one bad request on
+purpose, the group `"WE"`. The schema check returned a `ValidationError` as that call's result, the loop went on, all
+ten tool calls got their results under the matching `call_id`, and the run ended with the same totals. A run with a
+real model was not part of these checks.
 
 ## What the harness can check, and what it cannot
 
@@ -689,6 +742,8 @@ tokens or time?
   *Transport Policy* 150, 95–105. [arXiv:2309.06719](https://arxiv.org/abs/2309.06719).
 - Da, L., et al. (2024). Open-TI: Open traffic intelligence with augmented language model. *International Journal
   of Machine Learning and Cybernetics* 15, 4761–4786. [arXiv:2401.00211](https://arxiv.org/abs/2401.00211).
+- OpenAI, [Function calling](https://developers.openai.com/api/docs/guides/function-calling) (Responses API), checked
+  November 4, 2026. The LQF walkthrough uses SUMO 1.28.0, `traci`, `jsonschema` and the `openai` Python SDK 2.33.0.
 - Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures on tool use and MCP.
 - Eclipse SUMO documentation: [TraCI](https://sumo.dlr.de/docs/TraCI/index.html) (lane area detector, lane and
   traffic light value retrieval and state changes) and [TripInfo output](https://sumo.dlr.de/docs/Simulation/Output/TripInfo.html).

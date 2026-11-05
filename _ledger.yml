@@ -3640,3 +3640,19 @@ items:
     notes: Six steps of one tool call with real text from the walkthrough runs (Qwen chat template and Claude
       API formats side by side), the MCP trace, what went wrong in runs A-G and the fix after each, writing
       the result, check yourself. Not on the site; its runs are in the repo walkthrough/.
+
+  - id: m5-harness-loop-explained
+    file: M5-8_AI_Agents_and_RL/lqf_walkthrough/
+    kind: case
+    module: 5
+    session: '2026-11-05'
+    status: drafted
+    dest: site/module5/notes3-tools.md
+    notes: Hao's annotated harness loop, harness_loop_explained.py (one function, comments A-G match the loop
+      figure), for a longest-queue-first signal at a synthetic four-arm intersection through OpenAI's Responses
+      API. Mounted Nov 4 as the 5.3 section "The whole loop in one function" (anchor harness-loop-explained),
+      before "What the harness can check"; figure site/_static/figures/AI4Mobility_Harness_Loop.png (source
+      Shared/Figures/harness_loop/); code shown with literalinclude from site/module5/lqf_walkthrough/, a copy
+      of the folder with the recorded runs (Hao's personal comments removed from harness.py). Checked Nov 4
+      reference mode and the explained file against a local stand-in through the OpenAI SDK; not run with a
+      real model.

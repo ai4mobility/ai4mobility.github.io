@@ -1,0 +1,4 @@
+eclipse-sumo==1.28.0
+traci==1.28.0
+jsonschema==4.26.0
+openai==2.33.0
