@@ -378,6 +378,10 @@ Three results to look for:
   the whole SOP needs many pieces spread over many sections, and the top three pieces hold almost none of them
   (tab 7). Tab 7 also covers what to expect when you give a document to a chat assistant, with an exercise that
   compares Claude's answers given no document, three pieces, and the whole SOP.
+- **An agent reads in steps that depend on each other.** Tab 10 lets you play the agent on the SOP with
+  `list_sections`, `search` and `open_section`, compares one search, a fixed workflow, the whole SOP and a scripted
+  harness on the same question, walks one MUTCD lane-closure question through Part 6, and shows where transportation
+  knowledge goes in the harness.
 
 Meaning search on a question you type yourself loads a 45 MB model into your browser from the internet; everything
 else works offline.

@@ -3664,13 +3664,15 @@ items:
     session: '2026-11-17'
     status: drafted
     dest: site/module5/notes4-context.md
-    notes: 'RAG on the signal SOP: how an agent looks things up. Nine tabs: the picture; split (window/overlap
+    notes: 'RAG on the signal SOP: how an agent looks things up. Ten tabs: the picture; split (window/overlap
       sliders, rules cut); embed (PCA map, cosine, worked example); search (keyword BM25 / meaning MiniLM
       / both RRF, acronym and field-glossary toggles, rewrite prompt); answer and check (prompt builder,
       citation checker); where it breaks (six cases); beyond lookup (what RAG cannot do: six question kinds,
       evidence coverage, chat-assistant expectations, Claude exercise); measured (hit table, glossary test
-      on 20 held-out questions, cost calculator); fit card. FDOT D7 SOP v1.5 pp. 5-11, 57 questions. Built
-      by M5-8_AI_Agents_and_RL/rag_companion/ (build_rag_data.py, assemble.py; test_companion.py checks
+      on 20 held-out questions, cost calculator); fit card; to an agent (added Nov 14: the reading ladder,
+      be the agent with list_sections / search / open_section on the SOP, scripted 72-hour harness trace,
+      MUTCD Part 6 lane-closure walk-through, harness design table). FDOT D7 SOP v1.5 pp. 5-11, 57 questions. Built
+      by M5-8_AI_Agents_and_RL/rag_companion/ (build_rag_data.py, build_agent_data.py, assemble.py; test_companion.py checks
       the page against Python; audit_companion.py checks the prose and the protocol hashes). Optional live
       mode loads Transformers.js 3.8.1 + fp16 Xenova/all-MiniLM-L6-v2 (45 MB). Mounted Nov 14 as the 5.4
       section "RAG on the signal SOP: build it, test it, and see what it cannot do" (anchor rag-sop-companion),
