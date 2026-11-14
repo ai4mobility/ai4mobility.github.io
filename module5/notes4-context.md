@@ -35,6 +35,7 @@
 - Keeping the loop light: why a longer context lowers accuracy, and three questions about what an agent reads
 - Milestone paper: **retrieval-augmented generation (RAG)**
 - RAG for a safety analyst, and where retrieval breaks
+- Hands-on: RAG on the District 7 signal SOP, step by step, and what RAG cannot do (interactive companion)
 
 ## What the model reads on every call
 
@@ -353,8 +354,42 @@ fix it. That is evaluation, and it is {doc}`Module 6 <../module6/index>`.
 | **Why it works** | The model answers from what is in front of it; an index can be updated, cited and checked, and weights cannot. |
 | **Fits these tasks** | Manuals, policies, past studies, data dictionaries, long histories of tool results. *Leverage: retrieval.* |
 | **Needs this data** | Clean documents split at headings, with titles and dates, and test questions with known answers. |
-| **Breaks when** | The index is stale, pieces are cut badly, the answer is buried in a long context, or a summary drops a rule. |
+| **Breaks when** | The index is stale, pieces are cut badly, the answer is buried in a long context, a summary drops a rule, or the question is not a lookup at all (a plan, a complete list, something missing). |
 | **Keep the classical method when** | The answer is a lookup in a table or a database query; then call a tool, not a retriever. |
+
+(rag-sop-companion)=
+## RAG on the signal SOP: build it, test it, and see what it cannot do
+
+The companion below builds RAG one step at a time on a document District 7 uses: the FDOT D7 Traffic Signals SOP for
+hurricanes (v1.5, June 2025), pages 5–11. You split the SOP into pieces and watch which rules get cut in half, turn
+each piece into 384 numbers with a small sentence model, search the pieces by keyword, by meaning or both, build the
+prompt and paste it into Claude, and let a checker test the citations in the answer. Every number about the SOP is
+computed from its text.
+
+Three results to look for:
+
+- **Keyword search is hard to beat when the question uses the SOP's own words.** On 12 such questions, the classical
+  method (BM25) found the rule as often as the embedding model, or more often. Asked in field words ("backup power
+  units" for generators), every method drops, and a field-to-SOP glossary helps less on new questions than on the
+  questions it was written from (tab 8).
+- **Search always returns something.** No similarity cutoff separates the questions the SOP answers from the ones it
+  does not (tab 6).
+- **RAG is for lookups.** A plan, a sequence of steps, a complete list, something that is missing, or a judgment about
+  the whole SOP needs many pieces spread over many sections, and the top three pieces hold almost none of them
+  (tab 7). Tab 7 also covers what to expect when you give a document to a chat assistant, with an exercise that
+  compares Claude's answers given no document, three pieces, and the whole SOP.
+
+Meaning search on a question you type yourself loads a 45 MB model into your browser from the internet; everything
+else works offline.
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Interactive companion &mdash; RAG on the signal SOP</span>
+    <a href="../_static/companions/RAG_On_The_Signal_SOP_Companion.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/RAG_On_The_Signal_SOP_Companion.html"
+          title="RAG on the signal SOP: how an agent looks things up" loading="lazy"></iframe>
+</div>
 
 ## Check yourself
 
@@ -367,6 +402,10 @@ fix it. That is evaluation, and it is {doc}`Module 6 <../module6/index>`.
 4. An agent helps a TMC operator review last night's incidents, and each incident record arrives as a 40-page PDF
    export from the CAD system. Which of the three questions in {ref}`keeping the loop light <keeping-the-loop-light>`
    does this setup fail, and what would you change first?
+5. A district engineer gives a chat assistant the 7-page signal SOP and asks for a plan for the 72 hours before
+   landfall. Later the district puts all its SOPs, manuals and after-action reports into one project and asks the same
+   question. Why can the second answer be worse even though the assistant has more documents, and what would you ask
+   for instead?
 
 ## Sources
 
@@ -388,6 +427,14 @@ fix it. That is evaluation, and it is {doc}`Module 6 <../module6/index>`.
 - Anthropic (2025). [Effective context engineering for AI
   agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents).
 - Qwen Team (2024). Qwen2.5-1.5B-Instruct, the model in the recorded runs and the summary test.
+- Robertson, S. E., Walker, S., Jones, S., Hancock-Beaulieu, M., & Gatford, M. (1995). Okapi at TREC-3. *TREC-3*
+  (BM25, the keyword search in the companion).
+- Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence embeddings using Siamese BERT-networks. *EMNLP*
+  (the family of the companion's all-MiniLM-L6-v2 model).
+- Edge, D., et al. (2024). From local to global: A graph RAG approach to query-focused summarization.
+  [arXiv:2404.16130](https://arxiv.org/abs/2404.16130) (why plain RAG fails on whole-document questions).
+- FDOT District 7 (2025). Traffic Signals Standard Operating Procedures Reference Guide, v1.5, pages 5–11 (the
+  companion's document).
 - Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures on context and
   retrieval.
 

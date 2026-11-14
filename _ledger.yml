@@ -3656,3 +3656,22 @@ items:
       of the folder with the recorded runs (Hao's personal comments removed from harness.py). Checked Nov 4
       reference mode and the explained file against a local stand-in through the OpenAI SDK; not run with a
       real model.
+
+  - id: m5-companion-rag-sop
+    file: M5-8_AI_Agents_and_RL/RAG_On_The_Signal_SOP_Companion.html
+    kind: companion
+    module: 5
+    session: '2026-11-17'
+    status: drafted
+    dest: site/module5/notes4-context.md
+    notes: 'RAG on the signal SOP: how an agent looks things up. Nine tabs: the picture; split (window/overlap
+      sliders, rules cut); embed (PCA map, cosine, worked example); search (keyword BM25 / meaning MiniLM
+      / both RRF, acronym and field-glossary toggles, rewrite prompt); answer and check (prompt builder,
+      citation checker); where it breaks (six cases); beyond lookup (what RAG cannot do: six question kinds,
+      evidence coverage, chat-assistant expectations, Claude exercise); measured (hit table, glossary test
+      on 20 held-out questions, cost calculator); fit card. FDOT D7 SOP v1.5 pp. 5-11, 57 questions. Built
+      by M5-8_AI_Agents_and_RL/rag_companion/ (build_rag_data.py, assemble.py; test_companion.py checks
+      the page against Python; audit_companion.py checks the prose and the protocol hashes). Optional live
+      mode loads Transformers.js 3.8.1 + fp16 Xenova/all-MiniLM-L6-v2 (45 MB). Mounted Nov 14 as the 5.4
+      section "RAG on the signal SOP: build it, test it, and see what it cannot do" (anchor rag-sop-companion),
+      after the fit card.'

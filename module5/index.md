@@ -119,7 +119,7 @@ rebuilds it around transportation research and agency work.
 </tr>
 <tr>
   <td><a href="notes4-context.html"><strong>5.4 Context: what the model reads</strong></a><br><em>How an agent works</em></td>
-  <td>The context measured and its growth; lost in the middle; five ways to keep context useful; summaries that drop a rule; keeping the loop light (why a longer context lowers accuracy, measured on the SUMO agent); <strong>milestone paper: retrieval-augmented generation</strong>; RAG for a safety analyst.</td>
+  <td>The context measured and its growth; lost in the middle; five ways to keep context useful; summaries that drop a rule; keeping the loop light (why a longer context lowers accuracy, measured on the SUMO agent); <strong>milestone paper: retrieval-augmented generation</strong>; RAG for a safety analyst; <strong>hands-on companion: RAG on the D7 signal SOP</strong> (split, embed, search, check the answer, where it breaks, what RAG cannot do).</td>
   <td>&mdash;</td>
 </tr>
 <tr>
