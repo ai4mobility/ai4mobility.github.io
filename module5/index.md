@@ -114,7 +114,7 @@ rebuilds it around transportation research and agency work.
 </tr>
 <tr>
   <td><a href="notes3-tools.html"><strong>5.3 Tools: what an agent can reach</strong></a><br><em>How an agent works</em></td>
-  <td>A menu, not a new script each time (the TMC analogy); tool descriptions as contracts; five SUMO tools built from TraCI; tool call vs. TraCI call; how the harness runs a call; what a harness can check; where your traffic knowledge goes in a tool; <strong>milestone paper: Toolformer</strong>; code as the action; MCP; the published traffic agents and the gap they leave; a detector as a tool; grading tool use.</td>
+  <td>A menu, not a new script each time (the TMC analogy); tool descriptions as contracts; five SUMO tools built from TraCI; tool call vs. TraCI call; how the harness runs a call; <strong>slide show: one real tool call, slowed down</strong>; what a harness can check; where your traffic knowledge goes in a tool; <strong>milestone paper: Toolformer</strong>; code as the action; MCP; the published traffic agents and the gap they leave; a detector as a tool; grading tool use.</td>
   <td>&mdash;</td>
 </tr>
 <tr>

@@ -3677,3 +3677,43 @@ items:
       mode loads Transformers.js 3.8.1 + fp16 Xenova/all-MiniLM-L6-v2 (45 MB). Mounted Nov 14 as the 5.4
       section "RAG on the signal SOP: build it, test it, and see what it cannot do" (anchor rag-sop-companion),
       after the fit card.'
+
+  - id: m5-slideshow-agent-loop
+    file: M5-8_AI_Agents_and_RL/Agent_Loop_Slideshow.html
+    kind: companion
+    module: 5
+    session: '2026-11-17'
+    status: drafted
+    dest: site/module5/notes3-tools.md
+    notes: 'One real tool call, slowed down: an animated slide show (13 slides, 44 builds; Next/Back/Play,
+      arrow keys, full screen) of the busch_lanes question on the WZDx tools. Qwen3-1.7B setups B vs C with
+      the probes (what the model reads, call or answer, which tool and how the description decides it, the
+      call as text, the harness, the result back into the prompt, step 2 belief and stopping, the checked
+      answer, B end to end), then Claude setup C as a time line, the evaluation close and check yourself.
+      Built by agent_tools_demo/build_loop_slideshow.py from runs_qwen/ and runs/. Mounted Nov 15 in 5.3
+      as "One real tool call, slowed down" (anchor one-call-slowed-down), before "The whole loop in one
+      function". Also in AgentLecture1-Agent_Intro_and_Tool_Calling_v4.pptx, slides 37-49 (add_loop_slides.py).'
+
+  - id: m5-companion-agent-tools-test
+    file: M5-8_AI_Agents_and_RL/Agent_Tools_Test_Companion.html
+    kind: companion
+    module: 5
+    session: '2026-11-17'
+    status: drafted
+    dest: site/_static/companions (linked from module5/notes3-tools.md)
+    notes: 'Do the agent tools really work? With a closed model (Claude): 72 runs (6 questions x setups
+      R/A/B/C x 3 repeats) on the WZDx and SUMO tools, every call, result and time, grades against answers
+      written before the runs, the tool tests and server checks. Built by agent_tools_demo/build_companion.py.
+      Copied to the site Nov 15 and linked from the 5.3 slide-show section; not embedded.'
+
+  - id: m5-companion-inside-agent-loop
+    file: M5-8_AI_Agents_and_RL/Inside_The_Agent_Loop_Companion.html
+    kind: companion
+    module: 5
+    session: '2026-11-17'
+    status: drafted
+    dest: site/_static/companions (linked from module5/notes3-tools.md)
+    notes: 'Inside the agent loop, with an open model (Qwen3-1.7B): every step of 9 probed runs plus 1 reasoning
+      run, with P(call), which tool and belief at each step, convergence charts, how the description changes
+      the first choice. Built by agent_tools_demo/build_inside_companion.py. Copied to the site Nov 15 and
+      linked from the 5.3 slide-show section; not embedded.'

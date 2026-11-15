@@ -33,6 +33,7 @@
 - Five SUMO tools built from TraCI: a utility function with a new caller
 - Tool call vs. TraCI call, and who names the tools
 - How the model picks a tool, and how the harness runs it
+- One real tool call, slowed down: an animated slide show from the prompt to the checked answer
 - The whole loop in one function: an annotated harness for a longest-queue-first signal, through a hosted model's API
 - What a harness can check about a tool call, and what it cannot
 - Where your transportation knowledge goes in a tool
@@ -305,6 +306,39 @@ The model reads the error at its next step and can fix the call, for example by 
 Qwen's. With hosted models such as Claude or GPT, you send the menu in the API request, and the call comes back in its
 own field, with the name and the inputs already separated. The harness then skips the search, but the dictionary
 lookup and the function call stay the same.
+
+(one-call-slowed-down)=
+## One real tool call, slowed down
+
+All of this happens in a few seconds. The slide show below slows one real call down, one step per slide. The question
+is one you could ask the work-zone tools of Assignment 5.1: is any work reported on Busch Blvd near USF right now, and
+which lanes are closed? A small open model (Qwen3-1.7B) runs the loop, so each slide can show the probability behind
+its choices. At the end, Claude runs the same loop on the same tools. Every number comes from saved runs.
+
+Three things to look for:
+
+- **The description decides** (slide 4). The same code sits behind the new tool in both setups; only its description
+  differs. With a programmer's one-line description the model is split three ways; with the engineer's description it
+  picks the new tool almost every time.
+- **The result goes back into the prompt** (slide 7). The reply is pasted in as text and stays there. The prompt is
+  the agent's only memory.
+- **Read again, decide again** (slide 8). After one good result, the model's belief moves from a trap to the right
+  answer, and it stops calling tools.
+
+Step through with Next or the arrow keys, or press Play. Two companion pages hold the full runs:
+<a href="../_static/companions/Inside_The_Agent_Loop_Companion.html" target="_blank" rel="noopener">Inside the agent loop</a>
+(every step of every open-model run, with its probabilities) and
+<a href="../_static/companions/Agent_Tools_Test_Companion.html" target="_blank" rel="noopener">Do the agent tools really work?</a>
+(72 graded Claude runs, with and without the new tools).
+
+<div class="companion-embed">
+  <div class="companion-embed-bar">
+    <span>Slide show &mdash; One real tool call, slowed down</span>
+    <a href="../_static/companions/Agent_Loop_Slideshow.html" target="_blank" rel="noopener">Open full screen &#8599;</a>
+  </div>
+  <iframe src="../_static/companions/Agent_Loop_Slideshow.html"
+          title="One real tool call, slowed down" loading="lazy" allowfullscreen style="height:540px"></iframe>
+</div>
 
 (harness-loop-explained)=
 ## The whole loop in one function

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inside the Agent Loop, Step by Step · AI for Mobility</title>
+<style>
+:root{--g:#006747;--gd:#003E2A;--gdd:#00543a;--gm:#2E7D5C;--gold:#B79F4D;--sand:#CFC493;--ink:#1c2422;--muted:#5b6b66;
+--paper:#f6f8f7;--line:#e2e8e5;--warn:#c0392b;--ok:#1e9e57}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#0f1c18;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+#viewport{position:fixed;left:0;right:0;top:0;bottom:56px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#stage{width:1280px;height:720px;position:relative;background:var(--paper);flex:none;border-radius:6px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.slide{position:absolute;inset:0;display:none}
+.slide.active{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.top{position:absolute;left:0;right:0;top:0;height:96px;background:linear-gradient(135deg,var(--g),var(--gdd));color:#fff;padding:18px 48px}
+.kicker{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--sand);font-weight:700}
+.top h2{margin:5px 0 0;font-size:31px;font-weight:780;line-height:1.15}
+.body{position:absolute;left:48px;right:48px;top:116px;bottom:84px}
+.caption{position:absolute;left:0;right:0;bottom:0;height:72px;background:#fff;border-top:1px solid var(--line);padding:0 48px;font-size:16.5px;line-height:1.4;display:flex;align-items:center;color:#2b3633}
+.caption b{color:var(--gd)}
+.num{position:absolute;right:16px;bottom:8px;font-size:11px;color:#9aa6a1}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;background:#eef3f1;padding:1px 5px;border-radius:5px}
+.b{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.b.shown{opacity:1;transform:none}
+.hl{transition:background .6s,box-shadow .6s;border-radius:4px}
+.hl.lit{background:#f6e7a8;box-shadow:0 0 0 2px #f6e7a8}
+/* title slide */
+.slide.title{background:linear-gradient(135deg,var(--g),var(--gd))}
+.slide.title .top{background:none;height:auto;padding-top:46px}
+.slide.title .top h2{font-size:40px;max-width:1000px}
+.slide.title .body{top:190px;bottom:30px}
+.slide.title .caption{display:none}
+.tq{background:#fff;border-radius:16px;padding:22px 28px;max-width:900px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.tq .who{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.tq .ask{font-size:26px;font-weight:650;color:var(--gd);margin-top:6px;line-height:1.3}
+.tloop{display:flex;align-items:center;gap:10px;margin-top:30px}
+.tloop .lp{background:rgba(255,255,255,.12);border:1.5px solid var(--sand);color:#fff;border-radius:12px;padding:12px 14px;font-size:16px;font-weight:600;width:200px;text-align:center}
+.tloop .ar{color:var(--sand);font-size:26px;font-weight:700}
+.tloop .ar.back{font-size:34px;animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tsub{color:#e7efeb;font-size:17px;line-height:1.5;max-width:1000px;margin-top:30px}
+/* prompt stack */
+.ctxcol{position:absolute;left:0;top:0;width:300px;bottom:0}
+.ctxhead{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:6px}
+.ctx{border:2px solid var(--gd);border-radius:12px;padding:6px;background:#fff;display:flex;flex-direction:column;gap:5px}
+.blk{border-radius:7px;padding:6px 10px;font-size:14px;font-weight:650;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.blk .tk{font-weight:500;font-size:12.5px;opacity:.85;white-space:nowrap}
+.ctxcount{margin-top:10px;font-size:15px;color:var(--gd)}
+.ctxcount .count{font-size:26px;font-weight:800;font-family:ui-monospace,Menlo,monospace}
+.rcol{position:absolute;left:340px;right:0;top:0;bottom:0}
+.sysbox,.qbox{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gd);border-radius:0 10px 10px 0;padding:9px 14px;font-size:14.5px;line-height:1.4}
+.qbox{border-left-color:var(--gm);margin-top:10px;font-size:16px}
+.sysbox b,.qbox b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.toolgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.tool{background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px 11px;font-size:12.8px;line-height:1.35;color:#3a4542}
+.tool b{font-family:ui-monospace,Menlo,monospace;color:var(--gd);font-size:13.5px}
+.tool .args{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--muted);margin-left:4px}
+.tool.new{border:2px solid var(--gold);background:#fffdf3}
+/* bars */
+.pbar{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:15px}
+.pbar .plab{flex:0 0 44%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bel .pbar .plab{flex-basis:62%;white-space:normal;font-size:13.5px;line-height:1.3}
+.pbar .ptrack{flex:1;height:16px;background:#e7ecea;border-radius:4px;overflow:hidden}
+.pbar .pfill{display:block;height:100%;width:0;background:#9aa39e;border-radius:4px;transition:width 1s ease}
+.pbar.win .pfill{background:var(--g)}.pbar.new .pfill,.pbar.gold .pfill{background:var(--gold)}.pbar.gray .pfill{background:#9aa39e}
+.pbar .pval{flex:0 0 52px;text-align:right;font-family:ui-monospace,Menlo,monospace;font-weight:700;font-size:14px;color:var(--gd)}
+.nbh{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:4px}
+/* slide 3 */
+.d1{display:flex;align-items:center;gap:18px;margin-top:20px}
+.minictx{width:150px;height:170px;border:2px solid var(--gd);border-radius:12px;background:#fff;display:flex;flex-direction:column;justify-content:center;text-align:center;font-weight:700;color:var(--gd);font-size:17px}
+.minictx span{font-weight:500;font-size:14px;color:var(--muted)}
+.arrow1{font-size:34px;color:var(--gd);font-weight:700}
+.modelbox{width:260px;height:170px;background:var(--g);color:#fff;border-radius:14px;padding:18px;display:flex;flex-direction:column;justify-content:center}
+.modelbox b{font-size:21px}.modelbox span{font-size:15px;color:#dcebe4;margin-top:8px;line-height:1.4}
+.nextbars{flex:1;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.verdict{margin-top:10px;font-size:17px;color:var(--gd)}
+.eqrow{display:flex;gap:22px;align-items:center;margin-top:30px}
+.eq{background:#0f1c18;color:#eafff5;border-radius:10px;padding:14px 22px;font-family:ui-monospace,Menlo,monospace;font-size:21px;white-space:nowrap}
+.eq b{color:var(--sand)}.eq .g{color:#7fd8b0}
+.eqtext{font-size:16px;line-height:1.5;color:#2b3633}
+/* two columns */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.col{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px;min-width:0}
+.colh{font-size:14px;font-weight:800;color:var(--gd);letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+.colh.gold{color:#7a6522}
+.qline{font-size:16px;margin:0 0 12px;color:#2b3633}
+.desc{font-size:14.5px;line-height:1.45;background:var(--paper);border-radius:9px;padding:9px 12px;min-height:60px}
+.desc.small{font-size:12.4px;line-height:1.42}
+.tbars{margin-top:10px}
+.verdicts{display:flex;gap:22px;margin-top:12px}
+.verdicts span{flex:1;font-size:16px;font-weight:650;color:var(--gd);text-align:center}
+/* slide 5 */
+.codewrap{position:absolute;left:0;top:10px;width:640px}
+pre.code{background:#0f1c18;color:#eafff5;border-radius:12px;padding:20px 22px;font-size:17px;line-height:1.6;white-space:pre-wrap;word-break:break-word;min-height:200px;margin:0;font-family:ui-monospace,Menlo,monospace}
+.notes5{position:absolute;left:670px;right:0;top:10px}
+.n5{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 14px;font-size:15.5px;line-height:1.45;margin-bottom:10px}
+.n5 b{display:block;font-family:ui-monospace,Menlo,monospace;color:var(--gd)}
+.n5.warn{border-left-color:var(--warn);background:#fdf4f2}
+/* slide 6 */
+.pipe{display:grid;grid-template-columns:200px 1.3fr 1fr 1fr;gap:26px;margin-top:6px;align-items:start}
+.st{background:#fff;border:2px solid var(--gd);border-radius:14px;padding:14px;min-height:150px;font-size:14.5px;line-height:1.4}
+.st b{display:block;font-size:19px;color:var(--gd);margin-bottom:6px}
+.st span{color:#3a4542}
+.st.hz{border-color:var(--g)}
+.st.data{border-color:var(--gm);background:#eef3ef}
+.ticks{margin-top:10px}
+.tick{font-size:14px;color:var(--ok);font-weight:650;margin:3px 0}
+.tick code{color:var(--ink)}
+.packet{position:absolute;top:300px;left:90px;width:22px;height:22px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 6px rgba(183,159,77,.25);opacity:0;transition:left 1.1s ease,opacity .4s,background .4s}
+.packet.p1{opacity:1;left:330px}.packet.p3{left:960px}.packet.p4{left:330px;background:var(--g);box-shadow:0 0 0 6px rgba(0,103,71,.2)}
+.rail{position:absolute;top:340px;left:250px;right:0;display:flex;gap:40px;font-size:16px;color:var(--gd);font-weight:650}
+/* slide 7 */
+.result{background:#fff;border:2px solid var(--gold);border-radius:12px;padding:10px 14px;transition:transform 1.1s ease,opacity 1.1s ease}
+.result .rh{font-size:13px;font-weight:800;color:#7a6522;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.result pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;font-size:13.2px;line-height:1.5}
+.resultwrap{position:relative}
+.ghost{position:absolute;inset:0;border:2px solid var(--gold);background:#f6efd0;border-radius:12px;opacity:0;pointer-events:none}
+.ghost.fly{animation:flyin 1.4s ease forwards}
+@keyframes flyin{0%{opacity:.95;transform:none}100%{opacity:0;transform:translate(-610px,300px) scale(.16)}}
+.blk .bn{display:block;font-weight:400;font-size:12.5px;opacity:.8;margin-top:6px;line-height:1.35}
+.wire{position:absolute;top:310px;left:100px;right:110px;height:2px;background:repeating-linear-gradient(90deg,#9fb3ab 0 8px,transparent 8px 14px)}
+.n7{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 14px;font-size:15.5px;line-height:1.45;margin-top:12px}
+.n7.g{border-left-color:var(--g);font-weight:650;color:var(--gd)}
+/* slide 8 */
+.when{display:flex;gap:18px;margin-bottom:12px}
+.when span{font-size:16px;font-weight:750;background:var(--g);color:#fff;border-radius:20px;padding:5px 14px;transition:background .5s,color .5s}
+.when span.dim{background:#dfe6e3;color:var(--muted)}
+.small8{font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.4}
+.take{margin-top:14px;background:#f3fbf6;border-left:5px solid var(--ok);border-radius:0 10px 10px 0;padding:11px 16px;font-size:17px;line-height:1.45;color:var(--gd);font-weight:600}
+/* slide 9 */
+.ans{font-size:18px;line-height:1.55;white-space:pre-wrap}
+.gradebox{margin-top:20px;font-size:19px}
+.grade{display:inline-block;font-size:12.5px;font-weight:800;padding:3px 11px;border-radius:20px;text-transform:uppercase;letter-spacing:.05em;margin-right:6px}
+.grade.right{background:#e3f4ea;color:#14663a}.grade.wrong{background:#fdeceb;color:var(--warn)}.grade.partly{background:#f6efd0;color:#5b4810}
+/* slide 10 */
+.trk{display:grid;grid-template-columns:120px 1fr 28px 1fr 28px 1fr 28px 1fr;align-items:stretch;gap:6px;margin-bottom:14px}
+.trkh{font-weight:800;color:var(--gd);font-size:16px;display:flex;align-items:center}
+.trk.tc .trkh{color:#7a6522}
+.cell{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:13.8px;line-height:1.4}
+.cell b{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.tb .cell{border-top:4px solid #9aa39e}.tc .cell{border-top:4px solid var(--gold)}
+.carr{display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gd);font-weight:700}
+/* slide 11 */
+.tlh{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.timeline{position:relative;height:150px;margin:4px 0 14px}
+.axis{position:absolute;left:4%;right:4%;top:73px;height:3px;background:var(--gd);border-radius:2px}
+.ev{position:absolute;transform:translateX(-50%);background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px 11px;font-size:14px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.ev .t{display:block;font-family:ui-monospace,Menlo,monospace;font-weight:800;color:var(--gd);font-size:13px}
+.ev.call{border-top:4px solid var(--gold)}.ev.res{border-top:4px solid var(--gd)}.ev.think{border-top:4px dashed #8a8f8c}.ev.ans{border-top:4px solid var(--g)}
+.ev.b{transform:translate(-50%,14px)}.ev.b.shown{transform:translate(-50%,0)}
+.big{font-size:19px;line-height:1.6;margin:6px 0}
+/* slide 12-13 */
+.evc{background:#f1f8fb;border-left:5px solid #0E6E9E;border-radius:0 10px 10px 0;padding:16px 20px;font-size:19.5px;line-height:1.5;margin-bottom:16px}
+.evc b{color:var(--gd)}.evc.warn{background:#fdf4f2;border-left-color:var(--warn)}.evc.warn b{color:var(--warn)}
+.cy{background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px 20px;font-size:19px;line-height:1.5;margin-bottom:14px}
+.go{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:6px}
+.go>div{background:var(--g);color:#e7efeb;border-radius:12px;padding:14px 18px;font-size:16px;line-height:1.5}
+.go b{display:block;color:var(--sand);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase}
+.go a{color:#fff;font-weight:700;display:block}
+.go code{background:rgba(255,255,255,.15);color:#fff}
+/* controls */
+#bar{position:fixed;left:0;right:0;bottom:0;height:56px;background:#0f1c18;color:#cfe0d8;display:flex;align-items:center;gap:10px;padding:0 16px;font-size:14px}
+#bar button{background:#1d3029;color:#fff;border:1px solid #2f4a40;border-radius:8px;padding:8px 14px;font:inherit;font-weight:650;cursor:pointer}
+#bar button:hover{background:#27423a}
+#bar button.primary{background:var(--g);border-color:var(--g)}
+#bar button{white-space:nowrap}
+#dots{display:flex;gap:6px;margin:0 8px;flex-wrap:nowrap;flex-shrink:0}
+#dots span{width:10px;height:10px;border-radius:50%;background:#3b5049;cursor:pointer}
+#dots span.on{background:var(--sand)}
+#where{margin-left:auto;color:#9fb3ab;white-space:nowrap}
+#keys{color:#6f857c;font-size:12px;white-space:nowrap}
+@media(max-width:1020px){#keys{display:none}}
+@media(max-width:840px){#bar{gap:6px;padding:0 8px}#bar button{padding:7px 9px;font-size:13px}#dots{gap:4px;margin:0 4px}#dots span{width:8px;height:8px}}
+@media(max-width:600px){#dots,#full{display:none}#where{font-size:12px;white-space:normal;text-align:right}}
+</style></head>
+<body>
+<div id="viewport"><div id="stage">
+<section class="slide title" data-builds="2">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>How an agent picks a tool, and how the result comes back</h2></div>
+<div class="body">
+<div class="tq b" data-b="1"><div class="who">An engineer asks</div><div class="ask">&ldquo;Is any work reported on Busch Blvd near USF (28.0587, -82.4139) right now, and which lanes are closed?&rdquo;</div></div>
+<div class="tloop b" data-b="2">
+  <div class="lp">Read the whole prompt</div><div class="ar">&rarr;</div><div class="lp">Write a tool call or an answer</div>
+  <div class="ar">&rarr;</div><div class="lp">The harness runs the tool</div><div class="ar">&rarr;</div>
+  <div class="lp">The result goes into the prompt</div><div class="ar back">&#8635;</div></div>
+<p class="tsub">An agent is one step, repeated. These slides slow that step down, on one real question, with an open model
+(Qwen3-1.7B) whose probabilities we can read, and end with a strong closed model (Claude) doing the same job. Every
+number comes from the saved runs. Use &rarr; or Next to step through.</p></div>
+<div class="caption"><div></div></div><div class="num">1 / 13</div>
+</section>
+<section class="slide" data-builds="4">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>Step 1 · What the model reads</h2></div>
+<div class="body">
+<div class="ctxcol"><div class="ctxhead">The prompt</div><div class="ctx"><div class="blk b" data-b="1" style="height:314px;background:#003E2A;color:#fff"><span>Instructions + tool menu<span class="bn">Most of this is the menu: 6 tools, each a name, a description and its inputs.</span></span><span class="tk">1,711 tokens</span></div><div class="blk b" data-b="3" style="height:34px;background:#2E7D5C;color:#fff"><span>The question</span><span class="tk">81 tokens</span></div><div class="blk b" data-b="3" style="height:34px;background:#8a8f8c;color:#fff"><span>Start of the model's turn</span><span class="tk">7 tokens</span></div></div>
+  <div class="ctxcount b" data-b="4"><span class="count" data-count="4:1799">0</span> tokens before it writes a word</div></div>
+<div class="rcol">
+  <div class="sysbox b" data-b="1"><b>Instructions</b> &ldquo;You are an assistant to a transportation engineer. Answer the question by calling the tools yourself: the engineer cannot call them.&rdquo; &hellip;</div>
+  <div class="toolgrid"><div class="tool b" data-b="2" style="transition-delay:0.00s"><b>list_feeds</b><span class="args">(state)</span><div>Published WZDx work-zone feeds from USDOT&#x27;s feed registry, with the state, the agency, the WZDx version and whether …</div></div><div class="tool b" data-b="2" style="transition-delay:0.12s"><b>get_work_zones</b><span class="args">(feed, road, near_lat, near_lon, radius_mi, status, max_results)</span><div>Work zones from a WZDx feed (&#x27;FL&#x27;, &#x27;AZ&#x27; or a name from list_feeds), filtered by road (&#x27;I-75&#x27;, &#x27;SR 434&#x27;, &#x27;Fowler …</div></div><div class="tool b" data-b="2" style="transition-delay:0.24s"><b>check_location</b><span class="args">(feed, lat, lon, radius_mi)</span><div>Is this point in or near an active work zone? For a dashcam or vehicle agent: give the vehicle&#x27;s GPS position.</div></div><div class="tool b" data-b="2" style="transition-delay:0.36s"><b>get_detours</b><span class="args">(feed, work_zone_id)</span><div>The detour routes posted for one work zone (Florida&#x27;s feed links them), by the work zone&#x27;s id as shown by …</div></div><div class="tool b" data-b="2" style="transition-delay:0.48s"><b>feed_quality</b><span class="args">(feed)</span><div>How complete a WZDx feed is right now: counts by status, the share of work zones with unknown lane impact, verified …</div></div><div class="tool b new" data-b="2" style="transition-delay:0.60s"><b>work_zones_on_street</b><span class="args">(feed, street, near_lat, near_lon, radius_mi)</span><div>Active work on one street near a place, counted as works rather than records.</div></div></div>
+  <div class="qbox b" data-b="3"><b>The question</b> Is any work reported on Busch Blvd near USF (28.0587, -82.4139) right now, and which lanes are closed?</div>
+</div></div>
+<div class="caption"><div>The model reads one long text, the <b>prompt</b>. The tools are in it only as words: a name, a description and the inputs. The model never sees a tool's code.</div></div><div class="num">2 / 13</div>
+</section>
+<section class="slide" data-builds="4">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>Decision 1 · Call a tool, or answer now?</h2></div>
+<div class="body">
+<div class="d1">
+  <div class="minictx">The prompt<br><span>1,799 tokens</span></div>
+  <div class="arrow1">&rarr;</div>
+  <div class="modelbox b" data-b="1"><b>Qwen3-1.7B</b><span>scores every possible next token, about 150,000 of them, and turns the scores into probabilities</span></div>
+  <div class="arrow1 b" data-b="2">&rarr;</div>
+  <div class="nextbars b" data-b="2"><div class="nbh">Most likely first tokens</div><div class="pbar win"><span class="plab"><code>&lt;tool_call&gt;</code></span><span class="ptrack"><span class="pfill" data-ws="2:100.0"></span></span><span class="pval" data-vs="2:&gt;99%"></span></div><div class="pbar "><span class="plab"><code>&lt;tool_response&gt;</code></span><span class="ptrack"><span class="pfill" data-ws="2:0.8"></span></span><span class="pval" data-vs="2:&lt;1%"></span></div><div class="pbar "><span class="plab"><code>I</code></span><span class="ptrack"><span class="pfill" data-ws="2:0.8"></span></span><span class="pval" data-vs="2:&lt;1%"></span></div>
+    <div class="verdict b" data-b="3">&rarr; it will write a <b>tool call</b>, not an answer</div></div>
+</div>
+<div class="eqrow b" data-b="4"><div class="eq"><b>P</b>(<span class="g">k</span>) = e<sup>V<sub>k</sub></sup> / &Sigma;<sub>j</sub> e<sup>V<sub>j</sub></sup></div>
+<div class="eqtext">The multinomial logit you use for mode or route choice. <b>k</b>: one alternative (here, a next token).
+<b>V<sub>k</sub></b>: its utility, computed from everything in the prompt. Change the prompt and you change the utilities.</div></div></div>
+<div class="caption"><div>The model writes one token at a time. Before the first one, it gives every possible next token a probability. If <code>&lt;tool_call&gt;</code> wins, it is about to call a tool.</div></div><div class="num">3 / 13</div>
+</section>
+<section class="slide" data-builds="5">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>Decision 2 · Which tool? The descriptions decide</h2></div>
+<div class="body">
+<div class="qline">Question: &ldquo;Is any work reported on <span class="hl" data-cls="2:lit">Busch Blvd</span> <span class="hl" data-cls="2:lit">near USF</span> (28.0587, -82.4139) right now, and <span class="hl" data-cls="2:lit">which lanes are closed</span>?&rdquo;</div>
+<div class="two">
+  <div class="col b" data-b="1"><div class="colh">B &middot; a programmer's description</div>
+    <div class="desc"><span class="hl" data-cls="2:lit">Active work zones on a street.</span> feed: feed name. street: street name. near_lat, near_lon: a point. radius_mi: search radius in miles. Read-only.</div>
+    <div class="tbars b" data-b="3"><div class="nbh">Which tool, if it calls</div><div class="pbar "><span class="plab"><code>check_location</code></span><span class="ptrack"><span class="pfill" data-ws="3:39.5"></span></span><span class="pval" data-vs="3:39%"></span></div><div class="pbar new"><span class="plab"><code>work_zones_on_street</code></span><span class="ptrack"><span class="pfill" data-ws="3:31.5"></span></span><span class="pval" data-vs="3:32%"></span></div><div class="pbar "><span class="plab"><code>list_feeds</code></span><span class="ptrack"><span class="pfill" data-ws="3:28.9"></span></span><span class="pval" data-vs="3:29%"></span></div><div class="pbar "><span class="plab"><code>get_work_zones</code></span><span class="ptrack"><span class="pfill" data-ws="3:0.8"></span></span><span class="pval" data-vs="3:&lt;1%"></span></div></div></div>
+  <div class="col b" data-b="1"><div class="colh gold">C &middot; the engineer's description</div>
+    <div class="desc small"><span class="hl" data-cls="2:lit">Active work on one street near a place</span>, counted as works rather than records. feed: &#x27;FL&#x27;, &#x27;AZ&#x27; or a name from list_feeds. street: <span class="hl" data-cls="2:lit">a street name as people say it (&#x27;Busch Blvd&#x27;</span>, &#x27;N 30th St&#x27;, &#x27;Fowler Avenue&#x27;); suffixes and directions may be spelled out or abbreviated, and a name without N/S/E/W matches every direction prefix. near_lat, near_lon and radius_mi (default 5 mi) give the place, because street names repeat across a state (Florida&#x27;s feed has a 109th Avenue in Tampa and another 200 mi away). One work (a permit or a project) is often reported as several records, one per segment and direction: the result lists each work with its records&#x27; directions, lane impact, closed lanes, end time in local time and reporting organization. <span class="hl" data-cls="2:lit">&#x27;Lane impact not reported&#x27; means the feed does not say; it does not mean the lanes are open</span>. The result also says how many active records near the place have no street name, which a search by name cannot find. For route numbers (I-75, SR 580, US 41) use get_work_zones. Read-only.</div>
+    <div class="tbars b" data-b="4"><div class="nbh">Which tool, if it calls</div><div class="pbar new"><span class="plab"><code>work_zones_on_street</code></span><span class="ptrack"><span class="pfill" data-ws="4:100.0"></span></span><span class="pval" data-vs="4:&gt;99%"></span></div><div class="pbar "><span class="plab"><code>check_location</code></span><span class="ptrack"><span class="pfill" data-ws="4:0.8"></span></span><span class="pval" data-vs="4:&lt;1%"></span></div><div class="pbar "><span class="plab"><code>get_work_zones</code></span><span class="ptrack"><span class="pfill" data-ws="4:0.8"></span></span><span class="pval" data-vs="4:&lt;1%"></span></div><div class="pbar "><span class="plab"><code>list_feeds</code></span><span class="ptrack"><span class="pfill" data-ws="4:0.8"></span></span><span class="pval" data-vs="4:&lt;1%"></span></div></div></div>
+</div>
+<div class="verdicts b" data-b="5"><span>B: a near three-way split; this run drew <code>check_location</code></span><span>C: <code>work_zones_on_street</code>, almost certainly</span></div></div>
+<div class="caption"><div>Both setups run the <b>same code</b> for <code>work_zones_on_street</code>; only its description differs. The bars are the model's probabilities for each tool at step 1, before any result.</div></div><div class="num">4 / 13</div>
+</section>
+<section class="slide" data-builds="4">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>The model writes the call, as text</h2></div>
+<div class="body">
+<div class="codewrap"><pre class="code type" data-type="1" data-full="&lt;tool_call&gt;
+{&quot;name&quot;: &quot;work_zones_on_street&quot;, &quot;arguments&quot;: {&quot;feed&quot;: &quot;FL&quot;, &quot;street&quot;: &quot;Busch Blvd&quot;, &quot;near_lat&quot;: 28.0587, &quot;near_lon&quot;: -82.4139, &quot;radius_mi&quot;: 5.0}}
+&lt;/tool_call&gt;"></pre></div>
+<div class="notes5">
+  <div class="n5 b" data-b="2"><b>name</b> the tool that won Decision 2</div>
+  <div class="n5 b" data-b="3"><b>street, near_lat, near_lon</b> copied from the question: &ldquo;Busch Blvd&rdquo;, 28.0587, -82.4139</div>
+  <div class="n5 b" data-b="3"><b>radius_mi 5.0</b> the default the description gives (&ldquo;radius_mi (default 5 mi)&rdquo;)</div>
+  <div class="n5 warn b" data-b="4">If the format were wrong or an input missing, the harness would send an error back to the model instead of calling the tool.</div>
+</div></div>
+<div class="caption"><div>The call is 65 tokens of text in a set format. Nothing has run yet: a tool call does nothing until the harness reads it.</div></div><div class="num">5 / 13</div>
+</section>
+<section class="slide" data-builds="4">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>The harness runs the tool</h2></div>
+<div class="body">
+<div class="pipe">
+  <div class="st"><b>Model's text</b><span>&lt;tool_call&gt; &hellip;</span></div>
+  <div class="st hz b" data-b="1"><b>Harness</b><span>finds &lt;tool_call&gt; and reads the name and inputs</span><div class="ticks"><div class="tick b" data-b="2" style="transition-delay:0.00s">&#10003; <code>feed</code> = &quot;FL&quot;</div><div class="tick b" data-b="2" style="transition-delay:0.18s">&#10003; <code>street</code> = &quot;Busch Blvd&quot;</div><div class="tick b" data-b="2" style="transition-delay:0.36s">&#10003; <code>near_lat</code> = 28.0587</div><div class="tick b" data-b="2" style="transition-delay:0.54s">&#10003; <code>near_lon</code> = -82.4139</div><div class="tick b" data-b="2" style="transition-delay:0.72s">&#10003; <code>radius_mi</code> = 5.0</div></div></div>
+  <div class="st b" data-b="3"><b>Tool server</b><span>Python with the engineer's rules (lanes, &ldquo;unknown&rdquo;, one work = several records)</span></div>
+  <div class="st data b" data-b="3"><b>Data</b><span>FDOT's WZDx feed, the saved Nov 5 2026 copy</span></div>
+</div>
+<div class="wire"></div><div class="packet" data-cls="1:p1|3:p3|4:p4"></div>
+<div class="rail"><span class="b" data-b="3">request &rarr;</span><span class="b" data-b="4">&larr; reply: 623 characters of text, after 2.63 s</span></div></div>
+<div class="caption"><div>The <b>harness</b> is the program around the model. It finds the call, checks every input, sends it to the tool server over MCP, and waits for the reply.</div></div><div class="num">6 / 13</div>
+</section>
+<section class="slide" data-builds="4">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>The result goes back into the prompt</h2></div>
+<div class="body">
+<div class="ctxcol"><div class="ctxhead">The prompt for step 2</div><div class="ctx"><div class="blk" style="height:271px;background:#003E2A;color:#fff"><span>Instructions + tool menu</span><span class="tk">1,711 tokens</span></div><div class="blk" style="height:34px;background:#2E7D5C;color:#fff"><span>The question</span><span class="tk">81 tokens</span></div><div class="blk b" data-b="3" style="height:34px;background:#B79F4D;color:#1c2422"><span>The model's tool call</span><span class="tk">69 tokens</span></div><div class="blk b" data-b="3" style="height:34px;background:#CFC493;color:#1c2422"><span>The tool result</span><span class="tk">215 tokens</span></div><div class="blk b" data-b="3" style="height:34px;background:#8a8f8c;color:#fff"><span>Start of the model's turn</span><span class="tk">7 tokens</span></div></div>
+  <div class="ctxcount"><span class="count" data-count="0:1799|3:2083">1799</span> tokens</div></div>
+<div class="rcol">
+  <div class="resultwrap"><div class="result b" data-b="1"><div class="rh">Result from <code>work_zones_on_street</code></div><pre>Busch Blvd within 5 mi of (28.0587, -82.4139), fldot feed updated Thu Nov 5 09:21 EST: 1 active work(s) on the street, from 2 record(s). <span class="hl" data-cls="2:lit">Lane impact not reported for 1 of 2 records</span>.
+- work 4577091647 · E Busch Blvd · 2.1 mi away · reported by City of Tampa, Florida · 2 record(s)
+    direction not reported: lane impact not reported · until Thu Nov 5 16:00 EST
+    <span class="hl" data-cls="2:lit">eastbound: some lanes closed, right lane of 3 closed</span> · until Thu Nov 5 16:00 EST
+    East Busch Boulevard, Tampa
+Not findable by name: 5 active record(s) within 5 mi have no street name. To see them, call get_work_zones with near_lat, near_lon and radius_mi.</pre></div><div class="ghost" data-cls="3:fly"></div></div>
+  <div class="n7 b" data-b="2">The engineer's rules did the reading: the feed lists the closed lane as &ldquo;lane 4 of 5&rdquo;, counting from
+  the left with the shoulders as lanes. The tool turns that into &ldquo;right lane of 3&rdquo;, and says plainly when a record has no lane data.</div>
+  <div class="n7 g b" data-b="4">Step 2 starts: the model reads all 2,083 tokens again and makes Decision 1 again.</div>
+</div></div>
+<div class="caption"><div>The result is pasted into the prompt as text and stays there. The prompt is the agent's only memory: the next step reads everything again, now with the result.</div></div><div class="num">7 / 13</div>
+</section>
+<section class="slide" data-builds="3">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>Step 2 · Read again, decide again</h2></div>
+<div class="body">
+<div class="when"><span class="b" data-b="1" data-cls="2:dim">Step 1: only the question</span><span class="b" data-b="2">Step 2: after one result</span></div>
+<div class="two">
+  <div class="col b" data-b="1"><div class="colh">Call another tool, or answer?</div><div class="pbar gold"><span class="plab">call another tool</span><span class="ptrack"><span class="pfill" data-ws="1:100.0|2:0.8"></span></span><span class="pval" data-vs="1:&gt;99%|2:&lt;1%"></span></div><div class="pbar win"><span class="plab">answer now</span><span class="ptrack"><span class="pfill" data-ws="1:0.8|2:100.0"></span></span><span class="pval" data-vs="1:&lt;1%|2:&gt;99%"></span></div>
+    <div class="small8">First token at step 2: &ldquo;There&rdquo; (86%), the start of an answer.</div></div>
+  <div class="col b" data-b="1"><div class="colh">Which answer it believes</div><div class="bel"><div class="pbar win"><span class="plab"><b>right:</b> Eastbound, the right lane of the 3 travel lanes is closed, until Nov 5 at 4 pm.</span><span class="ptrack"><span class="pfill" data-ws="1:2.6|2:74.9"></span></span><span class="pval" data-vs="1:3%|2:75%"></span></div><div class="pbar gray"><span class="plab">trap: Eastbound, lane 4 of 5 is closed; the feed does not say which side that lane is on.</span><span class="ptrack"><span class="pfill" data-ws="1:21.0|2:0.8"></span></span><span class="pval" data-vs="1:21%|2:&lt;1%"></span></div><div class="pbar gray"><span class="plab">trap: The lane impact is unknown: the feed does not report which lanes are closed.</span><span class="ptrack"><span class="pfill" data-ws="1:51.7|2:25.1"></span></span><span class="pval" data-vs="1:52%|2:25%"></span></div><div class="pbar gray"><span class="plab">trap: No lanes are reported closed on Busch Blvd.</span><span class="ptrack"><span class="pfill" data-ws="1:24.7|2:0.8"></span></span><span class="pval" data-vs="1:25%|2:&lt;1%"></span></div></div>
+    <div class="small8">Each answer is shown in all four positions and the readings averaged; at step 2 the right answer was the pick in 3 of 4 orders.</div></div>
+</div>
+<div class="take b" data-b="3">One good result moved the model from a trap to the right answer, and it stopped calling tools.
+The loop ends when the model would rather answer than call again.</div></div>
+<div class="caption"><div><b>Belief</b>: each step, a copy of the conversation is asked which of four answers is best (one right, three traps). The probes read the model; they never enter the run.</div></div><div class="num">8 / 13</div>
+</section>
+<section class="slide" data-builds="3">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>The answer, checked</h2></div>
+<div class="body">
+<div class="two">
+  <div class="col"><div class="colh">The model's answer (90 tokens)</div><div class="ans type" data-type="1" data-full="There is a reported work zone on Busch Blvd near the given location. The work zone is reported by the City of Tampa, Florida, and it is eastbound. The lane impact is not reported for one of the records, but it is noted that some lanes are closed, specifically the right lane of 3 closed. The work zone is expected to remain active until Thursday, November 5th at 16:00 EST."></div></div>
+  <div class="col b" data-b="2"><div class="colh gold">The checked answer</div><div class="ans">Yes: one work by the City of Tampa on East Busch Boulevard, about 2 mi from the point, reported as 2 records, until Thu Nov 5 at 4:00 pm. Eastbound, the right lane of 3 travel lanes is closed (the feed lists it as lane 4 of 5, because WZDx counts lanes from the left and lists the shoulders as lanes). The other record gives no direction and no lane impact.</div></div>
+</div>
+<div class="gradebox b" data-b="3"><span class="grade right">right</span> Eastbound, the right lane of 3 closed, until Nov 5 at 16:00; notes the record without lane data.</div></div>
+<div class="caption"><div>The checked answer was written down, and checked in the feed, before any run. That is what makes a grade fair.</div></div><div class="num">9 / 13</div>
+</section>
+<section class="slide" data-builds="3">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>Same question, plainer words: setup B</h2></div>
+<div class="body"><div class="trk tb"><div class="trkh">B &middot; plain</div><div class="cell b" data-b="1" style="transition-delay:0.00s"><b>Picks</b><code>check_location</code> (39%; the new tool had 32%)</div><div class="carr b" data-b="1" style="transition-delay:0.20s">&rarr;</div><div class="cell b" data-b="1" style="transition-delay:0.45s"><b>Reads</b>No active work zone is reported within 0.5 mi of (28.05870, -82.41390) in the fldot feed.</div><div class="carr b" data-b="1" style="transition-delay:0.65s">&rarr;</div><div class="cell b" data-b="1" style="transition-delay:0.90s"><b>Believes</b>trap: &ldquo;The lane impact is unknown: the feed does not report which lanes are closed.&rdquo; (99%)</div><div class="carr b" data-b="1" style="transition-delay:1.10s">&rarr;</div><div class="cell b" data-b="1" style="transition-delay:1.35s"><b>Answers</b><span class="grade wrong">wrong</span> Never called the new tool; reports that no work zone was found.</div></div><div class="trk tc"><div class="trkh">C &middot; engineer's</div><div class="cell b" data-b="2" style="transition-delay:0.00s"><b>Picks</b><code>work_zones_on_street</code> (&gt;99%)</div><div class="carr b" data-b="2" style="transition-delay:0.20s">&rarr;</div><div class="cell b" data-b="2" style="transition-delay:0.45s"><b>Reads</b>eastbound: some lanes closed, right lane of 3 closed · until Thu Nov 5 16:00 EST</div><div class="carr b" data-b="2" style="transition-delay:0.65s">&rarr;</div><div class="cell b" data-b="2" style="transition-delay:0.90s"><b>Believes</b>right: &ldquo;Eastbound, the right lane of the 3 travel lanes is closed, until Nov 5 at 4 pm.&rdquo; (75%)</div><div class="carr b" data-b="2" style="transition-delay:1.10s">&rarr;</div><div class="cell b" data-b="2" style="transition-delay:1.35s"><b>Answers</b><span class="grade right">right</span> Eastbound, the right lane of 3 closed, until Nov 5 at 16:00; notes the record without lane data.</div></div><div class="take b" data-b="3">The words in a tool's description are part of the agent's design.
+This is one run per setup with a small model: the next slide asks whether a strong model behaves the same way.</div></div>
+<div class="caption"><div>Same model, same question, same code behind the tool. One description changed which tool it picked, which result it read, and so the answer.</div></div><div class="num">10 / 13</div>
+</section>
+<section class="slide" data-builds="3">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>A strong closed model runs the same loop</h2></div>
+<div class="body">
+<div class="tlh">Setup C, repeat 1: the whole run, in seconds</div>
+<div class="timeline"><div class="axis"></div><div class="ev call b" data-b="1" style="left:13.0%;top:6px;transition-delay:0.0s"><span class="t">0.0 s</span>calls <code>work_zones_on_street</code></div><div class="ev res b" data-b="1" style="left:46.7%;top:88px;transition-delay:0.5s"><span class="t">2.4 s</span>result back (the tool took 2.4 s)</div><div class="ev think b" data-b="1" style="left:86.0%;top:6px;transition-delay:1.0s"><span class="t">5.2 s</span>thinks (Claude Code does not show the text)</div><div class="ev ans b" data-b="1" style="left:86.0%;top:88px;transition-delay:1.5s"><span class="t">5.2 s</span>answers: <span class="grade right">right</span></div></div>
+<div class="two">
+  <div class="col b" data-b="2"><div class="colh">Work-zone questions answered right, by setup (36 saved runs)</div><div class="pbar"><span class="plab">R &middot; raw data + code</span><span class="ptrack"><span class="pfill" data-ws="2:66.7"></span></span><span class="pval">6 of 9</span></div><div class="pbar"><span class="plab">A &middot; without</span><span class="ptrack"><span class="pfill" data-ws="2:66.7"></span></span><span class="pval">6 of 9</span></div><div class="pbar"><span class="plab">B &middot; plain</span><span class="ptrack"><span class="pfill" data-ws="2:66.7"></span></span><span class="pval">6 of 9</span></div><div class="pbar new"><span class="plab">C &middot; full</span><span class="ptrack"><span class="pfill" data-ws="2:100.0"></span></span><span class="pval">9 of 9</span></div></div>
+  <div class="col b" data-b="3"><div class="colh">This question</div>
+    <p class="big">Setup B: right in <b>0 of 3</b> repeats (2 partly, 1 wrong).<br>Setup C: right in <b>3 of 3</b>.</p>
+    <p class="small8">With the plain description, even Claude did not name the right lane: the grades say why on the closed-model page.</p></div>
+</div></div>
+<div class="caption"><div>Claude (claude-sonnet-5-5) through Claude Code, same tools, same question. You can see every call, result and time, but not the probabilities behind them: that is why the earlier slides use an open model.</div></div><div class="num">11 / 13</div>
+</section>
+<section class="slide" data-builds="3">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>Before you trust this</h2></div>
+<div class="body">
+<div class="evc b" data-b="1"><b>What is the baseline?</b> Setup B: the same code as C, with a programmer's description and a
+raw result. Same model, same question, same seed. On the closed-model page, Claude also runs with raw data and code (R) and with
+the toolkit alone (A).</div>
+<div class="evc b" data-b="2"><b>How was the data split, and why is that honest?</b> Nothing is trained here, so there is no
+split. The checked answer and the three traps were written before any run, and the probes read a copy of the conversation:
+they never enter the run.</div>
+<div class="evc warn b" data-b="3"><b>The ugly cases.</b> One question, one small model, one seed. In B the pick was nearly a
+three-way tie (39%, 32%, 29%), so another seed could have drawn the new tool.
+The bars are probabilities at temperature 1; the run sampled at 0.7. The belief probe asks the model a question it was not
+asked in the run.</div></div>
+<div class="caption"><div>Read the whole runs, with every step, on the two companion pages listed on the last slide.</div></div><div class="num">12 / 13</div>
+</section>
+<section class="slide" data-builds="2">
+<div class="top"><div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Module 5 &middot; Inside the agent loop</div><h2>Check yourself, and where to go next</h2></div>
+<div class="body">
+<div class="cy b" data-b="1"><b>1.</b> In B the model's pick was split between <code>check_location</code>,
+<code>work_zones_on_street</code> and <code>list_feeds</code>. Write one sentence you would add to
+B's description, and say how you would show that it moved the probability.</div>
+<div class="cy b" data-b="1"><b>2.</b> C's result says &ldquo;Lane impact not reported for 1 of 2 records&rdquo;. Why is that
+better than leaving the record out? What could a TMC operator get wrong if it were left out?</div>
+<div class="go b" data-b="2"><div><b>Every step of every run</b><a href="Inside_The_Agent_Loop_Companion.html">Inside the agent loop</a> (open model, with probabilities)</div>
+<div><b>72 runs, graded</b><a href="Agent_Tools_Test_Companion.html">Do the agent tools really work?</a> (Claude, four setups)</div>
+<div><b>Run it yourself</b><code>python inside_loop.py busch_lanes C</code> in <code>agent_tools_demo/</code></div></div></div>
+<div class="caption"><div>AI for Mobility (CGN 6933), USF. The agents unit follows CMU 11-768 AI Agents (Fried and Neubig, Fall 2026); no CMU material is copied.</div></div><div class="num">13 / 13</div>
+</section>
+</div></div>
+<div id="bar"><button id="back" title="Back (left arrow)">&#9664; Back</button><button id="next" class="primary" title="Next (right arrow or space)">Next &#9654;</button>
+<button id="play" title="Play the whole show (P)">&#9654; Play</button><button id="full" title="Full screen (F)">&#x26F6; Full screen</button>
+<div id="dots"></div><span id="keys">&larr; &rarr; space: step &middot; P: play &middot; F: full screen</span><span id="where"></span></div>
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+const NB = slides.map(s => +s.dataset.builds);
+let cur = 0, b = 0, playing = null;
+function at(spec, k) {          // "1:39|2:0.1" -> the value for the latest key <= k
+  let v = null;
+  for (const part of spec.split('|')) { const i = part.indexOf(':'); if (+part.slice(0, i) <= k) v = part.slice(i + 1); }
+  return v;
+}
+const typers = new Map();
+function render(forward) {
+  slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+  const s = slides[cur];
+  s.querySelectorAll('[data-b]').forEach(e => e.classList.toggle('shown', +e.dataset.b <= b));
+  s.querySelectorAll('[data-ws]').forEach(e => { const v = at(e.dataset.ws, b); e.style.width = (v == null ? 0 : v) + '%'; });
+  s.querySelectorAll('[data-vs]').forEach(e => { const v = at(e.dataset.vs, b); e.innerHTML = v == null ? '' : v; });
+  s.querySelectorAll('[data-cls]').forEach(e => e.dataset.cls.split('|').forEach(p => { const i = p.indexOf(':'); e.classList.toggle(p.slice(i + 1), +p.slice(0, i) <= b); }));
+  s.querySelectorAll('[data-count]').forEach(e => {
+    const v = +(at(e.dataset.count, b) ?? 0), from = +e.textContent.replace(/,/g, '') || 0;
+    if (!forward || from === v) { e.textContent = v.toLocaleString(); return; }
+    const t0 = performance.now();
+    const step = t => { const f = Math.min(1, (t - t0) / 900); e.textContent = Math.round(from + (v - from) * f).toLocaleString(); if (f < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+  s.querySelectorAll('[data-type]').forEach(e => {
+    const k = +e.dataset.type, full = e.dataset.full;
+    clearInterval(typers.get(e));
+    if (b < k) { e.textContent = ''; return; }
+    if (!(forward && b === k)) { e.textContent = full; return; }
+    let n = 0; const per = Math.max(2, Math.ceil(full.length / 70));
+    typers.set(e, setInterval(() => { n += per; e.textContent = full.slice(0, n); if (n >= full.length) clearInterval(typers.get(e)); }, 22));
+  });
+  document.querySelectorAll('#dots span').forEach((d, i) => d.classList.toggle('on', i === cur));
+  document.getElementById('where').textContent = `Slide ${cur + 1} of ${slides.length}` + (NB[cur] ? ` · step ${b} of ${NB[cur]}` : '');
+  try { history.replaceState(null, '', '#' + (cur + 1)); } catch (e) {}
+}
+function next() {
+  if (b < NB[cur]) { b++; render(true); return true; }
+  if (cur < slides.length - 1) { cur++; b = 0; render(true); setTimeout(() => { if (b === 0 && NB[cur]) { b = 1; render(true); } }, 450); return true; }
+  return false;
+}
+function back() {
+  if (b > 1 || (b === 1 && cur === 0)) { b--; render(false); return; }
+  if (cur > 0) { cur--; b = NB[cur]; render(false); }
+}
+function go(i) { cur = i; b = NB[i]; render(false); }
+function play() {
+  const btn = document.getElementById('play');
+  if (playing) { clearTimeout(playing); playing = null; btn.textContent = '▶ Play'; return; }
+  btn.textContent = '❚❚ Pause';
+  const tick = () => { if (!next()) { playing = null; btn.textContent = '▶ Play'; return; } playing = setTimeout(tick, b === 1 ? 2600 : 2900); };
+  playing = setTimeout(tick, 400);
+}
+function fit() {
+  const vp = document.getElementById('viewport'), st = document.getElementById('stage');
+  const k = Math.min(vp.clientWidth / 1300, vp.clientHeight / 740);
+  st.style.transform = `scale(${k})`;
+}
+document.getElementById('next').onclick = () => next();
+document.getElementById('back').onclick = back;
+document.getElementById('play').onclick = play;
+document.getElementById('full').onclick = () => { try { (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {}); } catch (e) {} };
+document.getElementById('dots').innerHTML = slides.map((_, i) => `<span title="Slide ${i + 1}"></span>`).join('');
+document.querySelectorAll('#dots span').forEach((d, i) => d.onclick = () => go(i));
+document.getElementById('stage').addEventListener('click', e => { if (!e.target.closest('a')) next(); });
+document.addEventListener('keydown', e => {
+  if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); back(); }
+  else if (e.key === 'Home') go(0); else if (e.key === 'End') go(slides.length - 1);
+  else if (e.key === 'p' || e.key === 'P') play();
+  else if (e.key === 'f' || e.key === 'F') document.getElementById('full').click();
+});
+window.addEventListener('resize', fit);
+const h = parseInt(location.hash.slice(1));
+if (h >= 1 && h <= slides.length) { cur = h - 1; b = NB[cur]; }
+fit(); render(false);
+</script>
+</body></html>
