@@ -67,7 +67,7 @@ description is always visible, and the full instructions load on demand. Agencie
 standard operating procedures, design manuals, checklists — so turning one into a skill is often the
 cheapest improvement available. It is not free: in one benchmark, curated skills raised the average pass
 rate from 33.9% to 50.5%, but made results worse on 13 of 87 tasks, because a skill can push aside a
-better default.
+better default. To build a skill and share it with everyone, see {doc}`Transportation Skills <../skills>`.
 
 **Memory.** What should an agent keep from past runs — a fact, a lesson, a whole episode — and when
 should it update or delete what it kept?

@@ -299,6 +299,7 @@
 
 <section class="contribute-panel">
   <p>This page should evolve with the AI4Mobility community. Students, researchers, practitioners, and agency partners are encouraged to suggest tools, datasets, tutorials, project examples, agency problem statements, benchmark tasks, and student project outcomes.</p>
+  <p>Have a skill that teaches AI agents a transportation job, such as reading a manual, checking a dataset or running a simulation? Share it in the open repository: see <a href="skills.html">Transportation Skills</a>.</p>
   <div class="cta-row resource-cta-row">
     <a class="cta-button" href="https://github.com/ai4mobility/ai4mobility.github.io/issues/new?title=Resource%20suggestion" target="_blank" rel="noopener">Submit a Resource</a>
     <a class="cta-button cta-secondary" href="https://github.com/ai4mobility/ai4mobility.github.io/issues/new?title=Mobility%20problem%20suggestion" target="_blank" rel="noopener">Suggest a Mobility Problem</a>

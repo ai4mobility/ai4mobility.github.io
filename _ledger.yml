@@ -3485,6 +3485,22 @@ items:
       pipeline figure _static/figures/HT_Research_Directions.png (SVG source in the class folder).
       Not mirrored in the Canvas page.
 
+  - id: site-transportation-skills
+    file: site/skills.md
+    kind: handout
+    module: all
+    session: '2026-11-17'
+    status: drafted
+    notes: 'Transportation Skills page (Resources part of _toc.yml, after the Open Mobility AI Ecosystem
+      page): invites students, researchers, agency staff and consultants to build agent skills and share
+      them in the open repo github.com/ai4mobility/transportation-skills (MIT). Sections: what a skill is,
+      why transportation needs its own, who can contribute, ideas (6 wanted skills), the eight steps (D7
+      example), share it (6 steps + commands), trust levels with the evaluation close, use a skill, source
+      and data rules (no source PDFs), license, fit card, check yourself, a section for CGN 6933 students.
+      Figures: AGT_Skill_Loading and AGT_Knowledge_Homes (from the Nov 17 deck) and the new SKL_Share_Flow
+      (M5-8_AI_Agents_and_RL/skills_page/make_share_flow.py). Linked from module5/index.md (Skills paragraph)
+      and the resources.md Contribute panel.'
+
   - id: m5-notes-5-architectures
     file: site/module5/notes5-architectures.md
     kind: notes
