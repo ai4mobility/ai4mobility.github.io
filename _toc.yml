@@ -150,6 +150,9 @@ parts:
             title: "5.4 Context: what the model reads"
           - file: module5/notes5-architectures
             title: "5.5 Agent architectures: one loop, four questions"
+          # 2026-11-15: 5.6 added to mount the Where_Knowledge_Lives companion (Nov 17 lecture, giving a model the right knowledge).
+          - file: module5/notes6-knowledge
+            title: "5.6 Where knowledge lives: giving an agent the right knowledge"
       - file: module6/index
         sections:
           - file: module6/notes1-adaptation

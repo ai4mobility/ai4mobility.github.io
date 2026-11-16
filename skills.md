@@ -258,5 +258,5 @@ such as SOP clauses, keeps its source's own terms.
 - [Agent Skills specification](https://agentskills.io/specification), the open format the skills follow.
 - FDOT District 7 Traffic Signals SOP, v1.5 (June 2025), pages 5–11: the source of the worked example.
 - Li, X., et al. (2026). SkillsBench. *arXiv:2602.12670*.
-- In this course: {doc}`5.4 Context: what the model reads <module5/notes4-context>` and
-  {doc}`Module 5 <module5/index>`.
+- In this course: {doc}`5.4 Context: what the model reads <module5/notes4-context>`,
+  {doc}`5.6 Where knowledge lives <module5/notes6-knowledge>` and {doc}`Module 5 <module5/index>`.

@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where knowledge lives: eight places, one hurricane morning | AI for Mobility</title>
+<style>
+  :root{
+    --usf-green:#006747;--usf-green-d:#00543a;--usf-dark:#003E2A;--mid:#2E7D5C;--usf-gold:#CFC493;--gold:#B79F4D;--gold-deep:#8f7a33;
+    --ink:#1c2422;--muted:#5b6b66;--paper:#f6f8f7;--card:#fff;--line:#e2e8e5;--tool:#0E6E9E;--warn:#c0392b;--ok:#1e9e57;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 6px 22px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.58}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  header.hero{background:linear-gradient(135deg,var(--usf-green),var(--usf-green-d));color:#fff;padding:30px 0 24px}
+  header.hero .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--usf-gold);font-weight:700}
+  header.hero h1{margin:6px 0 8px;font-size:28px;font-weight:780}
+  header.hero p{margin:0;max-width:920px;color:#e7efeb;font-size:15px}
+  nav.tabs{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav.tabs .wrap{display:flex;gap:2px;flex-wrap:wrap;padding-top:7px;padding-bottom:7px}
+  nav.tabs button{border:none;background:transparent;font-size:13px;font-weight:600;color:var(--muted);padding:8px 10px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:var(--paper);color:var(--ink)}
+  nav.tabs button.active{background:var(--usf-green);color:#fff}
+  section.page{display:none;padding:24px 0 10px}
+  section.page.active{display:block}
+  h2.sec{font-size:23px;margin:4px 0 2px;color:var(--usf-green-d)}
+  h3{font-size:16.5px;margin:20px 0 6px;color:var(--ink)}
+  h4{font-size:12.5px;margin:16px 0 6px;color:var(--usf-green-d);text-transform:uppercase;letter-spacing:.06em}
+  .lead{color:var(--muted);max-width:920px;margin:0 0 16px;font-size:15px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+  .card h3:first-child{margin-top:0}
+  .callout{border-left:4px solid var(--usf-gold);background:#fffdf3;padding:11px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:14px}
+  .callout.good{border-left-color:var(--ok);background:#f3fbf6}
+  .callout.warn{border-left-color:var(--warn);background:#fdf4f2}
+  .callout b{color:var(--usf-green-d)}
+  .small{font-size:12.5px;color:var(--muted)}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:#eef3f1;border-radius:4px;padding:0 4px}
+  .figwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:4px 0}
+  .figwrap svg{display:block;width:100%;height:auto;min-width:660px}
+  svg .pl{cursor:pointer;transition:opacity .2s}
+  svg .pl rect.bx{transition:stroke-width .15s}
+  svg .pl:hover rect.bx{stroke-width:3.5}
+  svg .pl.sel rect.bx{stroke-width:4}
+  svg.hl .pl.rt:not(.hi):not(.op){opacity:.32}
+  svg.hl .ar:not(.hi):not(.op):not(.al){opacity:.18}
+  svg.hl .pl.pr:not(.hi):not(.op){opacity:.32}
+  svg .pl.hi rect.bx{stroke-width:4}
+  svg .ar.hi path{stroke-width:3.2}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);font-weight:600;margin:8px 0 2px;align-items:center}
+  .legend .sw{display:inline-block;width:26px;height:0;border-top:3px solid var(--gold);vertical-align:middle;margin-right:6px}
+  .legend .sw.d{border-top-style:dashed}
+  .legend .sw.g{border-top-color:var(--usf-green)}
+  .legend .sw.s{border-top-color:#8a9894}
+  .detail{border:1px solid var(--line);border-radius:14px;background:#fff;padding:18px 20px;box-shadow:var(--shadow)}
+  .detail .dh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:10px}
+  .detail .dh h3{margin:0;font-size:20px;color:var(--usf-green-d)}
+  .pill{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:20px;background:#eef7f3;color:var(--usf-green-d)}
+  .pill.gold{background:#f4efda;color:#6b5a1f}.pill.tool{background:#e6f1f7;color:#0b5679}.pill.per{background:#f3eef8;color:#5b3a78}.pill.w{background:#fdf1ee;color:var(--warn)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:860px){.grid2{grid-template-columns:1fr}}
+  .kv{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;font-size:14px;margin:8px 0}
+  .kv .k{font-weight:700;color:var(--usf-green-d);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;padding-top:2px}
+  @media(max-width:640px){.kv{grid-template-columns:1fr}}
+  pre.src{background:#0f1c18;color:#eafff5;border-radius:10px;padding:12px 14px;font-size:12.3px;white-space:pre-wrap;word-break:break-word;margin:6px 0;max-height:330px;overflow:auto;line-height:1.5}
+  details.src{border:1px solid var(--line);border-radius:10px;margin:8px 0;background:#fbfdfc}
+  details.src>summary{cursor:pointer;padding:8px 12px;font-weight:700;font-size:13.2px;color:var(--usf-green-d);list-style:none;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  details.src>summary::-webkit-details-marker{display:none}
+  details.src>summary::before{content:"\25B8";color:var(--gold-deep)}
+  details.src[open]>summary::before{content:"\25BE"}
+  details.src>div{padding:0 12px 10px}
+  .tk{font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;color:var(--muted)}
+  .acard{border:1px solid #cfe3d8;border-radius:11px;background:#f8fcfa;margin:8px 0;overflow:hidden}
+  .acard.sug{border-color:#e4d9ad;background:#fffdf4}
+  .acard.nc{border-color:#e9d2cf;background:#fff8f7}
+  .acard .ct{background:#e3f1ea;color:var(--usf-dark);font-weight:700;padding:7px 12px;font-size:13.6px}
+  .acard.sug .ct{background:#f3ecd0;color:#5c4c14}
+  .acard.nc .ct{background:#f7e3e0;color:#7b2b22}
+  .acard .fr{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:5px 12px;border-top:1px solid rgba(0,0,0,.05);font-size:13.3px}
+  .acard .fr .fk{font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.03em;padding-top:1px}
+  .acard .note{padding:6px 12px;font-size:12.3px;color:var(--muted);font-style:italic}
+  .acard p{margin:6px 12px;font-size:13.4px}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  button.act{border:1px solid var(--usf-green);background:var(--usf-green);color:#fff;font-weight:700;font-size:13.5px;padding:8px 15px;border-radius:9px;cursor:pointer}
+  button.act:hover{background:var(--usf-green-d)}
+  button.act:disabled{opacity:.4;cursor:not-allowed}
+  button.ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:13px;padding:7px 12px;border-radius:9px;cursor:pointer}
+  button.ghost:hover{background:var(--paper)}
+  button.ghost.on{background:var(--usf-green);border-color:var(--usf-green);color:#fff}
+  .dots{display:flex;gap:6px;flex-wrap:wrap}
+  .dots button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#fff;font-weight:700;color:var(--muted);cursor:pointer;font-size:12.5px}
+  .dots button.on{background:var(--usf-green);color:#fff;border-color:var(--usf-green)}
+  .dots button.done{background:#e3f1ea;color:var(--usf-dark)}
+  .stephead{display:flex;gap:12px;align-items:baseline;margin:10px 0 2px}
+  .stephead .n{font-family:ui-monospace,monospace;background:var(--usf-green);color:#fff;border-radius:7px;padding:2px 9px;font-weight:800}
+  .stephead h3{margin:0}
+  .meter{margin:10px 0 4px}
+  .meter .row{display:grid;grid-template-columns:200px 1fr 92px;gap:10px;align-items:center;margin:7px 0;font-size:13px}
+  .meter .lab{font-weight:600;color:var(--ink)}
+  .meter .bar{height:20px;background:#eef2f0;border-radius:5px;display:flex;overflow:hidden}
+  .meter .seg{height:100%;border-right:1px solid rgba(255,255,255,.7)}
+  .meter .seg.new{outline:2px solid var(--ink);outline-offset:-2px}
+  .meter .val{font-family:ui-monospace,monospace;font-weight:700;color:var(--usf-green-d);text-align:right}
+  @media(max-width:640px){.meter .row{grid-template-columns:1fr;gap:3px}.meter .val{text-align:left}}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+  .chip{display:inline-flex;gap:7px;align-items:center;font-size:12.4px;border:1px solid var(--line);border-radius:20px;padding:3px 10px;background:#fff}
+  .chip .sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+  .chip.new{border-color:var(--ink);font-weight:700}
+  .reqs{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0 12px}
+  .readout{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 4px}
+  .stat{background:#fbfdfc;border:1px solid var(--line);border-radius:11px;padding:9px 13px;min-width:130px;text-align:center;flex:1}
+  .stat .n{font-size:19px;font-weight:780;font-family:ui-monospace,monospace;color:var(--usf-green-d)}
+  .stat .n.w{color:var(--warn)}
+  .stat .l{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.3}
+  table.t{width:100%;border-collapse:collapse;font-size:13.4px;margin-top:8px}
+  table.t th,table.t td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.t th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  table.t td.num{font-family:ui-monospace,monospace;text-align:right;white-space:nowrap}
+  .scrollx{overflow-x:auto}
+  .seg2{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+  .seg2 button{border:none;background:#fff;font-weight:600;font-size:12.3px;padding:5px 10px;cursor:pointer;color:var(--ink);border-right:1px solid var(--line)}
+  .seg2 button:last-child{border-right:none}
+  .seg2 button.on{background:var(--usf-green);color:#fff}
+  .seg2 button.on.e{background:var(--warn)}
+  .ctrl{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+  .ctrl label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .ctrl input[type=range]{width:min(420px,80vw);accent-color:var(--usf-green)}
+  details.deeper{border:1px solid var(--line);border-radius:11px;background:#fbfdfc;margin:16px 0}
+  details.deeper>summary{cursor:pointer;padding:11px 16px;font-weight:700;font-size:13.8px;color:var(--usf-green-d);list-style:none}
+  details.deeper>summary::-webkit-details-marker{display:none}
+  details.deeper>summary::before{content:"\25B8  ";color:var(--gold-deep)}
+  details.deeper[open]>summary::before{content:"\25BE  "}
+  details.deeper>div{margin:0 16px 14px;font-size:14px}
+  .fitcard{background:#fbfdfc;border:1px solid var(--line);border-radius:12px;padding:4px 0}
+  .fitcard .row{display:grid;grid-template-columns:210px 1fr;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);font-size:14px}
+  .fitcard .row:last-child{border-bottom:none}
+  .fitcard .row .k{font-weight:700;color:var(--usf-green-d);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em}
+  @media(max-width:700px){.fitcard .row{grid-template-columns:1fr;gap:2px}nav.tabs .wrap{flex-wrap:nowrap;overflow-x:auto}}
+  .qa{border:1px solid var(--line);border-radius:11px;background:#fff;padding:10px 14px;margin:10px 0;font-size:14px}
+  .qa summary{cursor:pointer;font-weight:700;color:var(--usf-green-d);margin-top:6px}
+  ul.tight,ol.tight{margin:6px 0 0;padding-left:20px}ul.tight li,ol.tight li{margin-bottom:5px;font-size:14px}
+  footer{padding:24px 0;color:var(--muted);font-size:12.8px;border-top:1px solid var(--line);margin-top:18px}
+  footer a{color:var(--usf-green-d)}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">AI for Mobility &middot; CGN 6933 &middot; Agents unit &middot; Nov 17 &middot; Giving a model the right knowledge</div>
+  <h1>Where knowledge lives: eight places, one hurricane morning</h1>
+  <p>A strong model knows what a generator and a mast arm are. It has not read FDOT District 7's hurricane signal SOP.
+     This page takes the eight places knowledge can reach an agent and fills each one with the real D7 material from the
+     course kit: the instructions, the example cards, the card format, the skill and its files, the search results, the
+     code, the people the SOP names, and what the model already knows. Then it follows one morning's request through
+     them, step by step, and counts what each step puts in front of the model. It goes with Handout 2,
+     <i>How to Pass Knowledge to an AI Agent</i>.</p>
+</div></header>
+
+<nav class="tabs"><div class="wrap" role="tablist" aria-label="Sections of this page">
+  <button role="tab" aria-selected="true" data-tab="p1" class="active">1 &middot; The eight places</button>
+  <button role="tab" aria-selected="false" data-tab="p2">2 &middot; One hurricane morning</button>
+  <button role="tab" aria-selected="false" data-tab="p3">3 &middot; Try a request</button>
+  <button role="tab" aria-selected="false" data-tab="p4">4 &middot; What it costs</button>
+  <button role="tab" aria-selected="false" data-tab="p5">5 &middot; Fit card and check yourself</button>
+</div></nav>
+
+<!-- ============================== 1 ============================== -->
+<section class="page active" id="p1" role="tabpanel"><div class="wrap">
+  <h2 class="sec">Eight places knowledge can reach an agent</h2>
+  <p class="lead">The left column is in front of the model on every call. The right column stays closed until the model,
+     working through a step, decides it needs a procedure, a passage or a number, and asks for it. A person sits after the
+     model and gets back the decisions the agency gives to people. The weights are the model itself. Click any box to see
+     what it holds for D7 signal response.</p>
+
+  <div class="callout good"><b>You already work this way.</b> On a storm morning at the TMC, the one-page card taped to the
+     console is in front of you all the time: who you serve and what never to do (instructions). The SOP binder sits on the
+     shelf until you need a step (the skill). The MUTCD is down the hall, and you pull one section (retrieval). You use a
+     calculator for clock times, not your head (code). Some calls you hand to the TMC supervisor (a person). And your
+     training tells you what a mast arm is without opening anything (the weights).</div>
+
+  <div class="card">
+    <div class="figwrap" id="fig1"></div>
+    <div class="legend">
+      <span><span class="sw g"></span>sent with every call</span>
+      <span><span class="sw d"></span>the model asks for it (dashed)</span>
+      <span><span class="sw s"></span>it comes back (solid)</span>
+      <span class="small">Token counts: <span id="tokNote"></span></span>
+    </div>
+  </div>
+  <div class="detail" id="detail"></div>
+</div></section>
+
+<!-- ============================== 2 ============================== -->
+<section class="page" id="p2" role="tabpanel"><div class="wrap">
+  <h2 class="sec">One hurricane morning, step by step</h2>
+  <p class="lead">Here is one request from the class scenario (synthetic), traced through the figure. At each step, watch
+     which box opens and how much text is now in front of the model. The right column adds only what a step needs.</p>
+  <div class="card">
+    <h4>The request</h4>
+    <div class="callout" id="reqText" style="margin-top:4px"></div>
+    <div class="btnrow">
+      <button class="ghost" id="stBack">&larr; Back</button>
+      <div class="dots" id="stDots"></div>
+      <button class="act" id="stNext">Next step &rarr;</button>
+    </div>
+    <div class="stephead"><span class="n" id="stN"></span><h3 id="stTitle"></h3></div>
+    <p id="stText" style="margin:4px 0 10px;font-size:14.5px;max-width:900px"></p>
+    <div class="figwrap" id="fig2"></div>
+    <h4>What is in front of the model now</h4>
+    <div class="meter" id="stMeter"></div>
+    <div class="chips" id="stChips"></div>
+    <div id="stOpen"></div>
+  </div>
+  <details class="deeper"><summary>Going deeper: why the real total is larger than the meter</summary><div>
+    <p>The meter counts what sits in front of the model once all the steps have run. A real agent calls the model several
+       times for one request: it reasons, asks for a file or runs a tool, gets the result, and calls the model again with
+       everything so far. Each call re-reads the conversation up to that point, so the tokens billed across the whole run
+       are larger than the meter's last number. Prompt caching lowers the price of re-reading the same opening text,
+       which is one more reason to keep the left column short and stable.</p>
+  </div></details>
+</div></section>
+
+<!-- ============================== 3 ============================== -->
+<section class="page" id="p3" role="tabpanel"><div class="wrap">
+  <h2 class="sec">Try a request</h2>
+  <p class="lead">Different requests open different boxes. Pick one: the figure shows which places it reaches, the meter shows
+     what it puts in front of the model, and below is the answer the skill produces, with where that answer came from.</p>
+  <div class="card">
+    <div class="reqs" id="reqBtns"></div>
+    <div class="callout" id="rqText"></div>
+    <div class="figwrap" id="fig3"></div>
+    <h4>Opened for this request</h4>
+    <div class="chips" id="rqChips"></div>
+    <div class="meter" id="rqMeter"></div>
+    <h4>Why it goes this way</h4>
+    <p id="rqWhy" style="margin:4px 0;font-size:14.5px;max-width:900px"></p>
+    <h4>The answer</h4>
+    <div id="rqOut"></div>
+    <p class="small" id="rqSrc"></p>
+  </div>
+</div></section>
+
+<!-- ============================== 4 ============================== -->
+<section class="page" id="p4" role="tabpanel"><div class="wrap">
+  <h2 class="sec">What it costs: every call, or only when a step needs it</h2>
+  <p class="lead">Anything you put in the left column is paid for on every request, including the requests that never use it.
+     Move the skill's files between the two columns and see what a storm day costs in tokens. The day is a mix of the eight
+     requests from tab 3 in equal shares; you choose how many requests there are.</p>
+  <div class="card">
+    <div class="scrollx"><table class="t" id="costTable"></table></div>
+    <div class="ctrl"><label for="nReq">Requests in one storm day: <span id="nReqVal" class="mono"></span></label>
+      <input type="range" id="nReq" min="8" max="400" step="8" value="80"></div>
+    <div class="readout" id="costStats"></div>
+    <div id="costBars"></div>
+    <p class="small">Tool results (rules.py output) depend on each request, so they can never move to the left column. The
+       instructions, example cards, card format, skill descriptions and the request itself are always in front of the model:
+       <span id="alwaysTok"></span> tokens.</p>
+  </div>
+  <div class="callout warn"><b>Tokens are not the only cost.</b> Pasting the whole SOP into the instructions also takes away
+     the reading path. With all 150 clauses in front of it, the model has to find the right phase on its own every time,
+     which is the job the skill's steps 2 and 3 do for it. In the RAG test, meaning search found only 3 of the 15 items of the
+     72-hour plan in its top 3, while a filter on the SOP's own sections found all 15.</div>
+</div></section>
+
+<!-- ============================== 5 ============================== -->
+<section class="page" id="p5" role="tabpanel"><div class="wrap">
+  <h2 class="sec">Fit card: where to put a piece of agency knowledge</h2>
+  <div class="fitcard">
+    <div class="row"><div class="k">Idea in one sentence</div><div>Put each piece where it costs least and can still be checked: a short page on every call, the rest opened only when a step needs it, and the agency's decisions left with a named person.</div></div>
+    <div class="row"><div class="k">Why it works</div><div>The model reasons well but has not read your SOP. The left column sets the job; the skill, retrieval and code bring exact words, exact passages and exact numbers at the moment a step needs them; the person keeps what the agency assigns to people.</div></div>
+    <div class="row"><div class="k">Fits these tasks</div><div>SOP-driven operations (hurricane signal response, incident management), inspection and damage forms, crash coding, study checklists. Leverage: retrieval, generation, extraction, classification.</div></div>
+    <div class="row"><div class="k">Needs this data</div><div>The SOP with its version and pages; the agency's form; 10 to 20 hard cases; an hour with someone who does the work. No labels to start; labeled items to measure.</div></div>
+    <div class="row"><div class="k">Breaks when</div><div>The skill's description never matches the words people use, so it never opens; a number is left in prose for the model to compute; a gap is not written down, so the model fills it; examples come from the test set.</div></div>
+    <div class="row"><div class="k">Keep the classical method when</div><div>A rule is a formula or a lookup table: code it and skip the model. A trained classifier already meets the agency's accuracy. The value comes straight from a sensor, ATMS or a GIS layer.</div></div>
+  </div>
+
+  <h3>Check yourself</h3>
+  <div class="qa"><b>1.</b> A teammate moves all of <code>sop_text.md</code> into the instructions "so the agent never misses a clause."
+    What does that do to a request like "what is a mast arm?", and what is lost besides tokens?
+    <details><summary>One way to answer</summary><p>That request needed only the left column: <span data-n="always_tok"></span> tokens.
+    Now every request also carries the whole file, <span data-n="sop_full_tok"></span> more tokens, used or not. The bigger loss is the
+    reading path: the model must find the right phase among 150 clauses every time, instead of the skill sending it to the
+    one section that applies (Immediately Post Storm holds <span data-n="ips_n"></span> of them).</p></details></div>
+  <div class="qa"><b>2.</b> Crews text "lights at Drew St are dark and the gen went out at 6:40" and the skill never opens. Which two places
+    do you fix?
+    <details><summary>One way to answer</summary><p>The skill's description, which decides whether it opens at all: add the
+    words crews use ("the lights are dark", "gen"). Then the glossary, so that once it opens, "dark" maps to non-operational and
+    "gen" to generator before the model looks for clauses. Test both with requests written in field words.</p></details></div>
+  <div class="qa"><b>3.</b> Where does "First refueling to occur six (6) hours after initial deployment" go, and where does
+    "Develop an ongoing refueling schedule based on fueling needs" go?
+    <details><summary>One way to answer</summary><p>The first is a rule with a number: code (<code>rules.py refuel</code>), and
+    the card cites 3.2.1. The second gives no rule, so the schedule after the first refuel goes to a person, and
+    <code>gaps.md</code> says so.</p></details></div>
+  <div class="qa"><b>4.</b> Your agency hands you a 300-page traffic incident management manual and a two-page on-scene checklist.
+    Where does each go?
+    <details><summary>One way to answer</summary><p>The two-page checklist is a procedure the agent follows: a skill, with its
+    steps, its numbers in code and its deciders named. The 300-page manual is reference you look things up in: retrieval, with
+    every quote cited to its page. The skill's steps say when to search the manual.</p></details></div>
+  <div class="qa"><b>5.</b> When would you fine-tune the weights instead of using the other seven places?
+    <details><summary>One way to answer</summary><p>When you have many labeled examples of a pattern that is hard to write
+    down (a style of damage photo, a way narratives are written) and it changes slowly. Not for the D7 SOP: it changes by
+    version, a fine-tuned model cannot point to the clause it learned from, and every card must quote one.</p></details></div>
+
+  <details class="deeper"><summary>Going deeper: how a Claude skill loads in three stages</summary><div>
+    <p>Claude's skill documentation describes three stages. The name and description of every installed skill are always in
+       front of the model; for D7 that is <span data-n="desc_chars"></span> characters. When a request matches, Claude reads
+       <code>SKILL.md</code>. It opens a reference file or runs a script only when a step in <code>SKILL.md</code> says to.
+       That is why the description must use the words of real requests, and why each step in <code>SKILL.md</code> names the
+       file it opens. Read more in <a href="https://claude.com/docs/skills" target="_blank" rel="noopener">Skills overview</a>.</p>
+  </div></details>
+
+  <h3>For your project</h3>
+  <ul class="tight">
+    <li>Write the left column in under a page: who the agent serves, the output form, and what it must never do.</li>
+    <li>Put your manual in a skill, split along its own numbering, with a reading path that names the file each step opens.</li>
+    <li>Put every number, threshold and deadline in code, with a test on a known answer.</li>
+    <li>Use retrieval only for documents too long to load, and quote every passage with its page.</li>
+    <li>Name the person for every decision your agency assigns, and list what your manual does not say.</li>
+  </ul>
+</div></section>
+
+<footer><div class="wrap">
+  <b>Sources.</b> FDOT District 7, Traffic Signals Standard Operating Procedures Reference Guide, v1.5, June 2025 (PDF pages 5&ndash;11, as extracted for Lab 8).
+  Course kit <code>Nov17_kit.zip</code>: <code>sop_demo/d7-signal-sop</code> (SKILL.md, references, scripts/rules.py, assets/action_card.md),
+  <code>scenario/</code> and <code>tests/</code>; every excerpt on this page is read from those files and every tool result is produced by running
+  <code>rules.py</code>. Search results in the retrieval panel come from the course companion <i>RAG on the Signal SOP</i>
+  (MiniLM, one piece per SOP item). Token counts use the o200k_base tokenizer (tiktoken); Claude counts somewhat differently,
+  so read them as estimates. Text marked "written for this page" was written for this companion; the two cards among it pass
+  the kit's <code>check_cards.py</code>. Claude: <a href="https://claude.com/docs/skills" target="_blank" rel="noopener">Skills overview</a>
+  and <a href="https://claude.com/docs/skills/how-to.md" target="_blank" rel="noopener">Create custom skills</a>.
+  The scenario, generators and repairs are synthetic.<br>
+  Agents unit credit: CMU 11-768 AI Agents (Fried and Neubig); Stanford CS 329Z Engineering AI Agents.
+  Built by <code>knowledge_places/</code> in the module folder.
+</div></footer>
+
+<script type="application/json" id="data">{
+ "meta": {
+  "tokenizer": "o200k_base (tiktoken); Claude's tokenizer counts differently, so treat these as estimates",
+  "kit": "agents_nov17/kit/sop_demo",
+  "badA_msg": [
+   "x quote is not the SOP's words for Post-Storm > Immediately Post Storm > 3.2.1: \"Refuel generators every six hours\""
+  ],
+  "checked_written": {
+   "card_two": "1 of 1 cards pass.",
+   "card_ddir": "1 of 1 cards pass."
+  }
+ },
+ "pieces": {
+  "instructions": {
+   "title": "Instructions",
+   "text": "You support the FDOT District 7 traffic signal team before and after hurricanes.\nAnswer as action cards in the card format. Quote the SOP word for word and cite the clause id.\nNever rank intersections or set generator priorities: TMC personnel do that.\nIf the SOP does not say, say so and name who to ask.",
+   "tokens": 66,
+   "place": 1,
+   "src": "written for this page"
+  },
+  "examples": {
+   "title": "Two labeled example cards",
+   "text": "### Card 2: Set the order for the next generators\n- **Do:** Decide whether generators go only to Priority #1 intersections or to every red signal in the zone. The agent cannot rank the 7 red signals: the SOP has no priority list and the zone maps are blank.\n- **Who:** TMC personnel\n- **When:** before the next generator leaves the yard\n- **SOP:** Pre-Storm > Three Hours Prior > 2.2 — \"TMC personnel to determine generator deployment priorities\"\n- **Weight:** standard\n- **Person decides:** yes — TMC personnel; the SOP gives them this decision\n\n### Card 4: Refuel NH-114 by 12:10 and NH-121 by 12:40\n- **Do:** Send the refueling team to NH-114 first (due 12:10), then NH-121 (due 12:40). Times from `rules.py refuel`.\n- **Who:** not stated (Appendix C is blank)\n- **When:** 2026-10-10 12:10 and 12:40\n- **SOP:** Post-Storm > Immediately Post Storm > 3.2.1 — \"First refueling to occur six (6) hours after initial deployment\"\n- **Weight:** standard\n- **Person decides:** no — later refuels follow fueling needs (3.2), which a person sets\n\n<!-- sent back by the checker -->\n### Card A: Refuel every six hours\n- **Do:** Refuel all generators every six hours.\n- **Who:** Refueling teams\n- **When:** 12:10, 18:10, 00:10\n- **SOP:** Post-Storm > Immediately Post Storm > 3.2.1 — \"Refuel generators every six hours\"\n- **Weight:** standard\n- **Person decides:** no\n",
+   "tokens": 391,
+   "place": 2,
+   "src": "kit: scenario/example_cards.md (Cards 2 and 4), tests/bad_cards_synthetic.md (Card A)"
+  },
+  "form": {
+   "title": "The card format",
+   "text": "### Card <N>: <short action, verb first>\n- **Do:** <what to do, one or two sentences, with the intersections or generators it applies to>\n- **Who:** <the role the SOP names, or \"not stated (Appendix C is blank)\">\n- **When:** <a clock time or deadline; copy it from scripts/rules.py when a rule sets it>\n- **SOP:** <clause id> — \"<the SOP's exact words>\"; <second clause id> — \"<exact words>\"\n- **Weight:** <must | standard | consider, copied from references/sop_text.md>\n- **Person decides:** <no | yes — who decides and why>\n\nClause ids use \">\" between parts, for example\n`Post-Storm > Immediately Post Storm > 3.2.1`.\n\nAfter the last card, one block per lesson or practice entry that applies:\n\n### Suggestion <N>: <short idea, verb first>\n- **Suggest:** <what to consider, one or two sentences; for a contested question, both sides>\n- **From:** <L# or P#> — <its source and date, as written in lessons.md or practice.md>\n- **Person decides:** yes — <who decides>\n\nSuggestions never carry an SOP field or a weight: they are not the SOP.\n\nThen:\n\n### Not covered\n- <a question the user asked that neither the SOP nor the lessons answer, and who to ask>\n",
+   "tokens": 301,
+   "place": 6,
+   "src": "kit: d7-signal-sop/assets/action_card.md"
+  },
+  "listing": {
+   "title": "Skill names and descriptions",
+   "text": "Available skills:\n- d7-signal-sop: Turn the FDOT District 7 Traffic Signals SOP (v1.5, June 2025) into action cards for hurricane response - pre-storm preparation, post-storm signal status from ATMS, generator deployment and refueling, SAT and DAT passes, eSTORM updates, emergency TWOs and DDIR funding. Use when someone asks what the signal team should do next before or after a storm in District 7, or asks whether a plan follows the SOP, even in field words (\"the lights are dark\", \"top off the backup power\"). Every action cites an SOP clause word for word; lessons from past storms come separately, as suggestions.",
+   "tokens": 144,
+   "place": 3,
+   "src": "kit: d7-signal-sop/SKILL.md (front matter)"
+  },
+  "request": {
+   "title": "The request",
+   "text": "It is 07:30 on 2026-10-10, the morning after landfall in Pinellas County. ATMS on US-19 shows 31 signals: 18 green, 6 yellow, 7 red. Generator NH-114 went out at 06:10 and NH-121 at 06:40.\nBoth generators went out early this morning. What should the signal team do over the next 12 hours, and when do we top them off?",
+   "tokens": 98,
+   "place": 0,
+   "src": "written for this page, from scenario/scenario_day1.md"
+  },
+  "skill_body": {
+   "title": "SKILL.md (the reading path)",
+   "text": "\n# D7 traffic signal SOP: from procedure to action cards\n\nCourse demo skill for AI for Mobility (CGN 6933, USF). It is not an FDOT product.\nIt covers the SOP's pre-storm, post-storm, emergency TWO and funding pages\n(PDF pages 5-11). Damage assessment pages and Appendix A are not included.\n\n## Files\n\n- `references/sop_text.md`: every clause with its id, weight and page. Read the\n  section for the phase you are in, not the whole file.\n- `references/clauses.json`: the same clauses in machine-readable form.\n- `references/gaps.md`: what the SOP does not say. Read it before you answer.\n- `references/glossary.md`: field words mapped to the SOP's words.\n- `references/lessons.md`: lessons from past storms and other FDOT documents. Not the SOP.\n- `references/practice.md`: what experienced staff told us. Not the SOP.\n- `scripts/rules.py`: the SOP's time and money rules as code.\n- `assets/action_card.md`: the card and suggestion format. Fill it in exactly.\n\n## Where each kind of knowledge goes\n\n| Kind | Example in this SOP | What you do |\n|---|---|---|\n| Rule (a number, a time, a threshold) | first refuel six hours after deployment; encumber within 24 hours; $5,000 DDIR threshold; 1/4-mile grouping | Run `scripts/rules.py`. Never compute these yourself. |\n| Procedure (ordered steps) | the Immediately Post Storm steps | Follow `references/sop_text.md` and cite the clause. |\n| Guidance (long documents) | an after-action report, the MUTCD, a county plan | Use only if the user provides it. Cite the page. Never fill a gap from memory. |\n| Judgment (the SOP gives the decision to a person) | generator priorities (TMC personnel, Three Hours Prior 2.2); crew numbers (operations centers, 24 Hours Prior 1); DDIR grouping (DDIR team, TWO 4) | Write the card, set \"Person decides: yes\" and name who. |\n| Experience (not in the SOP) | stop control when no generator can run a signal (L1); retiming detour routes (L2); what staff told us (P1, P2, ...) | Write a **Suggestion**, never a card. Cite L# or P#. Person decides: yes. |\n\n## Steps\n\n1. Translate the request. Map field words to the SOP's words with\n   `references/glossary.md` (\"backup power\" means generator, \"dark\" means\n   non-operational). Search the SOP in its own words.\n2. Find the phase. Pre-storm: hours before landfall. Post-storm: Immediately Post\n   Storm, Ongoing Efforts, or 0-1 Week. Money: Emergency TWOs, 0-1 Month, 0-4 Months.\n   If the user gives no time line, ask for it before writing cards.\n3. Open `references/sop_text.md` and read that phase's clauses.\n4. For any time, deadline or dollar rule, run `scripts/rules.py` and copy its\n   result into the card's **When** field:\n   - `python3 scripts/rules.py atms yellow`\n   - `python3 scripts/rules.py refuel \"2026-10-10 06:10\"`\n   - `python3 scripts/rules.py sat \"<start>\" \"<end>\"`\n   - `python3 scripts/rules.py notice \"<notified>\" \"<deploy>\"`\n   - `python3 scripts/rules.py encumber \"<TWO issued>\"`\n   - `python3 scripts/rules.py two <issue date> <EO expiry> --soe yes --funding yes`\n   - `python3 scripts/rules.py ddir repairs.csv`\n5. Write one card per action with `assets/action_card.md`.\n   - Quote the SOP words exactly, between straight double quotes.\n   - Copy the weight from `sop_text.md`. Never raise a \"consider\" step to \"must\".\n   - **Who** is the role the SOP names. If it names none, write\n     \"not stated (Appendix C is blank)\".\n6. Set **Person decides: yes** when the SOP hands the decision to someone, or when\n   the action could put people at risk if it is wrong (energizing a damaged\n   signal, sending a crew into a flooded area).\n7. Read `references/gaps.md`. When an action needs a zone map, a priority list or\n   a responsibility assignment, say it is blank in v1.5 and name who to ask.\n   Never invent zone names, priority intersections, phone numbers, pay items or\n   costs.\n8. Read `references/lessons.md` and `references/practice.md`. Where a lesson or a\n   practice entry applies to the situation, add a **Suggestion** after the cards.\n   - Cite its id (L1, P2). Never put a lesson in a card's SOP field.\n   - Person decides: yes, always, with the role the entry names.\n   - If it conflicts with an SOP step, say so in the suggestion. The SOP card stands.\n   - If a question is contested (L3, signal head removal), give both sides and do not recommend.\n9. End with a short **Not covered** list: what the user asked that neither the SOP\n   nor the lessons answer.\n\n## Output\n\nOnly the cards, the suggestions and the Not covered list, in the format of\n`assets/action_card.md`. A checker (`check_cards.py` in the course kit) reads that\nformat, so do not change the field names.\n",
+   "tokens": 1220,
+   "place": 3,
+   "src": "kit: d7-signal-sop/SKILL.md"
+  },
+  "glossary": {
+   "title": "references/glossary.md",
+   "text": "# Field words → the SOP's words\n\nPeople in the field rarely use the SOP's terms. \"Top off the backup power units\" means\n**refueling** the **generators**; \"the lights are blinking\" means a signal **in flash**.\nBefore you look for clauses, map the request's words to the SOP's words with this table,\nthen search `sop_text.md` for the SOP's words. Keep the user's words in your answer only\nwhere they are clearer; cite the SOP in its own words.\n\n**Source and limits.** Written for class on Nov 14, 2026 from the SOP's own vocabulary\n(PDF pages 4-11) and common usage in Florida signal operations, for the RAG glossary test\n(48 entries). It was not written with D7 staff. A real glossary is built with the\noperators, crews and district staff who use both vocabularies: add their words at the bottom,\nwith who said it and when.\n\n| Field words | The SOP's words |\n|---|---|\n| backup power, portable power, power unit, power units, genset, gen set, portable generator | generator |\n| top off, top up, fill up, gas up, fuel up, diesel, gasoline, gas | refueling fuel |\n| send out, sent out, put out, drop off, dropped off, hook up, hooked up, out in the field, go out, went out | deploy deployment |\n| traffic light, traffic lights, stoplight, stoplights, stop light, lights | signal |\n| blinking, flashing, dark, blacked out, no power, lost power, out of service, not working | flash non-operational |\n| power company, utility power, grid power, power back, power restored, power comes back, power is back, electric company, duke energy, teco, tampa electric | commercial power restoration |\n| central system, central software, signal software, talking to, online, offline, comms, communication | ATMS signal system communicating |\n| field check, check crew, check crews, assessment crew, windshield crew, spotter, spotters, drive by, drive-by, patrol, first look | Situational Awareness Team SAT |\n| damage crew, damage crews, damage inspector, damage inspectors, damage team, inspection team | Damage Assessment Team DAT |\n| storm app, storm tracking app, tracking app, status app, storm database, storm system | eSTORM |\n| traffic management center, operations center, ops center, control room, tmc | RTMC TMC |\n| damage report, damage inspection report, fhwa report, federal damage, federal paperwork, fema, emergency relief, federal reimbursement, reimbursement | DDIR Detailed Damage Inspection Report |\n| project number, financial project, fund code, funding number | FPID Financial Project Identification |\n| work order, work orders, job order, job orders, task order, call out the contractor | Task Work Order TWO |\n| set aside, obligate, commit the money, commit funds, reserve the money, reserve funds, tie up | encumber funds CFM |\n| money, budget, dollars, pay for, cost | funding funds cost |\n| state of emergency, emergency declaration, declaration, governor's order, emergency order | governor executive order State of Emergency |\n| two days, 2 days | 48 Hours Prior |\n| one day before, a day before, day before landfall, 24 hrs | 24 Hours Prior |\n| a week before, week before, week out, seven days | One Week Prior |\n| a month before, month before, start of the season, hurricane season, early season | One Month Prior |\n| few hours before, couple hours before, right before landfall, last minute | Three Hours Prior |\n| before landfall, before the storm, before it hits, ahead of the storm, storm is coming | Pre-Storm |\n| right after, just after, storm passes, storm has passed, after it hits, after landfall, day after | Immediately Post Storm |\n| first week, week after, days after | 0-1 Week Post Storm |\n| month after, weeks after, first month | 0-1 Month Post Storm |\n| inspector, inspectors, consultant inspector, construction inspector | CEI inspectors |\n| contractor, contractors, vendor, vendors, maintenance contractor | Z-Contractors H-Contractors |\n| generator number, unit number, asset tag, asset number, serial number | NH # |\n| bring back, brought back, bring them back, return, returned, coming back, warehouse, depot | check-in yard |\n| pick up, picked up, collect, retrieve | pickups redeployments |\n| cabinet key, cabinet keys, controller cabinet, signal cabinet, signal cabinets | No. 2 keys cyber keys special keys |\n| route map, zone map, response zone, area map | hurricane response zone maps route maps |\n| group chat, group text, text group, chat | group messaging WhatsApp GroupMe |\n| shared sheet, spreadsheet, excel, tracker, tracking sheet | tracking spreadsheet |\n| pictures, photo, photos, coordinates, lat long, gps | pictures GPS geotag |\n| camera, cameras, video feed, video | CCTV camera feeds |\n| toll, tolls, toll booth | tolling suspension |\n| evacuation, evac, contraflow | evacuation timings |\n| outage map, outages, power outage, who has power | outage maps power companies |\n| tallahassee, headquarters, state office | Central Office |\n| upload, submit, file the request, send the request | load request SharePoint |\n| dme, maintenance engineer, district engineer | District Maintenance Engineer |\n| lodging, rooms, place to stay, motel | hotels |\n| supplies, snacks, meals, water | food storage water non-perishable |\n| radar sign, radar signs, your speed sign, speed sign, speed signs, school flasher, school zone flasher | speed feedback signs flashers beacons |\n| bill, billing, payment, pay the contractor | invoice final bill |\n| most important intersections, critical intersections, key intersections, major intersections | Priority #1 intersections |\n\n## Added from interviews\n<!-- One row per phrase: | field phrase | SOP term | who said it (role), date | -->\n",
+   "tokens": 1295,
+   "place": 3,
+   "src": "kit"
+  },
+  "sop_ips": {
+   "title": "sop_text.md: Immediately Post Storm only",
+   "text": "## Post-Storm > Immediately Post Storm\n\n- **Post-Storm > Immediately Post Storm > 1** [standard] (p. 8): Use ATMS signal system to determine what corridors are functional, meaning the signal is actively communicating with the ATMS signal system.\n- **Post-Storm > Immediately Post Storm > 1.1** [standard] (p. 8): If a signal is functioning within the ATMS signal system, the signal symbol will appear green.\n- **Post-Storm > Immediately Post Storm > 1.1.1** [standard] (p. 8): This indicates the signal is actively communicating and operational.\n- **Post-Storm > Immediately Post Storm > 1.1.2** [standard] (p. 8): All operational (green) signals in the ATMS signal system should be fully reflected in eSTORM.\n- **Post-Storm > Immediately Post Storm > 1.2** [standard] (p. 8): Signals shown as yellow or red, meaning a signal is in flash or non-operational, respectively, and should be evaluated for further action.\n- **Post-Storm > Immediately Post Storm > 1.2.1** [standard] (p. 8): A yellow or red status in the ATMS signal system should be used to help prioritize SAT and generator deployment teams.\n- **Post-Storm > Immediately Post Storm > 2** [standard] (p. 8): Conduct an initial windshield survey of corridors. Utilize SATs and Local Agency input.\n- **Post-Storm > Immediately Post Storm > 2.1** [standard] (p. 8): SAT deployment teams to conduct the initial pass of all roadways immediately post storm, utilizing eSTORM Lite to document and report all findings.\n- **Post-Storm > Immediately Post Storm > 3** [standard] (p. 8): Generator Deployment and Management\n- **Post-Storm > Immediately Post Storm > 3.1** [standard] (p. 8): Assign generators to teams and document: team name, generator NH #, and time/date deployed.\n- **Post-Storm > Immediately Post Storm > 3.2** [standard] (p. 8): Develop an ongoing refueling schedule based on fueling needs.\n- **Post-Storm > Immediately Post Storm > 3.2.1** [standard] (p. 8): First refueling to occur six (6) hours after initial deployment\n- **Post-Storm > Immediately Post Storm > 4** [standard] (p. 8): Status Updates and Coordination\n- **Post-Storm > Immediately Post Storm > 4.1** [standard] (p. 8): Monitor intersections transitioning from generator power to commercial power. Use outage maps provided by power companies.\n- **Post-Storm > Immediately Post Storm > 4.2** [standard] (p. 8): Coordinate with agencies for local generator deployment and FDOT generator replacement.\n- **Post-Storm > Immediately Post Storm > 4.3** [must] (p. 8): Track generator pickups and redeployments. Ensure proper check-in of generators returning to the yard.\n- **Post-Storm > Immediately Post Storm > 5** [standard] (p. 8): Operational Checks utilizing ATMS signal system. Confirm signals are operating correctly upon power restoration. Report any signals in flash or not functioning properly.\n- **Post-Storm > Immediately Post Storm > 6** [standard] (p. 8): Situational Awareness Team (SAT)\n- **Post-Storm > Immediately Post Storm > 6.1** [standard] (p. 8): Deploy SAT to intersections and follow assigned corridors. SAT assessments will continue twice daily at 9:00 AM and 2:00 PM, as intermittent commercial power restoration is ongoing.\n- **Post-Storm > Immediately Post Storm > 6.2** [standard] (p. 8): Maintain share repair/tracking spreadsheet for ongoing coordination.\n- **Post-Storm > Immediately Post Storm > 6.3** [must] (p. 8): Provide continuous updates on repair progress and issues encountered. eSTORM updates shall be made as soon as possible.\n- **Post-Storm > Immediately Post Storm > 6.4** [standard] (p. 8): Detailed assessments, including pictures of damage with GPS locations.\n- **Post-Storm > Immediately Post Storm > 7** [consider] (p. 8): Deploy DAT personnel. Consider requesting them to report signals, speed feedback signs, and beacons that are not found in eSTORM.\n- **Post-Storm > Immediately Post Storm > 8** [standard] (p. 9): Coordinate with the local agencies on repairs and equipment needs.\n- **Post-Storm > Immediately Post Storm > 9** [standard] (p. 9): Additional Notes\n- **Post-Storm > Immediately Post Storm > 9.1** [must] (p. 9): Ensure all teams have access to necessary templates and tracking sheets.\n- **Post-Storm > Immediately Post Storm > 9.2** [standard] (p. 9): Maintain clear and consistent communication across all response teams utilizing a streamlined group messaging option, such as WhatsApp or GroupMe\n- **Post-Storm > Immediately Post Storm > 9.3** [standard] (p. 9): Adjust deployment and repair strategies based on real-time field conditions.\n- **Post-Storm > Immediately Post Storm > 10** [consider] (p. 9): Consider using runners to investigate field requests.\n",
+   "tokens": 1177,
+   "place": 3,
+   "src": "kit: references/sop_text.md"
+  },
+  "sop_full": {
+   "title": "sop_text.md: all 150 clauses",
+   "text": "# FDOT D7 Traffic Signals SOP v1.5 (June 2025), PDF pages 5-11\n\nEach line: clause id, [weight], PDF page, then the SOP text word for word.\nCite clauses by id and quote the words exactly. Weights: must = shall/must/ensure/do not or a hard deadline;\nstandard = bare imperative; consider = consider/may/as needed/if necessary.\n\n\n## Pre-Storm > One Month Prior\n\n- **Pre-Storm > One Month Prior > 1** [must] (p. 5): Ensure eSTORM is fully updated.\n- **Pre-Storm > One Month Prior > 1.1** [standard] (p. 5): Test the application to confirm all new signals are added.\n- **Pre-Storm > One Month Prior > 1.2** [standard] (p. 5): Include speed feedback signs and flashers in addition to signals to aid in the Situational Awareness Team (SAT) and Damage Assessment Team (DAT) response.\n- **Pre-Storm > One Month Prior > 1.3** [standard] (p. 5): Conduct eSTORM and eSTORM Lite training sessions and verify user access for all necessary staff.\n- **Pre-Storm > One Month Prior > 1.3.1** [standard] (p. 5): Provide training for both SAT and DAT personnel, along with FDOT and consultant staffing\n- **Pre-Storm > One Month Prior > 1.4** [standard] (p. 5): Print out a list of current traffic signals in eSTORM, eSTORM checklist, and eSTORM user guide.\n- **Pre-Storm > One Month Prior > 2** [standard] (p. 5): Provide eSTORM (Lite) access to local agencies and eSTORM (regular) access to CEI staff and inspectors.\n- **Pre-Storm > One Month Prior > 3** [standard] (p. 5): Pre-Event Contract Meeting\n- **Pre-Storm > One Month Prior > 3.1** [standard] (p. 5): Review the contracting mechanism and confirm appropriate pay items. These are typically Z-Contracts or Permanent Signal Repair or Generator Deployments.\n- **Pre-Storm > One Month Prior > 3.2** [standard] (p. 5): Supplement or create additional H Contracts with Temporary and Permanent Repair Pay Items under Construction to assist with volume of work and resources.\n- **Pre-Storm > One Month Prior > 3.3** [standard] (p. 5): Meet with both CEI Leadership and Key Staff and provide sample Daily Work Orders and invoice deliverables with set expectations by Contract Managers.\n- **Pre-Storm > One Month Prior > 3.4** [standard] (p. 5): Meet with Z-Contractors and H-Contractors and provide Invoice Samples for expeditious approvals. Use examples of past contracts.\n- **Pre-Storm > One Month Prior > 4** [standard] (p. 5): Prepare/confirm list of SAT and DAT personnel. Compile phone numbers and email addresses.\n- **Pre-Storm > One Month Prior > 5** [standard] (p. 5): Pre-determine deployment corridors for the following signal assessment and generator deployment teams. Coordinate with FDOT and maintaining agencies.\n- **Pre-Storm > One Month Prior > 6** [consider] (p. 5): Print out route maps, list of contacts, and SLD, if necessary.\n- **Pre-Storm > One Month Prior > 7** [standard] (p. 5): Identify signals located within construction projects.\n- **Pre-Storm > One Month Prior > 8** [must] (p. 5): Ensure signal inventory list is up to date.\n- **Pre-Storm > One Month Prior > 9** [standard] (p. 5): Obtain cyber keys, or special keys if No. 2 keys are not utilized, from each agency.\n- **Pre-Storm > One Month Prior > 10** [standard] (p. 5): Test all generators to confirm they are operational.\n- **Pre-Storm > One Month Prior > 10.1** [must] (p. 5): Ensure generators have proper cables.\n- **Pre-Storm > One Month Prior > 11** [standard] (p. 5): Use combination locks on generators for secure deployments.\n- **Pre-Storm > One Month Prior > 12** [consider] (p. 5): Consider adding geotags to generators to track location in real time. Or, consider QA Code designations for each generator to be updated for location and refueling.\n- **Pre-Storm > One Month Prior > 13** [standard] (p. 5): Determine method for capturing and storing GPS coordinates.\n- **Pre-Storm > One Month Prior > 13.1** [consider] (p. 5): Consider use of mobile apps or devices with embedded geotagging (e.g., Solocator) capabilities\n- **Pre-Storm > One Month Prior > 13.1.1** [must] (p. 5): Ensure all personnel are trained in the chosen method.\n- **Pre-Storm > One Month Prior > 14** [standard] (p. 6): Utilize a streamlined group messaging option, such as WhatsApp or GroupMe, to create a text group for all key personnel to enable real-time communication before, during, and after the storm\n- **Pre-Storm > One Month Prior > 15** [must] (p. 6): Ensure employee access to ERS, InService, and eSTORM mailbox\n- **Pre-Storm > One Month Prior > 16** [standard] (p. 6): Check food storage\n- **Pre-Storm > One Month Prior > 16.1** [consider] (p. 6): Purchase water and non-perishable foods as needed\n\n## Pre-Storm > One Week Prior\n\n- **Pre-Storm > One Week Prior > 1** [standard] (p. 6): Conduct kickoff meetings for applicable personnel and agencies.\n- **Pre-Storm > One Week Prior > 1.1** [standard] (p. 6): Conduct training trainings for contractors on generator connection procedures with difference across local agencies. Remind Contractors/CEI to take photos of the damage and repairs with context.\n- **Pre-Storm > One Week Prior > 2** [standard] (p. 6): Contractor and Agency Coordination\n- **Pre-Storm > One Week Prior > 2.1** [standard] (p. 6): Contact all contractors to confirm emergency contact details.\n- **Pre-Storm > One Week Prior > 2.2** [standard] (p. 6): Conduct outreach to all maintaining agencies and coordinate post event response plans and preferences.\n- **Pre-Storm > One Week Prior > 2.3** [standard] (p. 6): Verify that all appropriate parties have access to eSTORM and other agencies applications.\n- **Pre-Storm > One Week Prior > 2.4** [standard] (p. 6): Provide power company and utilities contact information.\n- **Pre-Storm > One Week Prior > 3** [standard] (p. 6): Tracking and Documentation\n- **Pre-Storm > One Week Prior > 3.1** [standard] (p. 6): Distribute signal and damage tracking spreadsheet via shared link. Provide read-only access to the tracking spreadsheet for SAT assignments, generator deployments, and construction activities.\n- **Pre-Storm > One Week Prior > 4** [consider] (p. 6): Consider housing a contractor representative in the EOC or Tampa Operations.\n- **Pre-Storm > One Week Prior > 5** [standard] (p. 6): Obtain contractor pay item list.\n- **Pre-Storm > One Week Prior > 6** [standard] (p. 6): Initiate and ramp up the deployment plan in coordination with field teams as storm track becomes clearer. Send notification emails to personnel outlining expected roles, reporting times, and deployment locations.\n- **Pre-Storm > One Week Prior > 7** [standard] (p. 6): Review which agencies have generators plugs and provide ‘How-To’ guidance for their use.\n- **Pre-Storm > One Week Prior > 7.1** [consider] (p. 6): Consider pre-positioning 5-8 generators in Pinellas County, Hillsborough County, and the City of Tamp for their immediate deployment at key, priority intersections.\n- **Pre-Storm > One Week Prior > 8** [consider] (p. 6): Reserve hotels for personnel as needed.\n- **Pre-Storm > One Week Prior > 9** [must] (p. 6): At the RTMC, check the building for leaks. Ensure generators are operational.\n- **Pre-Storm > One Week Prior > 10** [standard] (p. 6): Discuss tolling suspension plans in case of emergency evacuations.\n- **Pre-Storm > One Week Prior > 10.1** [standard] (p. 6): Preapprove website update for toll suspension/Governor Order\n- **Pre-Storm > One Week Prior > 11** [standard] (p. 6): Test CCTV camera feeds and user log ins at the EOC level.\n- **Pre-Storm > One Week Prior > 12** [standard] (p. 6): Monitor arterial network and implement evacuation/revised timings at congested locations.\n\n## Pre-Storm > Three Days Prior\n\n- **Pre-Storm > Three Days Prior > 1** [standard] (p. 7): FDOT to assign inspectors to each generator group and/or corridor.\n- **Pre-Storm > Three Days Prior > 2** [standard] (p. 7): Tentatively assign Situational Awareness Teams (SAT) to designated corridors\n- **Pre-Storm > Three Days Prior > 3** [standard] (p. 7): Identify backup personnel in case team members are unable to deploy due to storm.\n- **Pre-Storm > Three Days Prior > 4** [standard] (p. 7): Reallocate generators from Tampa Yard to Pinellas Yard as appropriate.\n- **Pre-Storm > Three Days Prior > 5** [standard] (p. 7): Prioritize generators to Pinellas County and other agencies, as necessary.\n\n## Pre-Storm > 48 Hours Prior\n\n- **Pre-Storm > 48 Hours Prior > 1** [standard] (p. 7): Determine prepositioning of crews\n- **Pre-Storm > 48 Hours Prior > 2** [standard] (p. 7): Request Funding: Seek pre-event funding approval from the D7 District Maintenance Engineer\n- **Pre-Storm > 48 Hours Prior > 3** [standard] (p. 7): Fuel and load generator onto trailers. Inspectors and FDOT to track NH #’s. Key or combinations to be provided by FDOT/CEI.\n- **Pre-Storm > 48 Hours Prior > 4** [standard] (p. 7): Provide traffic operations personnel at Pinellas County TMC and other agencies, as necessary.\n\n## Pre-Storm > 24 Hours Prior\n\n- **Pre-Storm > 24 Hours Prior > 1** [standard] (p. 7): Determine number of crews and when to deploy to field (to be determined by operations centers). Provide at least 6-hour notice for all crews.\n- **Pre-Storm > 24 Hours Prior > 2** [must] (p. 7): Confirm routes, ensure generators are fueled, and verify all teams are prepared.\n- **Pre-Storm > 24 Hours Prior > 3** [standard] (p. 7): Recheck the 48-hour item decisions.\n\n## Pre-Storm > Three Hours Prior\n\n- **Pre-Storm > Three Hours Prior > 1** [standard] (p. 7): FDOT to provide finalized deployment routes to all generator teams and SAT based on where the storm hits.\n- **Pre-Storm > Three Hours Prior > 2** [standard] (p. 7): Contact maintaining agencies to verify system status via ATMS signal system. Update eSTORM accordingly based on system checks.\n- **Pre-Storm > Three Hours Prior > 2.1** [standard] (p. 7): Once systems checks are completed and eSTORM is updated, arterial RTMC personnel to reorder, prioritize, and distribute all hurricane response zone maps, including identifying priority routes, corridors, and zones for response efforts.\n- **Pre-Storm > Three Hours Prior > 2.2** [standard] (p. 7): TMC personnel to determine generator deployment priorities, including whether generator teams are to deploy only at Priority #1 intersections or to all non-operational signals within their assigned zones.\n- **Pre-Storm > Three Hours Prior > 3** [standard] (p. 7): Generator teams and SAT on standby for immediate deployment.\n\n## Post-Storm > Immediately Post Storm\n\n- **Post-Storm > Immediately Post Storm > 1** [standard] (p. 8): Use ATMS signal system to determine what corridors are functional, meaning the signal is actively communicating with the ATMS signal system.\n- **Post-Storm > Immediately Post Storm > 1.1** [standard] (p. 8): If a signal is functioning within the ATMS signal system, the signal symbol will appear green.\n- **Post-Storm > Immediately Post Storm > 1.1.1** [standard] (p. 8): This indicates the signal is actively communicating and operational.\n- **Post-Storm > Immediately Post Storm > 1.1.2** [standard] (p. 8): All operational (green) signals in the ATMS signal system should be fully reflected in eSTORM.\n- **Post-Storm > Immediately Post Storm > 1.2** [standard] (p. 8): Signals shown as yellow or red, meaning a signal is in flash or non-operational, respectively, and should be evaluated for further action.\n- **Post-Storm > Immediately Post Storm > 1.2.1** [standard] (p. 8): A yellow or red status in the ATMS signal system should be used to help prioritize SAT and generator deployment teams.\n- **Post-Storm > Immediately Post Storm > 2** [standard] (p. 8): Conduct an initial windshield survey of corridors. Utilize SATs and Local Agency input.\n- **Post-Storm > Immediately Post Storm > 2.1** [standard] (p. 8): SAT deployment teams to conduct the initial pass of all roadways immediately post storm, utilizing eSTORM Lite to document and report all findings.\n- **Post-Storm > Immediately Post Storm > 3** [standard] (p. 8): Generator Deployment and Management\n- **Post-Storm > Immediately Post Storm > 3.1** [standard] (p. 8): Assign generators to teams and document: team name, generator NH #, and time/date deployed.\n- **Post-Storm > Immediately Post Storm > 3.2** [standard] (p. 8): Develop an ongoing refueling schedule based on fueling needs.\n- **Post-Storm > Immediately Post Storm > 3.2.1** [standard] (p. 8): First refueling to occur six (6) hours after initial deployment\n- **Post-Storm > Immediately Post Storm > 4** [standard] (p. 8): Status Updates and Coordination\n- **Post-Storm > Immediately Post Storm > 4.1** [standard] (p. 8): Monitor intersections transitioning from generator power to commercial power. Use outage maps provided by power companies.\n- **Post-Storm > Immediately Post Storm > 4.2** [standard] (p. 8): Coordinate with agencies for local generator deployment and FDOT generator replacement.\n- **Post-Storm > Immediately Post Storm > 4.3** [must] (p. 8): Track generator pickups and redeployments. Ensure proper check-in of generators returning to the yard.\n- **Post-Storm > Immediately Post Storm > 5** [standard] (p. 8): Operational Checks utilizing ATMS signal system. Confirm signals are operating correctly upon power restoration. Report any signals in flash or not functioning properly.\n- **Post-Storm > Immediately Post Storm > 6** [standard] (p. 8): Situational Awareness Team (SAT)\n- **Post-Storm > Immediately Post Storm > 6.1** [standard] (p. 8): Deploy SAT to intersections and follow assigned corridors. SAT assessments will continue twice daily at 9:00 AM and 2:00 PM, as intermittent commercial power restoration is ongoing.\n- **Post-Storm > Immediately Post Storm > 6.2** [standard] (p. 8): Maintain share repair/tracking spreadsheet for ongoing coordination.\n- **Post-Storm > Immediately Post Storm > 6.3** [must] (p. 8): Provide continuous updates on repair progress and issues encountered. eSTORM updates shall be made as soon as possible.\n- **Post-Storm > Immediately Post Storm > 6.4** [standard] (p. 8): Detailed assessments, including pictures of damage with GPS locations.\n- **Post-Storm > Immediately Post Storm > 7** [consider] (p. 8): Deploy DAT personnel. Consider requesting them to report signals, speed feedback signs, and beacons that are not found in eSTORM.\n- **Post-Storm > Immediately Post Storm > 8** [standard] (p. 9): Coordinate with the local agencies on repairs and equipment needs.\n- **Post-Storm > Immediately Post Storm > 9** [standard] (p. 9): Additional Notes\n- **Post-Storm > Immediately Post Storm > 9.1** [must] (p. 9): Ensure all teams have access to necessary templates and tracking sheets.\n- **Post-Storm > Immediately Post Storm > 9.2** [standard] (p. 9): Maintain clear and consistent communication across all response teams utilizing a streamlined group messaging option, such as WhatsApp or GroupMe\n- **Post-Storm > Immediately Post Storm > 9.3** [standard] (p. 9): Adjust deployment and repair strategies based on real-time field conditions.\n- **Post-Storm > Immediately Post Storm > 10** [consider] (p. 9): Consider using runners to investigate field requests.\n\n## Post-Storm > Ongoing Efforts\n\n- **Post-Storm > Ongoing Efforts > 1** [must] (p. 9): eSTORM to be constantly updated through the entire process to ensure Central Office is seeing the most up-to-date information.\n- **Post-Storm > Ongoing Efforts > 1.1** [standard] (p. 9): Download eSTORM data each hour to keep historical track of changes.\n- **Post-Storm > Ongoing Efforts > 2** [standard] (p. 9): Provide continuous updates on repair progress and issues encountered.\n- **Post-Storm > Ongoing Efforts > 3** [standard] (p. 9): Track generator pickups and redeployments. Reconcile between CEI check-in and FDOT NH #’s.\n- **Post-Storm > Ongoing Efforts > 4** [must] (p. 9): Ensure proper check-in of generators returning to the yard.\n- **Post-Storm > Ongoing Efforts > 5** [standard] (p. 9): Daily status update conferences\n- **Post-Storm > Ongoing Efforts > 6** [standard] (p. 9): Monitor intersections transitioning from generator power to commercial power.\n- **Post-Storm > Ongoing Efforts > 7** [standard] (p. 9): Refueling generators\n\n## Post-Storm > 0-1 Week Post Storm\n\n- **Post-Storm > 0-1 Week Post Storm > 1** [must] (p. 9): SAT assessments shall continue daily at 9:00 AM and 2:00 PM to verify status of commercial power restoration.\n- **Post-Storm > 0-1 Week Post Storm > 1.1** [standard] (p. 9): As corridors are restored to commercial power, SATs can be modified to adjust resource needs.\n- **Post-Storm > 0-1 Week Post Storm > 2** [standard] (p. 9): Reduce the number of refueling teams as signals transition back to commercial power.\n- **Post-Storm > 0-1 Week Post Storm > 3** [standard] (p. 9): Conduct districtwide damage assessments using ArcGIS Field Maps/eSTORM and/or Survey123.\n- **Post-Storm > 0-1 Week Post Storm > 4** [standard] (p. 9): Load all damage, including sign-related damage, into the Damage Assessment Collector App\n- **Post-Storm > 0-1 Week Post Storm > 5** [standard] (p. 9): Upload and organize all damage pictures (Major Street @ Minor Street)\n- **Post-Storm > 0-1 Week Post Storm > 6** [standard] (p. 9): Additional Funding Request\n- **Post-Storm > 0-1 Week Post Storm > 6.1** [standard] (p. 9): Filter and sort the new Damage Report to determine rough estimates for repairs.\n- **Post-Storm > 0-1 Week Post Storm > 6.1.1** [standard] (p. 9): Identify repair types and costs based on the following: emergency or permanent repairs, < $5,000 or => $5,000 making sure to sum all repairs and totals\n- **Post-Storm > 0-1 Week Post Storm > 6.2** [standard] (p. 9): If additional funds are needed for repairs,\n- **Post-Storm > 0-1 Week Post Storm > 6.2.1** [standard] (p. 9): Request pre-event funding approvals from D7 District Maintenance Engineer DDIR Requests and Central Office as indicated in the “48 Hours Prior to Storm Event” Pre-Storm Section.\n- **Post-Storm > 0-1 Week Post Storm > 6.2.2** [standard] (p. 9): Email D7 with previous request/approval email chain.\n- **Post-Storm > 0-1 Week Post Storm > 6.2.3** [must] (p. 9): Load request into Central Office SharePoint site as a “NEW” request. Do not edit existing requests.\n- **Post-Storm > 0-1 Week Post Storm > 6.2.4** [standard] (p. 9): Check the green arrow after the request is loaded.\n\n## TWO > Emergency TWOs\n\n- **TWO > Emergency TWOs > 1** [standard] (p. 10): TWOs to be issued once a State of Emergency is ordered for the area and funding has been programmed or appropriated. Obtain a copy of the official TWO and any extensions.\n- **TWO > Emergency TWOs > 2** [standard] (p. 10): Confirm FPIDs are issued and programmed.\n- **TWO > Emergency TWOs > 2.1** [standard] (p. 10): This will typically happen either concurrently with or immediately after the issuance of the emergency TWO depending on the urgency and type of work involved.\n- **TWO > Emergency TWOs > 3** [standard] (p. 10): Issue all Emergency (both Temporary and Permanent) Work Orders.\n- **TWO > Emergency TWOs > 3.1** [standard] (p. 10): Understand when emergency permanent repairs can be issued.\n- **TWO > Emergency TWOs > 4** [standard] (p. 10): Coordinate with DDIR team to determine what grouping is required.\n- **TWO > Emergency TWOs > 5** [standard] (p. 10): Email list of emergency DDIR requests to DDIR team after issuance of emergency TWOs.\n- **TWO > Emergency TWOs > 6** [standard] (p. 10): Confirm FPIDs are issued and programmed.\n- **TWO > Emergency TWOs > 7** [standard] (p. 10): Once funding request is approved by D7 and CO, begin to issue emergency TWOs.\n- **TWO > Emergency TWOs > 8** [standard] (p. 10): After TWOs are issued and when available, enter DDIR and FPID numbers into TWOs.\n- **TWO > Emergency TWOs > 9** [must] (p. 10): Encumber funds in CFM against applicable FPIDs within 24 hours.\n- **TWO > Emergency TWOs > 10** [standard] (p. 10): Track, inspect, and close.\n- **TWO > Emergency TWOs > 11** [standard] (p. 10): Pay invoice and email final bill to DDIR team.\n- **TWO > Emergency TWOs > 12** [must] (p. 10): Do not issue emergency TWO after expiration of governor’s executive order.\n\n## Funding > 0-1 Month Post Storm\n\n- **Funding > 0-1 Month Post Storm > 1** [standard] (p. 10): Identify all emergency and permanent repairs (per Object ID or grouped within ¼ mile) with a repair cost of $5000 or greater.\n- **Funding > 0-1 Month Post Storm > 2** [standard] (p. 10): Email a DDIR request to DDIR team for both emergency and permanent repairs.\n- **Funding > 0-1 Month Post Storm > 2.1** [must] (p. 10): Emergency and permanent repairs within the same Object ID or grouped with ¼ mile may be included in the same DDIR if the total cost exceeds $5,000. The DDIR must distinguish between emergency work and permanent repairs.\n- **Funding > 0-1 Month Post Storm > 3** [standard] (p. 10): Once DDIRs are approved, take list to Work Program for team to issue FPIDs for emergency and/or permanent repairs.\n- **Funding > 0-1 Month Post Storm > 4** [standard] (p. 10): After DDIR-related FPIDs are issued, wait for approval of DDIR by FHWA. Log the DDIR and FPIDs with each TWO in the tracking spreadsheet.\n- **Funding > 0-1 Month Post Storm > 5** [standard] (p. 10): Draft the permanent TWOs and determine total repair costs for each FPID.\n- **Funding > 0-1 Month Post Storm > 6** [standard] (p. 10): Program (Work Program) and encumber funds (CFM) against applicable FPIDs.\n- **Funding > 0-1 Month Post Storm > 7** [standard] (p. 10): Issue permanent TWOs and copy in DDIR team.\n- **Funding > 0-1 Month Post Storm > 8** [standard] (p. 10): Track, inspect, and close Permanent TWOs.\n- **Funding > 0-1 Month Post Storm > 9** [standard] (p. 10): Pay invoice and email final bill to DDIR team.\n- **Funding > 0-1 Month Post Storm > 10** [standard] (p. 10): Email all TWOs and include DDIR team so they are aware of pending costs and can track repairs.\n- **Funding > 0-1 Month Post Storm > 11** [standard] (p. 10): Give final contract repair costs to DDIR team upon final acceptance of both emergency and permanent TWOs.\n\n## Funding > 0-4 Months Post Storm\n\n- **Funding > 0-4 Months Post Storm > 1** [standard] (p. 11): After funding request is approved by D7 and CO, begin to gather DDIR and FPIDs for permanent TWOs.\n- **Funding > 0-4 Months Post Storm > 2** [standard] (p. 11): Draft the permanent TWOs and determine total repair costs for each FPID.\n- **Funding > 0-4 Months Post Storm > 3** [standard] (p. 11): Encumber funds against applicable FPIDs.\n- **Funding > 0-4 Months Post Storm > 4** [standard] (p. 11): Issue permanent TWOs and cc DDIR team.\n- **Funding > 0-4 Months Post Storm > 5** [standard] (p. 11): Track, inspect, close.\n- **Funding > 0-4 Months Post Storm > 6** [standard] (p. 11): Pay invoice and email final bill to DDIR team.\n- **Funding > 0-4 Months Post Storm > 7** [must] (p. 11): Do not issue emergency TWO after expiration of governor’s executive order.\n",
+   "tokens": 6246,
+   "place": 3,
+   "src": "kit: references/sop_text.md"
+  },
+  "tool_out": {
+   "title": "rules.py refuel, twice",
+   "text": "{\n \"deployed\": \"2026-10-10 06:10\",\n \"first_refuel\": \"2026-10-10 12:10\",\n \"clause\": \"Post-Storm > Immediately Post Storm > 3.2.1\",\n \"after_that\": \"schedule based on fueling needs (3.2): a person decides\"\n}\n{\n \"deployed\": \"2026-10-10 06:40\",\n \"first_refuel\": \"2026-10-10 12:40\",\n \"clause\": \"Post-Storm > Immediately Post Storm > 3.2.1\",\n \"after_that\": \"schedule based on fueling needs (3.2): a person decides\"\n}",
+   "tokens": 148,
+   "place": 5,
+   "src": "kit: scripts/rules.py, run by build_data.py"
+  },
+  "gaps": {
+   "title": "references/gaps.md",
+   "text": "# What the SOP does not say (v1.5, June 2025)\n\nRead this before writing cards. When an action depends on one of these, say so\nin the card and name who to ask. Do not fill the gap yourself.\n\n1. **Appendix B, Hurricane Response Zone Maps (PDF p. 24), is blank.** Three Hours\n   Prior 2.1 says arterial RTMC personnel \"reorder, prioritize, and distribute all\n   hurricane response zone maps\", but the maps are not in the document.\n   Ask: arterial RTMC.\n2. **Appendix C, Responsibility Matrix (PDF p. 25), is blank.** Many steps name\n   no role (\"Track generator pickups and redeployments\"). Write\n   \"not stated (Appendix C is blank)\" in **Who**.\n3. **No list of Priority #1 intersections.** Three Hours Prior 2.2 refers to them.\n   TMC personnel decide generator priorities.\n4. **Refueling after the first one.** Immediately Post Storm 3.2 says \"based on\n   fueling needs\". Only the first refuel (six hours) is a rule.\n5. **$5,000: \"or greater\" or \"exceeds\"?** Funding 0-1 Month 1 says \"$5000 or\n   greater\" and 0-1 Week 6.1.1 says \"=> $5,000\", but 0-1 Month 2.1 says \"if the total\n   cost exceeds $5,000\". A group totaling exactly $5,000 goes to the DDIR team.\n6. **What counts as a 1/4-mile group.** The SOP gives the distance, not the method\n   (from the first repair? end to end?). The DDIR team decides (TWO 4).\n7. **0-1 Week 6.2.1 points to the \"48 Hours Prior to Storm Event\" section.** The\n   section's actual title is \"48 Hours Prior to Storm\".\n8. **Damage assessment pages and Appendix A (Field Checklist) are not in this\n   skill.** Damage codes come from the agency's form (see the form demo).\n9. **The weights are a reading of the verbs** (must / standard / consider), not an\n   FDOT classification. A person settles borderline cases.\n10. **Typos are quoted as written.** One Week Prior 7.1 says \"City of Tamp\".\n",
+   "tokens": 521,
+   "place": 3,
+   "src": "kit"
+  },
+  "lessons": {
+   "title": "references/lessons.md",
+   "text": "# Lessons from past storms and other documents (NOT the D7 SOP)\n\nThese lessons come from documents written after real storms. None of them is a step in the\nD7 SOP v1.5. Use them only as **suggestions**, in the \"Suggestion\" format of\n`assets/action_card.md`:\n\n- cite the lesson by its id (L1, L2, ...), never as an SOP clause;\n- always set **Person decides: yes** and name who;\n- never present a lesson as required, and never let it override an SOP step.\n\nEach lesson is paraphrased from its source. Open the source before quoting it.\n\n## L1\n- **Lesson:** If a generator cannot power a signal, put stop control in place at major intersections.\n- **Source:** FDOT Central Office, Traffic Engineering and Operations Office, \"FDOT Hurricane Preparation and Response Recommendations\" (slides; undated), \"After the Hurricane\".\n- **Use when:** a signal is red (non-operational) and no generator is available or one cannot be connected.\n- **Who decides:** TMC personnel, with the maintaining agency.\n\n## L2\n- **Lesson:** After an emergency, retime signals, starting with detour routes and heavily traveled areas.\n- **Source:** FDOT Central Office, Traffic Engineering and Operations Office, \"FDOT Hurricane Preparation and Response Recommendations\" (slides; undated), \"After the Hurricane\".\n- **Use when:** a road or bridge closure sends traffic onto a detour, or signals come back on commercial power.\n- **Who decides:** the signal timing engineer for the corridor.\n\n## L3\n- **Lesson:** Removing signal heads before a storm is contested. For: it saves equipment, lightens span-wire loads and gets intersections back to normal sooner. Against: fewer indications than the MUTCD requires leaves the agency exposed; a three-day forecast can change track, so the removal may be unnecessary; removed heads can be mistaken for storm damage and replaced.\n- **Source:** FDOT Central Office, Traffic Engineering and Operations Office, \"FDOT Hurricane Preparation and Response Recommendations\" (slides; undated), \"Area of Controversy: Signal Head Removal\". The slides list these as considerations, not recommendations.\n- **Use when:** someone asks whether to take heads down before landfall. Give both sides; do not recommend either.\n- **Who decides:** not stated in the D7 SOP; ask district traffic operations.\n\n## L4\n- **Lesson:** In Hillsborough County, more than 300 county-owned intersections have solar-powered backup beacons, developed by county Public Works after Hurricane Irma. They flash red, turning the intersection into a four-way stop, only after the signal loses power and its battery backup (about six to eight hours) is spent. About 170 signals were affected after Hurricane Ian in 2022.\n- **Source:** Hillsborough County news release, originally published November 9, 2022 (reposted January 2, 2024), \"A one-of-a-kind innovation makes Hillsborough County roads safer during widespread and extended power outages\".\n- **Use when:** ranking dark or flashing signals in Hillsborough County. A county intersection may be on battery or beacon, so the time since power loss matters.\n- **Who decides:** TMC personnel, after checking with Hillsborough County.\n\n## L5\n- **Lesson:** In Pinellas County, numerous span-wire signals fell during Hurricane Debby (2024), leaving them inoperable and blocking roads; Hurricane Milton downed over 100 traffic signals in St. Petersburg. The county is replacing span wire with mast arms and elevating signal cabinets on evacuation routes, which are particularly vulnerable to flooding on barrier-island roads.\n- **Source:** St. Pete Catalyst, \"County seeks funding to storm-harden traffic signals\", May 13, 2025, reporting Pinellas County documents.\n- **Use when:** a span-wire signal is down, or a cabinet on a barrier-island or evacuation route may have flooded.\n- **Who decides:** the field crew lead and TMC personnel. A downed signal is a road hazard first.\n\n## L6\n- **Lesson (why eSTORM matters):** After Hurricane Michael (2018), FDOT District 3 concluded it needed efficient, reliable, real-time tools for signal status and damage. With eSTORM after Hurricane Sally (2020), crews assessed 450 signals in the app, found 69 damaged, flashing or dark, and had all signals operational within one week.\n- **Source:** National Operations Center of Excellence (NOCoE), case study \"eSTORM\", December 28, 2023, sponsored by FDOT.\n- **Use when:** explaining why the SOP's eSTORM steps come first. It is a reason, not an extra step.\n- **Who decides:** not a decision.\n",
+   "tokens": 1000,
+   "place": 3,
+   "src": "kit"
+  },
+  "practice": {
+   "title": "references/practice.md (empty before class)",
+   "text": "# Practice: what experienced staff do that the SOP does not say (NOT the D7 SOP)\n\nPractice comes from people, not documents: how experienced signal staff fill the SOP's gaps,\nthe order they really work in, and the mistakes they see new staff make. Collect it by\ninterviewing someone who has worked a storm (see `INTERVIEW_THE_EXPERT.md` in the course kit).\n\nRules for this file:\n\n- Write down only what a named person said. Record their role and the date.\n- If the person is playing a role (as in the Nov 17 class demo, where the instructor plays a\n  district signal engineer), add \"role-played\" to **Said by**. Those entries are class\n  examples, not D7 practice.\n- One entry per idea, in their words where you can.\n- An entry is a **suggestion**, never a rule: cite it by its id (P1, P2, ...) in the\n  \"Suggestion\" format of `assets/action_card.md`, and set **Person decides: yes**.\n- If an entry contradicts the SOP, keep both and flag the conflict. Do not pick a winner.\n- Re-check entries every season. Practice changes faster than the SOP.\n\n## Entry format\n\n```\n## P<n>\n- **Practice:** <what they do, and why, in one or two sentences>\n- **Said by:** <role, not a name>, <date>\n- **Use when:** <the situation it applies to>\n- **Who decides:** <role>\n```\n\n## Entries\n<!-- Filled in class, from the interview. Until then this skill has no practice entries. -->\n",
+   "tokens": 346,
+   "place": 3,
+   "src": "kit"
+  },
+  "tool_out_two": {
+   "title": "rules.py two",
+   "text": "{\n \"allowed\": false,\n \"blocked_by\": [\n  \"executive order has expired (TWO 12)\"\n ],\n \"note\": null,\n \"clauses\": [\n  \"TWO > Emergency TWOs > 1\",\n  \"TWO > Emergency TWOs > 12\"\n ]\n}",
+   "tokens": 61,
+   "place": 5,
+   "src": "kit: scripts/rules.py"
+  },
+  "tool_out_ddir": {
+   "title": "rules.py ddir",
+   "text": "{\n \"groups\": [\n  {\n   \"repairs\": [\n    \"R6\",\n    \"R7\",\n    \"R8\"\n   ],\n   \"objects\": [\n    \"SIG-1060\",\n    \"SIG-1061\",\n    \"SIG-1062\"\n   ],\n   \"total\": 5800.0,\n   \"emergency\": 3900.0,\n   \"permanent\": 1900.0,\n   \"needs_ddir\": true,\n   \"flags\": [\n    \"chained group spans 667 m (> 1/4 mile end to end). Ask the DDIR team whether to split it.\"\n   ]\n  },\n  {\n   \"repairs\": [\n    \"R1\",\n    \"R2\"\n   ],\n   \"objects\": [\n    \"SIG-1041\"\n   ],\n   \"total\": 5600.0,\n   \"emergency\": 3200.0,\n   \"permanent\": 2400.0,\n   \"needs_ddir\": true,\n   \"flags\": []\n  },\n  {\n   \"repairs\": [\n    \"R3\",\n    \"R4\"\n   ],\n   \"objects\": [\n    \"SIG-1043\",\n    \"SIG-1044\"\n   ],\n   \"total\": 5000.0,\n   \"emergency\": 2600.0,\n   \"permanent\": 2400.0,\n   \"needs_ddir\": true,\n   \"flags\": [\n    \"total is exactly $5,000: 0-1 Month 1 says '$5000 or greater', 2.1 says 'exceeds $5,000'. Ask the DDIR team.\"\n   ]\n  },\n  {\n   \"repairs\": [\n    \"R5\"\n   ],\n   \"objects\": [\n    \"SIG-1050\"\n   ],\n   \"total\": 4100.0,\n   \"emergency\": 0,\n   \"permanent\": 4100.0,\n   \"needs_ddir\": false,\n   \"flags\": []\n  }\n ],\n \"clauses\": [\n  \"Funding > 0-1 Month Post Storm > 1\",\n  \"Funding > 0-1 Month Post Storm > 2.1\",\n  \"TWO > Emergency TWOs > 4\"\n ],\n \"decided_by\": \"DDIR team (TWO > Emergency TWOs > 4)\"\n}",
+   "tokens": 495,
+   "place": 5,
+   "src": "kit: scripts/rules.py"
+  },
+  "sop_two": {
+   "title": "sop_text.md: Emergency TWOs only",
+   "text": "## TWO > Emergency TWOs\n\n- **TWO > Emergency TWOs > 1** [standard] (p. 10): TWOs to be issued once a State of Emergency is ordered for the area and funding has been programmed or appropriated. Obtain a copy of the official TWO and any extensions.\n- **TWO > Emergency TWOs > 2** [standard] (p. 10): Confirm FPIDs are issued and programmed.\n- **TWO > Emergency TWOs > 2.1** [standard] (p. 10): This will typically happen either concurrently with or immediately after the issuance of the emergency TWO depending on the urgency and type of work involved.\n- **TWO > Emergency TWOs > 3** [standard] (p. 10): Issue all Emergency (both Temporary and Permanent) Work Orders.\n- **TWO > Emergency TWOs > 3.1** [standard] (p. 10): Understand when emergency permanent repairs can be issued.\n- **TWO > Emergency TWOs > 4** [standard] (p. 10): Coordinate with DDIR team to determine what grouping is required.\n- **TWO > Emergency TWOs > 5** [standard] (p. 10): Email list of emergency DDIR requests to DDIR team after issuance of emergency TWOs.\n- **TWO > Emergency TWOs > 6** [standard] (p. 10): Confirm FPIDs are issued and programmed.\n- **TWO > Emergency TWOs > 7** [standard] (p. 10): Once funding request is approved by D7 and CO, begin to issue emergency TWOs.\n- **TWO > Emergency TWOs > 8** [standard] (p. 10): After TWOs are issued and when available, enter DDIR and FPID numbers into TWOs.\n- **TWO > Emergency TWOs > 9** [must] (p. 10): Encumber funds in CFM against applicable FPIDs within 24 hours.\n- **TWO > Emergency TWOs > 10** [standard] (p. 10): Track, inspect, and close.\n- **TWO > Emergency TWOs > 11** [standard] (p. 10): Pay invoice and email final bill to DDIR team.\n- **TWO > Emergency TWOs > 12** [must] (p. 10): Do not issue emergency TWO after expiration of governor’s executive order.\n",
+   "tokens": 517,
+   "place": 3,
+   "src": "kit: references/sop_text.md"
+  },
+  "sop_three": {
+   "title": "sop_text.md: Three Hours Prior only",
+   "text": "## Pre-Storm > Three Hours Prior\n\n- **Pre-Storm > Three Hours Prior > 1** [standard] (p. 7): FDOT to provide finalized deployment routes to all generator teams and SAT based on where the storm hits.\n- **Pre-Storm > Three Hours Prior > 2** [standard] (p. 7): Contact maintaining agencies to verify system status via ATMS signal system. Update eSTORM accordingly based on system checks.\n- **Pre-Storm > Three Hours Prior > 2.1** [standard] (p. 7): Once systems checks are completed and eSTORM is updated, arterial RTMC personnel to reorder, prioritize, and distribute all hurricane response zone maps, including identifying priority routes, corridors, and zones for response efforts.\n- **Pre-Storm > Three Hours Prior > 2.2** [standard] (p. 7): TMC personnel to determine generator deployment priorities, including whether generator teams are to deploy only at Priority #1 intersections or to all non-operational signals within their assigned zones.\n- **Pre-Storm > Three Hours Prior > 3** [standard] (p. 7): Generator teams and SAT on standby for immediate deployment.\n",
+   "tokens": 252,
+   "place": 3,
+   "src": "kit: references/sop_text.md"
+  }
+ },
+ "steps": [
+  {
+   "n": 1,
+   "title": "The left column is already there",
+   "arrow": "left",
+   "loads": [
+    "instructions",
+    "examples",
+    "form",
+    "listing",
+    "request"
+   ],
+   "text": "The instructions, the two example cards, the card format and the one-line description of each skill arrive with the request. You pay for them on every call, so they stay short. None of the SOP's 150 clauses is here yet.",
+   "added": 1000,
+   "total": 1000
+  },
+  {
+   "n": 2,
+   "title": "Is there a skill for this job?",
+   "arrow": "ask-skill",
+   "loads": [
+    "skill_body"
+   ],
+   "text": "The model has only seen the skill's name and description. “Generators”, “after a storm” and “District 7” match d7-signal-sop, so it asks for the skill and SKILL.md comes back: the nine-step reading path.",
+   "added": 1220,
+   "total": 2220
+  },
+  {
+   "n": 3,
+   "title": "Translate the field words",
+   "arrow": "ask-skill",
+   "loads": [
+    "glossary"
+   ],
+   "text": "“Top them off” is not the SOP's term. Step 1 of SKILL.md opens glossary.md: top off means refueling, and the units are generators.",
+   "added": 1295,
+   "total": 3515
+  },
+  {
+   "n": 4,
+   "title": "Find the phase, read only that",
+   "arrow": "ask-skill",
+   "loads": [
+    "sop_ips"
+   ],
+   "text": "The morning after landfall is Immediately Post Storm. The model reads that section of sop_text.md, not the whole file. Two clauses matter most here: 1.2 and 3.2.1.",
+   "added": 1177,
+   "total": 4692
+  },
+  {
+   "n": 5,
+   "title": "A number is needed",
+   "arrow": "ask-tools",
+   "loads": [
+    "tool_out"
+   ],
+   "text": "The model does not add six hours in its head. It runs rules.py refuel for each generator; each answer comes back with clause 3.2.1 attached. After the first refuel the SOP says “based on fueling needs”, so the code hands the rest to a person.",
+   "added": 148,
+   "total": 4840
+  },
+  {
+   "n": 6,
+   "title": "A passage the skill does not hold",
+   "arrow": "ask-retrieval",
+   "loads": [],
+   "text": "Suppose the operator also asks what the MUTCD says about running a signal in flash. The skill does not hold the MUTCD, so the model would ask a search tool for the passage and quote it with its section and page. The class kit has no MUTCD index: this step shows the pattern only, and adds nothing to the meter.",
+   "added": 0,
+   "total": 4840
+  },
+  {
+   "n": 7,
+   "title": "A decision the SOP gives to someone",
+   "arrow": "person",
+   "loads": [],
+   "text": "Which of the 7 red signals gets the next free generator? No file or tool answers that: the SOP gives it to TMC personnel (Three Hours Prior 2.2). The card says “Person decides: yes — TMC personnel”.",
+   "added": 0,
+   "total": 4840
+  },
+  {
+   "n": 8,
+   "title": "Say what is blank",
+   "arrow": "ask-skill",
+   "loads": [
+    "gaps"
+   ],
+   "text": "Step 7 of SKILL.md opens gaps.md. Asked for the zone map, the card says Appendix B is blank in v1.5 and names arterial RTMC, who distribute the zone maps.",
+   "added": 521,
+   "total": 5361
+  },
+  {
+   "n": 9,
+   "title": "The answer, in the agency's form",
+   "arrow": "form",
+   "loads": [
+    "lessons",
+    "practice"
+   ],
+   "text": "Step 8 of SKILL.md reads lessons.md and practice.md for suggestions. Then come six-field cards that each quote a clause, any suggestions from experience, and a Not covered list. check_cards.py reads all of it before anyone acts.",
+   "added": 1346,
+   "total": 6707
+  }
+ ],
+ "always": [
+  "instructions",
+  "examples",
+  "form",
+  "listing",
+  "request"
+ ],
+ "everything": [
+  "instructions",
+  "examples",
+  "form",
+  "request",
+  "skill_body",
+  "sop_full",
+  "glossary",
+  "gaps",
+  "lessons",
+  "practice"
+ ],
+ "requests": [
+  {
+   "key": "refuel",
+   "label": "When do we top off NH-114?",
+   "q": "NH-114 went out at 06:10 this morning. When do we top it off?",
+   "route": [
+    "skill",
+    "tools"
+   ],
+   "loads": [
+    "skill_body",
+    "glossary",
+    "sop_ips",
+    "tool_out"
+   ],
+   "out_kind": "card",
+   "out": "### Card 4: Refuel NH-114 by 12:10 and NH-121 by 12:40\n- **Do:** Send the refueling team to NH-114 first (due 12:10), then NH-121 (due 12:40). Times from `rules.py refuel`.\n- **Who:** not stated (Appendix C is blank)\n- **When:** 2026-10-10 12:10 and 12:40\n- **SOP:** Post-Storm > Immediately Post Storm > 3.2.1 — \"First refueling to occur six (6) hours after initial deployment\"\n- **Weight:** standard\n- **Person decides:** no — later refuels follow fueling needs (3.2), which a person sets\n",
+   "out_src": "kit: scenario/example_cards.md, Card 4 (written by Claude following the skill, checked by check_cards.py)",
+   "why": "Field words go through the glossary; the phase is Immediately Post Storm; the time comes from rules.py, never from the model.",
+   "added": 3840,
+   "total": 4840
+  },
+  {
+   "key": "two",
+   "label": "An emergency TWO on Nov 9?",
+   "q": "Can we still issue an emergency TWO on Nov 9? The governor's order ran through Nov 8.",
+   "route": [
+    "skill",
+    "tools"
+   ],
+   "loads": [
+    "skill_body",
+    "sop_two",
+    "tool_out_two"
+   ],
+   "out_kind": "card",
+   "out": "### Card 1: Do not issue the emergency TWO on Nov 9\n- **Do:** Do not issue an emergency TWO on 2026-11-09: the executive order expired on 2026-11-08. Result from `rules.py two`.\n- **Who:** not stated (Appendix C is blank)\n- **When:** before any emergency TWO goes out\n- **SOP:** TWO > Emergency TWOs > 12 — \"Do not issue emergency TWO after expiration of governor’s executive order.\"\n- **Weight:** must\n- **Person decides:** no\n",
+   "out_src": "written for this page following the skill; passes check_cards.py",
+   "why": "The deadline is a rule, so rules.py two decides it and returns clauses TWO 1 and 12. The must-clause is quoted word for word.",
+   "added": 1798,
+   "total": 2798
+  },
+  {
+   "key": "priority",
+   "label": "Which red signal gets the generator?",
+   "q": "Seven signals are red and one generator just came free. Which signal gets it?",
+   "route": [
+    "skill",
+    "person"
+   ],
+   "loads": [
+    "skill_body",
+    "sop_three",
+    "gaps"
+   ],
+   "out_kind": "card",
+   "out": "### Card 2: Set the order for the next generators\n- **Do:** Decide whether generators go only to Priority #1 intersections or to every red signal in the zone. The agent cannot rank the 7 red signals: the SOP has no priority list and the zone maps are blank.\n- **Who:** TMC personnel\n- **When:** before the next generator leaves the yard\n- **SOP:** Pre-Storm > Three Hours Prior > 2.2 — \"TMC personnel to determine generator deployment priorities\"\n- **Weight:** standard\n- **Person decides:** yes — TMC personnel; the SOP gives them this decision\n",
+   "out_src": "kit: scenario/example_cards.md, Card 2",
+   "why": "No tool can rank them: the SOP has no Priority #1 list (gaps.md 3) and gives generator priorities to TMC personnel. The agent hands the decision back.",
+   "added": 1993,
+   "total": 2993
+  },
+  {
+   "key": "zone",
+   "label": "Send me the zone map",
+   "q": "Send me our hurricane response zone map.",
+   "route": [
+    "skill"
+   ],
+   "loads": [
+    "skill_body",
+    "gaps"
+   ],
+   "out_kind": "gap",
+   "out": "### Not covered\n- Which zone each red signal is in, and the priority routes: Appendix B (zone maps) is blank in v1.5. Ask arterial RTMC.\n",
+   "out_src": "kit: scenario/example_cards.md, Not covered",
+   "why": "gaps.md says Appendix B is blank in v1.5. Without that file, a model asked for the map tends to make one up.",
+   "added": 1741,
+   "total": 2741
+  },
+  {
+   "key": "heads",
+   "label": "Take the signal heads down?",
+   "q": "A storm is three days out. Should we take the signal heads down at the span-wire intersections?",
+   "route": [
+    "skill",
+    "person"
+   ],
+   "loads": [
+    "skill_body",
+    "lessons",
+    "practice"
+   ],
+   "out_kind": "suggestion",
+   "out": "### Suggestion 2: Signal head removal: both sides, no recommendation\n- **Suggest:** For: it saves equipment, lightens span-wire loads and speeds the return to normal. Against: fewer indications than the MUTCD requires leaves the agency exposed; a three-day forecast can change track; removed heads can be mistaken for storm damage. The D7 SOP does not address it.\n- **From:** L3 — FDOT Central Office TEOO, \"FDOT Hurricane Preparation and Response Recommendations\" (undated), \"Area of Controversy\"\n- **Person decides:** yes — not stated in the D7 SOP; ask district traffic operations\n",
+   "out_src": "kit: scenario/example_experience.md, Suggestion 2",
+   "why": "The SOP says nothing about it. Lesson L3 (FDOT TEOO slides) lists it as a controversy, so the agent gives both sides, recommends neither, and leaves the call to a person.",
+   "added": 2566,
+   "total": 3566
+  },
+  {
+   "key": "ddir",
+   "label": "Do these repairs need a DDIR?",
+   "q": "Here are eight repairs (repairs_synthetic.csv). Which ones need a DDIR?",
+   "route": [
+    "skill",
+    "tools",
+    "person"
+   ],
+   "loads": [
+    "skill_body",
+    "sop_two",
+    "tool_out_ddir"
+   ],
+   "out_kind": "card",
+   "out": "### Card 1: Send the proposed DDIR groups to the DDIR team\n- **Do:** Send the four proposed groups to the DDIR team. Three total $5,000 or more; two are flagged: one totals exactly $5,000, and one chained group spans 667 m end to end. Groups from `rules.py ddir`.\n- **Who:** DDIR team\n- **When:** with the emergency DDIR requests\n- **SOP:** TWO > Emergency TWOs > 4 — \"Coordinate with DDIR team to determine what grouping is required.\"\n- **Weight:** standard\n- **Person decides:** yes — DDIR team; the SOP gives them the grouping decision\n",
+   "out_src": "written for this page following the skill; passes check_cards.py",
+   "why": "rules.py groups the repairs and flags the two edges the SOP never decided. Grouping belongs to the DDIR team (TWO 4), so code proposes and a person decides.",
+   "added": 2232,
+   "total": 3232
+  },
+  {
+   "key": "mutcd",
+   "label": "What does the MUTCD say about flash?",
+   "q": "What does the MUTCD say about running a signal in flashing mode?",
+   "route": [
+    "retrieval"
+   ],
+   "loads": [],
+   "out_kind": "notfound",
+   "out": "### Not covered\n- What the MUTCD says about flashing operation: the MUTCD is not in this skill. With a MUTCD search tool the agent would quote the section and page; without one it says so and asks for the section.",
+   "out_src": "written for this page",
+   "why": "The answer lives in a long reference document, not the SOP. That is retrieval's job: find the passage, quote it with its page. The class kit has no MUTCD index, so the honest answer is “not covered”.",
+   "added": 0,
+   "total": 1000
+  },
+  {
+   "key": "mastarm",
+   "label": "What is a mast arm?",
+   "q": "What is a mast arm?",
+   "route": [
+    "weights"
+   ],
+   "loads": [],
+   "out_kind": "weights",
+   "out": "A mast arm is the horizontal arm, cantilevered from a vertical pole, that holds signal heads over the travel lanes. The other common way to hang heads is span wire strung between two poles. (General knowledge: no SOP clause is needed, so the skill stays closed.)",
+   "out_src": "written for this page",
+   "why": "General knowledge is already in the weights. The request does not match the skill's description, so nothing on the right opens and nothing extra is paid for.",
+   "added": 0,
+   "total": 1000
+  }
+ ],
+ "deciders": [
+  {
+   "who": "TMC personnel",
+   "what": "generator deployment priorities",
+   "id": "Pre-Storm > Three Hours Prior > 2.2",
+   "text": "TMC personnel to determine generator deployment priorities, including whether generator teams are to deploy only at Priority #1 intersections or to all non-operational signals within their assigned zones.",
+   "page": 7
+  },
+  {
+   "who": "Operations centers",
+   "what": "how many crews, and when they deploy",
+   "id": "Pre-Storm > 24 Hours Prior > 1",
+   "text": "Determine number of crews and when to deploy to field (to be determined by operations centers). Provide at least 6-hour notice for all crews.",
+   "page": 7
+  },
+  {
+   "who": "DDIR team",
+   "what": "how repairs are grouped",
+   "id": "TWO > Emergency TWOs > 4",
+   "text": "Coordinate with DDIR team to determine what grouping is required.",
+   "page": 10
+  },
+  {
+   "who": "Arterial RTMC personnel",
+   "what": "zone maps, priority routes and corridors",
+   "id": "Pre-Storm > Three Hours Prior > 2.1",
+   "text": "Once systems checks are completed and eSTORM is updated, arterial RTMC personnel to reorder, prioritize, and distribute all hurricane response zone maps, including identifying priority routes, corridors, and zones for response efforts.",
+   "page": 7
+  }
+ ],
+ "rules": {
+  "refuel114": "{\n \"deployed\": \"2026-10-10 06:10\",\n \"first_refuel\": \"2026-10-10 12:10\",\n \"clause\": \"Post-Storm > Immediately Post Storm > 3.2.1\",\n \"after_that\": \"schedule based on fueling needs (3.2): a person decides\"\n}",
+  "refuel121": "{\n \"deployed\": \"2026-10-10 06:40\",\n \"first_refuel\": \"2026-10-10 12:40\",\n \"clause\": \"Post-Storm > Immediately Post Storm > 3.2.1\",\n \"after_that\": \"schedule based on fueling needs (3.2): a person decides\"\n}",
+  "two": "{\n \"allowed\": false,\n \"blocked_by\": [\n  \"executive order has expired (TWO 12)\"\n ],\n \"note\": null,\n \"clauses\": [\n  \"TWO > Emergency TWOs > 1\",\n  \"TWO > Emergency TWOs > 12\"\n ]\n}",
+  "ddir": "{\n \"groups\": [\n  {\n   \"repairs\": [\n    \"R6\",\n    \"R7\",\n    \"R8\"\n   ],\n   \"objects\": [\n    \"SIG-1060\",\n    \"SIG-1061\",\n    \"SIG-1062\"\n   ],\n   \"total\": 5800.0,\n   \"emergency\": 3900.0,\n   \"permanent\": 1900.0,\n   \"needs_ddir\": true,\n   \"flags\": [\n    \"chained group spans 667 m (> 1/4 mile end to end). Ask the DDIR team whether to split it.\"\n   ]\n  },\n  {\n   \"repairs\": [\n    \"R1\",\n    \"R2\"\n   ],\n   \"objects\": [\n    \"SIG-1041\"\n   ],\n   \"total\": 5600.0,\n   \"emergency\": 3200.0,\n   \"permanent\": 2400.0,\n   \"needs_ddir\": true,\n   \"flags\": []\n  },\n  {\n   \"repairs\": [\n    \"R3\",\n    \"R4\"\n   ],\n   \"objects\": [\n    \"SIG-1043\",\n    \"SIG-1044\"\n   ],\n   \"total\": 5000.0,\n   \"emergency\": 2600.0,\n   \"permanent\": 2400.0,\n   \"needs_ddir\": true,\n   \"flags\": [\n    \"total is exactly $5,000: 0-1 Month 1 says '$5000 or greater', 2.1 says 'exceeds $5,000'. Ask the DDIR team.\"\n   ]\n  },\n  {\n   \"repairs\": [\n    \"R5\"\n   ],\n   \"objects\": [\n    \"SIG-1050\"\n   ],\n   \"total\": 4100.0,\n   \"emergency\": 0,\n   \"permanent\": 4100.0,\n   \"needs_ddir\": false,\n   \"flags\": []\n  }\n ],\n \"clauses\": [\n  \"Funding > 0-1 Month Post Storm > 1\",\n  \"Funding > 0-1 Month Post Storm > 2.1\",\n  \"TWO > Emergency TWOs > 4\"\n ],\n \"decided_by\": \"DDIR team (TWO > Emergency TWOs > 4)\"\n}",
+  "sat": "{\n \"passes\": [\n  \"2026-10-10 09:00\",\n  \"2026-10-10 14:00\"\n ],\n \"clause\": \"Post-Storm > 0-1 Week Post Storm > 1\"\n}"
+ },
+ "rules_tok": {
+  "refuel114": 74,
+  "refuel121": 74,
+  "two": 61,
+  "ddir": 495,
+  "sat": 53
+ },
+ "ddir_short": "{\n \"groups\": [\n  {\n   \"repairs\": [\n    \"R6\",\n    \"R7\",\n    \"R8\"\n   ],\n   \"total\": 5800.0,\n   \"needs_ddir\": true,\n   \"flags\": [\n    \"chained group spans 667 m (> 1/4 mile end to end). Ask the DDIR team whether to split it.\"\n   ]\n  },\n  {\n   \"repairs\": [\n    \"R1\",\n    \"R2\"\n   ],\n   \"total\": 5600.0,\n   \"needs_ddir\": true,\n   \"flags\": []\n  },\n  {\n   \"repairs\": [\n    \"R3\",\n    \"R4\"\n   ],\n   \"total\": 5000.0,\n   \"needs_ddir\": true,\n   \"flags\": [\n    \"total is exactly $5,000: 0-1 Month 1 says '$5000 or greater', 2.1 says 'exceeds $5,000'. Ask the DDIR team.\"\n   ]\n  },\n  {\n   \"repairs\": [\n    \"R5\"\n   ],\n   \"total\": 4100.0,\n   \"needs_ddir\": false,\n   \"flags\": []\n  }\n ],\n \"decided_by\": \"DDIR team (TWO > Emergency TWOs > 4)\"\n}",
+ "skill_desc": "Turn the FDOT District 7 Traffic Signals SOP (v1.5, June 2025) into action cards for hurricane response - pre-storm preparation, post-storm signal status from ATMS, generator deployment and refueling, SAT and DAT passes, eSTORM updates, emergency TWOs and DDIR funding. Use when someone asks what the signal team should do next before or after a storm in District 7, or asks whether a plan follows the SOP, even in field words (\"the lights are dark\", \"top off the backup power\"). Every action cites an SOP clause word for word; lessons from past storms come separately, as suggestions.",
+ "sugg_stop": "### Suggestion 1: Consider stop control until a generator is free\n- **Suggest:** At the two red signals with no generator, consider stop control until power or a generator returns. This is not an SOP step.\n- **From:** L1 — FDOT Central Office TEOO, \"FDOT Hurricane Preparation and Response Recommendations\" (undated)\n- **Person decides:** yes — TMC personnel, with the maintaining agency\n",
+ "rag": {
+  "0": {
+   "q": "How soon after a generator is deployed should it be refueled the first time?",
+   "top": [
+    {
+     "rank": 1,
+     "i": 45,
+     "cos": 4616,
+     "piece": {
+      "text": "FDOT D7 Signal SOP, Post-Storm > Immediately Post Storm, item 3 (p. 8): 3 Generator Deployment and Management 3.1 Assign generators to teams and document: team name, generator NH #, and time/date deployed. 3.2 Develop an ongoing refueling schedule based on fueling needs. 3.2.1 First refueling to occur six (6) hours after initial deployment",
+      "sec": "Post-Storm > Immediately Post Storm",
+      "item": "3",
+      "held": [
+       "Post-Storm > Immediately Post Storm > 3",
+       "Post-Storm > Immediately Post Storm > 3.1",
+       "Post-Storm > Immediately Post Storm > 3.2",
+       "Post-Storm > Immediately Post Storm > 3.2.1"
+      ],
+      "pages": [
+       8
+      ]
+     }
+    },
+    {
+     "rank": 2,
+     "i": 42,
+     "cos": 3997,
+     "piece": {
+      "text": "FDOT D7 Signal SOP, Pre-Storm > Three Hours Prior, item 3 (p. 7): 3 Generator teams and SAT on standby for immediate deployment.",
+      "sec": "Pre-Storm > Three Hours Prior",
+      "item": "3",
+      "held": [
+       "Pre-Storm > Three Hours Prior > 3"
+      ],
+      "pages": [
+       7
+      ]
+     }
+    },
+    {
+     "rank": 3,
+     "i": 31,
+     "cos": 3956,
+     "piece": {
+      "text": "FDOT D7 Signal SOP, Pre-Storm > Three Days Prior, item 4 (p. 7): 4 Reallocate generators from Tampa Yard to Pinellas Yard as appropriate.",
+      "sec": "Pre-Storm > Three Days Prior",
+      "item": "4",
+      "held": [
+       "Pre-Storm > Three Days Prior > 4"
+      ],
+      "pages": [
+       7
+      ]
+     }
+    }
+   ],
+   "answer_piece": [
+    45
+   ],
+   "answer_rank": [
+    1
+   ],
+   "answer_cos": [
+    4616
+   ]
+  },
+  "12": {
+   "q": "Our backup power units went out to the field this morning. When do we need to top them off with gas?",
+   "top": [
+    {
+     "rank": 1,
+     "i": 31,
+     "cos": 3489,
+     "piece": {
+      "text": "FDOT D7 Signal SOP, Pre-Storm > Three Days Prior, item 4 (p. 7): 4 Reallocate generators from Tampa Yard to Pinellas Yard as appropriate.",
+      "sec": "Pre-Storm > Three Days Prior",
+      "item": "4",
+      "held": [
+       "Pre-Storm > Three Days Prior > 4"
+      ],
+      "pages": [
+       7
+      ]
+     }
+    },
+    {
+     "rank": 2,
+     "i": 61,
+     "cos": 3363,
+     "piece": {
+      "text": "FDOT D7 Signal SOP, Post-Storm > 0-1 Week Post Storm, item 2 (p. 9): 2 Reduce the number of refueling teams as signals transition back to commercial power.",
+      "sec": "Post-Storm > 0-1 Week Post Storm",
+      "item": "2",
+      "held": [
+       "Post-Storm > 0-1 Week Post Storm > 2"
+      ],
+      "pages": [
+       9
+      ]
+     }
+    },
+    {
+     "rank": 3,
+     "i": 32,
+     "cos": 3360,
+     "piece": {
+      "text": "FDOT D7 Signal SOP, Pre-Storm > Three Days Prior, item 5 (p. 7): 5 Prioritize generators to Pinellas County and other agencies, as necessary.",
+      "sec": "Pre-Storm > Three Days Prior",
+      "item": "5",
+      "held": [
+       "Pre-Storm > Three Days Prior > 5"
+      ],
+      "pages": [
+       7
+      ]
+     }
+    }
+   ],
+   "answer_piece": [
+    45
+   ],
+   "answer_rank": [
+    5
+   ],
+   "answer_cos": [
+    3222
+   ]
+  }
+ },
+ "num": {
+  "clauses": 150,
+  "ips_n": 29,
+  "must": 18,
+  "standard": 123,
+  "consider": 9,
+  "desc_chars": 585,
+  "glossary_entries": 48,
+  "lessons": 6,
+  "practice_entries": 0,
+  "gaps": 10,
+  "always_tok": 1000,
+  "steps_total": 6707,
+  "everything_tok": 11484,
+  "sop_full_tok": 6246,
+  "sop_ips_tok": 1177,
+  "refuel114": "12:10",
+  "refuel121": "12:40",
+  "ddir_groups": 4,
+  "ddir_needed": 3,
+  "ddir_flagged": 2,
+  "rag_sop_rank": 1,
+  "rag_field_rank": 5
+ }
+}</script>
+<script>
+"use strict";
+const D = JSON.parse(document.getElementById('data').textContent);
+const N = D.num, P = D.pieces;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt = n => Number(n).toLocaleString('en-US');
+const inl = s => esc(s).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+document.querySelectorAll('[data-n]').forEach(e => { e.textContent = fmt(N[e.dataset.n]); });
+$('tokNote').textContent = D.meta.tokenizer;
+
+/* ---------------- colours per piece ---------------- */
+const COL = {instructions:'#006747', examples:'#2E7D5C', form:'#5fa384', listing:'#CFC493', request:'#9aa7a2',
+  skill_body:'#B79F4D', glossary:'#d4bd6a', sop_ips:'#8f7a33', sop_full:'#8f7a33', sop_two:'#8f7a33', sop_three:'#8f7a33',
+  gaps:'#a8903f', lessons:'#c9ad52', practice:'#e3d39a', tool_out:'#0E6E9E', tool_out_two:'#0E6E9E', tool_out_ddir:'#0E6E9E'};
+
+/* ---------------- the figure ---------------- */
+const PL = {
+  p1:{x:30,y:72,col:'l',num:'1',name:'Instructions',sub:'who it serves, the card, never-do',tok:()=>P.instructions.tokens},
+  p2:{x:30,y:178,col:'l',num:'2',name:'Labeled examples',sub:'Cards 2 and 4; Card A sent back',tok:()=>P.examples.tokens},
+  p6:{x:30,y:284,col:'l',num:'6',name:'The output form',sub:'the six-field action card',tok:()=>P.form.tokens},
+  p3:{x:720,y:72,col:'r',num:'3',name:'Skill',sub:'d7-signal-sop, read by phase',tok:()=>P.skill_body.tokens},
+  p4:{x:720,y:178,col:'r',num:'4',name:'Retrieval',sub:'the MUTCD, after-action reports',tok:null},
+  p5:{x:720,y:284,col:'r',num:'5',name:'Code and tools',sub:'rules.py: refuel, SAT, TWO, DDIR',tok:null},
+};
+function fig(pfx){
+  const W = 250, H = 88, g = [];
+  g.push(`<svg viewBox="0 30 1000 494" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Eight places knowledge can reach an agent, with the D7 signal SOP" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">`);
+  g.push(`<defs><marker id="${pfx}-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#006747"/></marker>
+    <marker id="${pfx}-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#B79F4D"/></marker>
+    <marker id="${pfx}-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a9894"/></marker></defs>`);
+  g.push(`<text x="30" y="52" font-size="13" font-weight="700" fill="#5b6b66" letter-spacing="1">IN FRONT OF IT ON EVERY CALL</text>`);
+  g.push(`<text x="970" y="52" text-anchor="end" font-size="13" font-weight="700" fill="#8f7a33" letter-spacing="1">OPENED ONLY WHEN A STEP NEEDS IT</text>`);
+  // left arrows
+  for (const k of ['p1','p2','p6']) { const y = PL[k].y + H/2; g.push(`<g class="ar al" data-a="l${k}"><path d="M280 ${y}H337" stroke="#006747" stroke-width="2" fill="none" marker-end="url(#${pfx}-g)"/></g>`); }
+  // ask / return arrows
+  const lab = {p3:['needs steps?','SKILL.md + files'], p4:['needs a page?','the quoted passage'], p5:['needs a number?','the exact answer']};
+  for (const k of ['p3','p4','p5']) { const c = PL[k].y + H/2;
+    g.push(`<g class="ar" data-a="a${k}"><path d="M580 ${c-14}H716" stroke="#B79F4D" stroke-width="2" stroke-dasharray="6 5" fill="none" marker-end="url(#${pfx}-o)"/><text x="650" y="${c-22}" text-anchor="middle" font-size="12.5" font-weight="600" fill="#6b5a1f">${lab[k][0]}</text></g>`);
+    g.push(`<g class="ar" data-a="b${k}"><path d="M720 ${c+14}H584" stroke="#8a9894" stroke-width="2" fill="none" marker-end="url(#${pfx}-s)"/><text x="650" y="${c+33}" text-anchor="middle" font-size="12" fill="#5b6b66">${lab[k][1]}</text></g>`); }
+  // person arrow
+  g.push(`<g class="ar" data-a="pd"><path d="M460 364V418" stroke="#8a9894" stroke-width="2" fill="none" marker-end="url(#${pfx}-s)"/><text x="472" y="396" font-size="12.5" fill="#5b6b66">hands back the decision</text></g>`);
+  // boxes
+  for (const [k, b] of Object.entries(PL)) {
+    const left = b.col === 'l', stroke = left ? '#006747' : '#B79F4D';
+    const t = b.tok ? `${fmt(b.tok())} tokens` : (k === 'p4' ? 'not in the class kit' : 'runs only when called');
+    g.push(`<g class="pl ${left ? 'lt' : 'rt'}" data-p="${k}"><rect class="bx" x="${b.x}" y="${b.y}" width="${W}" height="${H}" rx="10" fill="#fff" stroke="${stroke}" stroke-width="2"/>
+      <text x="${b.x+16}" y="${b.y+27}" font-size="16.5" font-weight="700" fill="#1c2422">${b.num}  ${b.name}</text>
+      <text x="${b.x+16}" y="${b.y+51}" font-size="13" fill="#5b6b66">${esc(b.sub)}</text>
+      <text x="${b.x+16}" y="${b.y+74}" font-size="12" font-weight="700" fill="${left ? '#2E7D5C' : '#8f7a33'}" font-family="ui-monospace,Menlo,monospace">${t}</text></g>`);
+  }
+  // model
+  g.push(`<g class="pl md" data-p="model"><rect class="bx" x="340" y="72" width="240" height="292" rx="12" fill="#e3f1ea" stroke="#006747" stroke-width="2.5"/>
+    <text x="460" y="108" text-anchor="middle" font-size="19" font-weight="800" fill="#003E2A">The model</text>
+    <text x="460" y="138" text-anchor="middle" font-size="13" fill="#1c2422">reasons through the task,</text>
+    <text x="460" y="156" text-anchor="middle" font-size="13" fill="#1c2422">decides what each step needs,</text>
+    <text x="460" y="174" text-anchor="middle" font-size="13" fill="#1c2422">and asks for it</text></g>`);
+  g.push(`<g class="pl wt" data-p="p8"><rect class="bx" x="352" y="262" width="216" height="84" rx="10" fill="#f6faf8" stroke="#8a9894" stroke-width="1.6" stroke-dasharray="5 4"/>
+    <text x="460" y="290" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1c2422">8  In the weights</text>
+    <text x="460" y="312" text-anchor="middle" font-size="12.5" fill="#5b6b66">knows mast arms,</text>
+    <text x="460" y="330" text-anchor="middle" font-size="12.5" fill="#5b6b66">not D7's SOP</text></g>`);
+  g.push(`<g class="pl pr" data-p="p7"><rect class="bx" x="335" y="420" width="250" height="88" rx="10" fill="#fff" stroke="#6d4f8a" stroke-width="2"/>
+    <text x="460" y="448" text-anchor="middle" font-size="16.5" font-weight="700" fill="#1c2422">7  A person</text>
+    <text x="460" y="471" text-anchor="middle" font-size="13" fill="#5b6b66">TMC personnel, the DDIR team, ...</text>
+    <text x="460" y="493" text-anchor="middle" font-size="12" font-weight="700" fill="#6d4f8a">decides what the SOP assigns</text></g>`);
+  g.push(`</svg>`);
+  return g.join('');
+}
+function mark(svg, places, arrows, opP, opA){
+  if (!svg) return;
+  svg.classList.toggle('hl', places !== null);
+  svg.querySelectorAll('.pl').forEach(e => { e.classList.toggle('hi', !!places && places.includes(e.dataset.p)); e.classList.toggle('op', !!opP && opP.includes(e.dataset.p)); });
+  svg.querySelectorAll('.ar').forEach(e => { e.classList.toggle('hi', !!arrows && arrows.includes(e.dataset.a)); e.classList.toggle('op', !!opA && opA.includes(e.dataset.a)); });
+}
+
+/* ---------------- cards ---------------- */
+function cards(md){
+  const out = []; let cur = null, kind = '';
+  const close = () => { if (cur) { out.push(`<div class="acard ${kind}">${cur.join('')}</div>`); cur = null; } };
+  for (const raw of md.split('\n')) {
+    const l = raw.trimEnd();
+    if (!l.trim()) continue;
+    let m;
+    if ((m = l.match(/^### (.*)$/))) { close(); kind = /^Suggestion/.test(m[1]) ? 'sug' : (/^Not covered/.test(m[1]) ? 'nc' : ''); cur = [`<div class="ct">${inl(m[1])}</div>`]; continue; }
+    if (!cur) { cur = []; kind = 'nc'; }
+    if ((m = l.match(/^<!--\s*(.*?)\s*-->$/))) { cur.push(`<div class="note">${esc(m[1])}</div>`); continue; }
+    if ((m = l.match(/^- \*\*([^*]+):\*\*\s*(.*)$/))) { cur.push(`<div class="fr"><div class="fk">${esc(m[1])}</div><div>${inl(m[2])}</div></div>`); continue; }
+    if ((m = l.match(/^- (.*)$/))) { cur.push(`<p>&bull; ${inl(m[1])}</p>`); continue; }
+    cur.push(`<p>${inl(l)}</p>`);
+  }
+  close();
+  return out.join('');
+}
+const src = (title, text, tokens, note) => `<details class="src"><summary>${esc(title)} <span class="tk">${fmt(tokens)} tokens</span>${note ? ` <span class="small">${esc(note)}</span>` : ''}</summary><div><pre class="src">${esc(text)}</pre></div></details>`;
+const srcP = (k, note) => src(P[k].title, P[k].text, P[k].tokens, note || P[k].src);
+
+/* ---------------- tab 1: detail panels ---------------- */
+const R = D.rag;
+function ragTop(q){
+  return `<table class="t"><tr><th>Rank</th><th>SOP piece (one numbered item)</th><th>Similarity</th></tr>` +
+    q.top.map(t => `<tr><td class="num">${t.rank}</td><td>${esc(t.piece.sec)}, item ${esc(t.piece.item)} (p. ${t.piece.pages.join(', ')})${t.piece.held.includes('Post-Storm > Immediately Post Storm > 3.2.1') ? ' <span class="pill">holds 3.2.1</span>' : ''}</td><td class="num">${(t.cos/10000).toFixed(2)}</td></tr>`).join('') + `</table>`;
+}
+const DETAIL = {
+  p1: () => `<div class="dh"><h3>1 &middot; Instructions</h3><span class="pill">every call</span><span class="tk">${fmt(P.instructions.tokens)} tokens</span></div>
+    <p>The text the agent reads with every request: a system prompt, a Project's instructions, or a <code>CLAUDE.md</code> file.
+    It holds only what applies to every task: who the agent serves, the shape of the answer, and the few things it must never do.</p>
+    <h4>In the D7 example</h4>${src('Instructions (written for this page)', P.instructions.text, P.instructions.tokens, 'the handout\'s example, written out')}
+    <div class="kv"><div class="k">Why so short</div><div>You pay for it on every call. The whole <code>sop_text.md</code> is ${fmt(N.sop_full_tok)} tokens; these four lines are ${fmt(P.instructions.tokens)}.</div>
+    <div class="k">How you check it</div><div>Read a few outputs. Does every one come back as cards? Does any card rank intersections?</div>
+    <div class="k">What goes wrong</div><div>A long list of rules here gets followed unevenly. Procedures belong in the skill, numbers in code.</div></div>`,
+  p2: () => `<div class="dh"><h3>2 &middot; Labeled examples</h3><span class="pill">every call they are added to</span><span class="tk">${fmt(P.examples.tokens)} tokens</span></div>
+    <p>A few solved items placed in front of the model. They teach the shape of a good answer, and the line between a good one
+    and one a supervisor would send back, better than a definition does.</p>
+    <h4>In the D7 example</h4>${cards(P.examples.text)}
+    <div class="kv"><div class="k">What each teaches</div><div>Card 2: the agent does not rank the red signals; it names TMC personnel. Card 4: times come from code. Card A: a paraphrase dressed as a quote. The checker says: <i>${esc(D.meta.badA_msg.join(' '))}</i></div>
+    <div class="k">How you check it</div><div>Compare level 1 (no examples) with level 2 (examples) on the validation items.</div>
+    <div class="k">What goes wrong</div><div>Examples taken from the test items make the score meaningless. Use the same examples for every item.</div></div>`,
+  p6: () => `<div class="dh"><h3>6 &middot; The output form</h3><span class="pill">every answer</span><span class="tk">${fmt(P.form.tokens)} tokens</span></div>
+    <p>The agency's own shape for the answer. When every answer must fill the same fields, a checker can read it, and a person can
+    review it fast. For D7 the form is the action card; for a county inspector it is the Survey123 form (taught Thu Nov 19).</p>
+    <h4>In the D7 example</h4>${srcP('form', 'kit: d7-signal-sop/assets/action_card.md')}
+    <div class="kv"><div class="k">Six fields</div><div>Do, Who, When, SOP (clause id and the exact words), Weight, Person decides. Suggestions from experience have their own shape: Suggest, From (L# or P#), Person decides: yes.</div>
+    <div class="k">How you check it</div><div><code>check_cards.py</code> reads the field names, so they must never change.</div>
+    <div class="k">What goes wrong</div><div>Free text cannot be checked in code. A renamed field breaks the checker silently.</div></div>`,
+  p3: () => `<div class="dh"><h3>3 &middot; Skill</h3><span class="pill gold">opened when a request matches</span><span class="tk">${fmt(P.listing.tokens)} tokens always; the rest on demand</span></div>
+    <p>A folder the model opens when a task matches its description. Only the name and the description sit in front of the model
+    all the time. When a request matches, the model reads <code>SKILL.md</code>; it opens a reference file only when a step says to.</p>
+    <h4>Always visible: the name and description</h4>${srcP('listing')}
+    <h4>Opened when the request matches</h4>${srcP('skill_body')}
+    <h4>Opened when a step says to</h4>
+    <table class="t"><tr><th>File</th><th>What it holds</th><th>Opened at</th><th class="num">Tokens</th></tr>
+      <tr><td><code>glossary.md</code></td><td>${N.glossary_entries} field phrases mapped to the SOP's words</td><td>step 1, translate</td><td class="num">${fmt(P.glossary.tokens)}</td></tr>
+      <tr><td><code>sop_text.md</code>, one phase</td><td>Immediately Post Storm: ${N.ips_n} of the ${N.clauses} clauses</td><td>steps 2&ndash;3, find the phase and read it</td><td class="num">${fmt(P.sop_ips.tokens)}</td></tr>
+      <tr><td><code>sop_text.md</code>, all of it</td><td>${N.clauses} clauses: ${N.must} must, ${N.standard} standard, ${N.consider} consider</td><td>never read whole by the card skill</td><td class="num">${fmt(P.sop_full.tokens)}</td></tr>
+      <tr><td><code>gaps.md</code></td><td>${N.gaps} things the SOP does not say, and who to ask</td><td>step 7</td><td class="num">${fmt(P.gaps.tokens)}</td></tr>
+      <tr><td><code>lessons.md</code></td><td>${N.lessons} lessons from past storms, each with its source</td><td>step 8</td><td class="num">${fmt(P.lessons.tokens)}</td></tr>
+      <tr><td><code>practice.md</code></td><td>what staff told us (empty until the class interview)</td><td>step 8</td><td class="num">${fmt(P.practice.tokens)}</td></tr></table>
+    ${srcP('sop_ips')}${srcP('glossary')}${srcP('gaps')}${srcP('lessons')}
+    <div class="kv"><div class="k">How you check it</div><div>Requests that should and should not load it; <code>check_cards.py</code> on every card; level 2 against level 3.</div>
+    <div class="k">What goes wrong</div><div>A description that misses the words people use, so the skill never opens. A step that says "read the SOP" without naming a section.</div></div>`,
+  p4: () => `<div class="dh"><h3>4 &middot; Retrieval</h3><span class="pill gold">opened when a step needs a passage</span><span class="tk">not in the class kit</span></div>
+    <p>For documents too long to load: split them into passages with their section and page, find the passages that match the
+    question, and give the model those passages to quote. The D7 SOP is short enough to sit in the skill. Retrieval is for the
+    MUTCD, a design manual, or a district's after-action reports.</p>
+    <h4>What search does with the SOP itself (from the RAG companion)</h4>
+    <p><b>Asked in the SOP's words:</b> "${esc(R['0'].q)}" The piece that holds 3.2.1 ranks ${R['0'].answer_rank[0]}.</p>${ragTop(R['0'])}
+    <p style="margin-top:12px"><b>Asked in field words:</b> "${esc(R['12'].q)}" The piece that holds 3.2.1 drops to rank ${R['12'].answer_rank[0]} (similarity ${(R['12'].answer_cos[0]/10000).toFixed(2)}), out of the top 3:</p>${ragTop(R['12'])}
+    <div class="kv"><div class="k">The lesson</div><div>Search finds a rule asked in the manual's words and misses it in field words. The D7 skill does not search the SOP at all: its glossary translates field words, and its reading path opens the right phase. Keep search for documents too long to load.</div>
+    <div class="k">How you check it</div><div>Every quote must match its page; "not found" must be a possible answer.</div>
+    <div class="k">What goes wrong</div><div>No score marks a missing answer, so a model can fill the gap from memory with text that looks like a citation.</div></div>`,
+  p5: () => `<div class="dh"><h3>5 &middot; Code and tools</h3><span class="pill tool">runs when a step needs a number</span></div>
+    <p>Functions the agent calls that return an answer it cannot get wrong: a clock time, a deadline, a total, a distance. Each D7
+    command returns the clause it came from, so the card can cite it. Your team's trained model is a tool too.</p>
+    <h4>In the D7 example: <code>scripts/rules.py</code>, run when this page was built</h4>
+    ${src('rules.py refuel "2026-10-10 06:10"', D.rules.refuel114, D.rules_tok.refuel114, 'NH-114')}
+    ${src('rules.py refuel "2026-10-10 06:40"', D.rules.refuel121, D.rules_tok.refuel121, 'NH-121')}
+    ${src('rules.py sat "2026-10-10 07:30" "2026-10-10 19:30"', D.rules.sat, D.rules_tok.sat, 'SAT passes for the day')}
+    ${src('rules.py two 2026-11-09 2026-11-08 --soe yes --funding yes', D.rules.two, D.rules_tok.two, 'the executive order expired')}
+    ${src('rules.py ddir repairs_synthetic.csv', D.rules.ddir, D.rules_tok.ddir, 'eight synthetic repairs')}
+    <div class="kv"><div class="k">Results</div><div>First refuel ${N.refuel114} for NH-114 and ${N.refuel121} for NH-121. DDIR: ${N.ddir_groups} proposed groups, ${N.ddir_needed} need a DDIR, ${N.ddir_flagged} flagged for the DDIR team.</div>
+    <div class="k">How you check it</div><div>A unit test on a known answer for every command.</div>
+    <div class="k">What goes wrong</div><div>A number left in prose is a number the model computes in its head. A tool with a vague description gets called at the wrong time.</div></div>`,
+  p7: () => `<div class="dh"><h3>7 &middot; A person</h3><span class="pill per">when the agent hands a decision back</span></div>
+    <p>Some knowledge is a decision the agency gives to someone. The agent prepares it (the options, the evidence, the clause) and
+    names that person on the card instead of deciding.</p>
+    <h4>Who the D7 SOP names, in its own words</h4>
+    <table class="t"><tr><th>Person</th><th>Decides</th><th>The SOP's words</th></tr>${D.deciders.map(d => `<tr><td><b>${esc(d.who)}</b></td><td>${esc(d.what)}</td><td>"${esc(d.text)}" <span class="small">(${esc(d.id)}, p. ${d.page})</span></td></tr>`).join('')}</table>
+    <p style="margin-top:10px">Also, from <code>SKILL.md</code> step 6: any action that could put people at risk if it is wrong, such as energizing a damaged signal or sending a crew into flood water, gets "Person decides: yes" even where the SOP is silent.</p>
+    <div class="kv"><div class="k">How you check it</div><div>The record shows who approved each card that needed a person.</div>
+    <div class="k">What goes wrong</div><div>An agent that "helpfully" ranks the red signals has taken TMC personnel's decision.</div></div>`,
+  p8: () => `<div class="dh"><h3>8 &middot; The weights</h3><span class="pill">always: it is the model</span></div>
+    <p>What the model learned in training. It reads the request, reasons, and writes the cards. Fine-tuning (for example LoRA) can
+    add to it, so knowledge travels inside the model and needs no room in front of it.</p>
+    <div class="grid2"><div><h4>Already in the weights</h4><ul class="tight"><li>what a mast arm, a span wire and a signal cabinet are</li><li>what flash mode and a generator are</li><li>how to read a procedure and write in a fixed format</li></ul></div>
+    <div><h4>Not in the weights</h4><ul class="tight"><li>D7's SOP v1.5, its clause ids and weights</li><li>who decides generator priorities in District 7</li><li>what your crews call things, and what went wrong last storm</li></ul></div></div>
+    <div class="kv"><div class="k">Why not fine-tune for D7</div><div>It needs many labeled examples, it is slow to update when SOP v1.6 arrives, and a fine-tuned model cannot point to the clause it learned from. Every card must quote one. Try the other seven places first.</div></div>`,
+  model: () => `<div class="dh"><h3>The model</h3><span class="pill">reasons, decides, asks</span></div>
+    <p>The model is not a store of agency knowledge. It reasons through the task, decides what each step needs, and asks for it:
+    a procedure from the skill, a passage from retrieval, a number from a tool. Then it writes the answer in the agency's form and
+    hands back what a person must decide. Click the boxes around it to see what each holds for D7, or go to tab 2 to watch one
+    request move through them.</p>`,
+};
+let sel = 'p3';
+function showDetail(k){
+  sel = k; $('detail').innerHTML = DETAIL[k]();
+  $('fig1').querySelectorAll('.pl').forEach(e => e.classList.toggle('sel', e.dataset.p === k));
+}
+$('fig1').innerHTML = fig('f1');
+$('fig1').querySelectorAll('.pl').forEach(e => e.addEventListener('click', () => showDetail(e.dataset.p)));
+showDetail('model');
+
+/* ---------------- meter ---------------- */
+function meter(rows, maxTok){
+  return rows.map(r => `<div class="row"><div class="lab">${r.label}</div><div class="bar">${r.keys.map(k => `<div class="seg${r.newKeys && r.newKeys.includes(k) ? ' new' : ''}" title="${esc(P[k].title)}: ${fmt(P[k].tokens)} tokens" style="width:${(100 * P[k].tokens / maxTok).toFixed(2)}%;background:${COL[k]}"></div>`).join('')}</div><div class="val">${fmt(r.keys.reduce((a, k) => a + P[k].tokens, 0))}</div></div>`).join('');
+}
+const chip = (k, isNew) => `<span class="chip${isNew ? ' new' : ''}"><span class="sw" style="background:${COL[k]}"></span>${esc(P[k].title)} <span class="tk">${fmt(P[k].tokens)}</span></span>`;
+
+/* ---------------- tab 2: step-through ---------------- */
+const ARROW = {
+  'left': [['p1','p2','p6','model'], ['lp1','lp2','lp6']],
+  'ask-skill': [['p3','model'], ['ap3','bp3']],
+  'ask-tools': [['p5','model'], ['ap5','bp5']],
+  'ask-retrieval': [['p4','model'], ['ap4','bp4']],
+  'person': [['p7','model'], ['pd']],
+  'form': [['p6','model','p7'], ['lp6','pd']],
+};
+let st = 0;
+$('reqText').innerHTML = esc(P.request.text).replace('\n', '<br><b>') + '</b>';
+$('fig2').innerHTML = fig('f2');
+$('stDots').innerHTML = D.steps.map((s, i) => `<button data-i="${i}" title="${esc(s.title)}">${s.n}</button>`).join('');
+$('stDots').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { st = +b.dataset.i; drawStep(); }));
+$('stBack').addEventListener('click', () => { if (st > 0) { st--; drawStep(); } });
+$('stNext').addEventListener('click', () => { if (st < D.steps.length - 1) { st++; drawStep(); } });
+function drawStep(){
+  const s = D.steps[st];
+  $('stN').textContent = 'Step ' + s.n; $('stTitle').textContent = s.title; $('stText').textContent = s.text;
+  $('stDots').querySelectorAll('button').forEach((b, i) => { b.classList.toggle('on', i === st); b.classList.toggle('done', i < st); });
+  $('stBack').disabled = st === 0; $('stNext').disabled = st === D.steps.length - 1;
+  const [pl, ar] = ARROW[s.arrow];
+  const opP = D.steps.slice(0, st).flatMap(x => ARROW[x.arrow][0]), opA = D.steps.slice(0, st).flatMap(x => ARROW[x.arrow][1]);
+  mark($('fig2').querySelector('svg'), pl, ar, opP, opA);
+  const keys = D.steps.slice(0, st + 1).flatMap(x => x.loads);
+  const maxTok = N.everything_tok;
+  $('stMeter').innerHTML = meter([
+    {label: `After step ${s.n}`, keys, newKeys: s.loads},
+    {label: 'Everything pasted into the instructions', keys: D.everything},
+  ], maxTok);
+  $('stChips').innerHTML = keys.map(k => chip(k, s.loads.includes(k))).join('');
+  $('stOpen').innerHTML = s.loads.length ? `<h4>Opened at this step</h4>` + s.loads.map(k => srcP(k)).join('') :
+    `<p class="small">Nothing new is added to the meter at this step.</p>`;
+}
+drawStep();
+
+/* ---------------- tab 3: try a request ---------------- */
+const ROUTE = {skill: [['p3'], ['ap3','bp3']], tools: [['p5'], ['ap5','bp5']], retrieval: [['p4'], ['ap4','bp4']], person: [['p7'], ['pd']], weights: [['p8'], []]};
+let rq = 0;
+$('fig3').innerHTML = fig('f3');
+$('reqBtns').innerHTML = D.requests.map((r, i) => `<button class="ghost" data-i="${i}">${esc(r.label)}</button>`).join('');
+$('reqBtns').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { rq = +b.dataset.i; drawReq(); }));
+function drawReq(){
+  const r = D.requests[rq];
+  $('reqBtns').querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', i === rq));
+  $('rqText').innerHTML = `<b>Request:</b> ${esc(r.q)}`;
+  const pl = ['model'], ar = [];
+  for (const k of r.route) { pl.push(...ROUTE[k][0]); ar.push(...ROUTE[k][1]); }
+  mark($('fig3').querySelector('svg'), pl, ar);
+  $('rqChips').innerHTML = r.loads.length ? r.loads.map(k => chip(k, true)).join('') : '<span class="small">Nothing on the right opens.</span>';
+  $('rqMeter').innerHTML = meter([
+    {label: 'This request', keys: D.always.concat(r.loads), newKeys: r.loads},
+    {label: 'Everything pasted in', keys: D.everything},
+  ], N.everything_tok);
+  $('rqWhy').textContent = r.why;
+  $('rqOut').innerHTML = r.out_kind === 'weights' ? `<div class="acard"><div class="ct">Answer from the weights</div><p>${inl(r.out)}</p></div>` : cards(r.out);
+  $('rqSrc').textContent = 'Source of this answer: ' + r.out_src + '.';
+}
+drawReq();
+
+/* ---------------- tab 4: cost ---------------- */
+const GROUPS = [
+  {g: 'skill_body', label: 'SKILL.md (the reading path)', tok: P.skill_body.tokens},
+  {g: 'glossary', label: 'glossary.md', tok: P.glossary.tokens},
+  {g: 'sop', label: 'sop_text.md (all 150 clauses if every call; one phase at a time if on demand)', tok: P.sop_full.tokens},
+  {g: 'gaps', label: 'gaps.md', tok: P.gaps.tokens},
+  {g: 'lessons', label: 'lessons.md', tok: P.lessons.tokens},
+  {g: 'practice', label: 'practice.md', tok: P.practice.tokens},
+];
+const grp = k => /^sop_/.test(k) ? 'sop' : k;
+const every = {};
+GROUPS.forEach(x => every[x.g] = false);
+const alwaysTok = D.always.reduce((a, k) => a + P[k].tokens, 0);
+$('alwaysTok').textContent = fmt(alwaysTok);
+function reqCost(r, ev){
+  let t = alwaysTok;
+  for (const x of GROUPS) if (ev[x.g]) t += x.tok;
+  for (const k of r.loads) if (!(grp(k) in ev) || !ev[grp(k)]) t += P[k].tokens;
+  return t;
+}
+function dayCost(ev, n){ const per = D.requests.reduce((a, r) => a + reqCost(r, ev), 0) / D.requests.length; return {per, day: per * n}; }
+function drawCostTable(){
+  $('costTable').innerHTML = `<tr><th>File in the skill</th><th class="num">Tokens</th><th>Where it sits</th></tr>` +
+    GROUPS.map(x => `<tr><td>${esc(x.label)}</td><td class="num">${fmt(x.tok)}</td><td><span class="seg2" data-g="${x.g}"><button class="${every[x.g] ? '' : 'on'}" data-v="0">on demand</button><button class="${every[x.g] ? 'on e' : ''}" data-v="1">every call</button></span></td></tr>`).join('') +
+    `<tr><td colspan="3"><button class="ghost" id="allOn">All on demand</button> <button class="ghost" id="allEv">Everything on every call</button></td></tr>`;
+  $('costTable').querySelectorAll('.seg2 button').forEach(b => b.addEventListener('click', () => { every[b.parentNode.dataset.g] = b.dataset.v === '1'; drawCost(); }));
+  $('allOn').addEventListener('click', () => { GROUPS.forEach(x => every[x.g] = false); drawCost(); });
+  $('allEv').addEventListener('click', () => { GROUPS.forEach(x => every[x.g] = true); drawCost(); });
+}
+function drawCost(){
+  drawCostTable();
+  const n = +$('nReq').value; $('nReqVal').textContent = n;
+  const none = {}, all = {}; GROUPS.forEach(x => { none[x.g] = false; all[x.g] = true; });
+  const a = dayCost(none, n), y = dayCost(every, n), z = dayCost(all, n);
+  $('costStats').innerHTML = [
+    [a.per, 'tokens per request, all on demand', ''], [y.per, 'tokens per request, your setting', y.per > a.per ? 'w' : ''],
+    [z.per, 'tokens per request, everything on every call', 'w'], [y.day, `tokens for ${n} requests, your setting`, y.per > a.per ? 'w' : '']
+  ].map(([v, l, c]) => `<div class="stat"><div class="n ${c}">${fmt(Math.round(v))}</div><div class="l">${l}</div></div>`).join('');
+  const mx = z.day;
+  const bar = (lab, v, col) => `<div class="meter"><div class="row"><div class="lab">${lab}</div><div class="bar"><div class="seg" style="width:${(100 * v / mx).toFixed(2)}%;background:${col}"></div></div><div class="val">${fmt(Math.round(v))}</div></div></div>`;
+  $('costBars').innerHTML = `<h4>Tokens for the whole day</h4>` + bar('All on demand', a.day, '#006747') + bar('Your setting', y.day, '#B79F4D') + bar('Everything on every call', z.day, '#c0392b');
+}
+$('nReq').addEventListener('input', drawCost);
+drawCost();
+
+/* ---------------- tabs ---------------- */
+function showTab(id){
+  document.querySelectorAll('nav.tabs button').forEach(x => { const on = x.dataset.tab === id; x.classList.toggle('active', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
+  document.querySelectorAll('section.page').forEach(x => x.classList.toggle('active', x.id === id));
+  window.scrollTo({top: 0, behavior: 'instant'});
+}
+document.querySelectorAll('nav.tabs button').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+</script>
+</body>
+</html>

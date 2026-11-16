@@ -292,4 +292,4 @@ agencies ask for, the measured comparison above, and judgment questions.
 
 ---
 
-Next: {doc}`Module 6 <../module6/index>`, evaluating agents and making them better.
+Next: {doc}`5.6 Where knowledge lives <notes6-knowledge>`, giving an agent the right knowledge.

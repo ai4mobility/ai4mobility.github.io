@@ -3733,3 +3733,37 @@ items:
       run, with P(call), which tool and belief at each step, convergence charts, how the description changes
       the first choice. Built by agent_tools_demo/build_inside_companion.py. Copied to the site Nov 15 and
       linked from the 5.3 slide-show section; not embedded.'
+
+  - id: m5-notes-6-knowledge
+    file: site/module5/notes6-knowledge.md
+    kind: notes
+    module: 5
+    session: '2026-11-17'
+    status: drafted
+    notes: '5.6 Where knowledge lives: giving an agent the right knowledge. Created Nov 15 2026 to mount
+      the Where_Knowledge_Lives companion (the Nov 17 lecture, "Giving a powerful model the right knowledge").
+      What the model knows vs. what it has not read (SOP 3.2.1); the eight places as a table grouped by
+      column (1, 2, 6 every call; 3, 4, 5 on request; 7 a person; 8 the weights) plus the TMC analogy; the
+      four-homes figure AGT_Knowledge_Homes (already in _static/figures); every call vs. on demand (1,000
+      always; SOP 6,246; Immediately Post Storm 1,177; 2,771 vs 11,716 per request; the 72-hour 3 of 15
+      vs 15 of 15 result from the RAG companion); the nine-step hurricane-morning table (1,000 -> 6,707,
+      vs 11,484 everything); companion embed (anchor where-knowledge-lives-companion); for your project;
+      three check-yourself questions; sources. All numbers from M5-8_AI_Agents_and_RL/knowledge_places/data.json.
+      5.5 footer now points here; 5.4 notes card and skills.md sources link here; module5/index.md map has
+      a 5.6 row and a sentence in the Skills paragraph.'
+
+  - id: m5-companion-where-knowledge-lives
+    file: M5-8_AI_Agents_and_RL/Where_Knowledge_Lives_Companion.html
+    kind: companion
+    module: 5
+    session: '2026-11-17'
+    status: drafted
+    dest: site/module5/notes6-knowledge.md
+    notes: 'Where knowledge lives: eight places, one hurricane morning. Five tabs: the eight places (clickable
+      figure, kit files and token counts); one hurricane morning (nine steps, lit arrows, meter); try a
+      request (eight requests with route, tokens and answer); what it costs (every call vs. on demand toggles,
+      requests-per-day slider); fit card and check yourself. Goes with Handout 2, "How to Pass Knowledge
+      to an AI Agent". Built by M5-8_AI_Agents_and_RL/knowledge_places/ (build_data.py -> data.json, template.html
+      + assemble.py, test_companion.py, shoot.py). o200k token counts, labeled as estimates. Self-contained
+      (no fetch, no CDN). Copied to _static/companions and mounted Nov 15 2026 as the 5.6 section "Interactive
+      companion".'

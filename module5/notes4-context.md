@@ -18,6 +18,7 @@
     <div>
       <h4>Used again in</h4>
       <ul>
+      <li><a href="notes6-knowledge.html">5.6 Where knowledge lives</a> (where retrieval sits among the eight places)</li>
       <li><a href="index.html">Module 5 &mdash; skills, memory, and planning (the second session)</a></li>
       <li><a href="../module6/index.html">Module 6 &mdash; Evaluation and fine-tuning</a></li>
       </ul>

@@ -67,7 +67,9 @@ description is always visible, and the full instructions load on demand. Agencie
 standard operating procedures, design manuals, checklists — so turning one into a skill is often the
 cheapest improvement available. It is not free: in one benchmark, curated skills raised the average pass
 rate from 33.9% to 50.5%, but made results worse on 13 of 87 tasks, because a skill can push aside a
-better default. To build a skill and share it with everyone, see {doc}`Transportation Skills <../skills>`.
+better default. {doc}`Section 5.6 <notes6-knowledge>` shows where each kind of agency knowledge belongs, on the
+District 7 hurricane signal SOP. To build a skill and share it with everyone, see
+{doc}`Transportation Skills <../skills>`.
 
 **Memory.** What should an agent keep from past runs — a fact, a lesson, a whole episode — and when
 should it update or delete what it kept?
@@ -128,9 +130,14 @@ rebuilds it around transportation research and agency work.
   <td>In-class sorting worksheet</td>
 </tr>
 <tr>
-  <td><strong>Further sections</strong><br><em>Skills, memory, and planning</em></td>
-  <td>Skills, memory, planning and re-planning in depth &mdash; written up after the session.</td>
+  <td><a href="notes6-knowledge.html"><strong>5.6 Where knowledge lives: giving an agent the right knowledge</strong></a><br><em>Skills, memory, and planning</em></td>
+  <td>What a model knows and what it has not read; eight places knowledge can reach an agent; four kinds of knowledge and their homes (code, skill, retrieval, a person); every call vs. only when a step needs it, in tokens; one hurricane-morning request traced through the D7 signal skill; <strong>hands-on companion: where knowledge lives</strong>.</td>
   <td>In-class skill exercise</td>
+</tr>
+<tr>
+  <td><strong>Further sections</strong><br><em>Skills, memory, and planning</em></td>
+  <td>Memory, planning and re-planning, and several agents in depth &mdash; written up after the session.</td>
+  <td>&mdash;</td>
 </tr>
 </tbody>
 </table>
