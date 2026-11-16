@@ -153,6 +153,9 @@ parts:
           # 2026-11-15: 5.6 added to mount the Where_Knowledge_Lives companion (Nov 17 lecture, giving a model the right knowledge).
           - file: module5/notes6-knowledge
             title: "5.6 Where knowledge lives: giving an agent the right knowledge"
+          # 2026-11-16: 5.7 added to mount the Inside_A_Skill companion (the two course skills opened up, with/without runs).
+          - file: module5/notes7-skills
+            title: "5.7 Inside a skill: packaging transportation know-how"
       - file: module6/index
         sections:
           - file: module6/notes1-adaptation

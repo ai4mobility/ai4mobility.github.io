@@ -3767,3 +3767,33 @@ items:
       + assemble.py, test_companion.py, shoot.py). o200k token counts, labeled as estimates. Self-contained
       (no fetch, no CDN). Copied to _static/companions and mounted Nov 15 2026 as the 5.6 section "Interactive
       companion".'
+
+  - id: m5-notes-7-skills
+    file: site/module5/notes7-skills.md
+    kind: notes
+    module: 5
+    session: '2026-11-17'
+    status: drafted
+    notes: '5.7 Inside a skill: packaging transportation know-how. Created Nov 16 2026 to mount the Inside_A_Skill
+      companion. A skill as a folder (the d7-signal-sop tree; 144 / 1,653 / 6,246 / 1,177 / 74 tokens);
+      five writing moves quoted from SKILL.md; seven kinds of know-how and their homes; the with/without
+      table (D7 2 / 3.5 / 5 of 5, journal club 7.5 / 7 / 10 of 10) with the caveats (one run each, grader
+      not blind, synthetic inputs); companion embed (anchor inside-a-skill-companion); for your project;
+      three check-yourself questions; sources. 5.6 footer and notes card point here; module5/index.md has
+      a 5.7 row and a sentence in the Skills paragraph; skills.md links it next to the worked examples and
+      in its sources.'
+
+  - id: m5-companion-inside-a-skill
+    file: M5-8_AI_Agents_and_RL/Inside_A_Skill_Companion.html
+    kind: companion
+    module: 5
+    session: '2026-11-17'
+    status: drafted
+    dest: site/module5/notes7-skills.md
+    notes: 'Inside a skill: two transportation skills, opened up. Eight tabs: what a skill is; open the
+      folder (file explorer, every file as committed at transportation-skills 4b7bc8d); read the SKILL.md
+      (call map, annotated blocks); watch it run (the two skill-run traces with real script output); write
+      your own (homes figure, eight steps, 13-card sorter); what matters most; with and without (six fresh
+      runs, graded against evals.json); fit card and check yourself. Built by M5-8_AI_Agents_and_RL/inside_a_skill/
+      (build/build.py, notes.py, page.py; runs/). o200k token counts, labeled as estimates. Self-contained.
+      Copied to _static/companions and mounted Nov 16 2026 as the 5.7 section Interactive companion.'

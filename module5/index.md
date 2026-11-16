@@ -68,7 +68,8 @@ standard operating procedures, design manuals, checklists — so turning one int
 cheapest improvement available. It is not free: in one benchmark, curated skills raised the average pass
 rate from 33.9% to 50.5%, but made results worse on 13 of 87 tasks, because a skill can push aside a
 better default. {doc}`Section 5.6 <notes6-knowledge>` shows where each kind of agency knowledge belongs, on the
-District 7 hurricane signal SOP. To build a skill and share it with everyone, see
+District 7 hurricane signal SOP. {doc}`Section 5.7 <notes7-skills>` opens two course skills file by file and
+compares answers with and without them. To build a skill and share it with everyone, see
 {doc}`Transportation Skills <../skills>`.
 
 **Memory.** What should an agent keep from past runs — a fact, a lesson, a whole episode — and when
@@ -133,6 +134,11 @@ rebuilds it around transportation research and agency work.
   <td><a href="notes6-knowledge.html"><strong>5.6 Where knowledge lives: giving an agent the right knowledge</strong></a><br><em>Skills, memory, and planning</em></td>
   <td>What a model knows and what it has not read; eight places knowledge can reach an agent; four kinds of knowledge and their homes (code, skill, retrieval, a person); every call vs. only when a step needs it, in tokens; one hurricane-morning request traced through the D7 signal skill; <strong>hands-on companion: where knowledge lives</strong>.</td>
   <td>In-class skill exercise</td>
+</tr>
+<tr>
+  <td><a href="notes7-skills.html"><strong>5.7 Inside a skill: packaging transportation know-how</strong></a><br><em>Skills, memory, and planning</em></td>
+  <td>A skill as a folder and when the model sees each file; how SKILL.md sends the model to its files; sorting know-how into homes; the same request run with no skill, the document only, and the skill (D7 SOP and journal club); <strong>hands-on companion: inside a skill</strong>.</td>
+  <td>&mdash;</td>
 </tr>
 <tr>
   <td><strong>Further sections</strong><br><em>Skills, memory, and planning</em></td>

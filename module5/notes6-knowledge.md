@@ -18,6 +18,7 @@
     <div>
       <h4>Used again in</h4>
       <ul>
+      <li><a href="notes7-skills.html">5.7 Inside a skill</a> (two skills opened up, with and without)</li>
       <li><a href="../skills.html">Transportation Skills</a> (build a skill in eight steps and share it)</li>
       <li><a href="../module8/index.html">Module 8 &mdash; Building transportation harnesses</a></li>
       </ul>
@@ -201,4 +202,4 @@ To build the skill and share it, follow the eight steps on the {doc}`Transportat
 
 ---
 
-Next: {doc}`Module 6 <../module6/index>`, evaluating agents and making them better.
+Next: {doc}`5.7 Inside a skill <notes7-skills>`, two transportation skills opened up file by file.
