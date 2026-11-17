@@ -1,25 +1,25 @@
 (inside-a-skill)=
-# 5.7 Inside a skill: packaging transportation know-how
+# 6.2 Inside a skill: packaging transportation know-how
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 5 &middot; Section 5.7</span>
-    <span class="notes-card-session">Session: Skills, memory, and planning</span>
+    <span class="notes-card-eyebrow">Module 6 &middot; Section 6.2</span>
+    <span class="notes-card-session">Session: Skills, lecture 1 &mdash; how skills work</span>
   </div>
-  <p class="notes-card-lede">Section 5.6 placed a skill among the eight places knowledge can reach an agent. This section opens two skills from the course's transportation-skills repository, file by file: <code>d7-signal-sop</code>, built from FDOT District 7's hurricane signal SOP, and <code>journal-club-paper-review</code>, built from the instructor's journal-club guide. You will see how a skill is laid out as a folder, how its SKILL.md sends the model to the right file at each step, and how to turn your own know-how into a skill. You will also see what changed when the same request was run with and without the skill.</p>
+  <p class="notes-card-lede">Section 6.1 placed a skill among the eight places knowledge can reach an agent. This section opens two skills from the course's transportation-skills repository, file by file: <code>d7-signal-sop</code>, built from FDOT District 7's hurricane signal SOP, and <code>journal-club-paper-review</code>, built from the instructor's journal-club guide. You will see how a skill is laid out as a folder, how its SKILL.md sends the model to the right file at each step, and how to turn your own know-how into a skill. You will also see what changed when the same request was run with and without the skill.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it first</h4>
       <ul>
-      <li><a href="notes3-tools.html">5.3 Tools: what an agent can reach</a> (what is inside a tool)</li>
-      <li><a href="notes6-knowledge.html">5.6 Where knowledge lives</a> (where a skill sits among the eight places)</li>
+      <li><a href="../module5/notes3-tools.html">5.3 Tools: what an agent can reach</a> (what is inside a tool)</li>
+      <li><a href="notes1-knowledge.html">6.1 Where knowledge lives</a> (where a skill sits among the eight places)</li>
       </ul>
     </div>
     <div>
       <h4>Used again in</h4>
       <ul>
       <li><a href="../skills.html">Transportation Skills</a> (build a skill in eight steps and share it)</li>
-      <li><a href="../module8/index.html">Module 8 &mdash; Building transportation harnesses</a></li>
+      <li><a href="../module8/index.html">Module 8 &mdash; Agents at work in an agency</a> (a data dictionary loaded as a skill)</li>
       </ul>
     </div>
   </div>
@@ -37,7 +37,7 @@
 ## A skill is a folder
 
 A tool gives the model an action: a name, a description, an input schema, and code that runs
-({doc}`5.3 <notes3-tools>`). A skill gives the model know-how for one job, packed as a folder. Here is the D7
+({doc}`5.3 <../module5/notes3-tools>`). A skill gives the model know-how for one job, packed as a folder. Here is the D7
 skill, with what each file holds:
 
 ```text
@@ -184,10 +184,12 @@ Eight tabs:
 - [Agent Skills specification](https://agentskills.io/specification), the open format the course skills follow.
 - Anthropic (2025). [Equipping agents for the real world with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills).
 - Li, X., et al. (2026). SkillsBench. *arXiv:2602.12670*.
-- In this course: {doc}`5.3 Tools <notes3-tools>`, {doc}`5.6 Where knowledge lives <notes6-knowledge>` and
+- In this course: {doc}`5.3 Tools <../module5/notes3-tools>`, {doc}`6.1 Where knowledge lives <notes1-knowledge>` and
   {doc}`Transportation Skills <../skills>`.
 - Agents unit credit: CMU 11-768 *AI Agents* (Fried and Neubig); Stanford CS 329Z *Engineering AI Agents*.
 
 ---
 
-Next: {doc}`Module 6 <../module6/index>`, evaluating agents and making them better.
+Next: {doc}`Module 7 <../module7/index>`, what an agent reads and remembers. The rest of the skills material (how a
+model decides to load a skill, building a skill in eight steps, and putting domain experience into it) will be added
+to {doc}`this module <index>` after the two skills lectures.

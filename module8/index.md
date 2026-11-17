@@ -1,88 +1,120 @@
-# Module 8 — Building Transportation Harnesses
+# Module 8 — Agents at Work in an Agency: AI-Ready Data, Agency Forms, and Several Agents
 
-*Part II, AI Agents for Mobility · lecture 5 of 5, followed by the final presentations. The class schedule is on
-the {doc}`../syllabus` page.*
+*Part II, AI Agents for Mobility · the last module of the agents unit, followed by the final presentations. The
+class schedule is on the {doc}`../syllabus` page.*
 
 ## Session topics
 
-- **Building transportation harnesses:** a harness template, the SUMO simulation workflow, the safety
-  analysis workflow, and data engineering for AI agents
+- **AI-ready data:** what an agent needs to do one real job; why data kept for people is not ready for an agent;
+  six moves that make existing data ready; data that does not exist yet; data for improving or training an agent
+- **Answering in the agency's form:** picking the agency's exact choices in field apps that have no API, such as
+  Survey123
+- **Several agents:** when a manager agent with helpers pays off, and when one agent with the whole picture does
+  better *(if time allows)*
+- **Your project, the agentic way:** comparing your own model with a powerful model used at five levels
 
 ## Overview
 
-This module puts Part II together. Every agent you build for transportation work is a model inside a
-harness, and the same template describes the harness every time:
+By now your agent can call tools, follow a skill, look things up in a manual and remember what happened. Every one
+of those quietly assumed that the data was there and correct, and that the agent's answer would land somewhere an
+agency can use. This module stops assuming.
 
-| Field | Question to answer |
-|---|---|
-| Task and trigger | What starts the agent, and what does "done" look like? |
-| Tools and data access | Which APIs or MCP servers can it call? Read-only or write? |
-| Documents | Which manuals or documents does it retrieve from? |
-| Skills | Which agency procedures are written as skills? |
-| Memory | What does it keep between runs, and who can edit it? |
-| Workflow or agent | Which steps are fixed in code, and which does the model decide? |
-| Checkpoints and permissions | Where must a person approve, especially before steps that cannot be undone? |
-| Transportation knowledge | Which theory, agency experience and data does it use? Where does each enter, and how do you show it beats a generic agent? |
-| Evaluation | How do we know it works, and what is the baseline? |
-| Logs and disclosure | What is recorded, and how are AI-assisted outputs labeled? |
+**AI-ready data.** Transportation agencies hold decades of data collected for engineers to read. Agents are a new
+kind of reader. The running job is the morning after a hurricane landfall, when many signals fail at once and the
+agent must help decide what to inspect, power and repair first. FDOT District 7's signal SOP names a data system in
+77 of its 150 rules, and one failed signal lives in five places, each kept for a person. The lecture follows the
+work list of NSF's new *AI Datasets* program (NSF 26-512), which pays to make existing datasets usable by AI, in
+four parts:
 
-**The SUMO simulation workflow.** Build the network, load the demand, calibrate to field counts, compare
-signal plans against a Webster or actuated baseline, and report. The agent runs the tools; a person
-checks the geometry, chooses what to test, and — the key checkpoint — accepts the calibration, using the
-usual GEH check against counts, before anyone trusts a scenario result.
+- **What the agent needs:** the questions it must answer, the six kinds of data in one run, and why data kept for
+  people is hard for an agent to use.
+- **Make existing data ready:** extract, describe (a data dictionary the agent loads as a skill), link, harmonize,
+  fill gaps, and score readiness. One caution: keep values a model made apart from values a person observed, and
+  label each with its method and date.
+- **Create what does not exist:** task records from past storms, records of the agent's own work, a practice
+  storm, the reference lists the SOP points to but does not contain, and a clock to tell whether anything improved.
+- **Improve, train and govern:** what each way of improving an agent needs, from worked examples to fine-tuning and
+  reinforcement learning; how many past cases you need to test; and who may read or change the data, and when it
+  expires.
 
-**The safety analysis workflow.** Follow the Highway Safety Manual's safety management process:
-network screening, diagnosis, countermeasure selection, economic appraisal, prioritization, and
-effectiveness evaluation. The agent links crash, roadway and volume data, runs the safety performance
-functions, reads crash narratives, and retrieves crash modification factors. The engineer approves the
-site list and the countermeasures.
+**Answering in the agency's form.** Field apps such as Survey123 damage forms, eSTORM Lite, crash report forms
+and asset inventories have fixed menus and usually no API you may call. A free-text answer from a model ("heads
+look twisted") is useless to the GIS layer; the agent must pick the agency's exact choice. One method works for any
+app: capture the form once as a file (best from the form definition, then the manual behind it, then screenshots
+checked by a person); let code walk the form one question at a time, so the model sees only that question's valid
+choices and may answer "unsure"; check the answers in code before anything leaves; deliver them as a fill-in card,
+a prefill link, or, with the GIS administrator's permission, a write to the layer. A person always reviews and
+submits. Then measure how often the agent agrees with the inspector's own choices. The running example is a real
+county's post-storm damage form, learned from the county's own how-to deck.
 
-**Data engineering for AI agents.** Transportation data was collected for people to read. AI now uses it
-in three places, and each improves only through a feedback loop: a model learns from a *checker* that grades
-its answers, a harness learns from *graded runs*, and a vendor's AI tool is judged by *your own local tests*.
-The most valuable data at each place is the data that closes its loop, and our field already holds many
-checkers: exact calculations, simulators, rubrics written into the MUTCD and the HSM, expert review, and
-real outcomes. As users of the data, agents need three things:
+**Several agents.** A manager agent can hand pieces of a task to helper agents, each with its own short context.
+Sometimes that helps. Often one agent that sees the whole task does better, because a hand-off is a summary, and
+summaries drop things ({doc}`7.1 <../module7/notes1-context>`). {doc}`Section 5.4 <../module5/notes5-architectures>`
+(question 3, the team) lays out three wirings and the case for one agent.
 
-- *Data they can use:* data dictionaries with units and codes, written like a skill; IDs that link crash
-  records, roadway inventory, traffic counts and weather; access through tools with privacy rules built in.
-- *What experts carry in their heads, written down:* known data errors, changes to report forms over the
-  years, missing exposure data.
-- *Data people could not use at scale:* narratives, sketches and video linked to crash records, and
-  near-miss events.
+**Your project, the agentic way.** Every team that trained its own model compares it with a powerful model used at
+five levels: (1) prompt only; (2) plus labeled examples from your training set; (3) plus your written knowledge as
+a skill; (4) an agent with tools, including your own model; (5) your small model first, with the agent reviewing
+the cases it is unsure about and a person seeing what the agent flags. Use the same test split for every version,
+freeze the skill and any memory before scoring, run each version three times, and report the &ldquo;unsure&rdquo;
+rate, the cost and the time. The agent losing is a valid result.
 
-One warning comes with it. An agent that tests 1,000 ideas at the 5% level will find about 50 that look
-real by chance alone. Agent-ready data needs held-out data or tests stated in advance — above all for
-crash data, where counts are small and regression to the mean is common.
+**This module's transportation question.** What data would let an agent do your project's job better, and what would
+you have to fix or create first? And can you show, on your own test set, that the agent beats your model, or that it
+does not?
 
-*Optional:* a harness for reviewing transportation papers or projects. Use it only on published papers or
-your own drafts. Funders and many journals do not allow confidential manuscripts or proposals to be
-uploaded to AI tools.
+## The module, page by page
 
-**This week's transportation question.** What makes your agent measurably better than a generic one?
-Each team brings the lever cards from the earlier lectures and makes that case, with the general agent as
-the baseline the final project is compared against.
+<div class="practice-table-wrap">
+<table class="practice-table notes-map">
+<thead>
+<tr><th style="width:32%">Page</th><th style="width:50%">What it covers</th><th style="width:18%">Labs</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Further sections</strong><br><em>AI-ready data</em></td>
+  <td>The job: signals on the morning after landfall; six kinds of data in one run; why data kept for people is not ready; six moves that make existing data ready; data that does not exist yet; data for improving and training an agent; governance &mdash; written up after the session.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><strong>Further sections</strong><br><em>Answering in the agency's form</em></td>
+  <td>Capturing a form as a file; code walks the form; checks before anything leaves; the delivery ladder; measuring consistency with the inspector &mdash; written up after the session.</td>
+  <td>Your project's form file</td>
+</tr>
+<tr>
+  <td><strong>Further sections</strong><br><em>Several agents; your project</em></td>
+  <td>A manager agent and its helpers, and the case for one agent; the five levels and the fair-comparison rules &mdash; written up after the session.</td>
+  <td>Your comparison table</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 ## Learning objectives
 
 By the end of this module you will be able to:
 
-- Describe any transportation agent with the harness template, and spot the field a design has left empty.
-- Make the case, against a baseline, for what transportation theory, agency experience and data add to your agent.
-- Lay out an AI workflow for traffic simulation and one for safety analysis, with the agent's steps, the
-  person's steps, and the checkpoints.
-- Say what would make a transportation dataset easier for an agent to use, what data would let a model, a
-  harness or a vendor tool improve, and what would make the agent's "findings" trustworthy.
+- List the data an agent needs for one transportation job, and say which of it is not ready for an agent today.
+- Apply the six moves (extract, describe, link, harmonize, fill gaps, score readiness) to an agency dataset, keeping
+  made values apart from observed ones.
+- Say what new data to create so that an agent can be tested, improved or trained.
+- Build a form file for an agency app, and have an agent answer in the agency's exact choices with checks in code
+  and a person who submits.
+- Decide when to split a task across several agents and when to keep one.
+- Compare your own model with a powerful model at five levels, fairly, and report the result even when the agent
+  loses.
 
 ## Topics
 
-- The harness template
-- An AI workflow for traffic simulation in SUMO
-- An AI workflow for transportation safety analysis
-- Data that closes the loop: checkers for models, test tracks and run logs for harnesses, local tests for vendor tools
-- Data engineering for AI agents: making existing data usable, writing down expert knowledge, new data to collect
-- Many tests, false findings, and how to guard against them
-- *(Optional)* a review harness for papers and projects
+- Agents as a new reader of transportation data; NSF 26-512 *AI Datasets*
+- Six kinds of data in one agent run, and where each stands today
+- Six moves that make existing data ready, and the caution about made values
+- Data to create: task records, work records, a practice storm, reference lists, an outcome clock
+- Data for improving and training an agent; how many past cases a test needs
+- Governance: who reads, who changes, when it expires
+- Field apps with fixed menus and no API: the form file, code-driven walking, checks, delivery, consistency
+- A manager agent with helpers vs. one agent with the whole task
+- Five levels of using a powerful model, and fair-comparison rules
 
 ## Video lectures
 
@@ -90,12 +122,14 @@ By the end of this module you will be able to:
 
 ## Recommended readings
 
-- Ye, C., et al. (2025). [SUMO-MCP: Leveraging the Model Context Protocol for traffic simulation](https://arxiv.org/abs/2506.03548). *arXiv:2506.03548*.
-- Liu, Q., et al. (2026). [SimSkill: A self-evolving LLM agent for skill and knowledge accumulation in traffic simulation](https://arxiv.org/abs/2609.03753). *arXiv:2609.03753*.
-- AASHTO. *Highway Safety Manual*, Part B: the roadway safety management process.
-- Federal Highway Administration (2026). [AI for Safety and Efficiency Program Roadmap](https://highways.dot.gov/sites/fhwa.dot.gov/files/FHWA-HRT-26-063.pdf). FHWA-HRT-26-063.
+- National Science Foundation (2026). *AI Datasets* program solicitation, NSF 26-512.
+- Stanford CS 329Z *Engineering AI Agents* (Fall 2026), lecture 11, &ldquo;What data do agents need?&rdquo;
+- Anthropic (2025). [How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system).
+- Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/).
 
-## Labs
+## Labs and assignments
 
-- **Your capstone's harness.** Each team fills in the harness template for its own project: what the
-  agent does, what the people do, and where the checkpoints go. No notebook.
+- **Your project's form file.** If your project's results must land in an agency app, capture its form as a file:
+  questions, exact choices, branching, required fields, and what is missing.
+- **Your comparison table.** Run your own model and the five levels on the same test split, three times each, and
+  report the table, with the failures you found, in your final presentation.

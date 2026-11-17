@@ -73,8 +73,8 @@ download from Canvas.
   <article class="resource-card">
     <div class="resource-card-top"><p class="resource-category">Part II</p></div>
     <h3>AI agents for transportation</h3>
-    <p>The last five lectures cover how AI agents work and how to build them for transportation work: reasoning, tools, memory, planning, evaluation, fine-tuning, human review, and full workflows for SUMO simulation and safety analysis.</p>
-    <div class="tag-row"><span>Five lectures</span><span>Research and agency practice</span></div>
+    <p>The agents unit covers how AI agents work and how to build them for transportation work: the loop and its tools, skills built from agency procedures and experience, retrieval and memory, and the data and agency forms an agent works with.</p>
+    <div class="tag-row"><span>Modules 5&ndash;8</span><span>Research and agency practice</span></div>
     <a class="resource-link" href="module5/index.html">Start Part II</a>
   </article>
 </div>
@@ -145,15 +145,16 @@ the {doc}`syllabus` page, and every notebook in the course is listed on the {doc
 
 | Module | Topic |
 |---|---|
-| {doc}`Module 5 <module5/index>` | Understanding AI Agents: Reasoning, Tool Calling, Skills, Memory, Planning, and Coordination |
-| {doc}`Module 6 <module6/index>` | Making Agents Better: Evaluation and Fine-Tuning |
-| {doc}`Module 7 <module7/index>` | Agents and People in an Agency |
-| {doc}`Module 8 <module8/index>` | Building Transportation Harnesses |
+| {doc}`Module 5 <module5/index>` | How an Agent Works: the Loop and Its Tools |
+| {doc}`Module 6 <module6/index>` | Skills: Packaging Transportation Know-How |
+| {doc}`Module 7 <module7/index>` | What an Agent Reads and Remembers: Context, RAG, and Memory |
+| {doc}`Module 8 <module8/index>` | Agents at Work in an Agency: AI-Ready Data, Agency Forms, and Several Agents |
+| {doc}`Module 9 <module9/index>` | Optional: How Models and Agents Are Trained |
 
-Part II draws its examples from across transportation research and agency practice: traffic flow,
-safety, operations, driving automation, infrastructure, EVs, transit and air mobility. Traffic simulation
-with SUMO and transportation safety analysis each get a hands-on lab and a full workflow, and the unit
-ends with harnesses built for transportation research and agency use.
+Part II draws its examples from across transportation research and agency practice. Two run through it:
+SUMO simulation tools, and FDOT District 7's hurricane signal SOP, which becomes a skill, a document to
+search, and the job behind the data module. Module 9 is optional reading on how the models under an agent
+are trained.
 
 (try-a-companion)=
 ## Try a Companion
@@ -210,7 +211,7 @@ your browser, with nothing to install. Here are six to start with.
 
 The {doc}`capstone/index` is a team project that starts in Week 1 and runs all term. It is half the
 course grade: 20% for the proposal and progress updates, and 30% for the final product, report, and
-presentation. Teams settled their topics by Sept 17, and final presentations and demos are on Dec 3.
+presentation. Teams settled their topics by Sept 17, and final presentations and demos are on Tue, Dec 8.
 
 Every project follows the same path, from a real need to a result other people can reuse.
 
@@ -261,7 +262,7 @@ Fall 2026 teams are working on:
   <span>Safety analysis of agency data with BERT</span>
 </div>
 
-Finished projects will be posted here after the Dec 3 presentations, each with a short problem brief,
+Finished projects will be posted here after the Dec 8 presentations, each with a short problem brief,
 the methods, the results, and what the team learned.
 
 ### Open Mobility Challenges

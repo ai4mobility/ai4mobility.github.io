@@ -34,7 +34,7 @@ scripts that compute the rules, and tests. Nothing is trained: a skill is writte
 code.
 
 Because the agent reads only the description until a request fits, one agent can carry many skills
-without filling its context (see {doc}`5.4 Context: what the model reads <module5/notes4-context>`). The
+without filling its context (see {doc}`7.1 Context: what the model reads <module7/notes1-context>`). The
 skills here follow the open [Agent Skills format](https://agentskills.io/specification), so the same
 folder works in Claude, Claude Code and other agents that support the format.
 
@@ -99,7 +99,7 @@ for every step is the
 built from the FDOT District 7 Traffic Signals SOP v1.5. A second example,
 [journal-club-paper-review](https://github.com/ai4mobility/transportation-skills/tree/main/skills/journal-club-paper-review),
 shows a research skill built from a guide for presenting journal papers instead of an agency SOP.
-{doc}`Section 5.7 <module5/notes7-skills>` opens both skills file by file and compares answers with and
+{doc}`Section 6.2 <module6/notes2-skills>` opens both skills file by file and compares answers with and
 without them.
 
 | # | Step | In the D7 example |
@@ -260,6 +260,6 @@ such as SOP clauses, keeps its source's own terms.
 - [Agent Skills specification](https://agentskills.io/specification), the open format the skills follow.
 - FDOT District 7 Traffic Signals SOP, v1.5 (June 2025), pages 5–11: the source of the worked example.
 - Li, X., et al. (2026). SkillsBench. *arXiv:2602.12670*.
-- In this course: {doc}`5.4 Context: what the model reads <module5/notes4-context>`,
-  {doc}`5.6 Where knowledge lives <module5/notes6-knowledge>`,
-  {doc}`5.7 Inside a skill <module5/notes7-skills>` and {doc}`Module 5 <module5/index>`.
+- In this course: {doc}`6.1 Where knowledge lives <module6/notes1-knowledge>`,
+  {doc}`6.2 Inside a skill <module6/notes2-skills>`, {doc}`7.1 Context: what the model reads <module7/notes1-context>` and
+  {doc}`Module 6 <module6/index>`.

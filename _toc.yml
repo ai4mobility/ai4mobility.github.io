@@ -136,6 +136,9 @@ parts:
             title: "Further reading: JEPA and V-JEPA 2"
 
   # Part II became the AI agents unit on 2026-10-24; its first two modules merged into Module 5 on 2026-10-25.
+  # 2026-11-16: reorganized to follow the decks prepared for class: 5 the loop and its tools, 6 skills,
+  # 7 context, RAG and memory, 8 data, agency forms and several agents, 9 optional training. Old 5.4 was split
+  # into 7.1 + 7.2; 5.5 -> 5.4 (file name kept); 5.6/5.7 -> 6.1/6.2; 6.1 -> 9.1. Old addresses redirect (_redirects/).
   - caption: Part II — AI Agents for Mobility
     chapters:
       - file: module5/index
@@ -146,22 +149,25 @@ parts:
             title: "5.2 A model in a loop"
           - file: module5/notes3-tools
             title: "5.3 Tools: what an agent can reach"
-          - file: module5/notes4-context
-            title: "5.4 Context: what the model reads"
           - file: module5/notes5-architectures
-            title: "5.5 Agent architectures: one loop, four questions"
-          # 2026-11-15: 5.6 added to mount the Where_Knowledge_Lives companion (Nov 17 lecture, giving a model the right knowledge).
-          - file: module5/notes6-knowledge
-            title: "5.6 Where knowledge lives: giving an agent the right knowledge"
-          # 2026-11-16: 5.7 added to mount the Inside_A_Skill companion (the two course skills opened up, with/without runs).
-          - file: module5/notes7-skills
-            title: "5.7 Inside a skill: packaging transportation know-how"
+            title: "5.4 Agent architectures: one loop, four questions"
       - file: module6/index
         sections:
-          - file: module6/notes1-adaptation
-            title: "6.1 The adaptation ladder"
+          - file: module6/notes1-knowledge
+            title: "6.1 Where knowledge lives: giving an agent the right knowledge"
+          - file: module6/notes2-skills
+            title: "6.2 Inside a skill: packaging transportation know-how"
       - file: module7/index
+        sections:
+          - file: module7/notes1-context
+            title: "7.1 Context: what the model reads"
+          - file: module7/notes2-rag
+            title: "7.2 Retrieval (RAG): looking things up in agency documents"
       - file: module8/index
+      - file: module9/index
+        sections:
+          - file: module9/notes1-adaptation
+            title: "9.1 The adaptation ladder"
 
   - caption: Labs
     chapters:
@@ -180,13 +186,13 @@ parts:
             title: "Lab 4 — CLIP vs. Traditional Computer Vision"
           - file: module3/lab5_graph_attention
             title: "Lab 5 — Attention on a Road Network"
-          - file: module6/lab6_vit_finetune
+          - file: module9/lab6_vit_finetune
             title: "Lab 6 — Fine-tuning a Vision Transformer"
           - file: module4/lab7_four_answers
             title: "Lab 7 — Four Ways to Predict the Next 5 Seconds"
           - file: module3/lab8_agency_graph
             title: "Lab 8 — Building a Graph from Agency Documents"
-          - file: module6/lab9_lora_crash_narratives
+          - file: module9/lab9_lora_crash_narratives
             title: "Lab 9 — Fine-tuning a Small Language Model on Crash Narratives"
 
   - caption: Capstone

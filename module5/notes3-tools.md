@@ -18,8 +18,8 @@
     <div>
       <h4>Used again in</h4>
       <ul>
-      <li><a href="notes4-context.html">5.4 Context: what the model reads</a></li>
-      <li><a href="../module8/index.html">Module 8 &mdash; Building transportation harnesses</a></li>
+      <li><a href="notes5-architectures.html">5.4 Agent architectures: one loop, four questions</a></li>
+      <li><a href="../module6/notes2-skills.html">6.2 Inside a skill</a> (a skill can run its own scripts)</li>
       </ul>
     </div>
   </div>
@@ -789,4 +789,4 @@ tokens or time?
 
 ---
 
-Next: {doc}`notes4-context` &mdash; what the model reads on every call, and how to bring knowledge in from outside.
+Next: {doc}`5.4 Agent architectures <notes5-architectures>` &mdash; one loop, four design questions, and where the published &ldquo;architectures&rdquo; fit.

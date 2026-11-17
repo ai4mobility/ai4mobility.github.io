@@ -34,9 +34,9 @@ Everything below is due *before* that day's class.
 | Oct 22 | **Project progress materials** as assigned |
 | Oct 29 | **First project progress report** -- what works, what broke, what changed |
 | Nov 5 | **Project progress update** |
-| Nov 12 | **Project progress update** |
+| Tue, Nov 17 | **Project progress update** (the Nov 12 class moved to Nov 17) |
 | Nov 19 | **Draft final project materials** -- plus a short in-class update from every team |
-| Dec 3 | **Final presentation materials**; presentations and demonstrations in class |
+| Tue, Dec 8 | **Final presentation materials**; presentations and demonstrations in class (moved from Dec 3) |
 | Dec 5–10 | **Final submission**, if assigned, during the university final exam period |
 
 From Oct 1 through Oct 22, one team also gave a rotating progress report at the start of most
@@ -67,8 +67,8 @@ result that someone would act on. Concretely, look for:
 - **A real operational pain point.** Something an agency, a research group, or an operator
   currently does slowly, manually, or not at all.
 - **Data you can actually get, in the time you have.** This is the constraint that kills most
-  projects. Topics are confirmed Sept 17 and presentations are Dec 3 — eleven weeks, and only
-  seven of them after the graded proposal on Oct 15. Confirm access before you commit to the
+  projects. Topics are confirmed Sept 17 and presentations are Dec 8 — almost twelve weeks, and fewer
+  than eight of them after the graded proposal on Oct 15. Confirm access before you commit to the
   topic, not after.
 - **A defensible baseline.** If you can't say what your method is better *than*, you can't
   claim it's better. A tuned classical baseline is worth more to your grade than a second
@@ -88,7 +88,7 @@ These are real problems, and picking one up gets you a domain contact.
 - **Final product** — the working artifact: code, notebook, prototype, hardware demonstration,
   or workflow.
 - **Report** — methods, results, limitations, and practical implications.
-- **Presentation and demonstration** on Dec 3, to the class and the advisory committee.
+- **Presentation and demonstration** on Tue, Dec 8, to the class and the advisory committee.
 
 ## Team expectations
 

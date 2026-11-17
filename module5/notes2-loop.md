@@ -19,7 +19,8 @@
       <h4>Used again in</h4>
       <ul>
       <li><a href="notes3-tools.html">5.3 Tools: what an agent can reach</a></li>
-      <li><a href="notes4-context.html">5.4 Context: what the model reads</a></li>
+      <li><a href="notes5-architectures.html">5.4 Agent architectures: one loop, four questions</a></li>
+      <li><a href="../module7/notes1-context.html">7.1 Context: what the model reads</a></li>
       </ul>
     </div>
   </div>
@@ -52,8 +53,8 @@ what people mean by an **AI agent**.
 
 Three kinds of task show the idea: **traffic simulation** with SUMO, **safety analysis** on agency data, and
 **visual inspection and reporting** from dashcam, pavement and structure images. Part II draws its examples from
-across transportation research and agency practice; SUMO simulation and safety analysis get extra depth later, with
-a full workflow each in {doc}`Module 8 <../module8/index>`. Look at what changes from a model to an agent: a model answers one question, while an agent works
+across transportation research and agency practice; traffic simulation gets the most depth, because the tools in
+{doc}`5.3 <notes3-tools>` are SUMO tools. Look at what changes from a model to an agent: a model answers one question, while an agent works
 through a task, deciding what to look up, calling a tool, reading the result and deciding what to do next. And
 look at what does not change. Every task ends with a person: an engineer approves the timing plan, an engineer
 signs off the site list, an inspector signs the report. That is the checkpoint rule of
@@ -415,11 +416,10 @@ The organizing idea of Part II: you will rarely change the model; you will desig
 The **model** is the part that writes text. The **harness** is everything else: the instructions it starts with,
 the tools it can call and how their results are written back, what it remembers, the loop and when it stops, what
 it is allowed to touch, and the log of everything it did. You can improve an agent in two ways: change the model,
-by fine-tuning ({doc}`Module 6 <../module6/index>`), or change the harness. In the runs above, moving the pedestrian limit from the
+by fine-tuning (the optional {doc}`Module 9 <../module9/index>`), or change the harness. In the runs above, moving the pedestrian limit from the
 model's reading into the harness's code changed the plan; nothing about the model changed. For the rest of Part
-II, almost everything you design is harness: tools and context here, memory, skills and planning later in this module,
-measurement and fine-tuning in Module 6, permissions and people in Module 7, and full workflows for SUMO simulation and safety analysis in
-Module 8.
+II, almost everything you design is harness: tools and their checks in this module, skills in Module 6, context,
+retrieval and memory in Module 7, and the data and agency forms an agent works with in Module 8.
 
 | Fit card — the agent loop | |
 | --- | --- |

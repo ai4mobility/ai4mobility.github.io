@@ -1,65 +1,107 @@
-# Module 7 — Agents and People in an Agency
+# Module 7 — What an Agent Reads and Remembers: Context, RAG, and Memory
 
-*Part II, AI Agents for Mobility · lecture 4 of 5. The class schedule is on the {doc}`../syllabus` page.*
+*Part II, AI Agents for Mobility. The class schedule is on the {doc}`../syllabus` page.*
 
 ## Session topics
 
-- **Agents and people in an agency:** orchestration and monitoring, safety and permissions,
-  human-in-the-loop design under agency AI policy, and agents that interact
+- **Context engineering:** what the model reads on each call; why the context grows at every step; lost in the
+  middle; feed it less; describe traffic with theory, not raw dumps; summaries that drop a rule
+- **Retrieval (RAG):** split, embed, search, answer with citations, then check; the milestone paper; splitting a
+  manual along its own structure; field words vs. the manual's words; where retrieval breaks; what RAG cannot do;
+  from RAG to an agent that reads
+- **Memory:** what an agent should remember, who decides, and how it joins the memory an agency already has
 
 ## Overview
 
-An agency will only use an agent it can approve. This module is about building one it could.
+A language model keeps nothing between calls. Everything it knows about the task in front of it is the text the
+harness sends: the instructions, the tool descriptions, the history so far, and whatever the harness fetched. That
+text is the **context**. This module is about what goes into it, how to bring in the right part of a long
+document, and what an agent should carry from one task to the next.
 
-**Orchestration.** Fix in code the steps you already know, and let the model handle only the judgment
-calls. Take a citizen request to a city's traffic operations team. "The signal at this intersection is
-stuck on red" should create a work order right away, with no model involved. "Please add a crosswalk
-here" should look up the warrant criteria, draft a reply, and wait for an engineer's review before
-anything is sent.
+**Context.** The context grows at every step, and a longer context is not a better one: models use the start and
+the end of a long text better than the middle, and accuracy falls as the context grows even when the right fact is
+in it. So the harness should send only what a step needs, in plain text, and describe traffic the way traffic flow
+theory does (a queue, a bottleneck, a capacity) rather than as a dump of detector records. Summaries save space but
+can drop the one rule that mattered; rules belong in the instructions and the harness.
 
-**Monitoring.** Keep a record of everything the agent did, so a failure can be traced. When the problems
-you are watching for are rare, most alarms will be false — the same arithmetic you meet in automatic
-incident detection.
+**Retrieval (RAG).** When the knowledge an agent needs is too long to send, keep it outside the model and look up
+the part a question needs. RAG splits a document into pieces, turns each into a vector with a BERT-style encoder
+you already know, finds the pieces closest to the question, and has the model answer from them with citations.
+Transportation work adds two things a generic setup misses. Manuals have their own structure, so split them along
+it: a rule cut in half is worse than useless. And manuals use the field's own language, so a field glossary that
+rephrases a question into the manual's words can help, if you test it honestly. Just as important is what RAG
+cannot do. It helps only when the answer is written down and matches the question. It will not write a good plan
+from an SOP, find what the SOP is missing, or answer whole-document questions such as conflicts between agencies or
+how a procedure should be improved. Those need an agent that reads in steps, or a person.
 
-**Safety.** Agents cause harm in four main ways: a user asks for something they should not; instructions
-are hidden inside text the agent reads, such as a citizen request or a 511 free-text field; the agent
-makes an honest mistake; or it takes a shortcut that passes the check without doing the work. The
-defences are part of the harness: read-only access by default, credentials the model never sees, and an
-audit log.
+**Memory.** Tools look up the present, RAG quotes the manual, and skills carry the procedure; all three were
+written before the agent started work. Memory is the only one written by the work itself. The main idea of this
+part: **an agency already has a memory** — event logs, work orders, timing files, after-action reports, and its
+staff. Designing memory for an agency agent is mostly deciding how the agent plugs into that memory. Agency memory
+also differs from chatbot memory: it is about a place and a time (this intersection, this storm) rather than a
+person; it serves whoever is on shift; it may go unused for months until the next hurricane season; and it may be a
+public record. So the hard parts are keys, approvals, expiry and records, not the database. The agent proposes a
+memory; a person promotes it; the system of record always wins over what the agent remembers.
 
-**People in the loop.** FDOT's AI Policy (May 2024) requires that AI supplement human work and that
-people remain fully responsible for its outputs; it also asks staff to disclose AI use, use approved tools
-only, and validate AI outputs. Each of those rules can be turned into a feature of the harness. The hard
-part is placing the person so the review is real. A reviewer who approves a hundred items a day stops
-reviewing, which is the same over-trust problem you know from driver-assistance systems.
+The running example is again FDOT District 7's hurricane signal SOP, with the MUTCD and the Highway Safety Manual
+as further documents to split, search and keep current.
 
-The module ends with **agents that interact**: agents with different goals meeting one another, such as
-language-model agents acting as simulated travelers or drivers.
+**This module's transportation question.** How should a manual be split, searched and asked so retrieval finds
+the right clause, and which questions should never be sent to retrieval at all? What should an agency agent
+remember about places, events and decisions, and who approves it?
 
-Other examples: traffic management center operators approving the dynamic message sign messages an
-agent drafts, and automated vehicles and human drivers as agents with different goals.
+## The module, page by page
 
-**This week's transportation question.** Where does the engineer's judgment belong in the loop, and which
-agency rules become features of the harness? And when language-model agents play drivers, does traffic
-flow theory say they behave like real ones — do they reproduce the fundamental diagram?
+<div class="practice-table-wrap">
+<table class="practice-table notes-map">
+<thead>
+<tr><th style="width:32%">Page</th><th style="width:50%">What it covers</th><th style="width:18%">Labs</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="notes1-context.html"><strong>7.1 Context: what the model reads</strong></a><br><em>Context engineering</em></td>
+  <td>The context measured and its growth; lost in the middle; five ways to keep context useful; summaries that drop a rule; keeping the loop light (why a longer context lowers accuracy, measured on the SUMO agent).</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes2-rag.html"><strong>7.2 Retrieval (RAG): looking things up in agency documents</strong></a><br><em>Retrieval</em></td>
+  <td><strong>Milestone paper: retrieval-augmented generation</strong>; RAG for a safety analyst; where retrieval breaks; <strong>hands-on companion: RAG on the D7 signal SOP</strong> (split, embed, search, check the answer, where it breaks, what RAG cannot do, and from RAG to an agent that reads).</td>
+  <td>Companion exercise</td>
+</tr>
+<tr>
+  <td><strong>Further section</strong><br><em>Memory</em></td>
+  <td>What memory means for an agent; four kinds of memory and six design decisions; what today's tools and key papers do; agency memory, the three sorting questions and nine rules; two worked examples (two storms, and a study); research openings &mdash; written up after the session.</td>
+  <td>&mdash;</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 ## Learning objectives
 
 By the end of this module you will be able to:
 
-- Design a workflow for an agency task, choosing which steps are fixed in code and which the model decides.
-- Read an agent's trace, and explain why an alarm for rare problems produces mostly false alarms.
-- Name the main ways an agent causes harm, and design permissions, credentials and logs against each.
-- Turn an agency's AI policy into specific harness features, and place human review where it is real.
-- Describe what changes when several agents with different goals interact.
+- Decide what belongs in an agent's context window, and explain why an agent's cost grows with every step it takes.
+- Build retrieval (RAG) over a transportation document, split along the document's own structure, and check the
+  retriever on its own before judging any answer.
+- Say which questions RAG can answer and which it cannot, and what to use instead.
+- Decide what an agent should remember between tasks, where it is stored, how it is recalled, and who may change it.
+- Connect an agent's memory to the records an agency already keeps, and treat that memory as an agency record.
 
 ## Topics
 
-- Orchestration: workflow graphs, routing, saved progress, and tests for each step
-- Monitoring: traces of what the agent did; why an overall score can hide the cause; alarm base rates
-- Safety: four ways agents cause harm; sandboxes; read-only and write access; credentials; audit logs
-- Human-in-the-loop design under an agency AI policy; real review vs. rubber stamp
-- Agents that interact: different goals, simulated travelers and drivers
+- What the model reads on each call, and how it grows
+- Lost in the middle; why a longer context lowers accuracy
+- Five ways to keep the context useful; summaries that drift
+- Retrieval-augmented generation: splitting, embedding, searching, grounding, citing
+- A BERT reminder: one vector per sentence, and why plain BERT needs training on question-answer pairs
+- Field words vs. the manual's words; a glossary, tested honestly
+- Where retrieval breaks: stale indexes, rules cut in two, conflicting rules, missing answers
+- What RAG cannot do, and from RAG to an agent that reads in steps
+- Memory: working, episodic, semantic and procedural; six decisions (what, when and where to write; how to recall;
+  update and forget; who can see it)
+- Agency memory: keys by place and time, review dates, promotion by a person, memory as a public record, poisoned
+  memory
 
 ## Video lectures
 
@@ -67,15 +109,22 @@ By the end of this module you will be able to:
 
 ## Recommended readings
 
-- Debenedetti, E., et al. (2024). AgentDojo: A dynamic environment to evaluate prompt injection attacks and defenses for LLM agents. *NeurIPS Datasets and Benchmarks*.
-- Greenblatt, R., et al. (2024). AI control: Improving safety despite intentional subversion. *ICML*.
-- HNTB. [FDOT's approach for artificial intelligence success](https://www.hntb.com/think/think-innovation-in-motion-fdots-approach-for-artificial-intelligence-success/) *(a summary of the FDOT AI Policy)*.
-- Federal Highway Administration (2026). [AI for Safety and Efficiency Program Roadmap](https://highways.dot.gov/sites/fhwa.dot.gov/files/FHWA-HRT-26-063.pdf). FHWA-HRT-26-063.
-- NCHRP Project 03-159. [Implementing human-AI collaboration for enhancing TMC freeway operations](https://rip.trb.org/View/2709250).
-- Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures 13 and 15.
+- Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. *NeurIPS*.
+- Liu, N. F., et al. (2024). Lost in the middle: How language models use long contexts. *Transactions of the ACL*.
+- Anthropic (2025). [Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents).
+- Edge, D., et al. (2024). From local to global: A graph RAG approach to query-focused summarization. *arXiv:2404.16130*.
+- Packer, C., et al. (2023). MemGPT: Towards LLMs as operating systems. *arXiv:2310.08560*.
+- Sumers, T. R., et al. (2024). Cognitive architectures for language agents. *TMLR*. *(CoALA, the vocabulary for the four kinds of memory.)*
+- Wen, L., et al. (2024). DiLu: A knowledge-driven approach to autonomous driving with large language models. *ICLR*.
+- Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures 2&ndash;4.
+- Stanford CS 329Z *Engineering AI Agents* (Fall 2026), lecture 7.
 
 ## Labs
 
-- **Reviewing an agent's work** *(in development)*. Work through a set of recorded agent runs on
-  transportation tasks. Find the failures, decide which ones a human reviewer would have caught, and
-  design where the approvals should go. The runs are recorded in advance, so nothing needs an API key.
+- **RAG on the signal SOP** *(companion exercise)*. In the companion in {doc}`7.2 <notes2-rag>`, ask Claude the
+  same SOP question three ways (no document, three retrieved pieces, the whole SOP) and grade each answer with one
+  checklist.
+
+- **For your project.** Decide what your agent should remember, sort each candidate with the three questions
+  (can a tool look it up fresh? will it be true next month, and who says so? would it be fine in a public records
+  response?), and say how you would test that memory helps. No notebook.

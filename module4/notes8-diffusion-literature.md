@@ -557,7 +557,7 @@ Most failures come from steering past what the data support. Nine to watch for:
 
 - *PET-guided generation at a real intersection.* Train a small scenario model like the {ref}`worked example <dlit-worked>` on left turns from inD or SinD, steer it with a PET-based cost, and report conflicts by type with the four checks. None of the 17 papers in {ref}`What the models learn from <dlit-data>` used these datasets or PET.
 - *Fix the mechanism.* Extend the worked example's reproducer with a response cost (the through driver's braking must look like recorded braking). Measure how the passing share and the mechanism change with λ.
-- *Rare conditions on Florida cameras.* Start from the 2,949 FL511 frames of {doc}`Lab 6 <../module6/lab6_vit_finetune>`. Add rain or flooded lanes with a ControlNet-style image model, and test a classifier only on held-out real frames.
+- *Rare conditions on Florida cameras.* Start from the 2,949 FL511 frames of {doc}`Lab 6 <../module9/lab6_vit_finetune>`. Add rain or flooded lanes with a ControlNet-style image model, and test a classifier only on held-out real frames.
 - *From steered samples to a rate (PhD level).* Combine the worked example with the importance sampling of the *Generating Crash Data from Near-Misses* handout: weight each steered sample by how much the steering raised its probability, and see whether the weighted crash rate recovers the world's true rate. The hard part is the weight, which needs the model's likelihood.
 
 ### Where to go next

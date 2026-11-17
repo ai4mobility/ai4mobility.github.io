@@ -6,7 +6,7 @@
   <p>One page for all the labs &mdash; what each one builds, what it actually proves, and what to compare it against before you believe the result. Everything runs in Google Colab; nothing needs a local install.</p>
   <div class="resource-meta">
     <span>9 notebooks available now</span>
-    <span>6 more planned for Modules 2&ndash;7</span>
+    <span>5 more planned for Modules 2&ndash;5</span>
     <span>Open data throughout</span>
   </div>
 </section>
@@ -44,9 +44,8 @@
         <tr><td>From VAE to diffusion</td><td>M4</td><td>Diffusion as a response to measured VAE failures, not an assertion</td><td>In development</td></tr>
         <tr><td>Training the denoiser</td><td>M4</td><td>What the network predicts at each noise level, and why</td><td>In development</td></tr>
         <tr><td>An agent that tunes a signal plan</td><td>M5</td><td>What you show an agent in a tool's output changes how often it breaks the rules</td><td>In development</td></tr>
-        <tr><td><a href="module6/lab6_vit_finetune.html">6 &mdash; Fine-tuning a vision transformer</a></td><td>M6</td><td>Where the accuracy in a fine-tune actually comes from &mdash; and how little of it survives sunset</td><td>Available</td></tr>
-        <tr><td><a href="module6/lab9_lora_crash_narratives.html">9 &mdash; Fine-tuning a small language model on crash narratives</a></td><td>M6</td><td>Whether LoRA beats prompting and retrieval on a split you can defend</td><td>Available</td></tr>
-        <tr><td>Reviewing an agent&rsquo;s work</td><td>M7</td><td>Which agent failures a human reviewer would actually have caught</td><td>In development</td></tr>
+        <tr><td><a href="module9/lab6_vit_finetune.html">6 &mdash; Fine-tuning a vision transformer</a></td><td>M9</td><td>Where the accuracy in a fine-tune actually comes from &mdash; and how little of it survives sunset</td><td>Available</td></tr>
+        <tr><td><a href="module9/lab9_lora_crash_narratives.html">9 &mdash; Fine-tuning a small language model on crash narratives</a></td><td>M9</td><td>Whether LoRA beats prompting and retrieval on a split you can defend</td><td>Available</td></tr>
       </tbody>
     </table>
   </div>
@@ -55,7 +54,7 @@
 <section class="resource-section" id="module1-labs">
   <div class="resource-section-header">
     <h2>Available Now</h2>
-    <span>Modules 1, 3, 4 and 6</span>
+    <span>Modules 1, 3, 4 and 9</span>
   </div>
   <p class="section-intro">Nine notebooks, all runnable in Colab. Read each one alongside the notes section named on its card &mdash; the notebook shows the thing working, the section says why it works and where it stops working. Lab 9&rsquo;s crash narratives are downloaded from Canvas; they are not in this repository.</p>
   <div class="resource-grid">
@@ -116,20 +115,20 @@
       <a class="resource-link" href="module4/lab7_four_answers.html">Open Lab 7</a>
     </article>
     <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 6</p><span class="level-badge level-intermediate">Intermediate</span></div>
+      <div class="resource-card-top"><p class="resource-category">Module 9</p><span class="level-badge level-intermediate">Intermediate</span></div>
       <h3>Lab 6 &mdash; Fine-tuning a Vision Transformer</h3>
       <p>2,949 snapshots from 494 FDOT traffic cameras around Tampa Bay, swept every 25 minutes straight through sunset. Turn the transfer dial you saw on the Sept 10 slides &mdash; head only, last block, last four blocks, everything &mdash; on a 5.5M-parameter ViT-Tiny, and watch what each setting costs and buys. The labels came from a detector, not a person, and the lab spends its last three sections on what that costs you.</p>
       <p><strong>Proves:</strong> a fine-tune's accuracy splits cleanly into what the pretrained features gave you for free and what you had to buy by unfreezing &mdash; and that an after-dark score can rise while the model gets worse, because the label source failed first. <strong>Check it against:</strong> twelve hand-written image statistics and a logistic regression, which scores 37.7% where the full fine-tune scores 71.2%.</p>
-      <div class="tag-row"><span>Reads with 2.7, 6.1</span><span>torch &middot; timm &middot; scikit-learn &middot; matplotlib</span><span>Downloads 31 MB &middot; ~15 min on CPU</span></div>
-      <a class="resource-link" href="module6/lab6_vit_finetune.html">Open Lab 6</a>
+      <div class="tag-row"><span>Reads with 2.7, 9.1</span><span>torch &middot; timm &middot; scikit-learn &middot; matplotlib</span><span>Downloads 31 MB &middot; ~15 min on CPU</span></div>
+      <a class="resource-link" href="module9/lab6_vit_finetune.html">Open Lab 6</a>
     </article>
     <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 6</p><span class="level-badge level-intermediate">Intermediate</span></div>
+      <div class="resource-card-top"><p class="resource-category">Module 9</p><span class="level-badge level-intermediate">Intermediate</span></div>
       <h3>Lab 9 &mdash; Fine-tuning a Small Language Model on Crash Narratives</h3>
       <p>399 crash reports from 20 corridors in Pasco, Hernando and Pinellas counties, chosen to study left turns and pedestrians, each with an officer&rsquo;s narrative and the coded form. Turn each narrative into six structured fields with a 0.5B-parameter open model, climbing the adaptation ladder from 6.1 one rung at a time: the prompt alone, three fixed examples, three retrieved examples, then a LoRA adapter trained per fold. Every rung is scored on the same corridor-grouped folds as 2.13, and the lab shows what a random split would have claimed instead. The last sections cover the hit-and-runs the narrative never mentions, and the fields that were dropped because the text does not contain them.</p>
       <p><strong>Proves:</strong> whether LoRA beats prompting and retrieval on a split you can defend &mdash; and that retrieved examples beat fixed ones (mean 0.566 vs 0.339 across the six fields) partly by copying the nearest neighbour. <strong>Check it against:</strong> a TF-IDF logistic regression trained in about a minute, which averages 0.722 across the six fields; retrieval from training corridors reaches 0.566, retrieval allowed to see the test corridors 0.592, and LoRA 0.367 &mdash; strong on vehicle counts, but it collapses to &ldquo;no&rdquo; on the rare yes/no fields.</p>
-      <div class="tag-row"><span>Reads with 2.13, 6.1</span><span>transformers &middot; peft &middot; scikit-learn</span><span>Colab T4 &middot; data: download from Canvas</span></div>
-      <a class="resource-link" href="module6/lab9_lora_crash_narratives.html">Open Lab 9</a>
+      <div class="tag-row"><span>Reads with 2.13, 9.1</span><span>transformers &middot; peft &middot; scikit-learn</span><span>Colab T4 &middot; data: download from Canvas</span></div>
+      <a class="resource-link" href="module9/lab9_lora_crash_narratives.html">Open Lab 9</a>
     </article>
   </div>
   <div class="placeholder-panel">
@@ -140,7 +139,7 @@
 <section class="resource-section" id="coming-later">
   <div class="resource-section-header">
     <h2>Coming Later in the Course</h2>
-    <span>Modules 2&ndash;7</span>
+    <span>Modules 2&ndash;5</span>
   </div>
   <p class="section-intro">These are described on each module page and released as the semester reaches them. They are listed here so you can see the arc &mdash; and so that if one of them is close to your capstone, you can start early rather than waiting for the week it is assigned.</p>
   <div class="resource-grid">
@@ -158,15 +157,9 @@
     </article>
     <article class="resource-card">
       <div class="resource-card-top"><p class="resource-category">Module 5</p><span class="status-tag status-closed">In development</span></div>
-      <h3>Understanding AI Agents</h3>
+      <h3>How an Agent Works</h3>
       <p><strong>An agent that tunes a signal plan.</strong> Build a small agent loop that adjusts the timing of one intersection through SUMO tools. Run it with and without the timing limits shown in the tool&rsquo;s output, count the plans that break them, then add a checkpoint before any plan is applied.</p>
       <a class="resource-link" href="module5/index.html">Module 5</a>
-    </article>
-    <article class="resource-card">
-      <div class="resource-card-top"><p class="resource-category">Module 7</p><span class="status-tag status-closed">In development</span></div>
-      <h3>Agents and People in an Agency</h3>
-      <p><strong>Reviewing an agent&rsquo;s work.</strong> Work through recorded agent runs on transportation tasks, find the failures, decide which a human reviewer would have caught, and design where the approvals go. The runs are recorded in advance, so nothing needs an API key.</p>
-      <a class="resource-link" href="module7/index.html">Module 7</a>
     </article>
   </div>
 </section>

@@ -29,7 +29,7 @@
 # =============================================================================
 
 meta:
-  updated: 2026-11-04
+  updated: 2026-11-16
   notes_granularity: one chapter per module
   chapter_files: site/moduleN/notes.md
   companion_mount: site/_static/companions/   # served at _static/companions/<file>
@@ -2657,16 +2657,16 @@ items:
       4.11-4.13. Joins the part "Generative models in transportation" (now 4.10-4.14). World models 4.14 -> 4.15
       (notes11, every 4.14 reference in notes12-jepa, module4/index.md); 4.13 now points Next to 4.14.'
 
-# MODULES 5-8 — PART II, AI AGENTS (since 2026-10-24; its Modules 4 and 5 merged into Module 5 on 2026-10-25)
+# MODULES 5-9 — PART II, AI AGENTS (since 2026-10-24; Modules 4+5 merged 2026-10-25; reorganized 2026-11-16)
 # -----------------------------------------------------------------------------
 
   - id: m4-notes-1-adaptation
-    file: site/module6/notes1-adaptation.md
+    file: site/module9/notes1-adaptation.md
     kind: notes
-    module: 6
+    module: 9
     session: '2026-11-12'
     status: integrated
-    notes: 'MOVED 2026-10-24 to Module 6 and renumbered 6.1 (was 4.1); its closing line now points to Module 4 for retrieval.
+    notes: 'MOVED 2026-11-16 to optional Module 9 and renumbered 9.1 (was 6.1). MOVED 2026-10-24 to Module 6 and renumbered 6.1 (was 4.1); its closing line now points to Module 4 for retrieval.
       4.1 The adaptation ladder: what your corpus actually needs. The FIRST Module 4 section page,
       created Sept 22 2026, and deliberately the module opener rather than a later section: the module index
       already argues that most problems people fine-tune for are retrieval problems, so the decision rule
@@ -2719,12 +2719,14 @@ items:
       runs with the grid search as the no-model baseline.
 
   - id: m4-notes-4-context
-    file: site/module5/notes4-context.md
+    file: site/module7/notes1-context.md
     kind: notes
-    module: 5
+    module: 7
     session: '2026-10-29'
     status: drafted
     notes: >-
+      SPLIT 2026-11-16: the context half is 7.1 (site/module7/notes1-context.md), the RAG half 7.2 (site/module7/notes2-rag.md,
+      row m7-notes-2-rag); the old address redirects by anchor.
       4.4 Context. Prose twin of Agents_Context_Slides: the context of the longest recorded run measured (510 -> 2,298
       tokens over 10 steps), the n-squared growth formula checked against the measurement, Lost in the Middle, four moves
       for context, the summary test (does a 60-word summary keep the 21 s pedestrian minimum?), milestone paper RAG in
@@ -2775,7 +2777,7 @@ items:
     module: 5
     session: '2026-10-29'
     status: drafted
-    dest: site/module5/notes4-context.md
+    dest: site/module7/notes1-context.md + site/module7/notes2-rag.md
     notes: >-
       AI agents 3: context. Section header, 15 slides, 1 backup, about 50 min with the lab launch. Figures AGC_*.
       The summary test (slide 5) is measured: 12 summaries of run D/0; the 21 s pedestrian minimum kept 1/6 and 1/6.
@@ -3018,12 +3020,12 @@ items:
       paired differences. Lab 8 notebook header now points to 3.10 instead of ''the handout''.'
 
   - id: m4-lab6-vit-finetune
-    file: site/module6/lab6_vit_finetune.ipynb
+    file: site/module9/lab6_vit_finetune.ipynb
     kind: lab
-    module: 6
+    module: 9
     session: '2026-10-01'
     status: published
-    dest: site/labs.md + _toc.yml Labs part + module6/index.md
+    dest: site/labs.md + _toc.yml Labs part + module9/index.md
     notes: 'Lab 6. Turns the Sept 10 transfer dial on ViT-Tiny (5,524,995 params, Apache-2.0) over 2,949
       FL511 Tampa Bay camera frames collected 2026-09-21 in six sweeps through sunset. Camera-disjoint
       split, daylight-only training. Daylight test: majority 35.5, 12 hand features 37.7, head-only at
@@ -3055,12 +3057,12 @@ items:
       numbers that do not match.'
 
   - id: m6-lab9-lora-crash-narratives
-    file: site/module6/lab9_lora_crash_narratives.ipynb
+    file: site/module9/lab9_lora_crash_narratives.ipynb
     kind: lab
-    module: 6
+    module: 9
     session: agents-finetune
     status: drafted
-    dest: site/labs.md + _toc.yml Labs part + module6/index.md + module6/notes1-adaptation.md
+    dest: site/labs.md + _toc.yml Labs part + module9/index.md + module9/notes1-adaptation.md
     notes: 'Lab 9. LoRA r16 on Qwen2.5-0.5B-Instruct, six fields, five corridor-grouped folds (the 2.13
       split). Mean headline score 0.367, versus 0.566 for 3 retrieved examples and 0.722 for TF-IDF + LR.
       Notebook is unexecuted (44 cells, no outputs). DATA_URL is empty; crash_narratives_joined.json is
@@ -3068,9 +3070,9 @@ items:
       LoRA does not beat retrieval or the bag of words at these settings.'
 
   - id: m6-lab9-repro
-    file: site/module6/lab9_lora_crash/
+    file: site/module9/lab9_lora_crash/
     kind: internal
-    module: 6
+    module: 9
     session: agents-finetune
     status: drafted
     notes: 'Instructor tooling for m6-lab9-lora-crash-narratives, kept on the site because the class-folder
@@ -3139,6 +3141,36 @@ items:
       research and agency practice (revised the same day: not running cases). The five module index pages (module4-8/index.md) were rewritten from it; old
       Modules 4-8 (adapting and orchestrating, sensing and edge, driving and connectivity, simulation and
       operations, safety and agency practice) left the site.'
+
+  - id: m7-notes-2-rag
+    file: site/module7/notes2-rag.md
+    kind: notes
+    module: 7
+    status: drafted
+    notes: '7.2 Retrieval (RAG): looking things up in agency documents. Created 2026-11-16 from the RAG
+      half of the old 5.4 (milestone paper RAG, RAG for a safety analyst, where retrieval breaks, the fit
+      card, and the RAG-on-the-signal-SOP companion embed, anchor rag-sop-companion), with its own notes
+      card, three of the old five check-yourself questions and the retrieval sources. The old module5/notes4-context.html
+      stub sends RAG anchors here.'
+
+  - id: site-part2-reorg-2026-11-16
+    file: site/_toc.yml
+    kind: internal
+    module: 5
+    status: integrated
+    dest: site/module5-9 index pages + _redirects/ + intro.md + README.md + labs.md + syllabus.md + capstone/index.md
+      + skills.md + module2 and module4 Lab 6 links
+    notes: 'Part II reorganized to follow the decks prepared for class (Hao, 2026-11-16): 5 How an agent
+      works: the loop and its tools (5.1-5.4; 5.5 architectures renumbered 5.4, file name kept); 6 Skills
+      (6.1 = old 5.6, 6.2 = old 5.7; two lectures, Agents_Skills_Slides); 7 Context, RAG and memory (7.1
+      + 7.2 split from old 5.4; memory still to write, Agents_Memory_Slides); 8 Agents at work in an agency
+      (AI-ready data, agency forms, several agents, five-level project comparison; nothing written yet;
+      Agents_Data_Ready_Slides, Agents_Agency_Form_Slides, Handout 1); 9 Optional: how models and agents
+      are trained (9.1 = old 6.1; Labs 6 and 9 moved from module6/; the four Nov 12 handouts and the RL
+      crash course). Old M6-M8 plans (evaluation lecture, agents and people in an agency, SUMO and HSM harness
+      workflows) removed. Redirect stubs for every moved page. Syllabus: Oct 29-Dec 8 rows rewritten (agents
+      Nov 5 / Tue Nov 17 / Nov 19 / Tue Nov 24 / Tue Dec 1, finals Tue Dec 8); the Oct 29 topic (Modules
+      3-4) is inferred and should be confirmed.'
 
 # -----------------------------------------------------------------------------
 # CAPSTONE AND COURSE-WIDE
@@ -3548,9 +3580,9 @@ items:
       key = AGA_Sorting_Key (slide and 5.5 dropdown). Not on the site.'
 
   - id: m5-notes-4-context-light
-    file: site/module5/notes4-context.md
+    file: site/module7/notes1-context.md
     kind: notes
-    module: 5
+    module: 7
     session: '2026-10-29'
     status: drafted
     notes: 'Added Nov 3: "Keeping the loop light" in 5.4. Figure AGC_Feed_Less: the NoLiMa Table 3 curve, and three
@@ -3679,7 +3711,7 @@ items:
     module: 5
     session: '2026-11-17'
     status: drafted
-    dest: site/module5/notes4-context.md
+    dest: site/module7/notes2-rag.md
     notes: 'RAG on the signal SOP: how an agent looks things up. Ten tabs: the picture; split (window/overlap
       sliders, rules cut); embed (PCA map, cosine, worked example); search (keyword BM25 / meaning MiniLM
       / both RRF, acronym and field-glossary toggles, rewrite prompt); answer and check (prompt builder,
@@ -3735,12 +3767,12 @@ items:
       linked from the 5.3 slide-show section; not embedded.'
 
   - id: m5-notes-6-knowledge
-    file: site/module5/notes6-knowledge.md
+    file: site/module6/notes1-knowledge.md
     kind: notes
-    module: 5
+    module: 6
     session: '2026-11-17'
     status: drafted
-    notes: '5.6 Where knowledge lives: giving an agent the right knowledge. Created Nov 15 2026 to mount
+    notes: 'MOVED 2026-11-16 to Module 6 and renumbered 6.1 (was 5.6). 5.6 Where knowledge lives: giving an agent the right knowledge. Created Nov 15 2026 to mount
       the Where_Knowledge_Lives companion (the Nov 17 lecture, "Giving a powerful model the right knowledge").
       What the model knows vs. what it has not read (SOP 3.2.1); the eight places as a table grouped by
       column (1, 2, 6 every call; 3, 4, 5 on request; 7 a person; 8 the weights) plus the TMC analogy; the
@@ -3758,7 +3790,7 @@ items:
     module: 5
     session: '2026-11-17'
     status: drafted
-    dest: site/module5/notes6-knowledge.md
+    dest: site/module6/notes1-knowledge.md
     notes: 'Where knowledge lives: eight places, one hurricane morning. Five tabs: the eight places (clickable
       figure, kit files and token counts); one hurricane morning (nine steps, lit arrows, meter); try a
       request (eight requests with route, tokens and answer); what it costs (every call vs. on demand toggles,
@@ -3769,12 +3801,12 @@ items:
       companion".'
 
   - id: m5-notes-7-skills
-    file: site/module5/notes7-skills.md
+    file: site/module6/notes2-skills.md
     kind: notes
-    module: 5
+    module: 6
     session: '2026-11-17'
     status: drafted
-    notes: '5.7 Inside a skill: packaging transportation know-how. Created Nov 16 2026 to mount the Inside_A_Skill
+    notes: 'MOVED 2026-11-16 to Module 6 and renumbered 6.2 (was 5.7). 5.7 Inside a skill: packaging transportation know-how. Created Nov 16 2026 to mount the Inside_A_Skill
       companion. A skill as a folder (the d7-signal-sop tree; 144 / 1,653 / 6,246 / 1,177 / 74 tokens);
       five writing moves quoted from SKILL.md; seven kinds of know-how and their homes; the with/without
       table (D7 2 / 3.5 / 5 of 5, journal club 7.5 / 7 / 10 of 10) with the caveats (one run each, grader
@@ -3789,7 +3821,7 @@ items:
     module: 5
     session: '2026-11-17'
     status: drafted
-    dest: site/module5/notes7-skills.md
+    dest: site/module6/notes2-skills.md
     notes: 'Inside a skill: two transportation skills, opened up. Eight tabs: what a skill is; open the
       folder (file explorer, every file as committed at transportation-skills 4b7bc8d); read the SKILL.md
       (call map, annotated blocks); watch it run (the two skill-run traces with real script output); write

@@ -1,8 +1,8 @@
-# AI4Mobility — Lab 9 instructor tooling: Fine-tuning a small language model on crash narratives (Module 6)
+# AI4Mobility — Lab 9 instructor tooling: Fine-tuning a small language model on crash narratives (Module 9)
 
-These files are instructor tooling, copied into `module6/lab9_lora_crash/` because this site repo does not keep the other labs' reproducers (those live in the class folder, for example `Labs/vit_finetune/`). They were not rewired for this layout.
+These files are instructor tooling, copied into `module9/lab9_lora_crash/` because this site repo does not keep the other labs' reproducers (those live in the class folder, for example `Labs/vit_finetune/`). They were not rewired for this layout.
 
-- The notebook students open is `module6/lab9_lora_crash_narratives.ipynb`, one directory up. Its content was not regenerated here.
+- The notebook students open is `module9/lab9_lora_crash_narratives.ipynb`, one directory up. Its content was not regenerated here.
 - `refresh.sh` still assumes the original working layout: it `cd`s to `../work`, runs `make_numbers.py` with `../venv`, and writes the notebook from `../out`. Do not run it from this folder.
 - `build_lora_crash_lab.py` reads `numbers.json` beside itself (or `LAB9_NUMBERS`) and writes the notebook path you pass it.
 - `lora_crash/*.py` read `crash_narratives_joined.json` from the working directory. That file is **not** in this repo. The dataset is distributed through Canvas only. Do not add it, and do not add per-report prediction files.
@@ -12,13 +12,13 @@ The notes below are the build record from the machine that produced `numbers.jso
 ## Files
 | path | what |
 |---|---|
-| `lab9_lora_crash_narratives.ipynb` | The notebook (44 cells, 19 code; no saved outputs). Goes to `module6/` |
+| `lab9_lora_crash_narratives.ipynb` | The notebook (44 cells, 19 code; no saved outputs). Goes to `module9/` |
 | `build_lora_crash_lab.py` + `_cells_code.py` | The builder. Every number in the prose is read from `numbers.json`, and a missing key fails loudly. A method that has not run shows **TODO-after-run** instead of a number |
 | `numbers.json` | Aggregate results from the build run. No narrative text (checked: 0 of 399 narratives share any 8-word window with it or with the notebook) |
 | `refresh.sh` | Re-scores the finished runs, copies numbers.json here and rebuilds the notebook |
 | `lora_crash/` | The reproducer scripts (common, llm_core, run_baseline, run_llm, run_lora, run_lora_variant, make_numbers). The per-report prediction files are deliberately not included |
 | `labs_card.md` | Draft labs.md changes: hero count, at-a-glance row, card, removing the "coming later" card |
-| `toc_entry.md` | Suggested `_toc.yml` entry and module6/index.md edits |
+| `toc_entry.md` | Suggested `_toc.yml` entry and module9/index.md edits |
 
 ## Data handling (instructor decision: Canvas only)
 The data is distributed **only through Canvas**; there is no public URL, and `DATA_URL` stays empty. The setup markdown and cell 2 both tell students to download `crash_narratives_joined.json` from Canvas, then either upload it at the Colab file picker or set `DATA_PATH`. The notebook contains no narrative text, and its outputs are aggregate. The one cell that shows a single narrative (cell 19) is off by default (`SHOW = False`) and tells students to clear its output before they share the notebook.
@@ -83,4 +83,4 @@ Notebook smoke test (re-run after the final rebuild): CPU cells 2–8 (load, sch
 2. **Fields dropped.** Weather, light and surface are dropped because the narrative rarely states them. Alcohol is dropped because there are only 9 cases.
 3. **2.13 mismatch.** The recomputed TF-IDF distracted AP is 0.614; the published 2.13 page says 0.619.
 4. **T4 timings.** These are TODO-after-run in sections 5, 7 and 8 and on the card's "~TODO min on a T4" tag.
-5. **Lab number.** The draft uses Lab 9, filed under module6/.
+5. **Lab number.** The draft uses Lab 9, filed under module9/ (moved from module6/ on Nov 16, 2026).

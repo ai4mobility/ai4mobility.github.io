@@ -97,20 +97,17 @@ Canvas.
 | Oct 8 | Agentic AI, tool use, memory, skills, API calling, AI-assisted coding, transportation workflow automation | Baseline method or data acquisition plan; **rotating project progress report: Team 2** |
 | Oct 15 | AI for mobility sensing: computer vision, AI cameras, dashcam data, roadside video, Wi-Fi/Bluetooth, radar, lidar | **Final project proposal**; **rotating project progress report: Team 3** |
 | Oct 22 | Edge AI and hardware-integrated mobility systems: edge devices, embedded computing, self-driving development devices, AI robotics | **Rotating project progress report: Team 4** |
-| Oct 29 | AI agents 1 — how an agent works: a model in a loop, workflow vs. agent, the model and its harness, tool use and MCP, context engineering and RAG | First project progress report |
-| Nov 5 | AI agents 2 — skills, memory, and planning: agency procedures as skills, planning and re-planning, steps that cannot be undone, coordinating several agents | Project progress update |
-| Nov 12 | AI agents 3 — making agents better: evaluating agents; fine-tuning, LoRA, and instruction tuning; agents that learn from experience | Project progress update |
-| Nov 19 | AI agents 4 — agents and people in an agency: orchestration and monitoring, safety and permissions, human-in-the-loop design under agency AI policy | Draft final project materials; short final-prep updates from remaining teams |
-| Tue, Nov 24 | AI agents 5 — building transportation harnesses: the SUMO simulation workflow, the safety analysis workflow, and data engineering for AI agents *(added session)* | — |
-| Nov 26 | *No class — Thanksgiving holiday* | — |
-| Dec 3 | Final project presentations, demonstrations, and course synthesis | Final project materials in progress |
-| Dec 5–10 | University-scheduled final exam period — may be used for final project submission, demonstrations, or presentations | Final project submission, if assigned |
+| Oct 29 | Graph neural networks and deep generative models (Modules 3 and 4) | First project progress report |
+| Nov 5 | AI agents begin: how an agent works, and tools (Module 5) | Project progress update |
+| Nov 12 | *No class; this meeting moved to Tue, Nov 17* | — |
+| Tue, Nov 17 · Nov 19 · Tue, Nov 24 · Tue, Dec 1 | AI agents, continued, in this order: checking tool results, which ends Module 5; skills, over two lectures (Module 6); context, RAG, and memory (Module 7); AI-ready data, answering in the agency's form, and several agents (Module 8). The pace is set in class, so a topic may move to the next session. No class Thu, Nov 26 (Thanksgiving). Optional reading: how models and agents are trained (Module 9) | Project progress update (moved from Nov 12); skills assignment after Nov 17; draft final project materials, as assigned |
+| Tue, Dec 8 | Final project presentations, demonstrations, and course synthesis *(moved from Dec 3; falls in the university final exam period, Dec 5–10)* | Final project materials; final submission, if assigned |
 
 ### Rotating project progress reports
 
 From Oct 1 through Oct 22, most Thursday meetings opened with a short rotating project
-progress report, one team per week. The rotation does not continue during the AI agents unit
-(Oct 29 to Nov 24), so those lectures keep their full time. The purpose is to help each
+progress report, one team per week. The rotation does not continue after Oct 22, so the
+remaining lectures keep their full time. The purpose is to help each
 team make steady progress, receive feedback while changes are still possible, and let the
 whole class learn from the practical problems that emerge in real AI mobility projects.
 

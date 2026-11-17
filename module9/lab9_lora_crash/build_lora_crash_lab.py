@@ -1,5 +1,5 @@
 """
-build_lora_crash_lab.py — emits module6/lab9_lora_crash_narratives.ipynb
+build_lora_crash_lab.py — emits module9/lab9_lora_crash_narratives.ipynb
 
 Every number the notebook asserts comes from numbers.json, written by make_numbers.py in the
 reproducer folder (lora_crash/). Nothing is typed in by hand. A method that was not run is
@@ -83,10 +83,10 @@ def cmp_word(a, b, tol=0.01):
 # ---------------------------------------------------------------- title
 A(md(f"""# Lab 9 — Fine-tuning a Small Language Model on Crash Narratives
 
-**AI4Mobility (CGN 6933) · Module 6 · reads with 6.1 (the adaptation ladder) and 2.13 (does it earn its keep?)**
+**AI4Mobility (CGN 6933) · Module 9 · reads with 9.1 (the adaptation ladder) and 2.13 (does it earn its keep?)**
 
 In 2.13 a TF-IDF bag of words with a logistic regression beat every frozen BERT probe on
-crash narratives, and a fine-tuned DistilBERT did not close the gap. Section 6.1 then gave you a
+crash narratives, and a fine-tuned DistilBERT did not close the gap. Section 9.1 then gave you a
 ladder for adapting a model: **prompt it, then give it retrieved examples, then train a small
 adapter (LoRA), and only then think about anything bigger.** This lab climbs the first three
 rungs on the same {n('corpus.n')} Florida crash reports, with a 494-million-parameter open model
@@ -238,7 +238,7 @@ the prompt must come from **training corridors only**.
 # ---------------------------------------------------------------- 4 · ladder
 A(md(f"""## 4 · The ladder, in plain words
 
-Section 6.1 ordered the ways to adapt a model by cost. This lab climbs the first three rungs with the
+Section 9.1 ordered the ways to adapt a model by cost. This lab climbs the first three rungs with the
 model held fixed, so the only thing that changes is how much you teach it.
 
 | Rung | What changes | What you pay |
@@ -625,7 +625,7 @@ Keep the classical method when:  the fields are few and keyword-shaped, the budg
 | **Crash records (FDOT, HSMV)** | Flag reports where the coded fields disagree with the narrative, for review | the agency's own narratives and coded forms | a keyword audit and a TF-IDF classifier per field |
 | **Safety analysis (HSIP, Vision Zero)** | Pull pedestrian and turning-movement detail that the form does not code | a few hundred reports coded by an analyst for the new field | the analyst reading reports, timed |
 | **Transit operations** | Turn incident logs into structured cause codes | the agency's incident log and its cause taxonomy | the cause code the operator picked from a dropdown |
-| **Agents (Module 6–7)** | A small local model as the extraction tool an agent calls | the same schema, plus checks on the tool's output | the same agent calling a prompted model |
+| **Agents (Modules 5–8)** | A small local model as the extraction tool an agent calls | the same schema, plus checks on the tool's output | the same agent calling a prompted model |
 
 ### Evaluation close
 

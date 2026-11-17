@@ -1,101 +1,83 @@
-# Module 5 — Understanding AI Agents: Reasoning, Tool Calling, Skills, Memory, Planning, and Coordination
+# Module 5 — How an Agent Works: the Loop and Its Tools
 
-*Part II, AI Agents for Mobility · lectures 1&ndash;2 of 5. The class schedule is on the {doc}`../syllabus` page.*
+*Part II, AI Agents for Mobility · the first module of the agents unit. The class schedule is on the
+{doc}`../syllabus` page.*
 
 ## Session topics
 
-- **How an agent works:** a model in a loop, workflow vs. agent, the model and its harness, tool use and MCP,
-  context engineering and RAG
-- **Skills, memory, and planning:** agency procedures as skills, what an agent should remember, planning and
-  re-planning, steps that cannot be undone, and coordinating several agents
+- **What an agent is:** from answering to acting; a tool call is text that the harness picks out and runs; an
+  agent is a model in a loop
+- **Calling and building tools:** turning functions you know, such as SUMO's TraCI, into tools; the menu the model
+  sees; how the harness runs one call and sends the result back
+- **Where your transportation knowledge goes:** the decisions inside every tool; advice in the description,
+  rules in code
+- **Who checks the tool result:** five places to add a check, checks from traffic flow theory, and a person as
+  the checker
+- **MCP and live data:** one tool server that many agents share; Arizona 511 and Florida work-zone feeds as tools
+- **Workflow or agent:** a scale you know from signal control; an agent is a model plus a harness; what an agent
+  may do alone, must ask about first, or must never do
+
+## Part II at a glance
+
+Part II of the course is about **AI agents**: systems in which a language model does not just answer a
+question but works through a task. It calls tools, reads the results, and decides what to do next. Each
+module adds one thing an agent needs to do transportation work well.
+
+| Module | What it adds | The question it answers |
+|---|---|---|
+| **5 How an agent works** (this module) | the loop and its tools | What can the agent look up or compute right now? |
+| {doc}`6 Skills <../module6/index>` | the agency's know-how, packed for an agent | How does this agency, or this group, do this job? |
+| {doc}`7 Context, RAG, and memory <../module7/index>` | what the model reads, and what carries over | What does a long manual say? What happened before? |
+| {doc}`8 Agents at work in an agency <../module8/index>` | data, agency forms, several agents | Is the data ready, and can we tell if the agent is right? |
+| {doc}`9 How models and agents are trained <../module9/index>` *(optional)* | the training behind it all | How does a model learn to reason, to use tools, or a new domain? |
+
+Four ideas carry all of Part II.
+
+- **An agent is a model in a loop.** The model writes a short, structured request to use a tool. A program runs
+  it, the result is pasted back into the model's input, and the loop repeats until the model decides the task is
+  done. The model never touches the simulator or the database itself; it only writes text that something else
+  runs.
+- **There is a scale from a fixed workflow to a free agent.** In a workflow, a person decides every step in
+  advance. In an agent, the model decides them while it runs. Signal control has the same scale: fixed-time,
+  actuated, adaptive. Adaptive control pays off when demand is unpredictable, and an agent pays off only when the
+  steps cannot be written down in advance. If you know the steps, write a workflow.
+- **An agent is a model plus a harness.** The harness is everything around the model: its instructions, its
+  tools, its skills, its memory, the loop, and its permissions. You will almost never change the model. You will
+  build harnesses.
+- **What transportation adds is the lever.** Tools, skills, retrieval, memory and data were all built to work in
+  any field. For each one we ask what transportation researchers and engineers can add: traffic flow and safety
+  theory, an agency's decades of procedures and lessons, and its data. The harness is where that knowledge goes,
+  and every idea is tested against the general version without it.
+
+Part II adapts the structure of CMU 11-768 *AI Agents* (Fall 2026, Daniel Fried and Graham Neubig) and draws on
+Stanford CS 329Z *Engineering AI Agents*, rebuilt around transportation research and agency work.
 
 ## Overview
 
-Part II of the course is about **AI agents**: systems in which a language model does not just answer a
-question but works through a task — calling tools, reading the results, and deciding what to do next.
-This module covers how that works, over two sessions. The first takes an agent apart: the loop, the
-tools it calls, and what it reads. The second covers what an agent carries from one task to the next,
-how it plans, and how several agents share a task.
+This module takes an agent apart. It starts from the workflow you met in the first week of class, puts a
+language model inside a loop, and then spends most of its time on **tools**, the part of an agent you will
+build first.
 
-Four ideas carry the whole of Part II.
+A tool is a function the model may ask the harness to run: get the queue at a detector, switch a signal phase,
+list the work zones on a street. The model sees a menu of tools, each with a name, a description and its inputs.
+It picks one by writing its name and arguments as text; the harness runs the function and pastes the result back.
+You will watch one real call slowed down, step by step, on a SUMO intersection, with a small open model and with
+a strong closed one.
 
-- **An agent is a model in a loop.** The model writes a short, structured request to use a tool. A
-  program runs it, the result is pasted back into the model's input, and the loop repeats until the model
-  decides the task is done. The model never touches the simulator or the database itself; it only writes
-  text that something else executes.
-- **There is a scale from a fixed workflow to a free agent.** In a workflow, a person decides every step
-  in advance. In an agent, the model decides them while it runs. Signal control has the same scale:
-  fixed-time, actuated, adaptive. Adaptive control pays off when demand is unpredictable, and an agent
-  pays off only when the steps cannot be written down in advance. If you know the steps, write a workflow.
-- **An agent is a model plus a harness.** The harness is everything around the model: its instructions,
-  its tools, its memory, the loop, and its permissions. You will almost never change the model. You will
-  build harnesses, and {doc}`Module 8 <../module8/index>` builds them for transportation.
-- **What transportation adds is the lever.** Every technique in Part II — retrieval, tools, skills,
-  memory, planning, fine-tuning, evaluation, human review — was built to work in any field. For each one
-  we ask what transportation researchers and engineers can add to make it work better: traffic flow and
-  safety theory, an agency's decades of procedures and lessons, and its data. The harness is where that
-  knowledge goes. Each lecture ends with ten minutes on this question for your own project, and every idea
-  is tested against the general version without it.
+Your transportation knowledge enters a tool in two places. **Advice goes in the description**: what the tool
+returns, when to call it, what a number means. **Rules go in code**: a minimum green, a pedestrian clearance, a
+check that a result is physically possible. The model may ignore advice. It cannot ignore code.
 
-**Reasoning comes before acting.** Each time round the loop, the model decides what to do next, and it
-often decides better when it first writes out its steps. In this course a model *reasons* when it writes
-intermediate steps before its final answer, checks and revises them, and those steps measurably raise its
-accuracy. Chain-of-thought prompting asks a model for those steps; reasoning models such as OpenAI's o1
-and DeepSeek-R1 are trained to write them on their own. ReAct ({doc}`5.2 <notes2-loop>`) interleaves the
-steps with tool calls. A clear chain of steps is still not proof that the answer is right. How
-reinforcement learning trains a reasoning model comes in {doc}`Module 6 <../module6/index>`.
+A plain loop has only one checker, the model itself, and models are poor at checking their own work. So the
+module ends the tools part with **who checks the tool result**: five places a harness can add a check, checks
+built from traffic flow theory (capacity, and how fast a queue can grow), and when the checker should be a person.
 
-The examples in Part II come from across transportation research and agency practice, so you should
-find your own kind of work among them. Two topics get extra depth: **traffic simulation with SUMO** (this
-module's lab and a full workflow in Module 8) and **transportation safety analysis** (the Module 6 lab and
-a full workflow in Module 8). In the first session the examples are an agent that runs a SUMO simulation
-through tools and reads the result, an agent that retrieves the right passage of an agency manual before
-it answers, and an agent that calls live traffic data such as Florida 511 incident reports.
+Two examples run through the module: an agent that retimes a signal through **SUMO** tools, and agents that read
+**live agency data**, Arizona 511 and Florida's work-zone (WZDx) feed, through tools served over MCP.
 
-**The first session's transportation question.** What should your agent compute itself, and what should it hand
-to a validated engineering tool such as SUMO or an HCM procedure? And how should traffic be described in
-its context: as raw detector data, or as the bottleneck and queue that traffic flow theory points to?
-
-### Skills, memory, planning, and coordination
-
-An agent that starts every task from nothing is slow, and it makes the same mistakes twice. The second
-session covers three ways an agent carries what it knows from one task to the next, and one way to split a task
-too big for a single agent.
-
-**Skills.** A skill is a written procedure the agent opens only when a task calls for it: a short
-description is always visible, and the full instructions load on demand. Agencies already write these —
-standard operating procedures, design manuals, checklists — so turning one into a skill is often the
-cheapest improvement available. It is not free: in one benchmark, curated skills raised the average pass
-rate from 33.9% to 50.5%, but made results worse on 13 of 87 tasks, because a skill can push aside a
-better default. {doc}`Section 5.6 <notes6-knowledge>` shows where each kind of agency knowledge belongs, on the
-District 7 hurricane signal SOP. {doc}`Section 5.7 <notes7-skills>` opens two course skills file by file and
-compares answers with and without them. To build a skill and share it with everyone, see
-{doc}`Transportation Skills <../skills>`.
-
-**Memory.** What should an agent keep from past runs — a fact, a lesson, a whole episode — and when
-should it update or delete what it kept?
-
-**Planning.** A plan is a written statement of what the agent intends to do, so it can be checked before
-anything happens. Some plans should be fixed up front; others need re-planning as new information
-arrives. Every plan should mark the steps that cannot be undone, and the constraints that apply to the
-whole task rather than to one step.
-
-**Several agents.** A manager agent can hand pieces of a task to helper agents. Sometimes that helps.
-Often one agent that sees the whole task does better, because a hand-off is a summary and summaries drop
-things.
-
-The main planning example is restoring traffic signals after a hurricane: read the damage reports,
-check the generator stock, decide the order of work, and only then file the work order — the step that
-cannot be undone. Other examples come from agency practice and research: an FDOT procedure written as a
-skill, and a manager agent with helper agents working through a literature review (how driver-assistance
-systems change freeway capacity, say) while keeping notes in memory between sessions.
-
-**The second session's transportation question.** Which parts of an agency's decades of practice — its
-procedures, after-action reviews and lessons from past storms — can become skills, memory and plan
-templates, and which cannot be written down?
-
-Part II adapts the structure of CMU 11-768 *AI Agents* (Fall 2026, Daniel Fried and Graham Neubig) and
-rebuilds it around transportation research and agency work.
+**This module's transportation question.** What should your agent compute itself, and what should it hand to a
+validated engineering tool such as SUMO or an HCM procedure? And which of your rules belong in a tool's
+description, and which in its code?
 
 ## The module, page by page
 
@@ -111,38 +93,23 @@ rebuilds it around transportation research and agency work.
   <td>&mdash;</td>
 </tr>
 <tr>
-  <td><a href="notes2-loop.html"><strong>5.2 A model in a loop</strong></a><br><em>How an agent works</em></td>
+  <td><a href="notes2-loop.html"><strong>5.2 A model in a loop</strong></a><br><em>What an agent is</em></td>
   <td>From answering to acting; six words for one step of the loop; a tool call is just text; recorded runs of a small model retiming a signal in SUMO; <strong>milestone paper: ReAct</strong>; workflow or agent, and Agentless; a model plus a harness.</td>
   <td>Agent lab <em>(in development)</em></td>
 </tr>
 <tr>
-  <td><a href="notes3-tools.html"><strong>5.3 Tools: what an agent can reach</strong></a><br><em>How an agent works</em></td>
+  <td><a href="notes3-tools.html"><strong>5.3 Tools: what an agent can reach</strong></a><br><em>Calling and building tools</em></td>
   <td>A menu, not a new script each time (the TMC analogy); tool descriptions as contracts; five SUMO tools built from TraCI; tool call vs. TraCI call; how the harness runs a call; <strong>slide show: one real tool call, slowed down</strong>; what a harness can check; where your traffic knowledge goes in a tool; <strong>milestone paper: Toolformer</strong>; code as the action; MCP; the published traffic agents and the gap they leave; a detector as a tool; grading tool use.</td>
-  <td>&mdash;</td>
+  <td>Assignment 5.1</td>
 </tr>
 <tr>
-  <td><a href="notes4-context.html"><strong>5.4 Context: what the model reads</strong></a><br><em>How an agent works</em></td>
-  <td>The context measured and its growth; lost in the middle; five ways to keep context useful; summaries that drop a rule; keeping the loop light (why a longer context lowers accuracy, measured on the SUMO agent); <strong>milestone paper: retrieval-augmented generation</strong>; RAG for a safety analyst; <strong>hands-on companion: RAG on the D7 signal SOP</strong> (split, embed, search, check the answer, where it breaks, what RAG cannot do, and from RAG to an agent that reads).</td>
-  <td>&mdash;</td>
-</tr>
-<tr>
-  <td><a href="notes5-architectures.html"><strong>5.5 Agent architectures: one loop, four questions</strong></a><br><em>Skills, memory, and planning</em></td>
+  <td><a href="notes5-architectures.html"><strong>5.4 Agent architectures: one loop, four questions</strong></a><br><em>What an agent is</em></td>
   <td>Why the published lists of &ldquo;architectures&rdquo; disagree; four design questions (control, reach, team, oversight); three ways to pick the next step, measured on the SUMO agent; the published traffic agents redrawn on the loop; what agencies ask for.</td>
   <td>In-class sorting worksheet</td>
 </tr>
 <tr>
-  <td><a href="notes6-knowledge.html"><strong>5.6 Where knowledge lives: giving an agent the right knowledge</strong></a><br><em>Skills, memory, and planning</em></td>
-  <td>What a model knows and what it has not read; eight places knowledge can reach an agent; four kinds of knowledge and their homes (code, skill, retrieval, a person); every call vs. only when a step needs it, in tokens; one hurricane-morning request traced through the D7 signal skill; <strong>hands-on companion: where knowledge lives</strong>.</td>
-  <td>In-class skill exercise</td>
-</tr>
-<tr>
-  <td><a href="notes7-skills.html"><strong>5.7 Inside a skill: packaging transportation know-how</strong></a><br><em>Skills, memory, and planning</em></td>
-  <td>A skill as a folder and when the model sees each file; how SKILL.md sends the model to its files; sorting know-how into homes; the same request run with no skill, the document only, and the skill (D7 SOP and journal club); <strong>hands-on companion: inside a skill</strong>.</td>
-  <td>&mdash;</td>
-</tr>
-<tr>
-  <td><strong>Further sections</strong><br><em>Skills, memory, and planning</em></td>
-  <td>Memory, planning and re-planning, and several agents in depth &mdash; written up after the session.</td>
+  <td><strong>Further section</strong><br><em>Who checks the tool result</em></td>
+  <td>Five places to add a check; which kind of check goes where; checks from traffic flow theory; a gate is a stop, not a fix; when a person is the checker &mdash; written up after the session.</td>
   <td>&mdash;</td>
 </tr>
 </tbody>
@@ -153,49 +120,31 @@ rebuilds it around transportation research and agency work.
 
 By the end of this module you will be able to:
 
-- Explain an agent as a language model running in a loop, and say what happens, step by step, when it
-  calls a tool.
-- Explain what it means for a model to reason, tell chain-of-thought prompting from a reasoning model,
-  and say why a written chain of steps is not proof that the answer is right.
+- Explain an agent as a language model running in a loop, and say what happens, step by step, when it calls a
+  tool.
 - Tell a task that needs an agent from one that needs a fixed workflow, and justify the choice.
-- Name the parts of a harness — instructions, tools, memory, the loop, permissions — and say which part
-  to change for a given failure.
-- Describe a tool to a model with a schema, and say what a schema can and cannot guarantee.
-- Explain what MCP is, how it differs from calling a web API directly, and why the model should never
-  see an agency's credentials.
-- Decide what belongs in an agent's context window, build retrieval (RAG) over transportation
-  documents, and explain why an agent's cost grows with every step it takes.
-- Turn an agency procedure into a skill an agent can load, and say when a skill helps and when it gets
-  in the way.
-- Decide what an agent should remember between tasks, and who is allowed to change it.
-- Write a plan for a multi-step transportation task, mark the steps that cannot be undone, and place the
-  checkpoint.
-- Explain when splitting a task across several agents helps, and when one agent with the whole picture
-  does better.
+- Name the parts of a harness, and say which part to change for a given failure.
+- Turn a function you already use (a TraCI call, a query on an agency feed) into a tool with a clear name,
+  description and inputs.
+- Put transportation knowledge into a tool: advice in its description, rules in its code, each with a source and
+  a test.
+- Add a check on a tool's result, say where in the harness it belongs, and say when the checker should be a
+  person.
+- Explain what MCP is, how it differs from calling a web API directly, and why the model should never see an
+  agency's credentials.
 
 ## Topics
 
 - What agents can do today, and which tasks an agent may do alone, must ask about first, or must never do
-- The words of Part II: what counts as an agent, the six capabilities an agent needs, training the model vs.
-  engineering the harness, and the system around the model (sandbox, inference, monitoring)
 - The agent loop: a tool call is text the model writes; ReAct
-- Reasoning before acting: chain-of-thought prompting and reasoning models (OpenAI o1, DeepSeek-R1); why a
-  written chain of steps is not proof
 - Workflow vs. agent: the scale from fixed steps to model-chosen steps
 - The model and its harness
-- Tool use: function calling, schemas, web APIs, one-at-a-time and parallel calls
+- Tool use: the menu, schemas, how the harness runs a call and returns the result
+- Building tools from TraCI functions and from live agency feeds (Arizona 511, Florida WZDx)
+- Advice in the description, rules in code
+- Checking tool results: in the loop, in the harness, from traffic flow theory, and by a person
 - MCP (Model Context Protocol), and keeping credentials away from the model
-- Context engineering: what fills the context window, and what it costs
-- Retrieval-augmented generation: chunking, embedding, retrieving, grounding — and checking the
-  retriever on its own before judging any answer
-- Summaries that drift: how an agent loses an exact constraint when its history is compressed
-- Skills written by people vs. skills an agent learns from experience
-- Loading only what a task needs (progressive disclosure)
-- Agency SOPs, manuals and checklists as skills
-- Memory: facts, lessons and episodes; adding, updating and deleting
-- Plans as written artifacts: breaking a task down, plan-then-act, re-planning
-- Steps that cannot be undone, and constraints that span the whole task
-- A manager agent with helper agents, and the case for staying with one
+- Agent architectures as answers to four design questions
 
 ## Video lectures
 
@@ -204,25 +153,25 @@ By the end of this module you will be able to:
 ## Recommended readings
 
 - Yao, S., et al. (2023). ReAct: Synergizing reasoning and acting in language models. *ICLR*.
-- Wei, J., et al. (2022). Chain-of-thought prompting elicits reasoning in large language models. *NeurIPS*.
-- DeepSeek-AI (2025). [DeepSeek-R1: Incentivizing reasoning capability in LLMs via reinforcement learning](https://arxiv.org/abs/2501.12948). *arXiv:2501.12948*.
 - Schick, T., et al. (2023). Toolformer: Language models can teach themselves to use tools. *NeurIPS*.
-- Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. *NeurIPS*.
+- Wang, X., et al. (2024). Executable code actions elicit better LLM agents. *ICML*. *(CodeAct.)*
+- Huang, J., et al. (2024). Large language models cannot self-correct reasoning yet. *ICLR*.
+- Gou, Z., et al. (2024). CRITIC: Large language models can self-correct with tool-interactive critiquing. *ICLR*.
 - Anthropic (2024). [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents).
-- OpenAI (2025). [A practical guide to building agents](https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf).
-- Anthropic (2025). [How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system).
 - Anthropic (2024). [Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol).
-- Liu, N. F., et al. (2024). Lost in the middle: How language models use long contexts. *Transactions of the ACL*.
+- OpenAI (2025). [A practical guide to building agents](https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf).
 - Xia, C. S., et al. (2025). Demystifying LLM-based software engineering agents (preprint title: Agentless). *FSE*.
 - Ye, C., et al. (2025). [SUMO-MCP: Leveraging the Model Context Protocol for autonomous traffic simulation and optimization](https://arxiv.org/abs/2506.03548). *China Automation Congress*.
-- Packer, C., et al. (2023). MemGPT: Towards LLMs as operating systems. *arXiv:2310.08560*.
-- Wang, Z. Z., Mao, J., Fried, D., & Neubig, G. (2024). Agent workflow memory. *arXiv:2409.07429*.
-- Li, X., et al. (2026). SkillsBench. *arXiv:2602.12670*.
-- Zhou, D., et al. (2023). Least-to-most prompting enables complex reasoning in large language models. *ICLR*.
-- Ahn, M., et al. (2022). Do as I can, not as I say: Grounding language in robotic affordances. *CoRL*. *(SayCan.)*
-- Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures 1–5.
+- Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/).
 
-## Labs
+## Labs and assignments
+
+- **Assignment 5.1 — Agent tools with transportation knowledge** *(Canvas)*. Write at least two tools an agent can
+  call, with your transportation rules in code (each with a source and a test). Serve them over MCP, read the whole
+  tool-calling loop of an open model that uses them, and measure what your tools, and the knowledge inside them,
+  change. Choose a track and submit a pull request:
+  [ai4mobility/sumo-agent-tools](https://github.com/ai4mobility/sumo-agent-tools) (a SUMO corridor) or
+  [ai4mobility/WZDx-Tools](https://github.com/ai4mobility/WZDx-Tools) (Florida and Arizona work-zone feeds).
 
 - **An agent that tunes a signal plan** *(in development)*. Run the agent of {doc}`5.2 <notes2-loop>` on its
   SUMO intersection with the timing limits (minimum green, pedestrian clearance) hidden, shown, and enforced by
@@ -230,6 +179,5 @@ By the end of this module you will be able to:
   tokens read per step, plans tested, plans that broke a limit, and the gap to the best valid plan of a grid
   search.
 
-- **In class: a procedure becomes a skill.** Take one FDOT procedure and write it as a skill an agent can
-  load. Then plan post-storm signal restoration with the irreversible step marked and the checkpoint
-  placed. No notebook.
+- **In class: sort the architectures.** Place the patterns from published &ldquo;agent architecture&rdquo; lists on
+  the four design questions of {doc}`5.4 <notes5-architectures>`. No notebook.

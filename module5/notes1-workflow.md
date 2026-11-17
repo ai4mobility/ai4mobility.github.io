@@ -17,8 +17,8 @@
     <div>
       <h4>Where it leads</h4>
       <ul>
-      <li><a href="index.html">Module 5 &mdash; Understanding AI agents</a></li>
-      <li><a href="../module7/index.html">Module 7 &mdash; Agents and people in an agency</a></li>
+      <li><a href="index.html">Module 5 &mdash; How an agent works</a></li>
+      <li><a href="../module8/index.html">Module 8 &mdash; Agents at work in an agency</a></li>
       </ul>
     </div>
   </div>
@@ -172,5 +172,5 @@ step.
 Nothing in this section stops applying when that happens. The six labels still describe what each step
 contributes. Judgment is still not a step you can hand over. The checkpoint still sits immediately before
 the first irreversible action. What changes is that the model, not the engineer, now chooses the path.
-The rest of {doc}`Module 5 <index>` is about how it does that, and Modules 6&ndash;8 are about making it
-reliable enough that an agency would let it.
+The rest of {doc}`Module 5 <index>` is about how it does that. Modules 6&ndash;8 give it what agency work needs:
+the agency's know-how as skills, the right documents and a memory, and data it can use.

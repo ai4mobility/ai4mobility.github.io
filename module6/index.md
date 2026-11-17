@@ -1,42 +1,60 @@
-# Module 6 — Making Agents Better: Evaluation and Fine-Tuning
+# Module 6 — Skills: Packaging Transportation Know-How
 
-*Part II, AI Agents for Mobility · lecture 3 of 5. The class schedule is on the {doc}`../syllabus` page.*
+*Part II, AI Agents for Mobility · two lectures. The class schedule is on the {doc}`../syllabus` page.*
 
 ## Session topics
 
-- **Making agents better:** evaluating agents; fine-tuning — full fine-tuning, LoRA, instruction tuning,
-  training on agent runs; agents that learn from experience
+- **Lecture 1, how skills work:** what a skill is; how its folder is laid out; how a model decides to load one;
+  how a skill makes the model open its files and run its rules; how a skill improves
+- **Lecture 2, building transportation skills:** the eight steps; putting domain experience in, in practice;
+  sorting an after-action report; two worked examples; where skills break; designing and sharing your own skill
 
 ## Overview
 
-You cannot improve what you cannot measure, so this module starts with **evaluation**. An agent's output
-is a process, not one number. Check separately that it chose the right tool, filled in the right
-arguments, took the steps in a sensible order, and reached the right result. Do it on tasks whose answers
-you already know, run each task several times because agents are random, and use a check that does not
-rely on the agent's own report of what it did.
+In {doc}`Module 5 <../module5/index>` you gave an agent tools. This module gives it a way of working: the manual,
+the rules, the checks, and the experience of the people who do the job. That package is called a **skill**.
 
-Then **fine-tuning**: changing the model itself. Full fine-tuning updates every weight. **LoRA** freezes
-the original weights and learns a small low-rank change on top of them, which is why it fits on a single
-GPU. Instruction tuning teaches a model to follow requests in a particular format, and the same idea
-applied to recorded agent runs teaches it to use tools. {doc}`Section 6.1 <notes1-adaptation>` is the
-decision rule for when any of this is worth it. The short version: fix the harness first, because it is
-cheaper; fine-tune when the same mistake keeps coming back, or when agency data cannot leave the building
-and a small local model is the only option.
+A skill is a folder with one required file, `SKILL.md`. Its short description is always in front of the model;
+the full instructions, and the files they point to, load only when a task matches the description. Loading a
+skill is an ordinary tool call, so everything you learned about tools still applies. Inside the folder, rules
+that must hold become code the model runs, and long reference text stays in files the model opens one step at a
+time.
 
-A brief look at **reinforcement learning** follows. Transportation has something most fields lack:
-simulators that score outcomes, such as delay in SUMO, which can serve as the reward an agent is trained
-on. The module ends with **agents that learn from experience** — saving lessons and skills from their own
-past runs — and why the quality of the judge that decides what counts as a success limits how far that
-can go.
+| Piece | The question it answers | Written by | When it reaches the model |
+|---|---|---|---|
+| Instructions | Who am I working for, and what must I never do? | You | Every call |
+| Tools (Module 5) | What can I look up or compute right now? | Developers | When the model calls one |
+| **Skills (this module)** | How does this agency, or this group, do this job? | People who know the work | When a task matches its description |
+| Retrieval and memory (Module 7) | What does the manual say? What happened before? | The documents; the work itself | When a step needs them |
 
-The examples: fine-tuning a small model to turn crash narratives into structured fields (this module's
-lab), scoring an agent that drafts post-storm damage reports from dashcam frames against inspectors'
-labels, and SimSkill, a published agent that builds up a library of skills from its own SUMO runs.
+Agencies already write this kind of know-how down: standard operating procedures, design manuals, checklists,
+after-action reports. Turning one into a skill is often the cheapest improvement available, but it is not free.
+In one benchmark (SkillsBench), curated skills raised the average pass rate from 33.9% to 50.5%, but made results
+worse on 13 of 87 tasks, because a skill can push aside a better default.
 
-**This week's transportation question.** Transportation has unusually good graders: simulators, exact
-calculations such as HCM procedures, conservation of vehicles, and decades of recorded outcomes. Where do
-they give better training data, rewards and judges than generic ones — and when is a simulator too poorly
-calibrated to trust as a judge?
+**Lecture 1** covers how a skill works: its folder, its three levels of loading and what each costs, and how a
+model decides to load one. The description works like a detection zone at an actuated signal: every phrase is
+there because a real request would use it, so you write it, then test it with requests that should and should not
+load the skill.
+
+**Lecture 2** builds transportation skills in eight steps: name the job; keep the exact words; sort the content
+into four homes (a rule becomes code, a procedure becomes skill steps, guidance stays in retrieval with quotes,
+and judgment stays with a person); write the reading path; add what the SOP leaves out; write the description;
+test before you trust it; keep it current. The heart of the lecture is step 5, **domain experience**. Field words
+go into a glossary, lessons already written down (after-action reports, other districts) go into a lessons file,
+and practice that lives only in people comes out through an interview. Experience stays apart from the SOP and
+reaches the agent only as a suggestion that cites its source and names the person who decides.
+
+Two skills run through both lectures, and both are in the class repository
+[ai4mobility/transportation-skills](https://github.com/ai4mobility/transportation-skills):
+
+- **`d7-signal-sop`**, built from FDOT District 7's hurricane signal SOP. It turns a storm situation into action
+  cards that cite the SOP's clauses. Agency practice; mostly procedure.
+- **`journal-club-paper-review`**, built from the instructor's journal-club guide. It turns a paper into review
+  notes and a slide outline. Research practice: know-how for evaluating a paper.
+
+**This module's transportation question.** Which parts of an agency's decades of practice — its procedures,
+after-action reviews and lessons from past storms — can become a skill, and which must stay with a person?
 
 ## The module, page by page
 
@@ -47,14 +65,19 @@ calibrated to trust as a judge?
 </thead>
 <tbody>
 <tr>
-  <td><a href="notes1-adaptation.html"><strong>6.1 The adaptation ladder: what your corpus actually needs</strong></a><br><em>Making agents better</em></td>
-  <td>Three different things called fine-tuning; the ladder rung by rung, with what each changes and costs; why retrieval beats a fine-tune for most agency documents; whether your corpus is big enough, and allowed; what &ldquo;it worked&rdquo; has to mean.</td>
-  <td><a href="lab6_vit_finetune.html">Lab 6</a></td>
+  <td><a href="notes1-knowledge.html"><strong>6.1 Where knowledge lives: giving an agent the right knowledge</strong></a><br><em>Lecture 1: how skills work</em></td>
+  <td>What a model knows and what it has not read; eight places knowledge can reach an agent; four kinds of knowledge and their homes (code, skill, retrieval, a person); every call vs. only when a step needs it, in tokens; one hurricane-morning request traced through the D7 signal skill; <strong>hands-on companion: where knowledge lives</strong>.</td>
+  <td>In-class skill exercise</td>
 </tr>
 <tr>
-  <td><strong>Further sections</strong><br><em>Making agents better</em></td>
-  <td>Evaluating agents, LoRA and instruction tuning, training on agent runs, agents that learn from experience &mdash; written up after the session.</td>
-  <td><a href="lab9_lora_crash_narratives.html">Lab 9</a></td>
+  <td><a href="notes2-skills.html"><strong>6.2 Inside a skill: packaging transportation know-how</strong></a><br><em>Lecture 1: how skills work</em></td>
+  <td>A skill as a folder and when the model sees each file; how SKILL.md sends the model to its files; sorting know-how into homes; the same request run with no skill, the document only, and the skill (D7 SOP and journal club); <strong>hands-on companion: inside a skill</strong>.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><strong>Further sections</strong><br><em>Lectures 1 and 2</em></td>
+  <td>How a model decides to load a skill, and how to write and test a description; how a skill uses its references and rules, and how it learns; building a transportation skill in eight steps; domain experience in practice, with a real after-action report; the two worked examples side by side; where skills break &mdash; written up after the sessions.</td>
+  <td>Skills assignment</td>
 </tr>
 </tbody>
 </table>
@@ -64,21 +87,29 @@ calibrated to trust as a judge?
 
 By the end of this module you will be able to:
 
-- Build an evaluation set for an agent before building the agent, and check tool choice, arguments,
-  order and outcome separately.
-- Explain full fine-tuning, LoRA and instruction tuning, and estimate what each costs in trainable
-  parameters and data.
-- Decide whether a failure calls for a change to the harness or for fine-tuning, and justify it.
-- Explain how an agent can improve from its own past runs, and why the quality of the judge limits it.
+- Explain what a skill is, and how it differs from a tool, a retrieved document and memory.
+- Read a skill's folder and say when the model sees each file, and what each level of loading costs.
+- Write a skill description that loads on the right requests, and test it with requests that should and should
+  not load it.
+- Turn an agency procedure into a skill with the eight steps, putting rules in code and judgment with a person.
+- Add experience the procedure leaves out (a glossary, written lessons, an interview with the people who do the
+  work) as cited suggestions, kept apart from the procedure.
+- Compare the same requests run with and without a skill, and say when a skill hurts.
 
 ## Topics
 
-- Evaluating agents: tasks with known answers, repeated runs, checks independent of the agent, cost and steps
-- The adaptation ladder: prompting, retrieval, fine-tuning (section 6.1)
-- Full fine-tuning vs. LoRA; instruction tuning
-- Fine-tuning on recorded agent runs
-- Reinforcement learning, briefly: simulators as a source of reward
-- Agents that learn from experience: reflection, and skills learned from past runs
+- What a skill is: a new hire's binder, turned into a folder
+- Skill, tool, retrieval or memory: which one a piece of know-how needs
+- The folder: front matter, body, references, scripts; three levels of loading
+- How the model decides: the skill list, the description as a detection zone, loading as a tool call
+- How models are trained to use skills (2026 research), and why descriptions should be a little &ldquo;pushy&rdquo;
+- Four devices that make a model use a skill's files: name the file in the step, put every rule in a script, fix
+  the answer format, and end with a checker the model must run
+- How a skill improves: people, patches and learned skills; who admits a lesson
+- The eight steps for building a transportation skill
+- Domain experience: glossaries, lessons, interviews, after-action reports; a card vs. a suggestion
+- Where skills break, and testing a skill before you trust it
+- Sharing a skill: the class repository and its rules
 
 ## Video lectures
 
@@ -86,22 +117,21 @@ By the end of this module you will be able to:
 
 ## Recommended readings
 
-- Hu, E. J., et al. (2022). LoRA: Low-rank adaptation of large language models. *ICLR*.
-- Ouyang, L., et al. (2022). Training language models to follow instructions with human feedback. *NeurIPS*. *(InstructGPT.)*
-- Gururangan, S., et al. (2020). Don't stop pretraining: Adapt language models to domains and tasks. *ACL*.
-- Shinn, N., et al. (2023). Reflexion: Language agents with verbal reinforcement learning. *NeurIPS*.
-- Liu, Q., et al. (2026). [SimSkill: A self-evolving LLM agent for skill and knowledge accumulation in traffic simulation](https://arxiv.org/abs/2609.03753). *arXiv:2609.03753*.
-- Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lectures 8–9.
+- Anthropic (2025). [Equipping agents for the real world with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills).
+- [Agent Skills specification](https://agentskills.io/specification), the open format the course skills follow.
+- Li, X., et al. (2026). SkillsBench. *arXiv:2602.12670*.
+- Wang, G., et al. (2023). Voyager: An open-ended embodied agent with large language models. *arXiv:2305.16291*.
+- Wang, Z. Z., Mao, J., Fried, D., & Neubig, G. (2024). Agent workflow memory. *arXiv:2409.07429*.
+- Fried, D., & Neubig, G. (2026). [CMU 11-768 AI Agents](https://www.cmu-agents.com/), lecture 4, &ldquo;Memory and Skills&rdquo;.
+- Stanford CS 329Z *Engineering AI Agents* (Fall 2026), lecture 7.
 
-## Labs
+## Labs and assignments
 
-- **{doc}`Lab 6 — Fine-tuning a Vision Transformer <lab6_vit_finetune>`** *(available)*. Turn the
-  transfer dial on 2,949 real FL511 traffic-camera frames: head only, last block, last four
-  blocks, everything. Measure what each setting costs and buys, then find out why the
-  after-dark score is higher than it should be. The labels came from a detector, and the last
-  third of the lab is about what that costs. Reads with sections 2.7 and 6.1.
+- **Skills assignment** *(Canvas, released after the first skills lecture)*. Build a skill for a job in your own
+  project with the eight steps, test it, and compare runs with and without it.
 
-- **{doc}`Lab 9 — Fine-tuning a Small Language Model on Crash Narratives <lab9_lora_crash_narratives>`** *(available)*.
-  Turn 399 crash narratives into six coded fields with a 0.5B open model, four ways: prompt only,
-  fixed examples, retrieved examples, and a LoRA adapter, all scored on 2.13's corridor folds against
-  a TF-IDF baseline. Then find out which fields the text never contained. Reads with sections 2.13 and 6.1.
+- **In class.** Name your project's repeat job; write and test a description; sort items from a real after-action
+  report; interview the expert and run the skill again. No notebook.
+
+- **Build one and share it.** The {doc}`Transportation Skills <../skills>` page explains how to build a skill in
+  eight steps and add it to the class repository.

@@ -1,10 +1,10 @@
 (agent-architectures)=
-# 5.5 Agent architectures: one loop, four questions
+# 5.4 Agent architectures: one loop, four questions
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 5 &middot; Section 5.5</span>
-    <span class="notes-card-session">Session: Skills, memory, and planning</span>
+    <span class="notes-card-eyebrow">Module 5 &middot; Section 5.4</span>
+    <span class="notes-card-session">Session: How an agent works</span>
   </div>
   <p class="notes-card-lede">Blog posts and vendor guides list eight, eleven or more &ldquo;agent architectures,&rdquo; and no two lists agree. This section replaces the lists with one loop and four design questions, places every named pattern on them, and measures one of the choices on the small SUMO agent of Section 5.2. The interactive companion at the end holds the full catalogue: fit cards for every pattern, twelve transportation tasks, and the published traffic agents.</p>
   <div class="notes-card-cols">
@@ -18,8 +18,8 @@
     <div>
       <h4>Used again in</h4>
       <ul>
-      <li><a href="../module7/index.html">Module 7 &mdash; Agents and people in an agency</a></li>
-      <li><a href="../module8/index.html">Module 8 &mdash; Building transportation harnesses</a></li>
+      <li><a href="../module6/notes1-knowledge.html">6.1 Where knowledge lives</a> (Q2, reach)</li>
+      <li><a href="../module8/index.html">Module 8 &mdash; Agents at work in an agency</a></li>
       </ul>
     </div>
   </div>
@@ -186,9 +186,9 @@ RAG, memory and skills all copy stored text into the context; they differ in wha
 ```
 
 Tools ({doc}`5.3 <notes3-tools>`) let the agent act and fetch exact numbers. The other three are the same move:
-fetch stored text into the context window. **Documents** (RAG, {doc}`5.4 <notes4-context>`) are written by people
+fetch stored text into the context window. **Documents** (RAG, {doc}`7.2 <../module7/notes2-rag>`) are written by people
 and indexed ahead of time. **Past episodes** (memory) are notes the agent saves during or after a task. **Procedures**
-(skills) are step lists, written by people or saved by the agent once something works. The &ldquo;four memory
+(skills, {doc}`Module 6 <../module6/index>`) are step lists, written by people or saved by the agent once something works. The &ldquo;four memory
 levels&rdquo; of one blog post follow a common analogy to human memory (see Weng, 2023); in an agent there are only two
 places, the context window and the storage outside it.
 
@@ -222,7 +222,8 @@ of Operations describes it, holds that &ldquo;humans are fully responsible for t
 AI&rdquo; and that AI involvement must be disclosed. A District Five meeting summary lists the same policy as requiring
 that &ldquo;AI usage must engage humans throughout the process, with human involvement in reviews and decisions&rdquo;
 (the summary notes it does not reflect FDOT's concurrence). TxDOT's January 2026 update requires &ldquo;a mandatory
-validation of outputs&rdquo; and a &ldquo;Human-in-the-Loop&rdquo; requirement. Module 7 turns these rules into harness features.
+validation of outputs&rdquo; and a &ldquo;Human-in-the-Loop&rdquo; requirement. Modules 7 and 8 turn these rules into harness features: memory kept as a public record, data with a named
+owner, and agency forms that a person reviews and submits.
 
 ## The published traffic agents on the four questions
 
@@ -292,4 +293,4 @@ agencies ask for, the measured comparison above, and judgment questions.
 
 ---
 
-Next: {doc}`5.6 Where knowledge lives <notes6-knowledge>`, giving an agent the right knowledge.
+Next: {doc}`Module 6 <../module6/index>`, skills: giving an agent the agency's know-how.

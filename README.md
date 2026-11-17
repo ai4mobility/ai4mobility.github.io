@@ -21,13 +21,17 @@ Part I — AI foundations through a transportation lens
 
 Part II — AI agents for mobility (since Oct 24, 2026)
 
-- **Module 5** — Understanding AI Agents: Reasoning, Tool Calling, Skills, Memory, Planning, and Coordination
-- **Module 6** — Making Agents Better: Evaluation and Fine-Tuning
-- **Module 7** — Agents and People in an Agency
-- **Module 8** — Building Transportation Harnesses
+- **Module 5** — How an Agent Works: the Loop and Its Tools
+- **Module 6** — Skills: Packaging Transportation Know-How
+- **Module 7** — What an Agent Reads and Remembers: Context, RAG, and Memory
+- **Module 8** — Agents at Work in an Agency: AI-Ready Data, Agency Forms, and Several Agents
+- **Module 9** — Optional: How Models and Agents Are Trained (Labs 6 and 9 live here)
+
+Part II was reorganized on Nov 16, 2026 to follow the decks actually prepared for class (old 5.4 split into 7.1
+and 7.2, 5.5 renumbered 5.4, 5.6/5.7 moved to 6.1/6.2, old 6.1 and Labs 6 and 9 moved to Module 9).
 
 Module pages list their session topics but carry no class dates; the dates live only on the syllabus page.
-Pages moved in the Oct 25, 2026 restructure keep working at their old addresses through the redirect stubs in
+Pages moved in the Oct 25 and Nov 16, 2026 restructures keep working at their old addresses through the redirect stubs in
 `_redirects/` (copied into the built site by `html_extra_path` in `_config.yml`).
 
 ## First-time deployment
@@ -137,7 +141,7 @@ If you'd like inline embedded players, install `sphinxcontrib-youtube` (`pip ins
 │   ├── notes5-embeddings.md        # 1.5
 │   ├── notes6-labs.md      # Practice, exercises, further reading
 │   └── lab1.ipynb …        # four lab notebooks, listed under the Labs part
-├── module2/ … module8/     # index.md each, plus notesN-*.md section pages where written
+├── module2/ … module9/     # index.md each, plus notesN-*.md section pages where written
 ├── capstone/index.md
 ├── _ledger.yml             # content inventory — one row per artifact
 ├── NOTES_GUIDE.md          # how to write a notes section page

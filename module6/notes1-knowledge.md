@@ -1,26 +1,26 @@
 (where-knowledge-lives)=
-# 5.6 Where knowledge lives: giving an agent the right knowledge
+# 6.1 Where knowledge lives: giving an agent the right knowledge
 
 <div class="notes-card">
   <div class="notes-card-head">
-    <span class="notes-card-eyebrow">Module 5 &middot; Section 5.6</span>
-    <span class="notes-card-session">Session: Skills, memory, and planning</span>
+    <span class="notes-card-eyebrow">Module 6 &middot; Section 6.1</span>
+    <span class="notes-card-session">Session: Skills, lecture 1 &mdash; how skills work</span>
   </div>
   <p class="notes-card-lede">A strong model knows what a generator and a mast arm are. It has not read FDOT District 7's hurricane signal SOP. This section names the eight places agency knowledge can reach an agent, splits them into what the model reads on every call and what it opens only when a step needs it, and follows one hurricane-morning request through them on the course's D7 signal skill. The interactive companion at the end counts what each step puts in front of the model.</p>
   <div class="notes-card-cols">
     <div>
       <h4>Read it first</h4>
       <ul>
-      <li><a href="notes4-context.html">5.4 Context: what the model reads</a> (and its RAG companion)</li>
-      <li><a href="notes5-architectures.html">5.5 Agent architectures</a> (Q2, reach)</li>
+      <li><a href="../module5/notes3-tools.html">5.3 Tools: what an agent can reach</a></li>
+      <li><a href="../module5/notes5-architectures.html">5.4 Agent architectures</a> (Q2, reach)</li>
       </ul>
     </div>
     <div>
       <h4>Used again in</h4>
       <ul>
-      <li><a href="notes7-skills.html">5.7 Inside a skill</a> (two skills opened up, with and without)</li>
+      <li><a href="notes2-skills.html">6.2 Inside a skill</a> (two skills opened up, with and without)</li>
       <li><a href="../skills.html">Transportation Skills</a> (build a skill in eight steps and share it)</li>
-      <li><a href="../module8/index.html">Module 8 &mdash; Building transportation harnesses</a></li>
+      <li><a href="../module7/notes2-rag.html">7.2 Retrieval (RAG)</a> (the retrieval home, in depth)</li>
       </ul>
     </div>
   </div>
@@ -111,7 +111,7 @@ times as much. A question such as "what is a mast arm?" never opens the skill at
 
 Tokens are not the only cost. Pasting the whole SOP into the instructions also throws away the reading path. With all
 150 clauses in front of it, the model has to find the right phase by itself on every request; the skill's steps do that
-job for it. The RAG companion in {doc}`5.4 <notes4-context>` measured the same problem from the other side: for a
+job for it. The RAG companion in {doc}`7.2 <../module7/notes2-rag>` measures the same problem from the other side: for a
 72-hour plan, meaning search put only 3 of the 15 needed SOP items in its top three, while a filter on the SOP's own
 sections found all 15. A skill is where that filter gets written down.
 
@@ -196,10 +196,10 @@ To build the skill and share it, follow the eight steps on the {doc}`Transportat
   generators and repairs are synthetic.
 - Anthropic. [Agent Skills overview](https://claude.com/docs/skills): how a skill loads in three stages.
 - [Agent Skills specification](https://agentskills.io/specification), the open format the course skills follow.
-- In this course: {doc}`5.4 Context: what the model reads <notes4-context>` (the RAG companion) and
+- In this course: {doc}`7.2 Retrieval (RAG) <../module7/notes2-rag>` (the RAG companion) and
   {doc}`Transportation Skills <../skills>`.
 - Agents unit credit: CMU 11-768 *AI Agents* (Fried and Neubig); Stanford CS 329Z *Engineering AI Agents*.
 
 ---
 
-Next: {doc}`5.7 Inside a skill <notes7-skills>`, two transportation skills opened up file by file.
+Next: {doc}`6.2 Inside a skill <notes2-skills>`, two transportation skills opened up file by file.
