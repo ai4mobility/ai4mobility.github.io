@@ -28,14 +28,15 @@
 
 ## What this section covers
 
-- Why now: NSF's new program for making existing data ready for AI
+- Why now: AI already helps science where the data is ready
 - The job: signals on the morning after landfall, and the five questions the agent must answer
 - Six kinds of data in one run of the agent, and where each stands today
 - Why data kept for people is not ready for an agent
 - Six moves that make existing data ready, each with a worked example
 - What to do for your project
 
-**Where the ideas come from.** The six moves follow the work list of NSF 26-512. The agents unit as a whole follows
+**Where the ideas come from.** The six moves group the data work that programs such as NSF 26-512 list; they
+apply to any agency's data. The agents unit as a whole follows
 [CMU 11-768 AI Agents](https://www.cmu-agents.com/) (Fried and Neubig), and the training part of Section 8.2 follows
 Stanford CS 329Z *Engineering AI Agents* (Yang, Ryan and Yang), lecture 11, "What Data Do Agents Need?". The running
 example is the FDOT District 7 *Traffic Signals Standard Operating Procedures Reference Guide* (v1.5, June 2025) and
@@ -43,17 +44,24 @@ the class skill [`d7-signal-sop`](https://github.com/ai4mobility/transportation-
 built from it. Clause names such as "Immediately Post Storm 3.2.1" point to that SOP. **The storm scenario, the
 signal IDs and every sample record on this page are synthetic.** They are not District 7 data.
 
-## Why now: NSF pays to make existing data ready for AI
+## Why now: AI already helps science where the data is ready
 
-In July 2026 the National Science Foundation opened a program called
-[AI Datasets (NSF 26-512)](https://www.nsf.gov/funding/opportunities/ai-datasets-unlocking-dataset-value-ai-enabled-scientific-discovery/nsf26-512/solicitation).
-It pays teams to make existing scientific datasets usable by AI: up to $200,000 for planning grants, $2 million for
-Impact awards and $5 million for Flagship awards, about $60 to $100 million in total, with a deadline on the first
-Wednesday of November each year. It does not pay to collect new data. Its starting point is that datasets were
-curated "for use by humans or heuristic scripting," and that AI systems are now often the first reader.
+AI is already changing how science is done. AlphaFold predicts the 3D shape of a protein from its sequence, work that
+shared the 2024 Nobel Prize in Chemistry. In weather forecasting, the European Centre for Medium-Range Weather
+Forecasts (ECMWF) has run a machine-learned model, AIFS, as an operational forecast since February 2025. Look at what
+sits under both: data that a field spent decades making ready. AlphaFold learned from the Protein Data Bank, where
+every structure is reviewed, validated and free to use. AIFS learned from ERA5, an hour-by-hour reconstruction of the
+world's weather since 1940, made with one fixed method for every year. The data came first; the model came last.
 
-Transportation agencies are in the same position. They hold decades of data collected for engineers to read, and
-agents are a new kind of reader. So this section uses the program's work list as a checklist for transportation data.
+Transportation has plenty of data: detector counts, signal logs, crash reports, probe speeds, inspection photos. Most
+of it is kept by one agency, in one format, for people to read. There is no Protein Data Bank for signals after a
+storm. Agents make this more urgent. An agent does not only learn from data; it reads data and acts on it in the
+middle of a job, so data it cannot reach, read or check is data it cannot use.
+
+Research funders have started to pay for this work. In Europe, the [RAISE pilot](https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy_en)
+(launched November 2025, €107 million) pools computing power, data, talent and funding for AI in science. In the
+United States, the National Science Foundation's [AI Datasets program (NSF 26-512)](https://www.nsf.gov/funding/opportunities/ai-datasets-unlocking-dataset-value-ai-enabled-scientific-discovery/nsf26-512/solicitation)
+pays teams to make existing datasets usable by AI. This section does that work on one transportation job.
 
 | Word | What it means here |
 |---|---|
@@ -209,14 +217,15 @@ This is good data for its first reader. The rest of this section is about prepar
 (six-moves)=
 ## Six moves that make existing data ready
 
-NSF 26-512 names the work: extract features, generate metadata, link datasets, harmonize them, fill gaps, and judge
-readiness. Here is each move on the storm job. None of them needs new data collection.
+Making existing data ready for AI takes six kinds of work: extract features, describe the data (metadata), link
+datasets, harmonize them, fill gaps, and judge readiness. Here is each move on the storm job. None of them needs new
+data collection.
 
 ```{figure} ../_static/figures/ARD_NSF_Map.png
-:alt: Seven lines from the NSF solicitation on the left mapped to the work on storm signal data on the right - feature extraction to Move 1 Extract, metadata generation to Move 2 Describe, fusion and linkage to Move 3 Link, harmonize to Move 4 Harmonize, correcting noise and gaps to Move 5 Fill gaps, discerning readiness to Move 6 Score readiness, and governance to Section 8.2.
+:alt: Seven kinds of data work on the left mapped to the same work on storm signal data on the right - feature extraction to Move 1 Extract, metadata generation to Move 2 Describe, fusion and linkage to Move 3 Link, harmonize to Move 4 Harmonize, correcting noise and gaps to Move 5 Fill gaps, discerning readiness to Move 6 Score readiness, and governance to Section 8.2.
 :width: 100%
 
-What NSF 26-512 asks for, done on transportation data.
+The six moves, plus governance, done on transportation data.
 ```
 
 ### Move 1. Extract: turn text and photos into fields
@@ -380,8 +389,17 @@ Section 8.2 ends with a one-page data plan that builds on these answers.
 
 ## Sources
 
+- The Nobel Prize in Chemistry 2024 (David Baker; Demis Hassabis and John Jumper). On the Protein Data Bank as the
+  training data: PDBe, [The Nobel Prize in Chemistry 2024](https://www.ebi.ac.uk/pdbe/node/62213).
+- Lang, S., et al. (2024). [AIFS: ECMWF's data-driven forecasting system](https://arxiv.org/abs/2406.01465).
+  Operational since February 25, 2025: [AIFS Single v1.1.0](https://gmd.copernicus.org/articles/19/4703/2026/),
+  *Geoscientific Model Development* 19, 4703 (2026).
+- Copernicus Climate Change Service. [ERA5 hourly data from 1940 to present](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels).
+- European Commission (2025). [European Strategy for AI in Science and RAISE](https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/our-digital-future/european-ai-science-strategy_en);
+  [Commission launches 'Resource for AI Science in Europe'](https://digital-strategy.ec.europa.eu/en/news/commission-launches-resource-ai-science-europe),
+  November 3, 2025.
 - U.S. National Science Foundation (2026). [NSF 26-512: Unlocking Dataset Value for AI-Enabled Scientific Discovery (AI Datasets)](https://www.nsf.gov/funding/opportunities/ai-datasets-unlocking-dataset-value-ai-enabled-scientific-discovery/nsf26-512/solicitation),
-  program solicitation, posted July 21, 2026 (award sizes, scope, and the work list behind the six moves).
+  program solicitation, posted July 21, 2026 (scope and its list of data work).
 - FDOT District 7 (2025). *Traffic Signals Standard Operating Procedures Reference Guide*, v1.5, pages 5–11, cited by
   clause; the class skill [`d7-signal-sop`](https://github.com/ai4mobility/transportation-skills/tree/main/skills/d7-signal-sop)
   (its `sop_text.md`, `gaps.md`, synthetic scenario and example cards).

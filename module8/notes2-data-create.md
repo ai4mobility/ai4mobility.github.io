@@ -41,8 +41,8 @@ outputs of `rules.py` are real: they come from running the class skill's code on
 ## Data that does not exist yet
 
 Section 8.1 named three kinds of data that are scattered or not kept: checks and answer keys, records of work, and
-outcomes. Building them takes five concrete things that nobody needed before agents. NSF's program does not pay for
-new data, but an agency or a research team that wants a working agent still has to make these.
+outcomes. Building them takes five concrete things that nobody needed before agents. An agency or a research team that
+wants a working agent has to make them.
 
 ### 1. Task records from past storms
 
@@ -293,7 +293,7 @@ you have to rebuild what was known at each moment from the snapshots. No snapsho
 ### What you reward decides what the agent learns
 
 ```{figure} ../_static/figures/ARD_Reward_Toy.png
-:alt: A synthetic toy with one crew and seven dark signals - P1 and P2 are Priority #1 signals that take 3 hours each, and E1 to E5 take 1 hour each. Easy-first restores 5 signals by hour 6, leaves Priority #1 signals dark for 19 signal-hours and all signals for 34. Priority-first restores 2 by hour 6, 9 Priority #1 signal-hours and 54 in all.
+:alt: A synthetic toy with one crew and seven dark signals - P1 and P2 are Priority No. 1 signals that take 3 hours each, and E1 to E5 take 1 hour each. Easy-first restores 5 signals by hour 6, leaves Priority No. 1 signals dark for 19 signal-hours and all signals for 34. Priority-first restores 2 by hour 6, 9 Priority No. 1 signal-hours and 54 in all.
 :width: 100%
 
 Three reasonable rewards, two different orders. Train on "restored by hour 6" and the agent learns easy-first; that is
@@ -316,8 +316,9 @@ Lecture 11 warns that training data teaches more than you intended. Each warning
 
 ## Governance: who reads it, who changes it, when it expires
 
-Ready data that anyone can read or change is a liability, so a dataset needs rules as well as fields. NSF requires
-every proposal to cover access, retirement, community contribution, security and integrity. The same questions fit an
+Ready data that anyone can read or change is a liability, so a dataset needs rules as well as fields. Programs that fund
+AI-ready data, such as NSF 26-512, ask every team to cover access, retirement, community contribution, security
+and integrity. The same questions fit an
 agency dataset.
 
 | Question | For the storm data |
