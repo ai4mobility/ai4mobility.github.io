@@ -19,8 +19,8 @@ By now your agent can call tools, follow a skill, look things up in a manual and
 of those quietly assumed that the data was there and correct, and that the agent's answer would land somewhere an
 agency can use. This module stops assuming.
 
-**AI-ready data.** Transportation agencies hold decades of data collected for engineers to read. Agents are a new
-kind of reader. The running job is the morning after a hurricane landfall, when many signals fail at once and the
+**AI-ready data** ({doc}`8.1 <notes1-data>` and {doc}`8.2 <notes2-data-create>`). Transportation agencies hold
+decades of data collected for engineers to read. Agents are a new kind of reader. The running job is the morning after a hurricane landfall, when many signals fail at once and the
 agent must help decide what to inspect, power and repair first. FDOT District 7's signal SOP names a data system in
 77 of its 150 rules, and one failed signal lives in five places, each kept for a person. The lecture follows the
 work list of NSF's new *AI Datasets* program (NSF 26-512), which pays to make existing datasets usable by AI, in
@@ -72,9 +72,14 @@ does not?
 </thead>
 <tbody>
 <tr>
-  <td><strong>Further sections</strong><br><em>AI-ready data</em></td>
-  <td>The job: signals on the morning after landfall; six kinds of data in one run; why data kept for people is not ready; six moves that make existing data ready; data that does not exist yet; data for improving and training an agent; governance &mdash; written up after the session.</td>
-  <td>&mdash;</td>
+  <td><a href="notes1-data.html"><strong>8.1 AI-ready data</strong></a><br><em>What an agent needs, and making existing data ready</em></td>
+  <td>NSF 26-512 and why agents are a new reader; the job: signals on the morning after landfall; six kinds of data in one run; one action card traced to five sources; why data kept for people is not ready (names instead of keys, meaning in heads, no clock, facts in photos, decisions in a chat, blank means two things); the six moves (extract, describe, link, harmonize, fill gaps, score readiness), each with a worked example; the work-zone feed.</td>
+  <td>Score your project's data</td>
+</tr>
+<tr>
+  <td><a href="notes2-data-create.html"><strong>8.2 Data to create, data to improve an agent, and governance</strong></a></td>
+  <td>Task records with a frozen clock; records of the agent's work; a practice storm; <code>rules.py</code> as a checker (the DDIR grouping); the lists the SOP points to; five ways to improve an agent and the data each needs; how many past cases a test needs; where training data comes from; trajectories; what a reward teaches; governance; where it breaks; the fit card.</td>
+  <td>Your project's one-page data plan</td>
 </tr>
 <tr>
   <td><strong>Further sections</strong><br><em>Answering in the agency's form</em></td>
@@ -129,6 +134,10 @@ By the end of this module you will be able to:
 
 ## Labs and assignments
 
+- **Your project's data plan.** One page, eight questions ({doc}`8.2 <notes2-data-create>`): the task, the data for
+  each of the agent's five questions, what was made for people and which move fixes it, what "unknown" looks like,
+  what must never reach the agent, where about 100 past cases with answer keys come from, what you keep from each run,
+  and who owns the data afterwards.
 - **Your project's form file.** If your project's results must land in an agency app, capture its form as a file:
   questions, exact choices, branching, required fields, and what is missing.
 - **Your comparison table.** Run your own model and the five levels on the same test split, three times each, and

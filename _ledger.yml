@@ -2855,7 +2855,7 @@ items:
     module: 8
     session: 2026-11-24
     status: debt
-    notes: Module 8 = Building Transportation Harnesses (Tue Nov 24, an added session). No section pages yet.
+    notes: Module 8 = Agents at work in an agency (since 2026-11-16). 8.1 and 8.2 (AI-ready data) written 2026-11-17 (m8-notes-1-data, m8-notes-2-data-create); answering in the agency's form, several agents and the five-level project comparison are still to write.
 
   - id: m4-m8-labs
     file: null
@@ -3829,3 +3829,32 @@ items:
       runs, graded against evals.json); fit card and check yourself. Built by M5-8_AI_Agents_and_RL/inside_a_skill/
       (build/build.py, notes.py, page.py; runs/). o200k token counts, labeled as estimates. Self-contained.
       Copied to _static/companions and mounted Nov 16 2026 as the 5.7 section Interactive companion.'
+
+  - id: m8-notes-1-data
+    file: site/module8/notes1-data.md
+    kind: notes
+    module: 8
+    status: drafted
+    notes: '8.1 AI-ready data: what an agent needs, and making existing data ready. Written 2026-11-17 from
+      the handout and deck "AI-Ready Transportation Data: What an Agent Needs to Do the Job" (M5-8_AI_Agents_and_RL/Agents_Data_Ready_Slides.pptx,
+      build in agents_data_ready/). NSF 26-512; the morning-after-landfall job (synthetic US-19 scenario
+      from the d7-signal-sop test file); six kinds of data; Card 4 traced to five sources; SOP data-system
+      count (77 of 150 rules); six problems with data kept for people; the six moves (extract, describe,
+      link, harmonize, fill gaps, score readiness) with worked examples; the work-zone feed. Figures ARD_Loop_Data,
+      Card_Sources, Two_Readers, One_Signal_Five_Places, Blank_Two_Things, NSF_Map, Extract, Link, Harmonize,
+      Timeline in _static/figures (256-color PNGs). Anchors ai-ready-data, six-moves.'
+
+  - id: m8-notes-2-data-create
+    file: site/module8/notes2-data-create.md
+    kind: notes
+    module: 8
+    status: drafted
+    notes: '8.2 Data to create, data to improve an agent, and governance. Written 2026-11-17 from the same
+      handout and deck. Task records with a frozen clock; work records; a practice storm; rules.py as a
+      checker (real output on the skill''s synthetic repairs: the exactly-$5,000 and 667 m flags; TWO, encumber,
+      SAT calls); the lists the SOP points to; five steps to improve an agent; test-set size (97 / 385;
+      margin table; going-deeper on correlated cases); training-data scale and L11''s five sources; trajectory
+      anatomy with a going-deeper on tracking sheets; the reward toy; L11''s accidental lessons; governance;
+      where it breaks; fit card; one-page data plan with a row per class project. Figures ARD_Task_Clock,
+      Practice_Storm, DDIR_Groups, Improve_Ladder, Five_Sources, Trajectory, Reward_Toy, Governance_Filter.
+      Anchor data-to-create.'

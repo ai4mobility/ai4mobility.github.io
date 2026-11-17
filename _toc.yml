@@ -164,6 +164,11 @@ parts:
           - file: module7/notes2-rag
             title: "7.2 Retrieval (RAG): looking things up in agency documents"
       - file: module8/index
+        sections:
+          - file: module8/notes1-data
+            title: "8.1 AI-ready data: what an agent needs, and making existing data ready"
+          - file: module8/notes2-data-create
+            title: "8.2 Data to create, data to improve an agent, and governance"
       - file: module9/index
         sections:
           - file: module9/notes1-adaptation

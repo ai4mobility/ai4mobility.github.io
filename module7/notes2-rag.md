@@ -19,7 +19,7 @@
       <h4>Used again in</h4>
       <ul>
       <li><a href="index.html">Module 7 &mdash; memory</a> (recall from stored text that the work itself wrote)</li>
-      <li><a href="../module8/index.html">Module 8 &mdash; AI-ready data</a> (documents split well and kept current)</li>
+      <li><a href="../module8/notes1-data.html">8.1 AI-ready data</a> (documents split well and kept current)</li>
       </ul>
     </div>
   </div>
@@ -158,7 +158,7 @@ our past studies used one?
 
 The common defence is a small set of test questions with known answers, run every time the index or the harness
 changes. Check the retriever on its own first: if the right passage is not in the top results, no generator can
-fix it. That is evaluation, and {doc}`Module 8 <../module8/index>` comes back to building such test sets from past cases.
+fix it. That is evaluation, and {doc}`8.2 <../module8/notes2-data-create>` comes back to building such test sets from past cases.
 
 | Fit card — context and retrieval | |
 | --- | --- |

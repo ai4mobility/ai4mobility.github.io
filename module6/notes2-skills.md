@@ -19,7 +19,7 @@
       <h4>Used again in</h4>
       <ul>
       <li><a href="../skills.html">Transportation Skills</a> (build a skill in eight steps and share it)</li>
-      <li><a href="../module8/index.html">Module 8 &mdash; Agents at work in an agency</a> (a data dictionary loaded as a skill)</li>
+      <li><a href="../module8/notes1-data.html">8.1 AI-ready data</a> (a data dictionary loaded as a skill)</li>
       </ul>
     </div>
   </div>
