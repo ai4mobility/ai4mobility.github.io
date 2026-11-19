@@ -157,6 +157,8 @@ parts:
             title: "6.1 Where knowledge lives: giving an agent the right knowledge"
           - file: module6/notes2-skills
             title: "6.2 Inside a skill: packaging transportation know-how"
+          - file: module6/notes3-signal-agent
+            title: "6.3 A worked agent: running the hurricane signal SOP with tools and skills"
       - file: module7/index
         sections:
           - file: module7/notes1-context

@@ -3830,6 +3830,53 @@ items:
       (build/build.py, notes.py, page.py; runs/). o200k token counts, labeled as estimates. Self-contained.
       Copied to _static/companions and mounted Nov 16 2026 as the 5.7 section Interactive companion.'
 
+  - id: m6-notes-3-signal-agent
+    file: site/module6/notes3-signal-agent.md
+    kind: notes
+    module: 6
+    session: '2026-11-19'
+    status: drafted
+    notes: '6.3 A worked agent: running the hurricane signal SOP with tools and skills. Created Nov 18 2026
+      from the HurricaneTrafficOps project (repo ai4mobility/hurricane-signal-ops). The problem (dark signals,
+      FDOT D7 SOP v1.5); the digital twin (245 signals, 47/98/100 by priority, 5 zones, 40 generators, 80
+      kits, 6 teams, 2 fuel trucks, 5 SAT; risk score w_p*n_t*s with 4/2/1, night x3, flash 0.3); the SOP
+      sorted into six homes (figure SOA_SOP_Homes); three skills; guesses G1-G7; the contract (22 clauses:
+      14 agent, 1 person, 7 field, plus 4 rules); the eight-step turn and four guard rails (SOA_Turn); turn
+      2 of the Sonnet 5.5 run request by request (SOA_Turn_Tokens: 3,582 -> 19,059 tokens; 7 requests, 14
+      calls, 21 s, $0.06; run totals 262 requests, 532 calls, 73% parallel, 124 thinking summaries, 87%
+      cached, $2.23); Qwen3 raw text (44,055 characters, 12,664 tokens); results table (built-in rule 7,765/304/0/112/45;
+      Haiku 8,272/301/0/61/54 $0.14; Sonnet 8,640/336/0/70/41 $2.23; Opus 8,363/284/0/100/39 $4.58; perfect
+      7,632/247/0/0/1; audit 23/2/1 for all three); before-you-trust block; where it breaks; fit card; applications;
+      check yourself. Figures built by M5-8_AI_Agents_and_RL/signal_ops_agent/ (make_figures.py, render.js).'
+
+  - id: m6-companion-agent-turn-transcript
+    file: M5-8_AI_Agents_and_RL/Agent_Turn_Transcript.html
+    kind: companion
+    module: 6
+    session: '2026-11-19'
+    status: drafted
+    dest: site/module6/notes3-signal-agent.md
+    notes: 'Inside the signal agent''s turns. Four tabs: how a turn works (harness/model/tools/skills/person
+      figure, three levels of skill loading, the note that carries over); one planning moment step by step
+      (any of 31 turns, request by request: history, thinking summaries, calls, results, side panel of what
+      each request carried and its tokens and cost); the whole storm (tool-by-turn table, refusals and questions);
+      what the model reads as text (last request of turn 2 in the Qwen3 chat template). Built by HurricaneTrafficOps/signal_ops_sim/export_transcripts.py
+      + transcript_template.html from out/agent_runs/sonnet_moderate (Claude Sonnet 5.5, thinking display
+      summarized). Self-contained, 0.9 MB.'
+
+  - id: m6-companion-signal-ops-replay
+    file: M5-8_AI_Agents_and_RL/Signal_Ops_After_Storm.html
+    kind: companion
+    module: 6
+    session: '2026-11-19'
+    status: drafted
+    dest: site/module6/notes3-signal-agent.md
+    notes: 'After the storm: the signal SOP on a Tampa map. Three storms x four rule runs, plus three AI
+      agent runs on the moderate storm (Haiku, Sonnet, Opus 5.5) with Agent''s turn and SOP contract tabs;
+      the Sonnet run links each turn to Agent_Turn_Transcript.html. Built by HurricaneTrafficOps/signal_ops_sim/export_replay.py
+      + replay_template.html. 6.9 MB. Its footer links four reports copied next to it in _static/companions
+      (Prestorm_Deployment, Post_Storm_Operations, Resource_Planning, Dispatch_Choices).'
+
   - id: m8-notes-1-data
     file: site/module8/notes1-data.md
     kind: notes

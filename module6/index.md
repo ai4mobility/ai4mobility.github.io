@@ -53,6 +53,10 @@ Two skills run through both lectures, and both are in the class repository
 - **`journal-club-paper-review`**, built from the instructor's journal-club guide. It turns a paper into review
   notes and a slide outline. Research practice: know-how for evaluating a paper.
 
+Section 6.3 then follows one project from start to finish: an agent that runs District 7's hurricane signal SOP on a
+simulated storm in Tampa with three skills, 25 tools and a person in the loop. Its companion shows every request the
+model was sent, so you can see when and why it called each tool and loaded each skill.
+
 **This module's transportation question.** Which parts of an agency's decades of practice — its procedures,
 after-action reviews and lessons from past storms — can become a skill, and which must stay with a person?
 
@@ -72,6 +76,11 @@ after-action reviews and lessons from past storms — can become a skill, and wh
 <tr>
   <td><a href="notes2-skills.html"><strong>6.2 Inside a skill: packaging transportation know-how</strong></a><br><em>Lecture 1: how skills work</em></td>
   <td>A skill as a folder and when the model sees each file; how SKILL.md sends the model to its files; sorting know-how into homes; the same request run with no skill, the document only, and the skill (D7 SOP and journal club); <strong>hands-on companion: inside a skill</strong>.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes3-signal-agent.html"><strong>6.3 A worked agent: running the hurricane signal SOP with tools and skills</strong></a><br><em>Lecture 2: building transportation skills</em></td>
+  <td>One project end to end: why dark signals after a storm matter; a digital twin of 245 Tampa signals; the SOP sorted into code, three skills, 25 tools, a person and seven guesses; the SOP as a contract that is audited after every run; one planning moment in eight steps with four guard rails; what three Claude models did with the same storm; <strong>two companions: the storm on a map, and every request the model was sent</strong>.</td>
   <td>&mdash;</td>
 </tr>
 <tr>

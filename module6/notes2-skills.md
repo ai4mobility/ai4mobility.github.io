@@ -190,6 +190,7 @@ Eight tabs:
 
 ---
 
-Next: {doc}`Module 7 <../module7/index>`, what an agent reads and remembers. The rest of the skills material (how a
+Next: {doc}`6.3 A worked agent <notes3-signal-agent>`, the hurricane signal SOP run by an agent with tools and skills.
+Then {doc}`Module 7 <../module7/index>`, what an agent reads and remembers. The rest of the skills material (how a
 model decides to load a skill, building a skill in eight steps, and putting domain experience into it) will be added
 to {doc}`this module <index>` after the two skills lectures.
