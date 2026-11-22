@@ -15,7 +15,7 @@
 <div class="cta-row resource-cta-row">
   <a class="cta-button" href="https://kw-diagram-agent.onrender.com/" target="_blank" rel="noopener">Open the agent in a new tab</a>
   <a class="cta-button cta-secondary" href="#kw-write">How to write your account</a>
-  <a class="cta-button" href="#kw-examples">See three examples</a>
+  <a class="cta-button" href="#kw-examples">See four examples</a>
 </div>
 
 ## Try it
@@ -78,13 +78,14 @@ agent redraws.
 
 <div id="kw-examples"></div>
 
-## Three examples
+## Four examples
 
-Each example below is an account in the style of a traffic management center report, the diagram the agent
-drew, and the key numbers. The accounts were written for testing; they are not real FDOT incidents.
+Each example below is an account, its diagram and the key numbers. The first three are in the style of a
+traffic management center report; they were written for testing and are not real FDOT incidents. The fourth
+sets up a problem from a research paper.
 
-The diagrams come from our test of November 21, 2026, in which a fresh copy of the agent (Claude Sonnet 5.5)
-had only its skill and its tools, and no example of the same case. Every diagram passed the check against
+The first three diagrams come from our test of November 21, 2026, in which a fresh copy of the agent (Claude
+Sonnet 5.5) had only its skill and its tools, and no example of the same case. Every diagram passed the check against
 kinematic wave theory, and each one matches the diagram we drew ourselves for the same account.
 
 **How to read a diagram.** The left panel is the fundamental diagram: each dot is a traffic state (flow
@@ -147,6 +148,38 @@ so both queue. The lower panels show the merge and the ramp's own flow.
 Key numbers: a queue first forms at 07:15. At its longest, at 08:00, its back is 3.9 mi upstream of the
 crash. The queue is gone by 08:19.
 ```
+
+### 4. From a research paper: speed limits that clear a bottleneck queue
+
+> A fixed bottleneck at km 12 on a three-lane freeway passes 6,000 veh/h from 0.1 h on; once a queue stands at
+> it, it discharges only 5,400 veh/h (capacity drop). 6,300 veh/h arrive until 0.25 h, then 4,000 veh/h,
+> measured at km 2. Free-flow speed 100 km/h, wave speed -20 km/h, jam density 150 veh/km per lane. To clear the
+> queue, a speed limit of 20 km/h is posted at one point, km 11.5, at 0.2 h; at 0.28 h it is raised to 40 km/h
+> and kept. Draw the diagram.
+
+*What it shows:* the agent working on a research problem. The account follows Fig. 2 of Chen, Ahn and Hegyi
+(2014), a paper on variable speed limits (VSL) at a bottleneck with a capacity drop; the paper uses symbols
+only, so the numbers are ours. The 20 km/h limit holds traffic in a slow, dense queue (*c*) and lets a lighter
+flow (*d*) through, so the queue at the bottleneck (*h*) is gone by 0.275 h. The 40 km/h limit then turns *c*
+into a faster queue (*e*) that feeds the bottleneck its full 6,000 veh/h in free flow (*g*): the capacity drop
+is avoided. The lighter demand that starts at 0.25 h ends queue *e*. Every state and shock wave of the paper's
+figure appears, in the same order. State names follow the paper.
+
+The live agent (Claude Sonnet 5.5) drew this account on November 22, 2026, in about a minute and a half,
+without asking anything. Its states, waves and key numbers are the same as ours. The figure here is our own
+drawing of the same account, with a tighter time and distance range; the agent chose 0 to 1 h and km 0 to 14,
+which makes the queue small.
+
+```{figure} _static/figures/KWA_VSL_Speed_Limit.png
+:alt: Fundamental diagram and time-space diagram for a bottleneck at km 12 with a capacity drop and a speed limit posted at km 11.5. The bottleneck queue h forms at 0.1 h. At 0.2 h a 20 km/h limit creates a slow queue c upstream of km 11.5 and a light flow d past it, which clears queue h by 0.275 h. At 0.28 h a 40 km/h limit turns c into queue e, which feeds the bottleneck 6,000 veh/h in free flow (state g). Lighter demand A2 ends queue e at km 11.5 at 0.443 h.
+:width: 100%
+
+Key numbers: a queue first forms at 0.1 h. At its longest, at 0.329 h, its back is 2.1 km upstream of the
+bottleneck. The queue is gone by 0.443 h.
+```
+
+Paper: D. Chen, S. Ahn and A. Hegyi (2014), "Variable speed limit control for steady and oscillatory queues at
+fixed freeway bottlenecks," *Transportation Research Part B* 70, 340-358.
 
 ## What it can and cannot draw
 
