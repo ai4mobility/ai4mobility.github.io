@@ -14,13 +14,14 @@
 
 <div class="cta-row resource-cta-row">
   <a class="cta-button" href="https://kw-diagram-agent.onrender.com/" target="_blank" rel="noopener">Open the agent in a new tab</a>
-  <a class="cta-button cta-secondary" href="#kw-write">How to write your account</a>
+  <a class="cta-button cta-secondary" href="#kw-write">How to write your narrative</a>
   <a class="cta-button" href="#kw-examples">See four examples</a>
 </div>
 
 ## Try it
 
-Type your account in the box, or click one of the examples under it. A diagram usually takes one
+Describe your traffic scenario in the box as a short incident narrative, or click one of the examples under it.
+A diagram usually takes one
 to four minutes. If something essential is missing (how many lanes, how much of the road was blocked, for
 how long), the agent asks you once; everything else it assumes and tells you.
 
@@ -54,7 +55,7 @@ how long), the agent asks you once; everything else it assumes and tells you.
 
 <div id="kw-write"></div>
 
-## How to write your account
+## How to write your narrative
 
 Write it the way you would tell a colleague at the TMC. Plain words, clock times and mile markers are all
 fine. The more of the first three rows you give, the fewer questions the agent asks.
@@ -71,7 +72,7 @@ fine. The more of the first three rows you give, the fewer questions the agent a
 
 Two tips. A reported backup is useful: "the backup was about 2 miles when they reopened" lets the agent work
 out how much traffic was coming, so it does not have to guess. And you can ask for a comparison in one
-account ("with and without ramp metering"); the agent draws one diagram for each.
+narrative ("with and without ramp metering"); the agent draws one diagram for each.
 
 After the diagram appears, you can correct any assumption ("it was four lanes", "use 5,000 veh/h") and the
 agent redraws.
@@ -80,13 +81,13 @@ agent redraws.
 
 ## Four examples
 
-Each example below is an account, its diagram and the key numbers. The first three are in the style of a
+Each example below is a narrative, its diagram and the key numbers. The first three are in the style of a
 traffic management center report; they were written for testing and are not real FDOT incidents. The fourth
 sets up a problem from a research paper.
 
 The first three diagrams come from our test of November 21, 2026, in which a fresh copy of the agent (Claude
 Sonnet 5.5) had only its skill and its tools, and no example of the same case. Every diagram passed the check against
-kinematic wave theory, and each one matches the diagram we drew ourselves for the same account.
+kinematic wave theory, and each one matches the diagram we drew ourselves for the same narrative.
 
 **How to read a diagram.** The left panel is the fundamental diagram: each dot is a traffic state (flow
 against density), and the slope of a line between two dots is the speed of the wave between them. The right
@@ -101,7 +102,7 @@ under each figure.
 > open again at 5:10 PM. The detector upstream was reading about 5,200 vehicles an hour before the crash. The
 > speed limit there is 65. Show me how the queue builds and when the road is back to normal.
 
-*What it shows:* a complete account. The agent asked only whether the number of lanes changes nearby
+*What it shows:* a complete narrative. The agent asked only whether the number of lanes changes nearby
 (answer: "No, it is four lanes for several miles on either side"); the live page now assumes it does not
 unless you say so.
 
@@ -138,7 +139,7 @@ Key numbers: a queue first forms at 10:00. The queue moves with the load and is 
 > nearby. Does the backup get to the ramp, and what happens to the ramp traffic and to the mainline behind it?
 
 *What it shows:* a merge. The backup reaches the ramp about four minutes after the crash; from then on the
-ramp and the mainline take turns (the zipper rule, assumed because the account did not say who has priority),
+ramp and the mainline take turns (the zipper rule, assumed because the narrative did not say who has priority),
 so both queue. The lower panels show the merge and the ramp's own flow.
 
 ```{figure} _static/figures/KWA_Crash_Past_On_Ramp.png
@@ -157,7 +158,7 @@ crash. The queue is gone by 08:19.
 > queue, a speed limit of 20 km/h is posted at one point, km 11.5, at 0.2 h; at 0.28 h it is raised to 40 km/h
 > and kept. Draw the diagram.
 
-*What it shows:* the agent working on a research problem. The account follows Fig. 2 of Chen, Ahn and Hegyi
+*What it shows:* the agent working on a research problem. The narrative follows Fig. 2 of Chen, Ahn and Hegyi
 (2014), a paper on variable speed limits (VSL) at a bottleneck with a capacity drop; the paper uses symbols
 only, so the numbers are ours. The 20 km/h limit holds traffic in a slow, dense queue (*c*) and lets a lighter
 flow (*d*) through, so the queue at the bottleneck (*h*) is gone by 0.275 h. The 40 km/h limit then turns *c*
@@ -165,9 +166,9 @@ into a faster queue (*e*) that feeds the bottleneck its full 6,000 veh/h in free
 is avoided. The lighter demand that starts at 0.25 h ends queue *e*. Every state and shock wave of the paper's
 figure appears, in the same order. State names follow the paper.
 
-The live agent (Claude Sonnet 5.5) drew this account on November 22, 2026, in about a minute and a half,
+The live agent (Claude Sonnet 5.5) drew this narrative on November 22, 2026, in about a minute and a half,
 without asking anything. Its states, waves and key numbers are the same as ours. The figure here is our own
-drawing of the same account, with a tighter time and distance range; the agent chose 0 to 1 h and km 0 to 14,
+drawing of the same narrative, with a tighter time and distance range; the agent chose 0 to 1 h and km 0 to 14,
 which makes the queue small.
 
 ```{figure} _static/figures/KWA_VSL_Speed_Limit.png
@@ -212,8 +213,9 @@ says so. A diagram that fails the check is never shown as an answer.
 Built on Prof. Hao Zhou's procedure for drawing traffic state diagrams, with examples from *Traffic Flow
 Theory* by Prof. Jorge Laval at Georgia Tech.
 
-**What is stored.** The account you type, the diagram and answer, your feedback, the time, and the
-approximate network address of your visit. We use them to improve the agent. Please do not enter personal
+**What is stored.** The narrative you type, the diagram and answer, your feedback, the time, and the
+approximate network address of your visit and the country it comes from (counted on the map at the bottom
+of the agent's page). We use them to improve the agent. Please do not enter personal
 information.
 
 **Contact.** Hao Zhou, Ph.D., Assistant Professor, CEE Department, University of South Florida,

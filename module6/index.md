@@ -45,7 +45,7 @@ go into a glossary, lessons already written down (after-action reports, other di
 and practice that lives only in people comes out through an interview. Experience stays apart from the SOP and
 reaches the agent only as a suggestion that cites its source and names the person who decides.
 
-**See a skill at work.** The {doc}`Text-to-Traffic-Diagram Agent <../traffic-diagram-agent>` is a skill plus tools, deployed as a public web page: type a short account of a crash or a lane closure, and it draws the kinematic-wave diagram and checks it against the theory.
+**See a skill at work.** The {doc}`Text-to-Traffic-Diagram Agent <../traffic-diagram-agent>` is a skill plus tools, deployed as a public web page: type a short incident narrative of a crash or a lane closure, and it draws the kinematic-wave diagram and checks it against the theory.
 
 Two skills run through both lectures, and both are in the class repository
 [ai4mobility/transportation-skills](https://github.com/ai4mobility/transportation-skills):
