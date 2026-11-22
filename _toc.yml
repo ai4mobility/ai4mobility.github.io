@@ -211,6 +211,8 @@ parts:
       - file: resources
       - file: skills
         title: "Transportation Skills"
+      - file: traffic-diagram-agent
+        title: "Try It: Traffic Diagram Agent"
       - file: hardware
         title: Hardware for Class
       - file: hurricane-dataset

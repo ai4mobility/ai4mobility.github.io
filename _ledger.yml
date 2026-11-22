@@ -3533,6 +3533,20 @@ items:
       (M5-8_AI_Agents_and_RL/skills_page/make_share_flow.py). Linked from module5/index.md (Skills paragraph)
       and the resources.md Contribute panel.'
 
+  - id: site-traffic-diagram-agent
+    file: site/traffic-diagram-agent.md
+    kind: handout
+    module: all
+    session: '2026-11-21'
+    status: drafted
+    notes: 'Resources page for the live KW Traffic State Diagram Agent (https://kw-diagram-agent.onrender.com,
+      app source M5-8_AI_Agents_and_RL/kw_diagram_app, private repo ai4mobility/kw_diagram_app). Sits after
+      Transportation Skills in the Resources part of _toc.yml; linked from module6/index.md. Sections: try
+      it (the app in a frame that sizes itself from the app''s postMessage; ?from=TAG on this page is passed
+      to the app), how to write your account (table), six examples with figures KWA_*.png from the fresh-agent
+      test (Sonnet 5.5, Nov 21 2026; kw_diagram_agent/fresh_agent_test), what it can and cannot draw, how
+      it works, credits and contact. The accounts are invented TMC-style narratives, said on the page.'
+
   - id: m5-notes-5-architectures
     file: site/module5/notes5-architectures.md
     kind: notes
