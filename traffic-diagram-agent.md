@@ -1,14 +1,14 @@
 (traffic-diagram-agent)=
-# Traffic State Diagram Agent: Try It
+# Text-to-Traffic-Diagram Agent: Try It
 
 <section class="resource-hero">
   <div class="resource-eyebrow">USF &middot; AI for Mobility &middot; Live research prototype</div>
-  <h2>Traffic State Diagram Agent <span>from a short account to a kinematic-wave diagram</span></h2>
-  <p>Describe a crash, a lane closure, a slow vehicle or a merge in a few sentences, the way you would report it to a traffic management center. The agent draws the fundamental diagram and the time-space diagram, gives the key numbers (when the queue forms, how far back it reaches, when it clears) and lists everything it assumed.</p>
+  <h2>Text-to-Traffic-Diagram Agent <span style="display:block; margin:6px 0 0 0; text-wrap:balance;">Like text-to-image, but worked out from traffic flow theory, not generated from data.</span></h2>
+  <p>Describe what happened on the road in a few sentences. The AI takes the steps a traffic flow expert would (finding the traffic states, the waves between them and where they meet), and exact tools draw the kinematic-wave diagram and check it against the theory. You get the fundamental diagram, the time-space diagram, the key numbers (when the queue forms, how far back it reaches, when it clears) and a list of everything it assumed. Free to try, no sign-in; for teaching and research, not for operational decisions.</p>
   <div class="resource-meta">
-    <span>Free to try, no sign-in</span>
-    <span>Every diagram is checked against kinematic wave theory</span>
-    <span>For teaching and research, not for operational decisions</span>
+    <span>Kinematic wave theory</span>
+    <span>Not trained on traffic data</span>
+    <span>Every diagram checked</span>
   </div>
 </section>
 
@@ -26,11 +26,11 @@ how long), the agent asks you once; everything else it assumes and tells you.
 
 <div class="companion-embed kw-embed">
   <div class="companion-embed-bar">
-    <span>Traffic State Diagram Agent (live)</span>
+    <span>Text-to-Traffic-Diagram Agent (live)</span>
     <a href="https://kw-diagram-agent.onrender.com/" target="_blank" rel="noopener">Open full screen &#8599;</a>
   </div>
   <iframe id="kw-agent-frame" src="https://kw-diagram-agent.onrender.com/"
-          title="Traffic State Diagram Agent" loading="lazy" style="height: 1150px;"></iframe>
+          title="Text-to-Traffic-Diagram Agent" loading="lazy" style="height: 1150px;"></iframe>
 </div>
 
 <script>
@@ -192,6 +192,9 @@ an incident, networks of several roads, and totals such as delay or travel time.
 fundamental diagram, and it does not consider a capacity drop unless you mention one.
 
 ## How it works
+
+Like a text-to-image tool, it turns a few sentences into a picture. Unlike one, it has not learned from traffic
+data and does not paint something that only looks right: every line comes from kinematic wave theory.
 
 The agent is an AI model (Claude Sonnet 5.5) that follows a **skill**: Prof. Hao Zhou's procedure for drawing
 traffic state diagrams, written down step by step (see {doc}`Module 6 on skills <module6/index>` and
