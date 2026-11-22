@@ -15,7 +15,7 @@
 <div class="cta-row resource-cta-row">
   <a class="cta-button" href="https://kw-diagram-agent.onrender.com/" target="_blank" rel="noopener">Open the agent in a new tab</a>
   <a class="cta-button cta-secondary" href="#kw-write">How to write your account</a>
-  <a class="cta-button" href="#kw-examples">See six examples</a>
+  <a class="cta-button" href="#kw-examples">See three examples</a>
 </div>
 
 ## Try it
@@ -78,7 +78,7 @@ agent redraws.
 
 <div id="kw-examples"></div>
 
-## Six examples
+## Three examples
 
 Each example below is an account in the style of a traffic management center report, the diagram the agent
 drew, and the key numbers. The accounts were written for testing; they are not real FDOT incidents.
@@ -112,42 +112,7 @@ Key numbers: a queue first forms at 16:40. It is longest at 17:28, just as it cl
 4.5 mi upstream of the crash. The queue is gone by 17:28.
 ```
 
-### 2. A one-line report
-
-> Vehicle fire on I-75 southbound at MM 262. The right lane is closed and traffic is backing up.
-
-*What it shows:* a short report is enough to start. The agent asked one round of questions. The answer was:
-"Three lanes, no lane drop nearby. It started around 2:10 PM and fire rescue reopened the lane at 2:50. I
-don't have a count, but the backup was about 2 miles long when they reopened. Posted speed is 70." The agent
-then worked out the arriving traffic (about 4,140 veh/h) from the reported backup instead of guessing it.
-
-```{figure} _static/figures/KWA_Vehicle_Fire.png
-:alt: Fundamental diagram and time-space diagram for a vehicle fire that closes one of three lanes from 14:10 to 14:50. The queue behind the fire grows upstream; after the lane reopens, discharge at capacity meets the back of the queue at 15:00.
-:width: 100%
-
-Key numbers: a queue first forms at 14:10. It is longest at 15:00, just as it clears: its back is then
-2.5 mi upstream of the fire. The queue is gone by 15:00.
-```
-
-### 3. A drawbridge on an arterial, twice
-
-> We have a drawbridge on a four-lane arterial, two lanes northbound, posted 35 mph, no lane changes on the
-> approach. On Saturday the bridge opens for boat traffic at 11:00 and again at 11:30, and each opening stops
-> traffic for 6 minutes. Northbound volume on Saturdays is about 1,400 veh/h. Does the queue from the first
-> opening clear before the second one? Draw the northbound approach.
-
-*What it shows:* full stops (a jam behind the bridge, an empty road ahead of it), a repeated event, and a
-yes-or-no question. Answer: yes, the first queue is gone by 11:09, well before the second opening.
-
-```{figure} _static/figures/KWA_Drawbridge.png
-:alt: Fundamental diagram and time-space diagram for a drawbridge that stops two northbound lanes from 11:00 to 11:06 and from 11:30 to 11:36. Each opening creates a stopped queue (red, state J) and an empty road ahead (state O); each queue discharges at capacity and is gone a few minutes after the bridge closes.
-:width: 100%
-
-Key numbers: a queue first forms at 11:00. At its longest, at 11:09, its back is 0.84 mi upstream of the
-bridge. The second queue is gone by 11:39.
-```
-
-### 4. A slow oversize load
+### 2. A slow oversize load
 
 > A permitted oversize load will move on I-75 northbound tomorrow. It enters at MM 240 at 10:00 AM and leaves
 > at MM 250, travelling 30 mph in the right lane. Three lanes, posted 70, no lane changes on that stretch.
@@ -165,27 +130,7 @@ Key numbers: a queue first forms at 10:00. The queue moves with the load and is 
 2.7 mi long. The queue is gone by 10:24.
 ```
 
-### 5. A work zone: which time of day?
-
-> We are planning bridge joint repair on I-275 southbound: the right lane closed for 1.5 miles starting at the
-> Bearss Ave overpass. Three lanes there, posted 55, no other lane changes nearby. We can do it midday, 10 AM
-> to 2 PM, when volume is about 3,000 veh/h, or we can take one hour from 3 to 4 PM when volume is about
-> 4,000. Which one backs up, and how bad is it?
-
-*What it shows:* a what-if comparison, drawn as two diagrams. Two open lanes carry about 3,536 veh/h. At
-midday 3,000 veh/h arrive, so nothing is held back and that diagram shows no queue at all. From 3 to 4 PM,
-4,000 veh/h arrive and a queue builds; this is the diagram below.
-
-```{figure} _static/figures/KWA_Work_Zone_PM.png
-:alt: Fundamental diagram and time-space diagram for a lane closure from 15:00 to 16:00 with 4,000 veh/h arriving. A queue grows upstream of the overpass; after the lane reopens at 16:00 the discharge meets the back of the queue at 16:17, about 4.2 miles upstream.
-:width: 100%
-
-The 3 to 4 PM option. Key numbers: a queue first forms at 15:00. It is longest at 16:17, just as it clears:
-its back is then 4.2 mi upstream of the overpass. The queue is gone by 16:17. (Midday option: no queue
-forms.)
-```
-
-### 6. A crash just past an on-ramp
+### 3. A crash just past an on-ramp
 
 > Crash on I-75 northbound about half a mile past the SR 56 on-ramp, one of three lanes blocked from 7:15 to
 > 7:45 AM. The mainline was carrying about 4,000 veh/h and the ramp about 700. Posted 70, no lane changes

@@ -3543,7 +3543,7 @@ items:
       app source M5-8_AI_Agents_and_RL/kw_diagram_app, private repo ai4mobility/kw_diagram_app). Sits after
       Transportation Skills in the Resources part of _toc.yml; linked from module6/index.md. Sections: try
       it (the app in a frame that sizes itself from the app''s postMessage; ?from=TAG on this page is passed
-      to the app), how to write your account (table), six examples with figures KWA_*.png from the fresh-agent
+      to the app), how to write your account (table), three examples (crash 2 of 4 lanes, oversize load redrawn in a tighter window, crash past an on-ramp) with figures KWA_*.png from the fresh-agent
       test (Sonnet 5.5, Nov 21 2026; kw_diagram_agent/fresh_agent_test), what it can and cannot draw, how
       it works, credits and contact. The accounts are invented TMC-style narratives, said on the page.'
 
