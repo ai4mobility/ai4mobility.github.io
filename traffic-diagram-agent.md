@@ -96,6 +96,21 @@ top, and each colored region is one traffic state. Yellow, orange and red region
 denser; red is stopped traffic), and green regions are traffic leaving a queue. The assumptions are printed
 under each figure.
 
+**How to read what it means.** The agent also reads each diagram for you, with four simple rules:
+
+- **Each colored region is one state.** Find its dot on the fundamental diagram to get its speed, flow and
+  density. That is how you describe the congestion an incident causes.
+- **A vertical line is one moment.** It crosses the queue over the queue's length at that moment. The queue is
+  longest where the vertical line crosses the most, which for a crash is the moment the lanes reopen.
+- **A horizontal line is one place.** It crosses the queue over the time that place stays congested.
+- **Area is time spent in the queue.** The area of a queued region, times the density of its state, is the
+  total time vehicles spend in it, in vehicle-hours.
+
+The dotted lines are three vehicles, numbered on the figure: **1** is the first to be queued, **2** is the one
+longest in the queue (its path has the widest span inside the queue), and **3** is the last, which passes the
+point where the back of the queue and the discharge wave meet. The numbered paths and the readings below were
+added on November 23, 2026 by the agent's reading tool.
+
 ### 1. A crash, with everything given
 
 > I-4 eastbound at mile marker 14. A crash at 4:40 PM blocked the two right lanes of four. All lanes were
@@ -107,12 +122,19 @@ under each figure.
 unless you say so.
 
 ```{figure} _static/figures/KWA_Crash_Two_Of_Four.png
-:alt: Fundamental diagram and time-space diagram for a crash that blocks two of four lanes from 16:40 to 17:10. Behind the crash a queue (orange, state U) grows upstream; when the lanes reopen, discharge at capacity (state C) runs back through the queue and meets its back at 17:28, about 4.5 miles upstream.
+:alt: Fundamental diagram and time-space diagram for a crash that blocks two of four lanes from 16:40 to 17:10. Behind the crash a queue (orange, state U) grows upstream; when the lanes reopen, discharge at capacity (state C) runs back through the queue and meets its back at 17:28, about 4.5 miles upstream. Three dotted vehicle paths are numbered 1, 2 and 3.
 :width: 100%
 
-Key numbers: a queue first forms at 16:40. It is longest at 17:28, just as it clears: its back is then
-4.5 mi upstream of the crash. The queue is gone by 17:28.
+Key numbers: a queue first forms at 16:40. The queue is longest at 17:10: about 2.8 mi. The back of the queue
+is furthest upstream at 17:28: 4.5 mi behind the crash, just as the queue clears. The queue is gone by 17:28.
 ```
+
+*Reading it:* the queue (state *U*) moves at 10.3 mi/h, at 59% of jam density. The vertical line at 17:10 crosses
+it over 2.8 mi, from mile 11.2 to the crash at mile 14: the longest queue. The horizontal line at the crash
+crosses it for 30 minutes. The area of *U* times its density is about 397 vehicle-hours spent in the queue,
+shared by about 4,500 vehicles: 5.3 minutes each on average. Vehicle 2 is in the queue longest, 10.6 minutes:
+it joins the back at 16:59 at mile 12.2, crawls 1.8 mi, and passes the crash just as the lanes reopen at 17:10.
+Vehicles that join later are met by the discharge wave before they reach the crash, so they wait less.
 
 ### 2. A slow oversize load
 
@@ -132,6 +154,11 @@ Key numbers: a queue first forms at 10:00. The queue moves with the load and is 
 2.7 mi long. The queue is gone by 10:24.
 ```
 
+*Reading it:* behind the load, traffic moves at about 51 mi/h (state *U*), so this is a slow queue, not a
+standstill. About 1,210 vehicles are caught in it and spend about 57 vehicle-hours there, 2.8 minutes each on
+average. Vehicle 2 is in it longest, 5.7 minutes: it catches up with the queue at 10:14 and gets out when the
+load exits at 10:20.
+
 ### 3. A crash just past an on-ramp
 
 > Crash on I-75 northbound about half a mile past the SR 56 on-ramp, one of three lanes blocked from 7:15 to
@@ -146,9 +173,15 @@ so both queue. The lower panels show the merge and the ramp's own flow.
 :alt: Fundamental diagram, time-space diagram, merge diagram and ramp flow for a crash half a mile past an on-ramp, one of three lanes blocked from 7:15 to 7:45. The queue from the crash reaches the merge, after which the mainline queue (states U1, U2, U3) grows upstream of the merge and the ramp flow drops below its demand; the queue is gone at 8:19.
 :width: 100%
 
-Key numbers: a queue first forms at 07:15. At its longest, at 08:00, its back is 3.9 mi upstream of the
-crash. The queue is gone by 08:19.
+Key numbers: a queue first forms at 07:15. The queue is longest at 08:00: about 3.4 mi. The back of the queue
+is furthest upstream at 08:00: 3.9 mi behind the crash. The queue is gone by 08:19.
 ```
+
+*Reading it:* upstream of the merge the queue first moves at about 13 mi/h (*U1*), then faster as it
+discharges (*U2*, *U3*). The merge is the place congested longest: 60 minutes. Freeway vehicles spend about
+368 vehicle-hours in the queue: about 4,320 vehicles, 5 minutes each on average. Vehicle 2 is in it longest,
+8.4 minutes: it joins the back at 7:37 and gets past the crash at 7:45. The time ramp vehicles wait on the ramp
+itself is not in these numbers.
 
 ### 4. From a research paper: speed limits that clear a bottleneck queue
 
@@ -175,9 +208,12 @@ which makes the queue small.
 :alt: Fundamental diagram and time-space diagram for a bottleneck at km 12 with a capacity drop and a speed limit posted at km 11.5. The bottleneck queue h forms at 0.1 h. At 0.2 h a 20 km/h limit creates a slow queue c upstream of km 11.5 and a light flow d past it, which clears queue h by 0.275 h. At 0.28 h a 40 km/h limit turns c into queue e, which feeds the bottleneck 6,000 veh/h in free flow (state g). Lighter demand A2 ends queue e at km 11.5 at 0.443 h.
 :width: 100%
 
-Key numbers: a queue first forms at 0.1 h. At its longest, at 0.329 h, its back is 2.1 km upstream of the
-bottleneck. The queue is gone by 0.443 h.
+Key numbers: a queue first forms at 0.1 h. The queue is longest at 0.329 h: about 1.6 km. The back of the
+queue is furthest upstream at 0.329 h: 2.1 km behind the bottleneck. The queue is gone by 0.443 h.
 ```
+
+*Reading it:* the three queues move at 30 km/h (*h*), 20 km/h (*c*) and 40 km/h (*e*). About 1,970 vehicles
+spend about 52 vehicle-hours in them; the longest any vehicle spends is 0.049 h, about 3 minutes (vehicle 2).
 
 Paper: D. Chen, S. Ahn and A. Hegyi (2014), "Variable speed limit control for steady and oscillatory queues at
 fixed freeway bottlenecks," *Transportation Research Part B* 70, 340-358.
@@ -186,10 +222,11 @@ fixed freeway bottlenecks," *Transportation Research Part B* 70, 340-358.
 
 **Can:** crashes and lane closures, full stops and traffic signals, a slow vehicle, a lane drop, a
 speed-limit zone, on-ramps (zipper merge or ramp priority) and off-ramps, an arriving volume that changes in
-steps, and with-and-without comparisons.
+steps, and with-and-without comparisons. For each diagram it also gives a reading: the states, how long the
+queue gets, where congestion lasts longest, the time vehicles spend in the queue, and three vehicles.
 
 **Cannot (yet):** stop-and-go waves that grow by themselves, speed limits switched on along a stretch during
-an incident, networks of several roads, and totals such as delay or travel time. It uses a triangular
+an incident, networks of several roads, and delay compared with free flow. It uses a triangular
 fundamental diagram, and it does not consider a capacity drop unless you mention one.
 
 ## How it works
@@ -207,6 +244,9 @@ Before you see a diagram, a final tool checks it against kinematic wave theory, 
 numerical solution of the same problem. If the model cannot get a diagram through that check, a stronger
 model (Claude Opus 5.5) starts again; if that also fails, the tools' own solver draws the diagram and the page
 says so. A diagram that fails the check is never shown as an answer.
+
+The reading is also done by a tool, from the checked diagram: it measures the regions and follows the three
+vehicles, and the model only puts the numbers into words.
 
 ## Credits and contact
 
