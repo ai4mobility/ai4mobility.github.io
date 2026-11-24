@@ -25,6 +25,12 @@ A diagram usually takes one
 to four minutes. If something essential is missing (how many lanes, how much of the road was blocked, for
 how long), the agent asks you once; everything else it assumes and tells you.
 
+**After the diagram, ask about it.** A box under the diagram takes the questions a traffic management center
+asks: where is the back of the queue at 5:00 PM, when does the backup reach a certain mile, how long does a
+driver take to get through, what is the total delay. You can also ask a what-if, such as clearing the incident
+10 minutes sooner, opening one more lane, or diverting 20% of the traffic upstream: the agent draws the changed
+case and shows a table of what it changes. Delay here means the total time vehicles spend in the queue.
+
 <div class="companion-embed kw-embed">
   <div class="companion-embed-bar">
     <span>Text-to-Traffic-Diagram Agent (live)</span>
@@ -223,7 +229,8 @@ fixed freeway bottlenecks," *Transportation Research Part B* 70, 340-358.
 **Can:** crashes and lane closures, full stops and traffic signals, a slow vehicle, a lane drop, a
 speed-limit zone, on-ramps (zipper merge or ramp priority) and off-ramps, an arriving volume that changes in
 steps, and with-and-without comparisons. For each diagram it also gives a reading: the states, how long the
-queue gets, where congestion lasts longest, the time vehicles spend in the queue, and three vehicles.
+queue gets, where congestion lasts longest, the time vehicles spend in the queue, and three vehicles. After the
+diagram it answers questions about it, including what-ifs (added November 24, 2026).
 
 **Cannot (yet):** stop-and-go waves that grow by themselves, speed limits switched on along a stretch during
 an incident, networks of several roads, and delay compared with free flow. It uses a triangular
@@ -246,7 +253,9 @@ model (Claude Opus 5.5) starts again; if that also fails, the tools' own solver 
 says so. A diagram that fails the check is never shown as an answer.
 
 The reading is also done by a tool, from the checked diagram: it measures the regions and follows the three
-vehicles, and the model only puts the numbers into words.
+vehicles, and the model only puts the numbers into words. Questions work the same way: a tool reads the answer
+from the diagram, and for a what-if a tool compares the two checked diagrams, so the model does not do the
+arithmetic.
 
 ## Credits and contact
 
