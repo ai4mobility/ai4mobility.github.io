@@ -19,6 +19,7 @@
     <div>
       <h4>Used again in</h4>
       <ul>
+      <li><a href="notes4-signal-team.html">6.4 One agent or a team</a> (the same SOP run by a lead agent and desk agents)</li>
       <li><a href="../module7/notes1-context.html">7.1 Context: what the model reads</a> (the history grows request by request)</li>
       <li><a href="../module8/index.html">Module 8</a> (agents at work in an agency)</li>
       </ul>
@@ -245,7 +246,8 @@ Four tabs:
 4. What the model reads, as text: one request written out in Qwen3's chat template.
 
 **The storm on the map.** The same storm under the built-in rule, three agent runs (Claude Haiku 5.5, Sonnet 5.5 and
-Opus 5.5) and two benchmarks.
+Opus 5.5) and two benchmarks. The **Compare** control picks the group of runs: *SOP rules*, *AI agent, three models*
+(the runs of this section), and the team runs of {doc}`Section 6.4 <notes4-signal-team>`.
 
 <div class="companion-embed">
   <div class="companion-embed-bar">
@@ -257,7 +259,7 @@ Opus 5.5) and two benchmarks.
 </div>
 
 Press play and switch the map between **On the street** (the truth), **What the TMC believes** and **Signal system**.
-Pick an AI agent run and open the **Agent's turn** tab to see the skills and tools of the turn at the current hour; on
+Set **Compare** to *AI agent, three models*, pick a run, and open the **Agent's turn** tab to see the skills and tools of the turn at the current hour; on
 the Sonnet run, a link opens that turn in the first companion. The **SOP contract** tab shows the audit, clause by
 clause.
 
@@ -383,5 +385,6 @@ stand-ins for the real ones.
 
 ---
 
-Next: {doc}`Module 7 <../module7/index>`, what an agent reads and remembers. The transcript in this section's companion
-is a good place to start: every request in it is a context window.
+Next: {doc}`6.4 One agent or a team <notes4-signal-team>`, the same SOP run by a lead agent and desk agents, compared
+with this agent on the same storms. Then {doc}`Module 7 <../module7/index>`, what an agent reads and remembers. The
+transcript in this section's companion is a good place to start: every request in it is a context window.

@@ -59,6 +59,10 @@ Section 6.3 then follows one project from start to finish: an agent that runs Di
 simulated storm in Tampa with three skills, 25 tools and a person in the loop. Its companion shows every request the
 model was sent, so you can see when and why it called each tool and loaded each skill.
 
+Section 6.4 rebuilds that agent as a team, a lead agent with desk agents, cut two ways (by crew type and by zone), and
+runs all three designs on the same storms. It shows what a team gained, what it cost, and how little one run can tell
+you.
+
 **This module's transportation question.** Which parts of an agency's decades of practice — its procedures,
 after-action reviews and lessons from past storms — can become a skill, and which must stay with a person?
 
@@ -83,6 +87,11 @@ after-action reviews and lessons from past storms — can become a skill, and wh
 <tr>
   <td><a href="notes3-signal-agent.html"><strong>6.3 A worked agent: running the hurricane signal SOP with tools and skills</strong></a><br><em>Lecture 2: building transportation skills</em></td>
   <td>One project end to end: why dark signals after a storm matter; a digital twin of 245 Tampa signals; the SOP sorted into code, three skills, 25 tools, a person and seven guesses; the SOP as a contract that is audited after every run; one planning moment in eight steps with four guard rails; what three Claude models did with the same storm; <strong>two companions: the storm on a map, and every request the model was sent</strong>.</td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td><a href="notes4-signal-team.html"><strong>6.4 One agent or a team: the hurricane signal SOP with a lead and desks</strong></a><br><em>Worked example, continued</em></td>
+  <td>The same SOP run by one agent, by a team cut by crew type, and by a team cut by zone; counting the linked jobs each cut breaks (17% and 29% stay inside one desk); one planning moment of a team (brief, plan, report, merge, send) and the rules kept in code; 15 runs with Claude Sonnet 5.5 and 27 without a model; repeated runs to measure noise; what happens when the lead cannot be reached; <strong>companion: the replay map with a graph of who briefed, reported to and asked whom</strong>.</td>
   <td>&mdash;</td>
 </tr>
 <tr>

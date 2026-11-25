@@ -207,6 +207,9 @@ another loop's worth of tokens: in Anthropic's report, its multi-agent research 
 of a chat. Split a task only when its parts truly do not depend on each other. Corridors with spillback between them do;
 OpenAI's guide puts it as &ldquo;maximize a single agent's capabilities first.&rdquo;
 
+{doc}`Section 6.4 <../module6/notes4-signal-team>` measures this rule on the hurricane signal SOP: one agent against a
+team cut by crew type and a team cut by zone, on the same storms, with the links that cross each cut counted first.
+
 ## Q4 Oversight: the gate before the step that cannot be undone
 
 ```{figure} ../_static/figures/AGA_Oversight_Checkpoint.png

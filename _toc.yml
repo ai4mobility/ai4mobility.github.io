@@ -159,6 +159,8 @@ parts:
             title: "6.2 Inside a skill: packaging transportation know-how"
           - file: module6/notes3-signal-agent
             title: "6.3 A worked agent: running the hurricane signal SOP with tools and skills"
+          - file: module6/notes4-signal-team
+            title: "6.4 One agent or a team: the hurricane signal SOP with a lead and desks"
       - file: module7/index
         sections:
           - file: module7/notes1-context

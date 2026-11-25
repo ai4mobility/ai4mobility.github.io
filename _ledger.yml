@@ -3888,8 +3888,29 @@ items:
     notes: 'After the storm: the signal SOP on a Tampa map. Three storms x four rule runs, plus three AI
       agent runs on the moderate storm (Haiku, Sonnet, Opus 5.5) with Agent''s turn and SOP contract tabs;
       the Sonnet run links each turn to Agent_Turn_Transcript.html. Built by HurricaneTrafficOps/signal_ops_sim/export_replay.py
-      + replay_template.html. 6.9 MB. Its footer links four reports copied next to it in _static/companions
+      + replay_template.html. 6.9 MB on Nov 18; rebuilt Nov 25 2026 at 14.7 MB with a Compare control, six runs of the
+      one-agent-or-team study (Sonnet 5.5, moderate storm, with and without the lead silent), the card How the agents worked
+      together (graph, steps, detail, table) and a comparison card; also mounted in site/module6/notes4-signal-team.md.
+      Its footer links four reports copied next to it in _static/companions
       (Prestorm_Deployment, Post_Storm_Operations, Resource_Planning, Dispatch_Choices).'
+
+  - id: m6-notes-4-signal-team
+    file: site/module6/notes4-signal-team.md
+    kind: notes
+    module: 6
+    session: '2026-11-24'
+    status: drafted
+    notes: '6.4 One agent or a team: the hurricane signal SOP with a lead and desks. Created Nov 25 2026 from
+      the HurricaneTrafficOps team study (Nov 23-24). Two cuts (by job = ICS group, by zone = ICS division; figure
+      SOT_Two_Cuts); the link count (2,105 linked jobs, 17% inside a desk by job, 29% by zone); one planning
+      moment of a team and four rules in code (SOT_Team_Turn); 15 Sonnet 5.5 runs and 27 no-model runs; results
+      table (moderate risk 8,111 / 7,618 / 7,542; severe 18,212 / 18,274 / 17,923; lead silent 8,338 / 8,666
+      / 7,756; tokens 3.8 / 10.1 / 18.4 M); four one-agent repeats on storm 1 (mean 8,552, sd 226; SOT_Repeats);
+      risk by priority (SOT_Risk_By_Priority); desks set SAT and refuel plans 35 times against 1 to 12; the
+      stale hold on SIG-127 while the lead was silent; no-model table and the solver-limit check (8,294 at
+      2 s, 9,720 at 10 s); before-you-trust block; fit card; applications; check yourself. Figures built by
+      M5-8_AI_Agents_and_RL/signal_ops_team/make_figures.py. Session label on the page is a placeholder
+      to confirm with the instructor.'
 
   - id: m8-notes-1-data
     file: site/module8/notes1-data.md
